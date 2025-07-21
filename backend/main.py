@@ -17,7 +17,7 @@ from backend.core.exception_handler import add_exception_handlers
 logger = get_logger(__name__)
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="Kiwi7 - 주식매매(개인용)", version="0.1.1")
+    app = FastAPI(title="Kiwi7 - 주식매매(개인용)", version="0.0.1")
     add_middlewares(app)
     add_routes(app)
     add_event_handlers(app)
