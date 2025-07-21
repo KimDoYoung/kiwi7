@@ -16,13 +16,14 @@
   - jinja 2.0
   - sqlite3
   - jwt
+  - pydantic
   - dotenv
 
 - frontend
   - alpine.js
   - bootstrap5
   - html5
-  
+
   
 - deploy
   - docker

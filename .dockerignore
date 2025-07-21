@@ -1,0 +1,42 @@
+# 1) VCS · IDE 산출물
+.venv/
+.git
+.gitignore
+.hg
+.svn
+.idea
+.vscode
+*.swp
+*~            # 편집기 백업
+
+# 2) 빌드 산출물 / 캐시
+dist/
+build/
+target/
+node_modules/
+__pycache__/
+*.py[cod]
+*.o
+*.so
+*.jar
+*.class
+
+# 3) 테스트 · 문서 · 샘플
+tests/
+docs/
+examples/
+
+# 4) OS · 도구 자동 생성물
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+
+# 5) 민감 정보
+*.pem
+*.key
+*.crt
+.env
+secrets/
+.env.local
+.env.real
