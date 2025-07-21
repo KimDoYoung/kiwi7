@@ -12,7 +12,7 @@
 import os
 import re
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from backend.app.core.logger import get_logger
+from backend.core.logger import get_logger
 
 logger = get_logger(__name__)
 

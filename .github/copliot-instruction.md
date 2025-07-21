@@ -12,6 +12,7 @@ description: Python coding conventions and guidelines
 - Use the `typing` module for type annotations (e.g., `List[str]`, `Dict[str, int]`).
 - Break down complex functions into smaller, more manageable functions.
 - 모든 주석은 한글로 작성
+- 패키지관리로 uv를 사용하고 있음. pip는 보조로, uv를 메인으로 조언해주세요.
 
 ## General Instructions
 

@@ -16,8 +16,8 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from typing import Union
 
-from backend.app.core.logger import get_logger
-from backend.app.core.template_engine import render_template
+from backend.core.logger import get_logger
+from backend.core.template_engine import render_template
 
 logger = get_logger(__name__)
 

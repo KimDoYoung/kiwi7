@@ -13,7 +13,7 @@
 from fastapi import HTTPException, Request
 from fastapi.responses import RedirectResponse
 from starlette.middleware.base import BaseHTTPMiddleware
-from backend.app.core.security import verify_token
+from backend.core.security import verify_token
 
 class JWTAuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
@@ -30,7 +30,7 @@ class JWTAuthMiddleware(BaseHTTPMiddleware):
 
         if not auth_header:
             # URL 쿼리 파라미터에서 토큰 및 토큰 유형 추출
-            token = request.cookies.get("lucy_token")
+            token = request.cookies.get("kiwi7_token")
 
         try:
             if token:

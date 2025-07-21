@@ -2,7 +2,7 @@ import logging
 from concurrent_log_handler import ConcurrentRotatingFileHandler
 
 def get_logger(name):
-    from backend.app.core.config import config
+    from backend.core.config import config
     logger = logging.getLogger(name)
     logger.setLevel(config.LOG_LEVEL)
     LOG_FILE = config.LOG_FILE
