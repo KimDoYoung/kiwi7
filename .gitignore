@@ -1,0 +1,7 @@
+.env
+.env.*
+data/
+files/
+.__lucy.lock
+.venv/
+__pycache__/
