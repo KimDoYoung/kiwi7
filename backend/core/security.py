@@ -5,9 +5,9 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from typing import Optional
-from core.config import config
+from backend.core.config import config
 
-from domains.user.user_model import User
+from backend.domains.user.user_model import User
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

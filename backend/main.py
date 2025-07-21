@@ -4,13 +4,14 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from core.logger import get_logger
-from core.config import config
-from core.jwtmiddleware import JWTAuthMiddleware
-from api.v1.endpoints.user_routes import router as user_router
-from api.v1.endpoints.home_routes import router as home_router
+from backend.core.kiwi7_db import create_kiwi7_db
+from backend.core.logger import get_logger
+from backend.core.config import config
+from backend.core.jwtmiddleware import JWTAuthMiddleware
+from backend.api.v1.endpoints.user_routes import router as user_router
+from backend.api.v1.endpoints.home_routes import router as home_router
 
-from core.exception_handler import add_exception_handlers
+from backend.core.exception_handler import add_exception_handlers
 
 
 logger = get_logger(__name__)
@@ -58,9 +59,15 @@ def add_static_files(app: FastAPI):
 
 async def startup_event():
     ''' Kiwi7 application  시작 '''
-    mongodb_url = config.DB_URL 
-    db_name = config.DB_NAME
-    logger.info(f"MongoDB 연결: {mongodb_url} / {db_name}")
+    db_path = config.DB_PATH 
+    parent_dir = os.path.dirname(db_path)
+    # sqlite3데이터베이스 생성
+    if not os.path.exists(parent_dir):
+        logger.info(f"DB 디렉토리가 존재하지 않습니다. 생성합니다: {parent_dir}")
+        os.makedirs(parent_dir, exist_ok=True)
+    if not os.path.exists(db_path):
+        logger.info(f"DB 파일이 존재하지 않습니다. 생성합니다: {db_path}")
+        create_kiwi7_db(db_path)
 
 async def shutdown_event():
     ''' Kiwi7 application 종료 '''
