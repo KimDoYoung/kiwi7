@@ -7,7 +7,6 @@ from passlib.context import CryptContext
 from typing import Optional
 from backend.core.config import config
 
-from backend.domains.user.user_model import UserInfo
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -22,7 +21,7 @@ def verify_password(plain_password, hashed_password):
 def get_password_hash(password):
     return pwd_context.hash(password)
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+def create_jwt_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
@@ -74,10 +73,4 @@ async def get_current_user(request: Request) -> dict:
     except JWTError:
         raise credentials_exception
 
-    user = await UserInfo.find_one(UserInfo.user_id == user_id)
-    if user is None:
-        raise credentials_exception
-    
-    user_dict = user.to_dict()
-
-    return user_dict
+    return user_id

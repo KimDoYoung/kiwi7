@@ -25,7 +25,7 @@ from backend.domains.user.user_service import UserService
 from backend.utils.kiwi_utils import get_today
 from backend.core.template_engine import render_template
 from backend.core.config import config
-from backend.core.security import create_access_token, get_current_user
+from backend.core.security import create_jwt_access_token, get_current_user
 
 from backend.core.logger import get_logger
 
@@ -45,8 +45,8 @@ def display_root(request: Request):
 @router.get("/main", response_class=HTMLResponse, include_in_schema=False)
 async def display_main(request: Request):
     ''' 메인 '''
-    current_user = await get_current_user(request)
-    if not current_user:
+    user_id = await get_current_user(request)
+    if not user_id:
         raise HTTPException(status_code=401, detail="Invalid token-현재 사용자 정보가 없습니다")
     
     logger.debug("***************Calling get_today() function for /main endpoint")
@@ -55,8 +55,7 @@ async def display_main(request: Request):
     stk_code = request.cookies.get("stk_code")
     context = { "request": request,  
                 "page_path": '/main',
-                "user_id":  current_user["user_id"], 
-                "user_name": current_user["user_name"], 
+                "user_id":  user_id, 
                 "today": today_str,
                 "stk_code": stk_code}    
     return render_template("main.html", context)
@@ -129,13 +128,14 @@ async def logout(response: Response):
 
 @router.post("/login", response_model=AccessToken)
 async def login_for_access_token(
+    response: Response,  # Response 추가
     userId: str = Form(...),
     password: str = Form(...),
     user_service: UserService = Depends(get_user_service)
 ):
     ''' SQLite 기반 로그인 처리 '''
     saved_user_id = user_service.get("user_id")
-    saved_password = user_service.get("password")
+    saved_password = user_service.get("user_pw")
 
     if not saved_user_id or not saved_password:
         raise HTTPException(status_code=400, detail="사용자 정보가 DB에 등록되어 있지 않습니다.")
@@ -147,7 +147,7 @@ async def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    EXPIRE_MINUTES = config.ACCESS_TOKEN_EXPIRE_MINUTES
+    EXPIRE_MINUTES = int(config.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token_expires = timedelta(minutes=EXPIRE_MINUTES)
     jwt_token_data = {
         "user_id": userId,
@@ -155,12 +155,21 @@ async def login_for_access_token(
         "login_time": datetime.now().isoformat(),
         "exp": datetime.now() + access_token_expires
     }
-    access_token = create_access_token(
+    jwt_token = create_jwt_access_token(
         data=jwt_token_data,
         expires_delta=access_token_expires
     )
+    # 쿠키에 토큰 설정 (자동)
+    response.set_cookie(
+        key=config.ACCESS_TOKEN_NAME,
+        value=jwt_token,
+        max_age=EXPIRE_MINUTES * 60,  # 초 단위
+        httponly=True,  # JavaScript에서 접근 불가 (보안)
+        secure=False,   # HTTPS에서만 전송 (개발시 False)
+        samesite="lax"  # CSRF 보호
+    )    
     return AccessToken(
-        access_token=access_token,
+        access_token=jwt_token,
         token_type="bearer",
         user_id =userId
     )

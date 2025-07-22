@@ -13,13 +13,14 @@
 from fastapi import HTTPException, Request
 from fastapi.responses import RedirectResponse
 from starlette.middleware.base import BaseHTTPMiddleware
+from backend.core.config import config
 from backend.core.security import verify_token
 
 class JWTAuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         # 토큰이 필요 없는 URL 경로 정의
         STATIC_PATHS = ["/public", "/favicon.ico"]
-        print(request.url.path)
+        
         if request.url.path in ["/login", "/logout"] or any(request.url.path.startswith(path) for path in STATIC_PATHS):    
             response = await call_next(request)
             return response
@@ -30,7 +31,8 @@ class JWTAuthMiddleware(BaseHTTPMiddleware):
 
         if not auth_header:
             # URL 쿼리 파라미터에서 토큰 및 토큰 유형 추출
-            token = request.cookies.get("kiwi7_token")
+            cookie_name = config.ACCESS_TOKEN_NAME
+            token = request.cookies.get(cookie_name)
 
         try:
             if token:

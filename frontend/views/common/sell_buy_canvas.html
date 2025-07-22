@@ -1,0 +1,118 @@
+<!-- 매수/매도용 Offcanvas component -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasBuySell" aria-labelledby="offcanvasExampleLabel" >
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel">매수/매도</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="mb-3 p-2">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="kisorls" id="kisorls1" value="KIS">
+                <label class="form-check-label" for="kisorls1">KIS-한국투자증권</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="kisorls" id="kisorls2" value="LS">
+                <label class="form-check-label" for="kisorls2">LS증권</label>
+            </div>
+        </div>        
+        <div id="offcanvaBuy" class="bg-buy mb-3 p-2">
+            <h2>매수</h2>
+            <form action="" id="buy-form">
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label for="pdno" class="form-label">상품번호</label>
+                        <input type="text" class="form-control" name="pdno" required>
+                    </div>
+                    <div class="col-8">
+                        <label for="pdno" class="form-label">상품명칭</label>
+                        <input type="text" class="form-control" name="pdnm" readonly required>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="qty" class="form-label">수량</label>
+                        <input type="number" class="form-control" name="qty" required min="1">
+                    </div>
+                    <div class="col">
+                        <label for="cost" class="form-label">지정가<small>(0:시장가)</small></label>
+                        <input type="number" class="form-control" name="cost" required min="0">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-danger  btnBuyCash">매수</button>
+                <button type="button" class="btn btn-secondary btnClearBuySell">초기화</button>
+            </form>
+        </div> 
+        <div id="offcanvasBuySell" class="bg-sell p-2">
+            <h2>매도</h2>
+            <form action="" id="sell-form">
+                <div class="row mb-3 p-2">
+                    <div class="col">
+                        <label for="pdno" class="form-label">상품번호</label>
+                        <input type="text" class="form-control" name="pdno" required>
+                    </div>
+                    <div class="col">
+                        <label for="pdno" class="form-label">상품명칭</label>
+                        <input type="text" class="form-control" name="pdnm" readonly required>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="qty" class="form-label">수량</label>
+                        <input type="number" class="form-control" name="qty"  min="1" required>
+                    </div>
+                    <div class="col">
+                        <label for="cost" class="form-label">지정가<small>(0:시장가)</small></label>
+                        <input type="number" class="form-control" name="cost" min="0" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btnSellCash">매도</button>
+                <button type="button" class="btn btn-secondary btnClearBuySell">초기화</button>
+            </form>        
+        </div>
+        <div id="buy-sell-message-area"></div>
+    </div>
+</div>
+
+<!-- 회사정보를 보여주는 offcanvas component -->
+<div class="offcanvas offcanvas-bottom h-auto" tabindex="-1" id="offcanvasCompany" >
+    <div class="offcanvas-header ms-3">
+        <h5 class="offcanvas-title" id="offcanvasCompanyName"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body  ms-3">
+        
+        <div class="row">
+            <div class="col-6">
+                <div id="offcanvas-naver-company-summary"></div> <!--기업개요-->
+                <div class="mt-3">
+                    <table class="table m-2 p-5"><tr>
+                        <th>시가총액</th><td id="offcanvas-naver-market-cap"></td>
+                        <th>시가총액순위</th><td id="offcanvas-naver-market-cap-rank"></td>
+                        <th>상장주식수</th><td id="offcanvas-naver-num-of-shares"></td>
+                    </tr></table>
+                </div>
+                <div>
+                    <table class="table m-2 p-5">
+                        <tr>
+                            <th class="text-end">주식 현재가</th>
+                            <th class="text-end">전일 대비 </th>
+                            <th class="text-end">전일 대비율 </th>
+                            <th class="text-end">누적 거래량</th>
+                            <th class="text-end">누적 거래 대금<th>
+                        </tr>
+                        <tr>
+                            <td class="text-end" id="offcanvas-stck_prpr"></td>
+                            <td class="text-end" id="offcanvas-prdy_vrss"></td>
+                            <td class="text-end" id="offcanvas-prdy_ctrt"></td>
+                            <td class="text-end" id="offcanvas-acml_vol"></td>
+                            <td class="text-end" id="offcanvas-acml_tr_pbmn"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="col-6">
+                <div id="offcanvas_daily_chart"></div> 
+            </div>
+        </div>
+    </div>
+</div>

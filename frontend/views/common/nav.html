@@ -1,0 +1,52 @@
+<nav class="navbar navbar-expand-lg" style="background-color:#e0f7fa;">
+    <div class="container-fluid">
+        <a class="navbar-brand ms-3" href="/main">키움증권-주식매매</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        종목찾기
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="nav-link" href="/page?path=mystock/mystock">My Stock</a></li>
+                        <li><a class="nav-link" href="/page?path=mystock/test1">TEST페이지</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="nav-link" href="/page?path=mystock/foreign_trade">외국인 매매종목</a></li>
+                        <li><a class="nav-link" href="/page?path=kis/kis-opinion">증권사-투자의견</a> </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="nav-link" href="/page?path=kis/kis-attension">KIS-관심종목</a> </li>
+                        <li><a class="nav-link" href="/page?path=kis/kis-psearch">KIS-조건식</a> </li>
+                        <li><a class="nav-link" href="/page?path=kis/kis-ranking">KIS-상위종목</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="nav-link" href="/page?path=ls/ls-ranking">LS-상위종목</a></li>
+                    </ul>                    
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownKis" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        한국투자증권(KIS)
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="nav-link" href="/page?path=kis/kis">계좌조회</a></li>
+                        <li><a class="nav-link" href="/page?path=kis/kis-inquire-daily-ccld">일별주문체결</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownLS" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        LS증권
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="nav-link" href="/page?path=ls/ls">LS계좌</a></li>
+                        <li><a class="nav-link" href="/page?path=ls/history">거래내역</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="btnBuySellOffcanvas" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBuySell">매수/매도</a>
+                </li>
+            </ul>
+            {% include "common/nav_right.html" %}
+        </div>
+    </div>
+</nav>

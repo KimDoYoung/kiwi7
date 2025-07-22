@@ -1,190 +1,74 @@
 /**
- * 로그인 페이지 Alpine.js 애플리케이션
- * POST /login 엔드포인트로 인증 요청을 처리합니다.
+ * 로그인 페이지용 Alpine.js 함수 (초보자용 - 매우 간단)
  */
 function loginApp() {
     return {
-        // 로그인 폼 데이터
-        loginForm: {
-            userId: '',
-            password: '',
-            rememberMe: false
-        },
-        
-        // UI 상태 관리
-        isLoading: false,
+        // 데이터 (상태)
         showPassword: false,
+        isLoading: false,
         errorMessage: '',
-        successMessage: '',
-        showDemoInfo: true, // 개발 환경에서는 true
         
         /**
-         * 로그인 폼 제출 처리
-         * POST /login 엔드포인트로 인증 요청을 보냅니다.
+         * 로그인 함수 - 폼 제출 시 호출됩니다
          */
         async login() {
-            // 기본 유효성 검사
-            if (!this.loginForm.userId.trim()) {
-                this.showError('사용자 아이디를 입력하세요.');
-                return;
-            }
+            console.log('로그인 함수 호출됨');
             
-            if (!this.loginForm.password.trim()) {
-                this.showError('비밀번호를 입력하세요.');
-                return;
-            }
-            
+            // 로딩 시작
             this.isLoading = true;
-            this.clearMessages();
+            this.errorMessage = '';
+            
+            // 폼 데이터 가져오기 (간단한 방법)
+            const userId = document.getElementById('userId').value;
+            const password = document.getElementById('password').value;
+            
+            // 기본 검증
+            if (!userId || !password) {
+                this.errorMessage = '아이디와 비밀번호를 입력하세요.';
+                this.isLoading = false;
+                return;
+            }
             
             try {
-                // POST /login 엔드포인트로 로그인 요청
+                // FormData로 POST 요청 (기존 백엔드와 호환)
+                const formData = new FormData();
+                formData.append('userId', userId);
+                formData.append('password', password);
+                
                 const response = await fetch('/login', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        user_id: this.loginForm.userId,
-                        password: this.loginForm.password,
-                        remember_me: this.loginForm.rememberMe
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (response.ok) {
-                    // 로그인 성공 처리
-                    this.handleLoginSuccess(result);
-                } else {
-                    // 로그인 실패 처리
-                    this.handleLoginError(result);
-                }
-                
-            } catch (error) {
-                console.error('로그인 요청 오류:', error);
-                this.showError('네트워크 오류가 발생했습니다. 다시 시도해 주세요.');
-            } finally {
-                this.isLoading = false;
-            }
-        },
-        
-        /**
-         * 로그인 성공 시 처리
-         */
-        handleLoginSuccess(result) {
-            this.showSuccess('로그인이 성공했습니다!');
-            
-            // 토큰 저장 (localStorage 또는 쿠키)
-            if (result.access_token) {
-                if (this.loginForm.rememberMe) {
-                    localStorage.setItem('kiwi7_token', result.access_token);
-                } else {
-                    sessionStorage.setItem('kiwi7_token', result.access_token);
-                }
-            }
-            
-            // 리다이렉트 처리
-            setTimeout(() => {
-                const redirectUrl = new URLSearchParams(window.location.search).get('redirect') || '/';
-                window.location.href = redirectUrl;
-            }, 1500);
-        },
-        
-        /**
-         * 로그인 실패 시 처리
-         */
-        handleLoginError(result) {
-            const errorMessage = result.detail || result.message || '로그인에 실패했습니다.';
-            this.showError(errorMessage);
-            
-            // 비밀번호 필드 초기화
-            this.loginForm.password = '';
-        },
-        
-        /**
-         * 데모 계정 정보 자동 입력
-         */
-        fillDemoCredentials() {
-            this.loginForm.userId = 'demo';
-            this.loginForm.password = 'demo123';
-            this.clearMessages();
-        },
-        
-        /**
-         * 오류 메시지 표시
-         */
-        showError(message) {
-            this.errorMessage = message;
-            this.successMessage = '';
-        },
-        
-        /**
-         * 성공 메시지 표시
-         */
-        showSuccess(message) {
-            this.successMessage = message;
-            this.errorMessage = '';
-        },
-        
-        /**
-         * 모든 메시지 초기화
-         */
-        clearMessages() {
-            this.errorMessage = '';
-            this.successMessage = '';
-        },
-        
-        /**
-         * 페이지 로드 시 초기화
-         */
-        init() {
-            console.log('로그인 앱 초기화 완료');
-            
-            // 이미 로그인된 사용자 체크
-            const token = localStorage.getItem('kiwi7_token') || sessionStorage.getItem('kiwi7_token');
-            if (token) {
-                // 토큰 유효성 검사 후 리다이렉트
-                this.validateTokenAndRedirect(token);
-            }
-            
-            // 엔터 키 이벤트 처리
-            this.setupKeyboardEvents();
-        },
-        
-        /**
-         * 토큰 유효성 검사 및 리다이렉트
-         */
-        async validateTokenAndRedirect(token) {
-            try {
-                const response = await fetch('/api/v1/auth/verify', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                    body: formData
                 });
                 
                 if (response.ok) {
-                    window.location.href = '/';
+                    // 로그인 성공
+                    const result = await response.json();
+                    console.log('로그인 성공:', result);
+                    
+                    // 메인 페이지로 이동
+                    window.location.href = '/main';
+                } else {
+                    // 로그인 실패
+                    const error = await response.json();
+                    this.errorMessage = error.detail || '로그인에 실패했습니다.';
                 }
+                
             } catch (error) {
-                // 토큰이 유효하지 않으면 제거
-                localStorage.removeItem('kiwi7_token');
-                sessionStorage.removeItem('kiwi7_token');
+                console.error('로그인 오류:', error);
+                this.errorMessage = '네트워크 오류가 발생했습니다.';
             }
+            
+            // 로딩 종료
+            this.isLoading = false;
         },
         
         /**
-         * 키보드 이벤트 설정
+         * 테스트 계정 자동입력
          */
-        setupKeyboardEvents() {
-            document.addEventListener('keydown', (event) => {
-                // Ctrl+Enter로 빠른 로그인 (개발용)
-                if (event.ctrlKey && event.key === 'Enter' && this.showDemoInfo) {
-                    this.fillDemoCredentials();
-                    setTimeout(() => this.login(), 100);
-                }
-            });
+        fillTestAccount() {
+            document.getElementById('userId').value = 'admin';
+            document.getElementById('password').value = '1234';
+            this.errorMessage = '';
         }
     }
 }

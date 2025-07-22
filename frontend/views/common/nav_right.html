@@ -1,0 +1,38 @@
+<ul class="navbar-nav ms-auto">
+    <li class="nav-item">
+        <!-- 실선 별 대신 빈 별 -->
+        <a href="/page?path=mystock/mystock" class="nav-link text-danger" title="즐겨찾기">
+            <i class="far fa-star"></i>
+        </a>
+    </li>
+    <li class="nav-item">
+        <!-- 다른 새로고침 아이콘 -->
+        <a href="/page?path={{page_path}}" class="nav-link text-primary" title="새로고침">
+            <i class="fas fa-redo-alt"></i>새로고침
+        </a>
+    </li>
+    <li class="nav-item">
+        <!-- 다른 날짜 아이콘 -->
+        <span class="nav-link text-primary">
+            <i class="fas fa-clock me-1"></i>{{today}}
+        </span>
+    </li>
+    <li class="nav-item">
+        <!-- 다른 설정 아이콘 -->
+        <a class="nav-link" href="/page?path=config/config" title="설정">
+            <i class="fas fa-cog"></i>
+        </a>
+    </li>
+    <li class="nav-item">
+        <!-- 다른 사용자 아이콘 -->
+        <a class="nav-link" href="/page?path=user/form" data-user-id="{{user_id}}" id="username" title="{{user_id}} - 사용자 설정">
+            <i class="fas fa-user-edit"></i>
+        </a>
+    </li>
+    <li class="nav-item">
+        <!-- 다른 로그아웃 아이콘 -->
+        <a class="nav-link" href="#" id="logout" data-user-id="{{user_id}}" title="{{user_id}} 로그아웃">
+            <i class="fas fa-power-off"></i>
+        </a>
+    </li>
+</ul>
