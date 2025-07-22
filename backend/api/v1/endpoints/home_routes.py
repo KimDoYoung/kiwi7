@@ -122,9 +122,18 @@ async def login(request: Request):
 @router.get("/logout", response_class=JSONResponse)
 async def logout(response: Response):
     ''' 로그아웃 페이지 '''
-    response.delete_cookie(config.ACCESS_TOKEN_NAME)
-    response = RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
-    return response
+    # response.delete_cookie(config.ACCESS_TOKEN_NAME)
+    # response = RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+    # return response
+    response = RedirectResponse(url="/login", status_code=302)
+    response.delete_cookie(
+        key=config.ACCESS_TOKEN_NAME,
+        path="/",              # ✅ set_cookie와 동일하게!
+        secure=False,          # ✅ set_cookie와 동일하게!
+        httponly=True,         # optional (FastAPI 기본값은 True)
+        samesite="lax"         # ✅ 동일하게
+    )
+    return response    
 
 @router.post("/login", response_model=AccessToken)
 async def login_for_access_token(
