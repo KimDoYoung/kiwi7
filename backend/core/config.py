@@ -5,20 +5,19 @@ class Config:
         self.PROFILE_NAME = os.getenv('kiwi7_MODE', 'local')
         load_dotenv(dotenv_path=f'.env.{self.PROFILE_NAME}')
         
-        # 디폴트사용자
-        self.DEFAULT_USER_ID = os.getenv('DEFAULT_USER_ID', 'kdy987')
-        self.DEFAULT_STOCK_ABBR = os.getenv('DEFAULT_STOCK_ABBR','KIS')
-
+        # KIWOOM API 관련 키
+        self.KIWOOM_APP_KEY = os.getenv('KIWOOM_APP_KEY', '')
+        self.KIWOOM_SECRET_KEY = os.getenv('KIWOOM_SECRET_KEY', '')
 
         # BASE_DIR 설정
         self.BASE_DIR = os.getenv('BASE_DIR', 'c:\\kiwi7')
-        self.DB_PATH = os.getenv('DB_PATH', f'{self.BASE_DIR}/db/kiwi7.db')
+        self.DB_PATH =  f'{self.BASE_DIR}/db/kiwi7.db'
         # 로그 설정
         self.LOG_LEVEL = os.getenv('LOG_LEVEL', 'DEBUG')
         self.LOG_DIR = os.getenv('LOG_DIR', f'{self.BASE_DIR}/logs')
         self.LOG_FILE = self.LOG_DIR + '/kiwi7.log'
 
-        self.SECRET_KEY = os.getenv('SECRET_KEY','kiwi77_secret_key_1234_!@#$')
+        self.JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY','kiwi77_secret_key_1234_!@#$')
         self.ALGORITHM = os.getenv('ALGORITHM','HS256')
         self.ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES', 30)
         self.ACCESS_TOKEN_NAME = os.getenv('ACCESS_TOKEN_NAME', 'kiwi777_token')

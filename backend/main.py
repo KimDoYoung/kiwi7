@@ -59,6 +59,10 @@ def add_static_files(app: FastAPI):
 
 async def startup_event():
     ''' Kiwi7 application  시작 '''
+    logger.info('---------------------------------')
+    logger.info('Startup 프로세스 시작')
+    logger.info('---------------------------------')
+
     db_path = config.DB_PATH 
     parent_dir = os.path.dirname(db_path)
     # sqlite3데이터베이스 생성
@@ -68,6 +72,7 @@ async def startup_event():
     if not os.path.exists(db_path):
         logger.info(f"DB 파일이 존재하지 않습니다. 생성합니다: {db_path}")
         create_kiwi7_db(db_path)
+    logger.info(f"DB 파일 경로: {db_path}")
 
 async def shutdown_event():
     ''' Kiwi7 application 종료 '''

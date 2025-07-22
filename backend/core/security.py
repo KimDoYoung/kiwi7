@@ -7,11 +7,11 @@ from passlib.context import CryptContext
 from typing import Optional
 from backend.core.config import config
 
-from backend.domains.user.user_model import User
+from backend.domains.user.user_model import UserInfo
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-SECRET_KEY = config.SECRET_KEY
+JWT_SECRET_KEY = config.JWT_SECRET_KEY
 ALGORITHM = config.ALGORITHM
 ACCESS_TOKEN_EXPIRE_MINUTES = config.ACCESS_TOKEN_EXPIRE_MINUTES
 ACCESS_TOKEN_NAME =  config.ACCESS_TOKEN_NAME
@@ -29,13 +29,13 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)  # 기본 만료 시간 설정
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, JWT_SECRET_KEY, algorithm=ALGORITHM)
     
     return encoded_jwt
 
 def verify_token(token: str):
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[ALGORITHM])
         return payload
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token expired")
@@ -66,7 +66,7 @@ async def get_current_user(request: Request) -> dict:
         raise credentials_exception
 
     try:
-        payload = jwt.decode(token, config.SECRET_KEY, algorithms=[config.ALGORITHM])
+        payload = jwt.decode(token, config.JWT_SECRET_KEY, algorithms=[config.ALGORITHM])
         user_id: str = payload.get("user_id")
         if user_id is None:
             raise credentials_exception
@@ -74,7 +74,7 @@ async def get_current_user(request: Request) -> dict:
     except JWTError:
         raise credentials_exception
 
-    user = await User.find_one(User.user_id == user_id)
+    user = await UserInfo.find_one(UserInfo.user_id == user_id)
     if user is None:
         raise credentials_exception
     

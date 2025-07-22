@@ -15,20 +15,26 @@
 버전: 1.0
 """
 
-from fastapi import APIRouter, HTTPException, Query, Request, Response
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response, Form
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi import status
+from datetime import timedelta, datetime
 
+from backend.domains.user.user_model import AccessToken
+from backend.domains.user.user_service import UserService
 from backend.utils.kiwi_utils import get_today
 from backend.core.template_engine import render_template
 from backend.core.config import config
-from backend.core.security import get_current_user
+from backend.core.security import create_access_token, get_current_user
 
 from backend.core.logger import get_logger
 
 logger = get_logger(__name__)
 
 router = APIRouter()
+
+def get_user_service():
+    return UserService()  # 매번 새로운 인스턴스를 생성하거나, 싱글톤 사용
 
 @router.get("/", response_class=HTMLResponse, include_in_schema=False)
 def display_root(request: Request):
@@ -121,21 +127,40 @@ async def logout(response: Response):
     response = RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
     return response
 
-# @router.post("/login", response_model=AccessToken)
-# async def login_for_access_token(form_data: LoginFormData, user_service :UserService=Depends(get_user_service)):
-#     ''' 로그인 프로세스'''
-#     user = await user_service.authenticate_user(form_data.username, form_data.password)
-#     if not user:
-#         raise HTTPException(
-#             status_code=status.HTTP_401_UNAUTHORIZED,
-#             detail="Incorrect username or password",
-#             headers={"WWW-Authenticate": "Bearer"},
-#         )
-#     access_token_expires = timedelta(minutes=int(config.ACCESS_TOKEN_EXPIRE_MINUTES))
-#     user_id = user.user_id
-#     user_name = user.user_name
-#     access_token = create_access_token(
-#         data={"user_id": user_id, "name": user_name}, expires_delta=access_token_expires
-#     )
-#     access_token = AccessToken(access_token=access_token, token_type="bearer",username=user_name, email=user.email) 
-#     return access_token
+@router.post("/login", response_model=AccessToken)
+async def login_for_access_token(
+    userId: str = Form(...),
+    password: str = Form(...),
+    user_service: UserService = Depends(get_user_service)
+):
+    ''' SQLite 기반 로그인 처리 '''
+    saved_user_id = user_service.get("user_id")
+    saved_password = user_service.get("password")
+
+    if not saved_user_id or not saved_password:
+        raise HTTPException(status_code=400, detail="사용자 정보가 DB에 등록되어 있지 않습니다.")
+
+    if userId != saved_user_id.value or password != saved_password.value:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="아이디 또는 비밀번호가 틀립니다.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    EXPIRE_MINUTES = config.ACCESS_TOKEN_EXPIRE_MINUTES
+    access_token_expires = timedelta(minutes=EXPIRE_MINUTES)
+    jwt_token_data = {
+        "user_id": userId,
+        "password": password,
+        "login_time": datetime.now().isoformat(),
+        "exp": datetime.now() + access_token_expires
+    }
+    access_token = create_access_token(
+        data=jwt_token_data,
+        expires_delta=access_token_expires
+    )
+    return AccessToken(
+        access_token=access_token,
+        token_type="bearer",
+        user_id =userId
+    )

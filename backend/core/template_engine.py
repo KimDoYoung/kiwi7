@@ -17,7 +17,7 @@ from backend.core.logger import get_logger
 logger = get_logger(__name__)
 
 # 프로젝트 루트 디렉토리를 기반으로 템플릿 디렉토리 설정
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 template_dir = os.path.join(BASE_DIR, 'frontend', 'views')
 logger.debug("------------------------------------------------")
 logger.debug(f"template_dir: {template_dir}")

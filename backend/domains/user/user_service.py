@@ -1,61 +1,52 @@
-from typing import List
-from fastapi import HTTPException
-from pydantic import ValidationError
-from backend.domains.user.user_model import User
+from backend.core.config import config
+from backend.domains.user.user_model import UserInfo
 from backend.core.logger import get_logger
+from typing import Dict
+from backend.domains.user.user_model import UserInfo
+import sqlite3
 
 logger = get_logger(__name__)
+# user_service.py
 
 class UserService:
+    def __init__(self, db_path: str = "app.db"):
+        self.db_path = config.DB_PATH
+        self.user_infos: Dict[str, UserInfo] = {}
+        self._load_userinfos()
 
-    async def create_user(self, user_data: dict):
-        user = User(**user_data)
-        await user.create()
-        return user
+    def _get_conn(self):
+        return sqlite3.connect(self.db_path)
 
-    async def get_all_users(self) -> List[User]:
-        try:
-            users = await User.find_all().to_list()
-            return users
-        except Exception as e:
-            logger.error(f"Failed to retrieve all users: {e}")
-            raise e
-    
-    async def get_1(self, user_id: str) -> User:
-        user = await User.find_one(User.user_id == user_id)
-        if user is None:
-            raise ValueError(f"User {user_id} not found")
-        return user
+    def _load_userinfos(self):
+        with self._get_conn() as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT name, value, created_at FROM users")
+            for name, value, created_at in cur.fetchall():
+                self.user_infos[name] = UserInfo(name=name, value=value, created_at=created_at)
 
-    async def update_user(self, user_id: str, update_data: dict) -> User:
-        user = await self.get_1(user_id)
-        if user:
-            try:
-                updated_data = user.model_dump()
-                updated_data.update(update_data)
-                updated_user = User(**updated_data)  # 유효성 검사를 위해 새 인스턴스 생성                
-                await updated_user.save()
-                return updated_user
-            except ValidationError as e:
-                logger.error(f"Validation error: {e}")
-                raise HTTPException(status_code=400, detail=str(e))
-        else:
-            raise ValueError("User not found")
+    def get(self, name: str) -> UserInfo:
+        return self.user_infos.get(name)
 
-    async def delete_user(self, user_id: str) -> User:
-        user = await User.find_one(User.user_id == user_id)
-        if user:
-            deleted_user = await user.delete()
-            return deleted_user  
+    def set(self, name: str, value: str):
+        user = UserInfo(name=name, value=value)
+        self.user_infos[name] = user
+        self._save_to_db(user)
 
-    async def count(self) -> int:
-        result = await User.count()
-        return result
+    def _save_to_db(self, user: UserInfo):
+        with self._get_conn() as conn:
+            cur = conn.cursor()
+            cur.execute("""
+                INSERT OR REPLACE INTO users (name, value) VALUES (?, ?)
+            """, (user.name, user.value))
+            conn.commit()
 
-    async def authenticate_user(self, user_id, password) -> User:
-        user = await self.get_1(user_id)
-        if user:
-            if user.password == password:
-                return user
-        else:
-            return None    
+    def delete(self, name: str):
+        if name in self.user_infos:
+            del self.user_infos[name]
+            with self._get_conn() as conn:
+                cur = conn.cursor()
+                cur.execute("DELETE FROM users WHERE name = ?", (name,))
+                conn.commit()
+
+    def list_all(self):
+        return list(self.user_infos.values())
