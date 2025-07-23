@@ -24,15 +24,21 @@ class UserService:
             for name, value, created_at in cur.fetchall():
                 self.user_infos[name] = UserInfo(name=name, value=value, created_at=created_at)
 
-    def get(self, name: str) -> UserInfo:
+    async def get(self, name: str) -> UserInfo:
         return self.user_infos.get(name)
 
-    def set(self, name: str, value: str):
+    async def set(self, name: str, value: str):
         user = UserInfo(name=name, value=value)
         self.user_infos[name] = user
-        self._save_to_db(user)
+        await self._save_to_db(user)
 
-    def _save_to_db(self, user: UserInfo):
+    async def _save_to_db(self, user: UserInfo):
+        # SQLite는 동기이므로 thread pool에서 실행
+        import asyncio
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(None, self._save_to_db_sync, user)
+
+    def _save_to_db_sync(self, user: UserInfo):
         with self._get_conn() as conn:
             cur = conn.cursor()
             cur.execute("""
