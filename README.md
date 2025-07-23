@@ -18,6 +18,7 @@
   - jwt
   - pydantic
   - dotenv
+  - aiohttp 
 
 - frontend
   - alpine.js
@@ -32,4 +33,3 @@
 
 - [키움Restful API 홈](https://openapi.kiwoom.com/main/home)
 - [**API문서**](https://openapi.kiwoom.com/guide/apiguide)
-111
