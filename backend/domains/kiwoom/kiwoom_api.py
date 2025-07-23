@@ -50,7 +50,6 @@ class KiwoomStockApi(StockApi):
 
             # 시각이 만료1시간 전이라면 다시 발급받는다.
             expire_time = datetime.strptime(self.ACCESS_TOKEN_EXPIRED_TIME, '%Y%m%d%H%M%S')
-            # 수정된 코드
             if expire_time <= (datetime.now() + timedelta(hours=1)):
                 await self.issue_access_token()
             
@@ -61,9 +60,7 @@ class KiwoomStockApi(StockApi):
 
     async def issue_access_token(self):
         """
-        키움증권 OpenAPI를 통해 ACCESS_TOKEN을 발급받는다.
-        Returns:
-            dict: ACCESS_TOKEN과 만료 시간을 포함한 JSON 응답
+        키움증권 OpenAPI를 통해 ACCESS_TOKEN을 발급받는다. DB에 저장
         """
         url = self.BASE_URL + '/oauth2/token'
 
