@@ -40,9 +40,10 @@ class KiwoomStockApi(StockApi):
         try:
             # 현재 갖고 있지 않으면 DB에서 가져온다
             if not self.ACCESS_TOKEN or not self.ACCESS_TOKEN_EXPIRED_TIME:
-                self.ACCESS_TOKEN = await self.user_service.get("ACCESS_TOKEN")
-                self.ACCESS_TOKEN_EXPIRED_TIME = await self.user_service.get("ACCESS_TOKEN_EXPIRED_TIME")
-            
+                token_info = await self.user_service.get("ACCESS_TOKEN")
+                time_info = await self.user_service.get("ACCESS_TOKEN_EXPIRED_TIME")
+                self.ACCESS_TOKEN = token_info.value if token_info else None
+                self.ACCESS_TOKEN_EXPIRED_TIME = time_info.value if time_info else None            
             # DB에서도 없다면 발급받는다
             if not self.ACCESS_TOKEN or not self.ACCESS_TOKEN_EXPIRED_TIME:
                 await self.issue_access_token()
