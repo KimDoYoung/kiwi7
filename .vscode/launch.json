@@ -15,6 +15,17 @@
             "env": {"PYTHONPATH": "${workspaceFolder}"}
         },
         {
+            "name": "Exapi",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd" : "${fileDirname}",
+            "justMyCode": false,
+            "env": {"PYTHONPATH": "${workspaceFolder}"},
+            "args": ["c:\\tmp\\kwapi.xlsx"]
+        },
+        {
             "name": "kiwi7",
             "type": "debugpy",
             "request": "launch",

@@ -33,3 +33,10 @@
 
 - [키움Restful API 홈](https://openapi.kiwoom.com/main/home)
 - [**API문서**](https://openapi.kiwoom.com/guide/apiguide)
+
+## 유틸리티
+- code_samples 
+- 키움api문서에서 제공하는 excel파일을 읽어서 definition을 추출
+```shell
+python extract_kw_api_def.py c:\\tmp\\kwapi.xlsx > 1.txt
+```

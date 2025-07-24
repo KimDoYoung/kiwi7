@@ -42,3 +42,23 @@ class KiwoomOrderException(KiwoomApiException):
 class KiwoomDataException(KiwoomApiException):
     """키움증권 데이터 조회 관련 예외"""
     pass
+
+
+class InvalidResponseException(KiwoomApiException):
+    """
+    키움증권 API 응답 형식 오류 예외
+    JSON 파싱 실패, 예상치 못한 응답 형식 등의 상황에서 사용됩니다.
+    """
+    
+    def __init__(self, detail: str):
+        super().__init__(detail, status_code=502)
+
+
+class NetworkException(KiwoomApiException):
+    """
+    네트워크 연결 관련 예외
+    API 서버 접속 실패, 타임아웃 등의 상황에서 사용됩니다.
+    """
+    
+    def __init__(self, detail: str):
+        super().__init__(detail, status_code=503)
