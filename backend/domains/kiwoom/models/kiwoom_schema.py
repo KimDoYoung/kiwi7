@@ -3,8 +3,8 @@ from typing import Optional, Dict, Any
 from enum import Enum
 from datetime import datetime
 
-from backend.domains.kiwoom.models.kiwoom_api_definition import (
-    KIWOOM_API_DEFINE, 
+from backend.domains.kiwoom.models.kiwoom_request_definition import (
+    KIWOOM_REQUEST_DEF, 
     get_api_definition
 )
 
@@ -163,7 +163,7 @@ class KiwoomApiHelper:
             bool: 유효성 검증 결과 (True: 유효, False: 유효하지 않음)
         """
         # API ID 존재 여부 확인
-        if request.api_id not in KIWOOM_API_DEFINE:
+        if request.api_id not in KIWOOM_REQUEST_DEF:
             return False
         
         # payload 유효성 검증
@@ -191,7 +191,7 @@ class KiwoomApiHelper:
         errors = []
         
         # API ID 존재 여부 확인
-        if request.api_id not in KIWOOM_API_DEFINE:
+        if request.api_id not in KIWOOM_REQUEST_DEF:
             errors.append(f"정의되지 않은 API ID입니다: {request.api_id}")
             return errors  # API ID가 없으면 더 이상 검증할 수 없음
         

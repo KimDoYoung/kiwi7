@@ -3,63 +3,87 @@
 import sys
 import pandas as pd
 
+import pandas as pd
+
 def extract_api_response_definition(sheet_index: int, file_path: str) -> dict:
     xls = pd.ExcelFile(file_path)
-    sheet_names = xls.sheet_names
+    sheet_name = xls.sheet_names[sheet_index]
+    df = pd.read_excel(file_path, sheet_name=sheet_name, header=None)
 
-    if sheet_index < 0 or sheet_index >= len(sheet_names):
-        raise IndexError(f"Sheet index out of range. Available range: 0 to {len(sheet_names) - 1}")
+    # API ID 추출
+    api_id = str(df.iloc[5, 2]).strip() if pd.notna(df.iloc[5, 2]) else ''
 
-    sheet = sheet_names[sheet_index]
-    df = pd.read_excel(file_path, sheet_name=sheet)
+    # 1. Response라는 셀 위치 찾기
+    response_idx = None
+    for i, row in df.iterrows():
+        if row.astype(str).str.contains("Response", na=False).any():
+            response_idx = i
+            break
+    if response_idx is None:
+        raise ValueError("Response 셀을 찾을 수 없습니다")
 
-    title = str(df.iloc[3, 2]).strip() if pd.notna(df.iloc[3, 2]) else ''
-    api_id = str(df.iloc[4, 2]).strip() if pd.notna(df.iloc[4, 2]) else ''
+    # 2. Example 포함된 행 찾기
+    example_idx = None
+    for i in range(response_idx + 1, len(df)):
+        if df.iloc[i].astype(str).str.contains("Example", na=False).any():
+            example_idx = i
+            break
+    if example_idx is None:
+        raise ValueError("Example 행을 찾을 수 없습니다")
 
-    df_body = df.iloc[15:].dropna(how='all', axis=1)
-    df_body.columns = df_body.iloc[0]
-    df_body = df_body[1:]
+    # 3. 컬럼명 행은 Response 다음 줄
+    header_row = df.iloc[response_idx + 1]
+    df_data = df.iloc[response_idx + 2 : example_idx].copy()
+    df_data.columns = header_row
 
-    # ✅ Response Body만 추출
-    body_rows = []
-    in_response = False
-    for _, row in df_body.iterrows():
-        section = str(row.get("구분")).strip()
-        if section == "Response":
-            in_response = True
-            continue
-        if in_response and section != "":
-            break  # 다음 section으로 넘어가면 종료
-        if in_response:
-            body_rows.append(row)
-
-    df_resp = pd.DataFrame(body_rows)
-
+    # 4. "구분"이 "Body"인 행만 필터링
+    # df_data = df_data[df_data["구분"] == "Body"]
+    # body_rows = []
+    # in_body = False
+    # for _, row in df_data.iterrows():
+    #     section = str(row.get("구분", "")).strip()
+    #     if section == "Body":
+    #         in_body = True
+    #     elif section not in ("", "Body"):
+    #         if in_body:
+    #             break  # Body가 끝났다면 중단
+    #     if in_body:
+    #         body_rows.append(row)
+    # df_data = pd.DataFrame(body_rows)        
+    # 5. 정리
     body_items = []
     prev_key = ''
-    for _, row in df_resp.iterrows():
-        key = str(row['Element']).strip()
-        name = str(row['한글명']).strip()
-        dtype = str(row['Type']).strip().lower()
+    insert_flag = False
+    for _, row in df_data.iterrows():
+        section = str(row.get("구분") or "").strip()
+        if section == "Body":
+            insert_flag = True
+        key = str(row.get('Element', '')).strip()
+        if key.startswith('-'):
+            key = key[1:].strip()
+        name = str(row.get('한글명', '')).strip()
+        dtype = str(row.get('Type', '')).strip().lower()
         required = str(row.get('Required', '')).strip().upper() == 'Y'
-        length = int(row['Length']) if str(row['Length']).isdigit() else None
-        desc = str(row.get('Description', '')).replace('\n', ' ').strip().replace("'", "")
+        length = int(row['Length']) if str(row.get('Length', '')).isdigit() else None
+        desc = str(row.get('Description') or "").replace('\n', ' ').strip().replace("'", "")
+        if desc == 'nan':
+            desc = None
 
-        data = {
-            'key': key,
-            'name': name,
-            'type': dtype,
-            'required': required,
-            'length': length,
-            'description': desc
-        }
-        if key != prev_key:
-            body_items.append(data)
+        if not key:
+            continue
+        if key != prev_key and insert_flag:
+            body_items.append({
+                'key': key,
+                'name': name,
+                'type': dtype,
+                'required': required,
+                'length': length,
+                'description': desc
+            })
         prev_key = key
 
-    return {
-        api_id: body_items
-    }
+    return {api_id: body_items}
+
 
 def myprint_resp(result):
     for api_key, body in result.items():

@@ -1,11 +1,11 @@
 # kiwoom_api_definition.py
 """
 모듈 설명: 
-    - 키움에서 제공하는 excel에서 유틸리티(extract_kw_api_def.py)를 이용해서 KIWOOM_API_DEFINE을 만듬.
+    - 키움에서 제공하는 excel에서 유틸리티(extract_kw_api_def.py)를 이용해서 KIWOOM_REQUEST_DEF 만듬.
     - API 정의 정보를 관리하고 조회하는 기능을 제공
 주요 기능:
     - get_required_fields: 필수 필드 목록을 반환
-    - get_api_definition: api_id로 KIWOOM_API_DEFINE
+    - get_api_definition: api_id로 KIWOOM_REQUEST_DEF
 
 작성자: 김도영
 작성일: 2025-07-24
@@ -13,7 +13,7 @@
 """
 from typing import Dict, Any, List
 
-KIWOOM_API_DEFINE = {
+KIWOOM_REQUEST_DEF = {
 'au10001': {
     'url': 'https://api.kiwoom.com/oauth2/token',
     'title': '접근토큰 발급',
@@ -1959,10 +1959,10 @@ def get_api_definition(api_id: str) -> Dict[str, Any]:
     Raises:
         KeyError: 존재하지 않는 API ID인 경우
     """
-    if api_id not in KIWOOM_API_DEFINE:
+    if api_id not in KIWOOM_REQUEST_DEF:
         raise KeyError(f"API ID '{api_id}'가 정의되지 않았습니다.")
     
-    return KIWOOM_API_DEFINE[api_id]
+    return KIWOOM_REQUEST_DEF[api_id]
 
 def get_required_fields(api_id: str) -> List[str]:
     """

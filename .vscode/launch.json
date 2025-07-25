@@ -15,7 +15,18 @@
             "env": {"PYTHONPATH": "${workspaceFolder}"}
         },
         {
-            "name": "Exapi",
+            "name": "ExResponse",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd" : "${fileDirname}",
+            "justMyCode": false,
+            "env": {"PYTHONPATH": "${workspaceFolder}"},
+            "args": ["c:\\tmp\\kwapi.xlsx"]
+        },        
+        {
+            "name": "ExRequest",
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",

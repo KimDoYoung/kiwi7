@@ -11,12 +11,14 @@ from datetime import datetime, timedelta
 import json
 from typing import Optional
 import aiohttp
-from backend.domains.kiwoom.models.kiwoom_schema import KIWOOM_API_DEFINE, KiwoomRequest
+from backend.domains.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomRequest
+from backend.domains.kiwoom.models.kiwoom_schema import KiwoomResponse
 from backend.domains.stock_api import StockApi
 from backend.core.config import config
 from backend.domains.user.user_service import UserService
 from backend.core.exceptions import InvalidResponseException, KiwoomApiException, KiwoomAuthException
 from backend.core.logger import get_logger
+from backend.domains.kiwoom.models.kiwoom_request_definition import KIWOOM_REQUEST_DEF  # Add this import
 
 logger = get_logger(__name__)
 
@@ -204,19 +206,19 @@ class KiwoomStockApi(StockApi):
             await self.refresh_token()
             
             # API 정의 조회
-            api_definition = KIWOOM_API_DEFINE.get(data.api_id)
-            if not api_definition:
-                return KiwoomApi.create_error_response(
-                    error_code="API_NOT_FOUND",
-                    error_message=f"정의되지 않은 API ID입니다: {data.api_id}",
+            request_definition = KIWOOM_REQUEST_DEF.get(data.api_id)
+            if not request_definition:
+                return KiwoomApiHelper.create_error_response(
+                    error_code="REQUEST_DEFINITION_NOT_FOUND",
+                    error_message=f"REQUEST DEFINITION이 정의되지 않은 API ID입니다: {data.api_id}",
                     status_code=404,
                     request_time=request_time
                 )
             
             # 요청 유효성 검증
-            if not KiwoomApi.validate_api_request(data):
-                validation_errors = KiwoomApi.get_validation_errors(data)
-                return KiwoomApi.create_error_response(
+            if not KiwoomApiHelper.validate_api_request(data):
+                validation_errors = KiwoomApiHelper.get_validation_errors(data)
+                return KiwoomApiHelper.create_error_response(
                     error_code="INVALID_REQUEST",
                     error_message=f"요청 데이터 오류: {', '.join(validation_errors)}",
                     status_code=400,
@@ -224,13 +226,13 @@ class KiwoomStockApi(StockApi):
                 )
             
             # 요청 파라미터 준비
-            method = api_definition.get('method', 'POST')
+            method = request_definition.get('method', 'POST')
             headers = self.get_headers(data)
-            url = self.BASE_URL + api_definition.get('url')
-            title = api_definition.get('title')
+            url = request_definition.get('url')
+            title = request_definition.get('title')
             
             # API 정보 생성
-            api_info = KiwoomApi.get_api_info(data.api_id)
+            api_info = KiwoomApiHelper.get_api_info(data.api_id)
             
             logger.info(f"{title} 요청 전송 - URL: {url}")
             logger.debug(f"요청 데이터: {data.payload}")
@@ -245,7 +247,7 @@ class KiwoomStockApi(StockApi):
                     async with session.get(url, headers=headers, params=data.payload) as response:
                         return await self._process_response(response, api_info, request_time)
                 else:
-                    return KiwoomApi.create_error_response(
+                    return KiwoomApiHelper.create_error_response(
                         error_code="UNSUPPORTED_METHOD",
                         error_message=f"지원하지 않는 HTTP 메서드: {method}",
                         status_code=400,
@@ -255,7 +257,7 @@ class KiwoomStockApi(StockApi):
                     
         except aiohttp.ClientError as e:
             logger.error(f"HTTP 요청 오류: {e}")
-            return KiwoomApi.create_error_response(
+            return KiwoomApiHelper.create_error_response(
                 error_code="HTTP_ERROR",
                 error_message=f"HTTP 요청 실패: {str(e)}",
                 status_code=500,
@@ -263,7 +265,7 @@ class KiwoomStockApi(StockApi):
             )
         except Exception as e:
             logger.error(f"예상치 못한 오류: {e}")
-            return KiwoomApi.create_error_response(
+            return KiwoomApiHelper.create_error_response(
                 error_code="UNEXPECTED_ERROR",
                 error_message=f"요청 처리 중 오류 발생: {str(e)}",
                 status_code=500,
@@ -292,7 +294,7 @@ class KiwoomStockApi(StockApi):
             if response.status != 200:
                 error_text = await response.text()
                 logger.error(f"API 응답 오류 - 상태코드: {response.status}")
-                return KiwoomApi.create_error_response(
+                return KiwoomApiHelper.create_error_response(
                     error_code=f"HTTP_{response.status}",
                     error_message=f"API 응답 오류: {error_text}",
                     status_code=response.status,
@@ -310,7 +312,7 @@ class KiwoomStockApi(StockApi):
             logger.debug(f"응답 헤더: {response_headers}")
             
             # 성공 응답 생성
-            return KiwoomApi.create_success_response(
+            return KiwoomApiHelper.create_success_response(
                 data=response_data,
                 headers=response_headers,
                 api_info=api_info,
@@ -319,7 +321,7 @@ class KiwoomStockApi(StockApi):
             
         except json.JSONDecodeError as e:
             logger.error(f"JSON 파싱 오류: {e}")
-            return KiwoomApi.create_error_response(
+            return KiwoomApiHelper.create_error_response(
                 error_code="JSON_PARSE_ERROR",
                 error_message=f"응답 내용이 JSON 형식이 아닙니다: {str(e)}",
                 status_code=502,
@@ -427,7 +429,7 @@ class KiwoomStockApi(StockApi):
 
     async def send_request(self, data: KiwoomRequest):
         try:
-            api_definition = KIWOOM_API_DEFINE.get(data.api_id)
+            api_definition = KIWOOM_REQUEST_DEF.get(data.api_id)
             if not api_definition:
                 raise KiwoomApiException(status_code=404, detail=f"API ID {data.api_id} not found")
             

@@ -5,3 +5,4 @@ files/
 .__kiwi7.lock
 .venv/
 __pycache__/
+*.txt
