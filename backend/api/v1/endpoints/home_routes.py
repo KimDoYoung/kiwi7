@@ -67,9 +67,9 @@ async def page(
     stk_code: str = Query(None, description="선택적 주식 코드")
 ):
     ''' path에 해당하는 페이지를 가져와서 보낸다. '''
-    current_user = await get_current_user(request)
+    user_id = await get_current_user(request)
     
-    if not current_user:
+    if not user_id:
         raise HTTPException(status_code=401, detail="Invalid token-현재 사용자 정보가 없습니다")
     
     # 쿠키에서 stk_code를 가져오거나, 쿼리 파라미터로 전달된 stk_code를 사용
@@ -77,42 +77,39 @@ async def page(
     stk_code = stk_code or cookie_stk_code    
     
     today = get_today()
-    context = {
-        "request": request, 
-        "today" : today,
-        "page_path": path, 
-        "user_id": current_user["user_id"], 
-        "user_name": current_user["user_name"],
-        "stk_code" : stk_code
-    }
+    context = { "request": request,  
+                "page_path": '/main',
+                "user_id":  user_id, 
+                "today": today,
+                "stk_code": stk_code}      
     # id = ipo_calendar 와 같은 형식이고 이를 분리한다.
     template_path = path.lstrip('/') 
     template_page = f"template/{template_path}.html"
     logger.debug(f"template_page 호출됨: {template_page}")
     return render_template(template_page, context)    
 
-@router.get("/template", response_class=JSONResponse, include_in_schema=False)
-async def handlebar_template(request: Request, path: str = Query(..., description="handlebar-template path")):
-    ''' path에 해당하는 html에서 body추출해서 jinja2처리한 JSON을 리턴 '''
-    today = get_today()
-    context = {
-        "request": request, 
-        "today" : today
-    }
-    # '/'로 시작하면 '/' 제거
-    if path.startswith('/'):
-        path = path.lstrip('/')
+# @router.get("/template", response_class=JSONResponse, include_in_schema=False)
+# async def handlebar_template(request: Request, path: str = Query(..., description="handlebar-template path")):
+#     ''' path에 해당하는 html에서 body추출해서 jinja2처리한 JSON을 리턴 '''
+#     today = get_today()
+#     context = {
+#         "request": request, 
+#         "today" : today
+#     }
+#     # '/'로 시작하면 '/' 제거
+#     if path.startswith('/'):
+#         path = path.lstrip('/')
     
-    # ".html"로 끝나면 ".html" 제거
-    path = path.removesuffix('.html')
+#     # ".html"로 끝나면 ".html" 제거
+#     path = path.removesuffix('.html')
     
-    handlebar_html_filename =  f"handlebar/{path}.html"
+#     handlebar_html_filename =  f"handlebar/{path}.html"
 
-    handlebar_html =  render_template(handlebar_html_filename, context)
-    data = {
-        "template": handlebar_html
-    }
-    return JSONResponse(content=data)
+#     handlebar_html =  render_template(handlebar_html_filename, context)
+#     data = {
+#         "template": handlebar_html
+#     }
+#     return JSONResponse(content=data)
 
 @router.get("/login", response_class=HTMLResponse)
 async def login(request: Request):
@@ -122,9 +119,6 @@ async def login(request: Request):
 @router.get("/logout", response_class=JSONResponse)
 async def logout(response: Response):
     ''' 로그아웃 페이지 '''
-    # response.delete_cookie(config.ACCESS_TOKEN_NAME)
-    # response = RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
-    # return response
     response = RedirectResponse(url="/login", status_code=302)
     response.delete_cookie(
         key=config.ACCESS_TOKEN_NAME,
