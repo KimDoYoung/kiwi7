@@ -26,6 +26,7 @@ from backend.utils.kiwi_utils import get_today
 from backend.core.template_engine import render_template
 from backend.core.config import config
 from backend.core.security import create_jwt_access_token, get_current_user
+from backend.page_contexts.context_registry import PAGE_CONTEXT_PROVIDERS
 
 from backend.core.logger import get_logger
 
@@ -81,10 +82,18 @@ async def page(
                 "page_path": '/main',
                 "user_id":  user_id, 
                 "today": today,
-                "stk_code": stk_code}      
-    # id = ipo_calendar 와 같은 형식이고 이를 분리한다.
-    template_path = path.lstrip('/') 
-    template_page = f"template/{template_path}.html"
+                "stk_code": stk_code} 
+
+        # ✅ 서버 렌더링을 위한 추가 context 처리
+    func = PAGE_CONTEXT_PROVIDERS.get(path.strip('/'))
+    if func:
+        try:
+            data = await func(user_id) if callable(func) and func.__code__.co_flags & 0x80 else func(user_id)
+            context["data"] = data
+        except Exception as e:
+            logger.error(f"{path}용 데이터 로딩 실패: {e}")
+
+    template_page = f"template/{path.lstrip('/')}.html"
     logger.debug(f"template_page 호출됨: {template_page}")
     return render_template(template_page, context)    
 
