@@ -1,19 +1,18 @@
 # api1.py
 import asyncio
 from backend.domains.kiwoom.kiwoom_service import get_kiwoom_api
-from backend.domains.kiwoom.models.kiwoom_schema import KiwoomRequest
+from backend.domains.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomRequest
 
 async def main():
     try:
         # Initialize the API
-        print("Initializing Kiwoom API...")
+        print("키움 API 초기화 중...")
         api = await get_kiwoom_api()
         
         if not api:
-            print("Failed to initialize Kiwoom API.")
             return
-        
-        print("Kiwoom API initialized successfully!")
+
+        print("키움 API 초기화 완료!")
         print(f"Access Token: {api.ACCESS_TOKEN[:20]}..." if api.ACCESS_TOKEN else "No token")
         print(f"Token Expires: {api.ACCESS_TOKEN_EXPIRED_TIME}")
 
@@ -23,7 +22,12 @@ async def main():
             payload={'stk_cd': '005930'}
         )        
         response = await api.send_request(request_data)
-        print("API Response:", response)
+        print("-----------------------------------------------------------")
+        print("API 응답 :", response)
+        if response.success:
+            korea_data = KiwoomApiHelper.to_korea_data(response.data, response.api_info['api_id'])
+            print("한글 변환 데이터:", korea_data)        
+        print("-----------------------------------------------------------")
         
     except Exception as e:
         print(f"Error occurred: {str(e)}")

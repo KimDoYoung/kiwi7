@@ -1946,7 +1946,7 @@ KIWOOM_REQUEST_DEF = {
 }
 
 # API 유효성 검증 함수들
-def get_api_definition(api_id: str) -> Dict[str, Any]:
+def get_request_definition(api_id: str) -> Dict[str, Any]:
     """
     API ID로 해당 API의 정의 정보를 반환합니다.
     
@@ -1974,5 +1974,5 @@ def get_required_fields(api_id: str) -> List[str]:
     Returns:
         List[str]: 필수 필드명 목록
     """
-    api_def = get_api_definition(api_id)
+    api_def = get_request_definition(api_id)
     return [field['key'] for field in api_def.get('body', []) if field.get('required', False)]

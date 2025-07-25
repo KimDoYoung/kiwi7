@@ -1,6 +1,6 @@
 
 
-KIWOOM_REQUEST_DEF = {
+KIWOOM_RESPONSE_DEF = {
 'ka10001': [
     {'key': 'stk_cd', 'name': '종목코드', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
     {'key': 'stk_nm', 'name': '종목명', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},

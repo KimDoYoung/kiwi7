@@ -1,11 +1,15 @@
 from pydantic import BaseModel
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from enum import Enum
 from datetime import datetime
 
 from backend.domains.kiwoom.models.kiwoom_request_definition import (
     KIWOOM_REQUEST_DEF, 
-    get_api_definition
+    get_request_definition,
+    get_required_fields
+)
+from backend.domains.kiwoom.models.kiwoom_response_definition import (
+    KIWOOM_RESPONSE_DEF
 )
 
 
@@ -23,6 +27,26 @@ class KiwoomRequest(BaseModel):
     cont_yn: ContYn = ContYn.N        # 연속조회 여부 (기본값: N)
     next_key: Optional[str] = None    # 연속조회 키 (연속조회 시 필요)
     payload: Dict[str, Any]           # POST body 또는 GET params 데이터
+
+    def validate_payload(self) -> List[str]:
+        """
+        payload의 유효성을 검증합니다.
+        Returns:
+            List[str]: 오류 메시지 목록 (빈 리스트면 유효함)
+        """
+        errors = []
+        api_def = KIWOOM_REQUEST_DEF.get(self.api_id)
+        if not api_def:
+            errors.append(f"API 정의를 찾을 수 없습니다: {self.api_id}")
+            return errors
+        
+        # body 필드에서 required=True인 필드들의 key 추출
+        required_fields = get_required_fields(self.api_id)
+        for field in required_fields:
+            if field not in self.payload:
+                errors.append(f"필수 필드 누락: {field}")
+        # 추가적인 검증 로직 필요시 여기에 작성
+        return errors
 
 class KiwoomResponse(BaseModel):
     """
@@ -264,9 +288,9 @@ class KiwoomApiHelper:
         )
 
     @staticmethod
-    def get_api_info(api_id: str) -> Optional[Dict[str, str]]:
+    def get_request_info(api_id: str) -> Optional[Dict[str, str]]:
         """
-        API ID에 해당하는 메타 정보를 반환합니다.
+        API ID에 해당하는 메타 정보를 KIWOOM_REQUEST_DEF에서 취득해서 반환합니다.
         
         Args:
             api_id: 조회할 API ID
@@ -275,14 +299,65 @@ class KiwoomApiHelper:
             Optional[Dict[str, str]]: API 메타 정보 (없으면 None)
         """
         try:
-            api_def = get_api_definition(api_id)
+            api_def = get_request_definition(api_id)
             return {
                 'api_id': api_id,
                 'title': api_def.get('title', ''),
                 'url': api_def.get('url', ''),
                 'method': api_def.get('method', 'POST'),
-                'category': api_def.get('category', ''),
                 'description': api_def.get('description', '')
             }
         except KeyError:
-            return None        
+            return None
+    
+    @staticmethod
+    def to_korea_data(response_data: Dict[str, Any], api_id: str) -> Dict[str, Any]:
+        """
+        키움 API 응답 데이터를 한글 필드명으로 변환합니다.
+        
+        Args:
+            response_data: 키움 API 응답 데이터
+            api_id: API ID
+            
+        Returns:
+            Dict[str, Any]: 한글 필드명으로 변환된 데이터
+        """
+        try:
+            # 응답 정의에서 필드 매핑 정보 가져오기
+            response_fields = KIWOOM_RESPONSE_DEF.get(api_id, [])
+            if not response_fields:
+                return response_data  # 정의가 없으면 원본 데이터 반환
+            
+            # 영문 key -> 한글 name 매핑 테이블 생성
+            key_to_name_map = {field['key']: field['name'] for field in response_fields}
+            
+            korea_data = {}
+            
+            # response_data가 딕셔너리인 경우
+            if isinstance(response_data, dict):
+                for key, value in response_data.items():
+                    # 한글 필드명이 있으면 변환, 없으면 원본 키 사용
+                    korean_key = key_to_name_map.get(key, key)
+                    korea_data[korean_key] = value
+            
+            # response_data가 리스트인 경우 (여러 레코드)
+            elif isinstance(response_data, list):
+                korea_data = []
+                for item in response_data:
+                    if isinstance(item, dict):
+                        korean_item = {}
+                        for key, value in item.items():
+                            korean_key = key_to_name_map.get(key, key)
+                            korean_item[korean_key] = value
+                        korea_data.append(korean_item)
+                    else:
+                        korea_data.append(item)
+            else:
+                # 딕셔너리나 리스트가 아닌 경우 원본 반환
+                return response_data
+            
+            return korea_data
+            
+        except Exception as e:
+            # 변환 중 오류 발생 시 원본 데이터 반환
+            return response_data
