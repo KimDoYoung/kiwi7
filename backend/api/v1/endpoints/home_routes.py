@@ -143,8 +143,8 @@ async def login_for_access_token(
     user_service: UserService = Depends(get_user_service)
 ):
     ''' SQLite 기반 로그인 처리 '''
-    saved_user_id = user_service.get("user_id")
-    saved_password = user_service.get("user_pw")
+    saved_user_id = await user_service.get("user_id")
+    saved_password = await user_service.get("user_pw")
 
     if not saved_user_id or not saved_password:
         raise HTTPException(status_code=400, detail="사용자 정보가 DB에 등록되어 있지 않습니다.")
