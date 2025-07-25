@@ -337,8 +337,24 @@ class KiwoomApiHelper:
             if isinstance(response_data, dict):
                 for key, value in response_data.items():
                     # 한글 필드명이 있으면 변환, 없으면 원본 키 사용
-                    korean_key = key_to_name_map.get(key, key)
-                    korea_data[korean_key] = value
+                    # value가 list이면
+                    if isinstance(value, list):
+                        # 리스트인 경우 각 항목에 대해 한글 필드명으로 변환
+                        korean_list = []
+                        for item in value:
+                            if isinstance(item, dict):
+                                korean_item = {}
+                                for item_key, item_value in item.items():
+                                    korean_item[key_to_name_map.get(item_key, item_key)] = item_value
+                                korean_list.append(korean_item)
+                            else:
+                                korean_list.append(item)
+                        korean_key = key_to_name_map.get(key, key)
+                        korea_data[korean_key] = korean_list
+
+                    else:
+                        korean_key = key_to_name_map.get(key, key)
+                        korea_data[korean_key] = value
             
             # response_data가 리스트인 경우 (여러 레코드)
             elif isinstance(response_data, list):
