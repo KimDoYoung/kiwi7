@@ -147,8 +147,8 @@ async def main():
 
     await websocket_client.register(
         grp_no='1',
-        item_list=['005930'],
-        type_list=['0C']
+        item_list=['005930', '005380'],
+        type_list=['0C','0E']
     )
 
 
