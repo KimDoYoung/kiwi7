@@ -12,15 +12,15 @@
 작성일: 2025-07-23
 버전: 1.0
 """
-from backend.domains.kiwoom.kiwoom_stock_api import KiwoomStockApi
+from backend.domains.kiwoom.kiwoom_rest_api import KiwoomRestApi
 from backend.domains.kiwoom.managers.kiwwom_token_manager import KiwoomTokenManager  
 
-kiwoom_api_instance: KiwoomStockApi | None = None
+kiwoom_api_instance: KiwoomRestApi | None = None
 token_manager_instance: KiwoomTokenManager | None = None
 
-async def get_kiwoom_api() -> KiwoomStockApi:
+async def get_kiwoom_api() -> KiwoomRestApi:
     token_manager = await get_token_manager()
-    return KiwoomStockApi(token_manager=token_manager)
+    return KiwoomRestApi(token_manager=token_manager)
 
 async def get_token_manager() -> KiwoomTokenManager:
     global token_manager_instance
