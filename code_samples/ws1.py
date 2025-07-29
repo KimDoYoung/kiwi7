@@ -1,114 +1,159 @@
-import asyncio 
+import asyncio
 import websockets
 import json
+from typing import Callable
 
-# socket 정보
-# SOCKET_URL = 'wss://mockapi.kiwoom.com:10000/api/dostk/websocket'  # 모의투자 접속 URL
-SOCKET_URL = 'wss://api.kiwoom.com:10000/api/dostk/websocket'  # 접속 URL
-ACCESS_TOKEN = '사용자 AccessToken'  # 고객 Access Token
+from backend.domains.kiwoom.managers.kiwwom_token_manager import KiwoomTokenManager
 
-class WebSocketClient:
-	def __init__(self, uri):
-		self.uri = uri
-		self.websocket = None
-		self.connected = False
-		self.keep_running = True
+class KiwoomWsClient:
+    def __init__(self, uri: str = 'wss://api.kiwoom.com:10000/api/dostk/websocket', token_manager: KiwoomTokenManager = None):
+        self.uri = uri
+        self.token_manager = token_manager
+        self.websocket = None
+        self.connected = False
+        self.keep_running = True
+        self.handlers: dict[str, Callable] = {}
 
-	# WebSocket 서버에 연결합니다.
-	async def connect(self):
-		try:
-			self.websocket = await websockets.connect(self.uri)
-			self.connected = True
-			print("서버와 연결을 시도 중입니다.")
+    async def connect(self):
+        try:
+            token = await self.token_manager.get_token()
 
-			# 로그인 패킷
-			param = {
-				'trnm': 'LOGIN',
-				'token': ACCESS_TOKEN
-			}
+            self.websocket = await websockets.connect(self.uri)
+            self.connected = True
+            print("서버와 연결을 시도 중입니다.")
 
-			print('실시간 시세 서버로 로그인 패킷을 전송합니다.')
-			# 웹소켓 연결 시 로그인 정보 전달
-			await self.send_message(message=param)
+            login_msg = {
+                'trnm': 'LOGIN',
+                'token': token
+            }
 
-		except Exception as e:
-			print(f'Connection error: {e}')
-			self.connected = False
+            print('실시간 시세 서버로 로그인 패킷을 전송합니다.')
+            await self.send_message(message=login_msg)
 
-	# 서버에 메시지를 보냅니다. 연결이 없다면 자동으로 연결합니다.
-	async def send_message(self, message):
-		if not self.connected:
-			await self.connect()  # 연결이 끊어졌다면 재연결
-		if self.connected:
-			# message가 문자열이 아니면 JSON으로 직렬화
-			if not isinstance(message, str):
-				message = json.dumps(message)
+        except Exception as e:
+            print(f'Connection error: {e}')
+            self.connected = False
 
-		await self.websocket.send(message)
-		print(f'Message sent: {message}')
+    async def send_message(self, message):
+        if not self.connected:
+            await self.connect()
+        if self.connected:
+            if not isinstance(message, str):
+                message = json.dumps(message)
+            await self.websocket.send(message)
+            print(f'Message sent: {message}')
 
-	# 서버에서 오는 메시지를 수신하여 출력합니다.
-	async def receive_messages(self):
-		while self.keep_running:
-			try:
-				# 서버로부터 수신한 메시지를 JSON 형식으로 파싱
-				response = json.loads(await self.websocket.recv())
+    async def receive_messages(self):
+        while self.keep_running:
+            try:
+                response = json.loads(await self.websocket.recv())
+                trnm = response.get('trnm', 'UNKNOWN')
 
-				# 메시지 유형이 LOGIN일 경우 로그인 시도 결과 체크
-				if response.get('trnm') == 'LOGIN':
-					if response.get('return_code') != 0:
-						print('로그인 실패하였습니다. : ', response.get('return_msg'))
-						await self.disconnect()
-					else:
-						print('로그인 성공하였습니다.')
+                if trnm == 'LOGIN':
+                    if response.get('return_code') != 0:
+                        print('로그인 실패하였습니다. : ', response.get('return_msg'))
+                        await self.disconnect()
+                    else:
+                        print('로그인 성공하였습니다.')
 
-				# 메시지 유형이 PING일 경우 수신값 그대로 송신
-				elif response.get('trnm') == 'PING':
-					await self.send_message(response)
+                elif trnm == 'PING':
+                    await self.send_message(response)
 
-				if response.get('trnm') != 'PING':
-					print(f'실시간 시세 서버 응답 수신: {response}')
+                elif trnm == 'UNKNOWN':
+                    print('알 수 없는 메시지를 받았습니다:', response)
 
-			except websockets.ConnectionClosed:
-				print('Connection closed by the server')
-				self.connected = False
-				await self.websocket.close()
+                else:
+                    if trnm in self.handlers:
+                        data_list = response.get('data', [])
+                        if isinstance(data_list, list):
+                            for data in data_list:
+                                type_ = data['type']
+                                name_ = data['name']
+                                item_ = data['item']
+                                await self.handlers[type_](data)
+                        else:
+                            print(f"response의 데이터가 리스트가 아님 {response}")
+                    else:
+                        print(f"실시간 응답 수신: {response}")
 
-	# WebSocket 실행
-	async def run(self):
-		await self.connect()
-		await self.receive_messages()
+            except websockets.ConnectionClosed:
+                print('Connection closed by the server')
+                self.connected = False
+                await self.websocket.close()
 
-	# WebSocket 연결 종료
-	async def disconnect(self):
-		self.keep_running = False
-		if self.connected and self.websocket:
-			await self.websocket.close()
-			self.connected = False
-			print('Disconnected from WebSocket server')
+    async def register(self, grp_no: str, item_list: list[str], type_list: list[str]):
+        message = {
+            "trnm": "REG",
+            "grp_no": grp_no,
+            "refresh": "1",
+            "data": [{
+                "item": item_list,
+                "type": type_list
+            }]
+        }
+        await self.send_message(message)
+
+    async def unregister(self, grp_no: str):
+        message = {
+            "type": "REMOVE",
+            "grp_no": grp_no
+        }
+        await self.send_message(message)
+
+    def add_handler(self, msg_type: str, handler: Callable):
+        """
+        실시간 수신 메시지 핸들러 등록
+        """
+        self.handlers[msg_type] = handler
+
+    async def run(self):
+        await self.connect()
+        await self.receive_messages()
+
+    async def disconnect(self):
+        self.keep_running = False
+        if self.connected and self.websocket:
+            await self.websocket.close()
+            self.connected = False
+            print('Disconnected from WebSocket server')
+
 
 async def main():
-	# WebSocketClient 전역 변수 선언
-	websocket_client = WebSocketClient(SOCKET_URL)
+    from backend.domains.kiwoom.kiwoom_service import get_token_manager
+    token_manager = await get_token_manager()
 
-	# WebSocket 클라이언트를 백그라운드에서 실행합니다.
-	receive_task = asyncio.create_task(websocket_client.run())
+    websocket_client = KiwoomWsClient(
+        token_manager=token_manager
+    )
 
-	# 실시간 항목 등록
-	await asyncio.sleep(1)
-	await websocket_client.send_message({ 
-		'trnm': 'REG', # 서비스명
-		'grp_no': '1', # 그룹번호
-		'refresh': '1', # 기존등록유지여부
-		'data': [{ # 실시간 등록 리스트
-			'item': ['005930'], # 실시간 등록 요소
-			'type': ['0C'], # 실시간 항목
-		}]
-	})
+    async def handle_0C(message):
+        print(">>> 실시간 체결 정보 수신 (0C):")
+        print(json.dumps(message, indent=2, ensure_ascii=False))
 
-	# 수신 작업이 종료될 때까지 대기
-	await receive_task
+    websocket_client.add_handler("0C", handle_0C)
 
-# asyncio로 프로그램을 실행합니다.
+    receive_task = asyncio.create_task(websocket_client.run())
+
+    await asyncio.sleep(1)
+    # await websocket_client.send_message({
+    #     'trnm': 'REG',
+    #     'grp_no': '1',
+    #     'refresh': '1',
+    #     'data': [{
+    #         'item': ['005930'],
+    #         'type': ['0C'],
+    #     }]
+    # })
+
+    await websocket_client.register(
+        grp_no='1',
+        item_list=['005930'],
+        type_list=['0C']
+    )
+
+
+    await receive_task
+
+
 if __name__ == '__main__':
-	asyncio.run(main())
+    asyncio.run(main())

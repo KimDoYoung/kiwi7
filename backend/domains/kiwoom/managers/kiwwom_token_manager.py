@@ -1,4 +1,4 @@
-# backend/domains/kiwoom/kiwoom_token.py
+
 
 from datetime import datetime
 from typing import Optional
@@ -39,7 +39,7 @@ class KiwoomTokenManager:
                 logger.info("토큰 만료가 임박하여 새로 발급받습니다.")
                 await self.issue_access_token()
 
-            logger.debug("토큰 상태 확인 완료")
+            logger.debug("Refresh_token : 토큰 상태 확인 완료")
             return True
         except Exception as e:
             logger.error(f"토큰 갱신 중 오류 발생: {str(e)}")
