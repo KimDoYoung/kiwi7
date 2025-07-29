@@ -7,21 +7,16 @@ async def main():
     try:
         # Initialize the API
         print("키움 API 초기화 중...")
-        api = await get_kiwoom_api()
+        kiwoom_api = await get_kiwoom_api()
         
-        if not api:
+        if not kiwoom_api:
             return
-
-        print("키움 API 초기화 완료!")
-        print(f"Access Token: {api.ACCESS_TOKEN[:20]}..." if api.ACCESS_TOKEN else "No token")
-        print(f"Token Expires: {api.ACCESS_TOKEN_EXPIRED_TIME}")
-
          
         request_data = KiwoomRequest(
             api_id='ka10099',
             payload={'mrkt_tp': '0'}
         )        
-        response = await api.send_request(request_data)
+        response = await kiwoom_api.send_request(request_data)
         print("-----------------------------------------------------------\n")
         print("Response header :", response.headers)
         print("-----------------------------------------------------------\n")

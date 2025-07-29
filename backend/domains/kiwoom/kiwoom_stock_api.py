@@ -9,14 +9,13 @@
 """
 from datetime import datetime
 import json
-from typing import Optional
 import aiohttp
+from backend.domains.kiwoom.managers.kiwwom_token_manager import KiwoomTokenManager
 from backend.domains.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomRequest
 from backend.domains.kiwoom.models.kiwoom_schema import KiwoomResponse
 from backend.domains.stock_api import StockApi
 from backend.core.config import config
 from backend.domains.user.user_service import UserService
-from backend.core.exceptions import KiwoomAuthException
 from backend.core.logger import get_logger
 
 logger = get_logger(__name__)
@@ -27,143 +26,21 @@ class KiwoomStockApi(StockApi):
     StockApi 인터페이스를 상속받아 키움증권의 실시간 주식 거래 및 정보 조회 기능을 제공합니다.
     """
     
-    def __init__(self):
+    def __init__(self, token_manager: KiwoomTokenManager):
         """키움 API 클래스 초기화"""
         super().__init__(config.KIWOOM_ACCT_NO, UserService())
+        self.token_manager = token_manager
         # 키움 API 기본 설정
-        self.BASE_URL = 'https://openapi.kiwoom.com'  # 실제 키움 API URL로 수정
-        self.APP_KEY = config.KIWOOM_APP_KEY
-        self.APP_SECRET = config.KIWOOM_SECRET_KEY
+        # self.BASE_URL = 'https://openapi.kiwoom.com'  # 실제 키움 API URL로 수정
+        # self.APP_KEY = config.KIWOOM_APP_KEY
+        # self.APP_SECRET = config.KIWOOM_SECRET_KEY
         
-        # 토큰 관리 변수
-        self.ACCESS_TOKEN: Optional[str] = None
-        self.ACCESS_TOKEN_EXPIRED_TIME: Optional[str] = None
+        # # 토큰 관리 변수
+        # self.ACCESS_TOKEN: Optional[str] = None
+        # self.ACCESS_TOKEN_EXPIRED_TIME: Optional[str] = None
     
-    async def refresh_token(self) -> bool:
-        """
-        액세스 토큰 갱신 처리
-        
-        사용자 DB에서 저장된 토큰을 확인하고, 없거나 만료가 임박한 경우 새로 발급받습니다.
-        토큰 만료 1시간 전에 미리 갱신하여 API 호출 중단을 방지합니다.
-        
-        Returns:
-            bool: 토큰 갱신 성공 여부
-            
-        Raises:
-            KiwoomAuthException: 토큰 갱신 실패 시
-        """
-        try:
-            # 메모리에 토큰이 없으면 DB에서 조회
-            if not self.ACCESS_TOKEN or not self.ACCESS_TOKEN_EXPIRED_TIME:
-                await self._load_token_from_db()
-            
-            # DB에도 토큰이 없으면 새로 발급
-            if not self.ACCESS_TOKEN or not self.ACCESS_TOKEN_EXPIRED_TIME:
-                logger.info("저장된 토큰이 없어 새로 발급받습니다.")
-                await self.issue_access_token()
-                return True
 
-            # 토큰 만료 시간 확인 (1시간 전에 미리 갱신)
-            if self._is_token_expire_soon():
-                logger.info("토큰 만료가 임박하여 새로 발급받습니다.")
-                await self.issue_access_token()
-            
-            logger.debug("토큰 상태 확인 완료")
-            return True
-            
-        except Exception as e:
-            logger.error(f"토큰 갱신 중 오류 발생: {str(e)}")
-            raise KiwoomAuthException(f"토큰 갱신 실패: {str(e)}")
-    
-    async def _load_token_from_db(self):
-        """DB에서 저장된 토큰 정보를 로드합니다."""
-        token_info = await self.user_service.get("ACCESS_TOKEN")
-        time_info = await self.user_service.get("ACCESS_TOKEN_EXPIRED_TIME")
-        
-        self.ACCESS_TOKEN = token_info.value if token_info else None
-        self.ACCESS_TOKEN_EXPIRED_TIME = time_info.value if time_info else None
-        
-        if self.ACCESS_TOKEN:
-            logger.debug("DB에서 토큰 정보를 성공적으로 로드했습니다.")
-    
-    def _is_token_expire_soon(self) -> bool:
-        """
-        토큰 만료가 임박했는지 확인합니다.
-        
-        Returns:
-            bool: 1시간 이내 만료 예정이면 True
-        """
-        try:
-            expire_time = datetime.strptime(self.ACCESS_TOKEN_EXPIRED_TIME, '%Y%m%d%H%M%S')
-            current_time = datetime.now()
-            time_diff = expire_time - current_time
-            
-            # 1시간(3600초) 이내에 만료되면 True
-            return time_diff.total_seconds() <= 3600
-            
-        except ValueError as e:
-            logger.error(f"토큰 만료 시간 파싱 오류: {e}")
-            return True  # 파싱 오류 시 안전하게 갱신하도록 True 반환
-
-    async def issue_access_token(self):
-        """
-        키움증권 OpenAPI를 통해 새로운 액세스 토큰을 발급받습니다.
-        
-        발급받은 토큰은 메모리와 DB에 모두 저장하여 다음 사용을 위해 보관합니다.
-        
-        Raises:
-            KiwoomAuthException: 토큰 발급 실패 시
-        """
-        url = f"{self.BASE_URL}/oauth2/tokenP"  # 실제 키움 API 엔드포인트
-        
-        headers = {
-            'Content-Type': 'application/json;charset=UTF-8',
-        }
-        
-        params = {
-            'grant_type': 'client_credentials',
-            'appkey': self.APP_KEY,
-            'secretkey': self.APP_SECRET,
-        }
-        
-        try:
-            logger.info("키움 API 액세스 토큰 발급 요청 중...")
-            
-            async with aiohttp.ClientSession() as session:
-                async with session.post(url, headers=headers, json=params) as response:
-                    if response.status != 200:
-                        error_text = await response.text()
-                        logger.error(f"토큰 발급 실패 - 상태코드: {response.status}, 응답: {error_text}")
-                        raise KiwoomAuthException(f"토큰 발급 실패: HTTP {response.status}")
-                    
-                    resp_json = await response.json()
-                    
-                    # 응답에서 토큰 정보 추출 (실제 키움 API 응답 구조에 맞게 수정 필요)
-                    self.ACCESS_TOKEN = resp_json.get("access_token")  # 실제 필드명 확인 필요
-                    self.ACCESS_TOKEN_EXPIRED_TIME = resp_json.get("expires_dt")  # 실제 필드명 확인 필요
-                    
-                    if not self.ACCESS_TOKEN:
-                        raise KiwoomAuthException("응답에서 액세스 토큰을 찾을 수 없습니다.")
-                    
-                    # DB에 토큰 정보 저장
-                    await self._save_token_to_db()
-                    
-                    logger.info("키움 API 액세스 토큰 발급 완료")
-                    
-        except aiohttp.ClientError as e:
-            logger.error(f"토큰 발급 네트워크 오류: {e}")
-            raise KiwoomAuthException(f"토큰 발급 네트워크 오류: {str(e)}")
-        except Exception as e:
-            logger.error(f"토큰 발급 중 예상치 못한 오류: {e}")
-            raise KiwoomAuthException(f"토큰 발급 실패: {str(e)}")
-    
-    async def _save_token_to_db(self):
-        """발급받은 토큰 정보를 DB에 저장합니다."""
-        await self.user_service.set("ACCESS_TOKEN", self.ACCESS_TOKEN)
-        await self.user_service.set("ACCESS_TOKEN_EXPIRED_TIME", self.ACCESS_TOKEN_EXPIRED_TIME)
-        logger.debug("토큰 정보를 DB에 저장했습니다.")
-
-    def get_headers(self, data: KiwoomRequest) -> dict:
+    def get_headers(self, data: KiwoomRequest, token:str) -> dict:
         """
         키움 API 요청에 필요한 HTTP 헤더를 생성합니다.
         
@@ -175,7 +52,7 @@ class KiwoomStockApi(StockApi):
         """
         headers = {
             'Content-Type': 'application/json;charset=UTF-8',
-            'authorization': f'Bearer {self.ACCESS_TOKEN}',
+            'authorization': f'Bearer {token}',
             'cont-yn': data.cont_yn.value,  
             'next-key': data.next_key or '',
             'api-id': data.api_id,  
@@ -199,9 +76,6 @@ class KiwoomStockApi(StockApi):
         request_time = datetime.now()
         
         try:
-            # 토큰 갱신 확인
-            await self.refresh_token()
-            
             # API 정보 생성
             request_info = KiwoomApiHelper.get_request_info(data.api_id)
             
@@ -217,7 +91,8 @@ class KiwoomStockApi(StockApi):
             
             # 요청 파라미터 준비
             method = request_info.get('method')
-            headers = self.get_headers(data)
+            token = await self.token_manager.get_token()
+            headers = self.get_headers(data, token)
             url = request_info.get('url')
             title = request_info.get('title')
 

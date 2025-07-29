@@ -8,14 +8,10 @@
 작성일: 2024-07-08
 버전: 1.0
 """
-from abc import ABC, abstractmethod
+from abc import ABC
 
 class StockApi(ABC):
     def __init__(self, acctno, user_service=None):
         self.acctno = acctno
         self.user_service = user_service
 
-
-    @abstractmethod  # 추상 메서드로 선언
-    async def refresh_token(self)-> bool:
-        pass  # stock company api 연결가능여부 확인
