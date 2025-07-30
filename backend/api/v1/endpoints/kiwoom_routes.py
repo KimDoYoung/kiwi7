@@ -9,7 +9,7 @@ from backend.domains.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomR
 router = APIRouter()
 logger = get_logger(__name__)
 
-@router.post("/{api_id}", response_class=KiwoomResponse)
+@router.post("/{api_id}", response_model=KiwoomResponse)
 async def kiwoom_rest_api(api_id: str, request: Request, req: KiwoomRequest):
     '''kiwoom rest api 호출'''
     logger.info(f"Received Kiwoom API request: api_id={api_id}, req=[{req}]")

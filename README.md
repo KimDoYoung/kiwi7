@@ -29,6 +29,14 @@
 - deploy
   - docker
 
+## 보안
+
+* 쿠키
+* client에서 보낼때 header의 bearer사용하지 않음.
+* jwtmiddelware.py
+* home_routes의 post login, get logout
+  
+
 ## 참고 사이트
 
 - [키움Restful API 홈](https://openapi.kiwoom.com/main/home)

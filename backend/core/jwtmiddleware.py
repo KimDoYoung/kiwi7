@@ -13,8 +13,10 @@
 from fastapi import HTTPException, Request
 from fastapi.responses import RedirectResponse
 from starlette.middleware.base import BaseHTTPMiddleware
+
 from backend.core.config import config
 from backend.core.security import verify_token
+
 
 class JWTAuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
@@ -45,3 +47,5 @@ class JWTAuthMiddleware(BaseHTTPMiddleware):
             return RedirectResponse(url="/login")
         
         return response
+    
+

@@ -22,14 +22,14 @@ class KiwiError extends Error {
  * @returns {Promise<Object>} - 응답 데이터
  */
 async function callKiwiApi(url, method, data = null) {
-    const token = localStorage.getItem('kiwi_token');
+    // const token = localStorage.getItem('kiwi_token');
 
     try {
         const options = {
             method,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
+                // 'Authorization': 'Bearer ' + token
             }
         };
 
@@ -54,9 +54,9 @@ async function callKiwiApi(url, method, data = null) {
                 const errorData = await response.json();
                 // Kiwi7 프로젝트의 KiwoomResponse 에러 형식에 맞게 수정
                 const errorMessage = errorData.error_message || errorData.detail || 'Unknown error';
-                throw new KiwiError(response.status, errorMessage);
+                throw new KiwiError(response.status, errorMessage, response.response_time);
             } else {
-                throw new KiwiError(response.status, 'Unexpected response format');
+                throw new KiwiError(response.status, 'Unexpected response format', response.response_time);
             }            
         }
 
@@ -119,20 +119,21 @@ async function deleteFetch(url, data) {
 /**
  * 키움 API 호출 함수
  * 
- * @param {string} apiId - 키움 API ID (예: 'ka10001', 'au10001')
+ * @param {string} api_id - 키움 API ID (예: 'ka10001', 'au10001')
  * @param {Object} payload - API 파라미터 데이터
  * @param {string} contYn - 연속조회 여부 ('Y' 또는 'N', 기본값: 'N')
  * @param {string} nextKey - 연속조회 키 (옵션)
  * @returns {Promise<Object>} - 키움 API 응답 데이터
  */
-async function callKiwoomApi(apiId, payload, contYn = 'N', nextKey = null) {
+async function callKiwoomApi(api_id, payload, contYn = 'N', nextKey = null) {
     const requestData = {
+        api_id : api_id,
         cont_yn: contYn,
         next_key: nextKey,
         payload: payload
     };
     
-    const url = `/api/v1/kiwoom/${apiId}`;
+    const url = `/api/v1/kiwoom/${api_id}`;
     return postFetch(url, requestData);
 }
 

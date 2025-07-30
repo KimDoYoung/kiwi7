@@ -170,7 +170,7 @@ class KiwoomRestApi(StockApi):
                 logger.error(f"API 오류 응답: {response_data}")
                 return KiwoomApiHelper.create_error_response(
                     error_code=str(return_code),
-                    error_message=response_data.get('return_message', '알 수 없는 오류'),
+                    error_message=response_data.get('return_msg', '알 수 없는 오류'),
                     status_code=500,
                     api_info=api_info,
                     request_time=request_time
