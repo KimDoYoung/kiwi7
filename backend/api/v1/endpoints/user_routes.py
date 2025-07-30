@@ -1,9 +1,11 @@
 from fastapi import APIRouter, HTTPException
+from backend.core.logger import get_logger
 from backend.domains.user.user_model import UserInfo
 from backend.domains.user.user_service import UserService
 
 # APIRouter 인스턴스 생성
 router = APIRouter()
+logger = get_logger(__name__)
 
 @router.get("/{user_id}", response_model=UserInfo)
 async def get_user(user_id: str, user_service :UserService):
