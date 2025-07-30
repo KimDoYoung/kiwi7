@@ -105,3 +105,55 @@ async def page(
     return render_template(template_page, context)    
 
 ```
+
+## javascript fetch
+
+### 보내기
+
+* body로 보낸다.
+```javascript
+// 키움 API 호출 예시 - 주식기본정보요청 (ka10001)
+async function callKiwoomApi() {
+    const apiId = 'ka10001';
+    const requestData = {
+        api_id: apiId,          // KiwoomRequest 모델의 api_id 필드
+        cont_yn: 'N',           // 연속조회 여부
+        next_key: null,         // 연속조회 키
+        payload: {              // 실제 API 파라미터들
+            stk_cd: 'KRX:005930'  // 삼성전자 종목코드
+        }
+    };
+
+    try {
+        const response = await fetch(`/api/v1/kiwoom/${apiId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('키움 API 응답:', result);
+        
+        // 한글 데이터 변환 예시
+        if (result.success && result.data) {
+            const koreaData = KiwoomApiHelper.to_korea_data(result.data, apiId);
+            console.log('한글 변환 데이터:', koreaData);
+        }
+        
+        return result;
+    } catch (error) {
+        console.error('API 호출 오류:', error);
+        throw error;
+    }
+}
+
+// 사용 예시
+callKiwoomApi();
+```
