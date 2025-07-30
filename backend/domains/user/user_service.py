@@ -9,7 +9,7 @@ logger = get_logger(__name__)
 # user_service.py
 
 class UserService:
-    def __init__(self, db_path: str = "app.db"):
+    def __init__(self):
         self.db_path = config.DB_PATH
         self.user_infos: Dict[str, UserInfo] = {}
         self._load_userinfos()
@@ -56,3 +56,13 @@ class UserService:
 
     def list_all(self):
         return list(self.user_infos.values())
+
+#---------------------------------------------------------
+# UserService의 싱글턴 인스턴스를 관리하기 위한 전역 변수와 getter 함수
+instance_user_service: UserService = None
+
+def get_user_service() -> UserService:
+    global instance_user_service
+    if instance_user_service is None:
+        instance_user_service = UserService()
+    return instance_user_service
