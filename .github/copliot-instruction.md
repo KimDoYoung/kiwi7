@@ -59,3 +59,6 @@ def calculate_area(radius: float) -> float:
 ## alpine.js를 사용함.
 
 - alphine.js를 처음 사용하는 것임을 인지하고 조언해 줄 것.
+
+## 주의
+1. jquery를 사용하지 않음.

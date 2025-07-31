@@ -2,7 +2,6 @@
 from fastapi import APIRouter
 from backend.core.exceptions import KiwoomApiException
 from backend.core.logger import get_logger
-from fastapi import Request
 
 from backend.domains.kiwoom.kiwoom_service import get_kiwoom_api
 from backend.domains.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomRequest, KiwoomResponse
@@ -10,7 +9,7 @@ router = APIRouter()
 logger = get_logger(__name__)
 
 @router.post("/{api_id}", response_model=KiwoomResponse)
-async def kiwoom_rest_api(api_id: str, request: Request, req: KiwoomRequest):
+async def kiwoom_rest_api(api_id: str, req: KiwoomRequest):
     '''kiwoom rest api 호출'''
     logger.info(f"Received Kiwoom API request: api_id={api_id}, req=[{req}]")
 
@@ -31,6 +30,9 @@ async def kiwoom_rest_api(api_id: str, request: Request, req: KiwoomRequest):
             )
         
         response = await kiwoom.send_request(req)
+        if response.success:
+            korea_data = KiwoomApiHelper.to_korea_data(response.data, response.api_info['api_id'])
+            response.data = korea_data        
         logger.info(f"Kiwoom API response: [{response}]")
         return response
     except KiwoomApiException as e:

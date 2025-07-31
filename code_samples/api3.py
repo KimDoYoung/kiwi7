@@ -22,12 +22,14 @@ async def main():
         print("-----------------------------------------------------------\n")
         if response.success:
             korea_data = KiwoomApiHelper.to_korea_data(response.data, response.api_info['api_id'])
+            response.data = korea_data
             # print("한글 변환 데이터:", korea_data)    
-            list = korea_data.get('종목리스트')
-            for item in list:
-                for key, value in item.items():
-                    print(f"{key}: {value}", end=' | ')
-                print()  # 줄바꿈
+            # list = korea_data.get('종목리스트')
+            # for item in list:
+            #     for key, value in item.items():
+            #         print(f"{key}: {value}", end=' | ')
+            #     print()  # 줄바꿈
+            print("Response data :", response.data)
         print("-----------------------------------------------------------\n")
         
     except Exception as e:
