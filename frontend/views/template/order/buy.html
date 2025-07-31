@@ -2,7 +2,7 @@
 
 {% block content %}
 <div x-data="orderForm()" class="container mt-4">
-
+  <h2 class="mb-4">매수</h2>
   <form @submit.prevent="submit" class="row g-3 needs-validation" novalidate>
     <!-- 국내거래소구분 -->
     <div class="col-md-6">
@@ -148,5 +148,5 @@
 
 {% block script %}
 <!-- <script src="/public/js/fetch-util.js"></script> -->
-<script src="/public/js/main.js"></script>
+<!-- <script src="/public/js/main.js"></script> -->
 {% endblock %}

@@ -88,7 +88,7 @@ async def page(
     func = PAGE_CONTEXT_PROVIDERS.get(path.strip('/'))
     if func:
         try:
-            data = await func(user_id) if callable(func) and func.__code__.co_flags & 0x80 else func(user_id)
+            data = await func(user_id) if callable(func) and func.__code__.co_flags & 0x80 else func()
             context["data"] = data
         except Exception as e:
             logger.error(f"{path}용 데이터 로딩 실패: {e}")
@@ -97,28 +97,6 @@ async def page(
     logger.debug(f"template_page 호출됨: {template_page}")
     return render_template(template_page, context)    
 
-# @router.get("/template", response_class=JSONResponse, include_in_schema=False)
-# async def handlebar_template(request: Request, path: str = Query(..., description="handlebar-template path")):
-#     ''' path에 해당하는 html에서 body추출해서 jinja2처리한 JSON을 리턴 '''
-#     today = get_today()
-#     context = {
-#         "request": request, 
-#         "today" : today
-#     }
-#     # '/'로 시작하면 '/' 제거
-#     if path.startswith('/'):
-#         path = path.lstrip('/')
-    
-#     # ".html"로 끝나면 ".html" 제거
-#     path = path.removesuffix('.html')
-    
-#     handlebar_html_filename =  f"handlebar/{path}.html"
-
-#     handlebar_html =  render_template(handlebar_html_filename, context)
-#     data = {
-#         "template": handlebar_html
-#     }
-#     return JSONResponse(content=data)
 
 @router.get("/login", response_class=HTMLResponse)
 async def login(request: Request):
