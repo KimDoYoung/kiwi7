@@ -4,6 +4,8 @@ logger = get_logger(__name__)
 def account_list():
     """계좌 정보를 가져오는 함수"""
 
-    logger.info("Fetching account list")
+    context_data = {
+        "title": "계좌정보",
+    }
     
-    return {"name": "홍길동", "list": []}
+    return context_data

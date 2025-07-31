@@ -15,20 +15,19 @@
 버전: 1.0
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response, Form
-from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
-from fastapi import status
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
+from fastapi import APIRouter, Depends, Form, HTTPException, Query, Request, Response
+from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 
+from backend.core import config
 from backend.domains.user.user_model import AccessToken
 from backend.domains.user.user_service import UserService
 from backend.utils.kiwi_utils import get_today
 from backend.core.template_engine import render_template
-from backend.core.config import config
 from backend.core.security import create_jwt_access_token, get_current_user
-from backend.page_contexts.context_registry import PAGE_CONTEXT_PROVIDERS
 
 from backend.core.logger import get_logger
+from backend.domains.kiwoom.page_contexts.context_registry import PAGE_CONTEXT_PROVIDERS
 
 logger = get_logger(__name__)
 
@@ -58,7 +57,11 @@ async def display_main(request: Request):
                 "page_path": '/main',
                 "user_id":  user_id, 
                 "today": today_str,
-                "stk_code": stk_code}    
+                "stk_code": stk_code,
+                "data": {
+                    "title": "주식매매"
+                }
+    }    
     return render_template("main.html", context)
 
 @router.get("/page", response_class=HTMLResponse, include_in_schema=False)
@@ -82,9 +85,8 @@ async def page(
                 "page_path": '/main',
                 "user_id":  user_id, 
                 "today": today,
-                "stk_code": stk_code} 
+                "stk_code": stk_code}
 
-        # ✅ 서버 렌더링을 위한 추가 context 처리
     func = PAGE_CONTEXT_PROVIDERS.get(path.strip('/'))
     if func:
         try:
@@ -92,7 +94,9 @@ async def page(
             context["data"] = data
         except Exception as e:
             logger.error(f"{path}용 데이터 로딩 실패: {e}")
-
+    else:
+        data = {"title":"주식매매"}
+        context["data"] = data
     template_page = f"template/{path.lstrip('/')}.html"
     logger.debug(f"template_page 호출됨: {template_page}")
     return render_template(template_page, context)    
