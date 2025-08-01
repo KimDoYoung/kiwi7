@@ -18,8 +18,9 @@
 from datetime import datetime, timedelta
 from fastapi import APIRouter, Depends, Form, HTTPException, Query, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
+from fastapi import status
 
-from backend.core import config
+from backend.core.config import config
 from backend.domains.user.user_model import AccessToken
 from backend.domains.user.user_service import UserService
 from backend.utils.kiwi_utils import get_today
@@ -67,8 +68,7 @@ async def display_main(request: Request):
 @router.get("/page", response_class=HTMLResponse, include_in_schema=False)
 async def page(
     request: Request, 
-    path: str = Query(..., description="template폴더안의 html path"),
-    stk_code: str = Query(None, description="선택적 주식 코드")
+    path: str = Query(..., description="template폴더안의 html path")
 ):
     ''' path에 해당하는 페이지를 가져와서 보낸다. '''
     user_id = await get_current_user(request)
@@ -76,16 +76,14 @@ async def page(
     if not user_id:
         raise HTTPException(status_code=401, detail="Invalid token-현재 사용자 정보가 없습니다")
     
-    # 쿠키에서 stk_code를 가져오거나, 쿼리 파라미터로 전달된 stk_code를 사용
-    cookie_stk_code = request.cookies.get("stk_code")
-    stk_code = stk_code or cookie_stk_code    
+    extra_params = {k: v for k, v in request.query_params.items()}
+
     
     today = get_today()
     context = { "request": request,  
-                "page_path": '/main',
                 "user_id":  user_id, 
                 "today": today,
-                "stk_code": stk_code}
+                **extra_params}
 
     func = PAGE_CONTEXT_PROVIDERS.get(path.strip('/'))
     if func:
