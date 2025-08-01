@@ -63,6 +63,9 @@ class KiwoomTokenManager:
                         raise KiwoomAuthException(f"토큰 발급 실패: HTTP {response.status} - {error_text}")
 
                     resp_json = await response.json()
+                    if 'return_code' not in resp_json or int(resp_json['return_code']) != 0:
+                        error_message = resp_json.get('return_message', '알 수 없는 오류')
+                        raise KiwoomAuthException(f"토큰 발급 실패: {error_message}")   
                     self.token_type = resp_json.get("token_type")
                     self.token = resp_json.get("token")
                     self.expires_dt = resp_json.get("expires_dt")
@@ -72,10 +75,55 @@ class KiwoomTokenManager:
                     logger.info(f"발급된 토큰: token[{self.token[:20]}], token_type:[{self.token_type}]... (만료 시간: {self.expires_dt})")
                     await self._save_token_to_db()
                     logger.info("키움 API 액세스 토큰 발급 완료")
+                    return {
+                        'token': self.token,
+                        'expires_dt': self.expires_dt,
+                        'token_type': self.token_type
+                    }
         except aiohttp.ClientError as e:
             raise KiwoomAuthException(f"토큰 발급 네트워크 오류: {str(e)}")
         except Exception as e:
             raise KiwoomAuthException(f"토큰 발급 실패: {str(e)}")
+    
+    async def discard_token(self):
+        """토큰을 폐기합니다."""
+        if not self.token or not self.expires_dt:
+            self.token = None
+            self.expires_dt = None
+
+            logger.warning("폐기할 토큰이 없습니다.")
+            return
+        url = f"{self.base_url}/oauth2/revoke"
+        headers = {'Content-Type': 'application/json;charset=UTF-8'}
+        params = {
+            'appkey': self.app_key,
+            'secretkey': self.app_secret,
+            'token': self.token,
+        }
+
+        try:
+            logger.info("키움 API 액세스 토큰 폐기 요청 중...")
+            async with aiohttp.ClientSession() as session:
+                async with session.post(url, headers=headers, json=params) as response:
+                    if response.status != 200:
+                        error_text = await response.text()
+                        raise KiwoomAuthException(f"토큰 폐기 실패: HTTP {response.status} - {error_text}")
+
+                    resp_json = await response.json()
+                    return_code = int(resp_json.get("return_code"))
+                    logger.info(f"토큰 폐기 응답: {resp_json}")
+                    if return_code != 0:
+                        raise KiwoomAuthException(f"토큰 폐기 실패: {resp_json.get('return_message', '알 수 없는 오류')}")
+                    return 
+                    # self.token = None
+                    # self.expires_dt = None
+                    # await self._save_token_to_db()
+                    logger.info("키움 API 액세스 토큰 폐기 완료")
+        except aiohttp.ClientError as e:
+            raise KiwoomAuthException(f"토큰 폐기 네트워크 오류: {str(e)}")
+        except Exception as e:
+            raise KiwoomAuthException(f"토큰 폐기 실패: {str(e)}")
+
 
     def _is_token_expire_soon(self) -> bool:
         try:
@@ -90,7 +138,9 @@ class KiwoomTokenManager:
         time_info = await self.user_service.get("ACCESS_TOKEN_EXPIRED_TIME")
         self.token = token_info.value if token_info else None
         self.expires_dt = time_info.value if time_info else None
+        logger.info("토큰 정보를 데이터베이스에서 로드했습니다. token: %s, expires_dt: %s", self.token[:10] if self.token else None, self.expires_dt)
 
     async def _save_token_to_db(self):
         await self.user_service.set("ACCESS_TOKEN", self.token)
         await self.user_service.set("ACCESS_TOKEN_EXPIRED_TIME", self.expires_dt)
+        logger.info("토큰 정보를 데이터베이스에 저장했습니다. token: %s, expires_dt: %s", self.token[:10] if self.token else None, self.expires_dt)
