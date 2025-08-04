@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 import os
 class Config:
     def __init__(self):
-        self.PROFILE_NAME = os.getenv('kiwi7_MODE', 'local')
+        self.PROFILE_NAME = os.getenv('KIWI7_MODE', 'local')
         load_dotenv(dotenv_path=f'.env.{self.PROFILE_NAME}')
         
         # KIWOOM API 관련 키

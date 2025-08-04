@@ -64,7 +64,7 @@ class KiwoomTokenManager:
 
                     resp_json = await response.json()
                     if 'return_code' not in resp_json or int(resp_json['return_code']) != 0:
-                        error_message = resp_json.get('return_message', '알 수 없는 오류')
+                        error_message = resp_json.get('return_msg', '알 수 없는 오류')
                         raise KiwoomAuthException(f"토큰 발급 실패: {error_message}")   
                     self.token_type = resp_json.get("token_type")
                     self.token = resp_json.get("token")
@@ -113,7 +113,7 @@ class KiwoomTokenManager:
                     return_code = int(resp_json.get("return_code"))
                     logger.info(f"토큰 폐기 응답: {resp_json}")
                     if return_code != 0:
-                        raise KiwoomAuthException(f"토큰 폐기 실패: {resp_json.get('return_message', '알 수 없는 오류')}")
+                        raise KiwoomAuthException(f"토큰 폐기 실패: {resp_json.get('return_msg', '알 수 없는 오류')}")
                     return 
                     # self.token = None
                     # self.expires_dt = None
