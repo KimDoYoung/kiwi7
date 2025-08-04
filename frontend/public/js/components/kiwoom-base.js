@@ -63,8 +63,29 @@ window.KiwoomBase = function(configKey) {
             return null;
         },
 
+        get_sorted_items (){
+            if (this.loading || !this.data) {
+                console.log('❌ No data or loading, returning empty array');
+                return [];
+            }
+
+            let items = this.data?.[config.table.data_key];
+
+            if (!items || !Array.isArray(items)) {
+                console.warn('⚠️ Configured key not found, searching for arrays...');
+                items = this.findArrayInData();
+            }
+
+            if (!items || !Array.isArray(items)) {
+                return [];
+            }
+            const sortedItems = window.KiwoomUtils.sortArray([...items], this.sort_key, this.sort_asc);
+            console.log('✅ Returning sorted items:', sortedItems.length, 'items');
+            return sortedItems;
+
+        },
         // 정렬된 아이템
-        get sorted_items() {
+        get sorted_items1() {
             if (this.loading || !this.data) {
                 console.log('❌ No data or loading, returning empty array');
                 return [];
@@ -84,6 +105,20 @@ window.KiwoomBase = function(configKey) {
             const sortedItems = window.KiwoomUtils.sortArray([...items], this.sort_key, this.sort_asc);
             console.log('✅ Returning sorted items:', sortedItems.length, 'items');
             return sortedItems;
+        },
+        getTableColumns() {            
+            try {
+                if (!this.config.table?.columns) {
+                    console.error('❌ No table columns config');
+                    return [];
+                }
+                
+                const columns = this.config.table.columns;
+                return columns;
+            } catch (error) {
+                console.error('❌ Error in getTableColumns:', error);
+                return [];
+            }
         },
 
         // 요약 필드 포맷팅

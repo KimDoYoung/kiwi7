@@ -16,6 +16,7 @@ TODO:
 {% endblock %}
 {% block content %}
 <div class="container mt-4" x-data="kt00004_component">
+    <!-- 계좌명과 헤드 시작-->
     <div class="d-flex align-items-center">
         <span x-text="data?.계좌명"></span>
         <span class="ms-2">(<span x-text="data?.지점명"></span>)</span>
@@ -23,7 +24,62 @@ TODO:
             <input class="form-check-input" type="checkbox" id="summaryFullCheck" x-model="summary_full">
             <label class="form-check-label" for="summaryFullCheck">전체보기</label>
         </div>
-    </div>    
+    </div>  
+    <!-- 계좌명과 헤드 끝-->
+     
+    <!-- 데이터 테이블  시작-->
+    <div class="mt-4">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle text-center">
+                <thead class="table-light">
+                    <tr>
+                        <template x-for="column in getTableColumns()" :key="column.key">
+                            <th>
+                                <template x-if="column.sortable">
+                                    <a href="#" @click.prevent="sortBy(column.key)" 
+                                        class="text-decoration-none text-dark sortable-header">
+                                        <span x-text="column.label"></span>
+                                        <span x-show="sort_key === column.key" 
+                                                x-text="sort_asc ? '▲' : '▼'"></span>
+                                    </a>
+                                </template>
+                                <template x-if="!column.sortable">
+                                    <span x-text="column.label"></span>
+                                </template>
+                            </th>
+                        </template>
+                    </tr>
+                </thead>
+                <tbody x-show="data && !loading">
+                    <template x-for="item in get_sorted_items()" :key="item.종목코드">
+                        <tr>
+                            <template x-for="column in getTableColumns()" :key="column.key">
+                                <td x-text="getCellValue(item, column)"
+                                    :class="getCellClass(item, column) + (column.clickable ? ' clickable-cell' : '')"
+                                    @click="handleCellClick(item, column)">
+                                </td>
+                            </template>
+                        </tr>
+                    </template>
+                </tbody>
+                <tbody x-show="loading">
+                    <tr>
+                        <td :colspan="getTableColumns().length" class="text-center py-4">
+                            <i class="fa fa-spinner fa-spin"></i> 데이터를 불러오는 중...
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody x-show="!loading && (!data || get_sorted_items().length === 0)">
+                    <tr>
+                        <td :colspan="getTableColumns().length" class="text-center py-4 text-muted">
+                            표시할 데이터가 없습니다.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>        
+    </div> 
+    <!-- 데이터 테이블 끝-->   
 </div>
 {% raw %}
 <!--handlebar scripts-->
@@ -40,11 +96,18 @@ TODO:
             let base = window.KiwoomBase('kt00004');
             const component = {
                 ...base,
+                config: window.KiwoomConfigs['kt00004'],
                 init(){
                     if(base.init){
                         return base.init.call(this);
                     } 
-                }
+                },
+                // get sorted_items() {
+                //     let items = this.data?.[this.config.table.data_key] || [];
+                //     const sortedItems = window.KiwoomUtils.sortArray([...items], this.sort_key, this.sort_asc);
+                //     // console.log('✅ Returning sorted items:', sortedItems.length, 'items');
+                //     return sortedItems;
+                // }
             }
             return component;
         });        
