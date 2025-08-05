@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>키움증권 계좌 정보</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5" x-data="accountData()">
+        <h1 class="mb-4">키움증권 계좌 정보</h1>
+
+        <!-- 계좌 기본 정보 -->
+        <div class="card mb-4">
+            <div class="card-header">
+                계좌 기본 정보
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>계좌명:</strong> <span x-text="info['계좌명']"></span></p>
+                        <p><strong>지점명:</strong> <span x-text="info['지점명']"></span></p>
+                        <p><strong>예수금:</strong> <span x-text="formatNumber(info['예수금'])"></span> 원</p>
+                        <p><strong>D+2추정예수금:</strong> <span x-text="formatNumber(info['D+2추정예수금'])"></span> 원</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>유가잔고평가액:</strong> <span x-text="formatNumber(info['유가잔고평가액'])"></span> 원</p>
+                        <p><strong>예탁자산평가액:</strong> <span x-text="formatNumber(info['예탁자산평가액'])"></span> 원</p>
+                        <p><strong>총매입금액:</strong> <span x-text="formatNumber(info['총매입금액'])"></span> 원</p>
+                        <p><strong>추정예탁자산:</strong> <span x-text="formatNumber(info['추정예탁자산'])"></span> 원</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 종목별 계좌 평가 현황 -->
+        <div class="card">
+            <div class="card-header">
+                종목별 계좌 평가 현황
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>종목명</th>
+                            <th>보유수량</th>
+                            <th>평균단가</th>
+                            <th>현재가</th>
+                            <th>평가금액</th>
+                            <th>손익금액</th>
+                            <th>손익율</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template x-for="stock in stocks" :key="stock['종목코드']">
+                            <tr>
+                                <td x-text="stock['종목명']"></td>
+                                <td x-text="formatNumber(stock['보유수량'])"></td>
+                                <td x-text="formatNumber(stock['평균단가'])"></td>
+                                <td x-text="formatNumber(stock['현재가'])"></td>
+                                <td x-text="formatNumber(stock['평가금액'])"></td>
+                                <td x-text="formatNumber(stock['손익금액'])"></td>
+                                <td><span x-text="stock['손익율']" :class="{'text-danger': stock['손익율'] < 0, 'text-primary': stock['손익율'] > 0}"></span> %</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function accountData() {
+            return {
+                info: {},
+                stocks: [],
+                init() {
+                    // 예시 데이터
+                    const data = {
+                        '계좌명': '김도영',
+                        '지점명': '신한은행',
+                        '예수금': '000000300000',
+                        'D+2추정예수금': '000000296982',
+                        '유가잔고평가액': '000000002902',
+                        '예탁자산평가액': '000000299887',
+                        '총매입금액': '000000003018',
+                        '추정예탁자산': '000000299884',
+                        '매도담보대출금': '000000000000',
+                        '당일투자원금': '000000000000',
+                        '당월투자원금': '000000000000',
+                        '누적투자원금': '000000000000',
+                        '당일투자손익': '000000000000',
+                        '당월투자손익': '000000000000',
+                        '누적투자손익': '000000000000',
+                        '당일손익율': '0.00',
+                        '당월손익율': '0.00',
+                        '누적손익율': '0.00',
+                        '종목별계좌평가현황': [
+                            { '종목코드': 'A024840', '종목명': 'KBI메탈', '보유수량': '000000000001', '평균단가': '000000001910', '현재가': '000000001840', '평가금액': '000000001838', '손익금액': '-00000000072', '손익율': '-3.7696', '대출일': '', '매입금액': '000000001910', '결제잔고': '000000000000', '전일매수수량': '000000000001', '전일매도수량': '000000000000', '금일매수수량': '000000000000', '금일매도수량': '000000000000' },
+                            { '종목코드': 'A094860', '종목명': '네오리진', '보유수량': '000000000001', '평균단가': '000000001108', '현재가': '000000001065', '평가금액': '000000001064', '손익금액': '-00000000044', '손익율': '-3.9711', '대출일': '', '매입금액': '000000001108', '결제잔고': '000000000000', '전일매수수량': '000000000001', '전일매도수량': '000000000000', '금일매수수량': '000000000000', '금일매도수량': '000000000000' }
+                        ],
+                        'return_code': 0,
+                        'return_msg': '조회가 완료되었습니다.'
+                    };
+
+                    this.info = data;
+                    this.stocks = data['종목별계좌평가현황'];
+                },
+                formatNumber(value) {
+                    if (!value) return '';
+                    // 숫자형 문자열에서 앞쪽의 0을 제거하고, 세자리마다 콤마를 추가합니다.
+                    return parseInt(value, 10).toLocaleString();
+                }
+            }
+        }
+    </script>
+</body>
+</html>

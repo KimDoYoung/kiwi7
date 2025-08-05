@@ -26,7 +26,72 @@ TODO:
         </div>
     </div>  
     <!-- 계좌명과 헤드 끝-->
-     
+    <!-- 계좌 요약 정보 시작--> 
+    <div class="mt-3">
+        <table class="mt-2 table table-bordered table-striped align-middle">
+        <tbody>
+            <tr>
+            <th class="bg-light">예수금</th>
+            <td class="text-end" x-text="Number(data?.예수금).toLocaleString() + ' 원'"></td>
+
+            <th class="bg-light">D+2추정예수금</th>
+            <td class="text-end" x-text="Number(data?.['D+2추정예수금']).toLocaleString() + ' 원'"></td>
+            </tr>
+            <tr>
+            <th class="bg-light">유가잔고평가액</th>
+            <td class="text-end" x-text="Number(data?.유가잔고평가액).toLocaleString() + ' 원'"></td>
+
+            <th class="bg-light">예탁자산평가액</th>
+            <td class="text-end" x-text="Number(data?.예탁자산평가액).toLocaleString() + ' 원'"></td>
+            </tr>
+            <tr>
+            <th class="bg-light">총매입금액</th>
+            <td class="text-end" x-text="Number(data?.총매입금액).toLocaleString() + ' 원'"></td>
+
+            <th class="bg-light">추정예탁자산</th>
+            <td class="text-end" x-text="Number(data?.추정예탁자산).toLocaleString() + ' 원'"></td>
+            </tr>
+            <tr x-show="summary_full">
+            <th class="bg-light">매도담보대출금</th>
+            <td class="text-end" x-text="Number(data?.매도담보대출금).toLocaleString() + ' 원'"></td>
+
+            <th class="bg-light">당일투자원금</th>
+            <td class="text-end" x-text="Number(data?.당일투자원금).toLocaleString() + ' 원'"></td>
+            </tr>
+            <tr x-show="summary_full">
+            <th class="bg-light">당월투자원금</th>
+            <td class="text-end" x-text="Number(data?.당월투자원금).toLocaleString() + ' 원'"></td>
+
+            <th class="bg-light">누적투자원금</th>
+            <td class="text-end" x-text="Number(data?.누적투자원금).toLocaleString() + ' 원'"></td>
+            </tr>
+            <tr x-show="summary_full">
+            <th class="bg-light">당일투자손익</th>
+            <td class="text-end text-danger" x-text="Number(data?.당일투자손익).toLocaleString() + ' 원'"></td>
+
+            <th class="bg-light">당월투자손익</th>
+            <td class="text-end text-danger" x-text="Number(data?.당월투자손익).toLocaleString() + ' 원'"></td>
+            </tr>
+            <tr x-show="summary_full">
+            <th class="bg-light">누적투자손익</th>
+            <td class="text-end text-danger" x-text="Number(data?.누적투자손익).toLocaleString() + ' 원'"></td>
+
+            <th class="bg-light">당일손익율</th>
+            <td class="text-end" x-text="data?.당일손익율 + ' %'"></td>
+            </tr>
+            <tr x-show="summary_full">
+            <th class="bg-light">당월손익율</th>
+            <td class="text-end" x-text="data?.당월손익율 + ' %'"></td>
+
+            <th class="bg-light">누적손익율</th>
+            <td class="text-end" x-text="data?.누적손익율 + ' %'"></td>
+            </tr>
+        </tbody>
+        </table>
+
+    </div>
+
+    <!-- 계좌 요약 정보 끝--> 
     <!-- 데이터 테이블  시작-->
     <div class="mt-4">
         <div class="table-responsive">
@@ -96,18 +161,12 @@ TODO:
             let base = window.KiwoomBase('kt00004');
             const component = {
                 ...base,
-                config: window.KiwoomConfigs['kt00004'],
+                // config: window.KiwoomConfigs['kt00004'],
                 init(){
                     if(base.init){
                         return base.init.call(this);
                     } 
                 },
-                // get sorted_items() {
-                //     let items = this.data?.[this.config.table.data_key] || [];
-                //     const sortedItems = window.KiwoomUtils.sortArray([...items], this.sort_key, this.sort_asc);
-                //     // console.log('✅ Returning sorted items:', sortedItems.length, 'items');
-                //     return sortedItems;
-                // }
             }
             return component;
         });        
