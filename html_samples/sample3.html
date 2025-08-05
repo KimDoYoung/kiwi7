@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>키움 계좌 요약 UI</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.0/cdn.min.js" defer></script>
+    
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --success-color: #059669;
+            --danger-color: #dc2626;
+            --warning-color: #d97706;
+            --info-color: #0891b2;
+            --light-bg: #f8fafc;
+            --border-color: #e2e8f0;
+        }
+
+        .summary-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .summary-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--info-color));
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .metric-large {
+            font-size: 1.5rem;
+        }
+
+        .profit-positive {
+            color: var(--success-color) !important;
+        }
+
+        .profit-negative {
+            color: var(--danger-color) !important;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .summary-container {
+                padding: 1rem;
+            }
+        }
+
+        .toggle-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 10px;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .icon-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-light p-4">
+    <div x-data="{
+        summary_full: false,
+        data: {
+            '예수금': 15000000,
+            'D+2추정예수금': 14800000,
+            '유가잔고평가액': 25000000,
+            '예탁자산평가액': 40000000,
+            '총매입금액': 23000000,
+            '추정예탁자산': 39500000,
+            '매도담보대출금': 0,
+            '당일투자원금': 1000000,
+            '당월투자원금': 3000000,
+            '누적투자원금': 23000000,
+            '당일투자손익': 150000,
+            '당월투자손익': 2000000,
+            '누적투자손익': 2000000,
+            '당일손익율': 0.87,
+            '당월손익율': 8.7,
+            '누적손익율': 8.7
+        },
+        
+        formatCurrency(value) {
+            return Number(value).toLocaleString() + ' 원';
+        },
+        
+        formatPercent(value) {
+            return value + ' %';
+        },
+        
+        getProfitClass(value) {
+            return Number(value) >= 0 ? 'profit-positive' : 'profit-negative';
+        }
+    }">
+
+        <!-- 옵션 1: 모던 그라데이션 카드 스타일 -->
+        <div class="summary-container mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="section-title mb-0">
+                    <div class="icon-circle">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    계좌 요약
+                </h2>
+                <button @click="summary_full = !summary_full" class="toggle-btn">
+                    <i class="fas" :class="summary_full ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    <span x-text="summary_full ? '간단히' : '자세히'"></span>
+                </button>
+            </div>
+
+            <!-- 주요 지표 (항상 표시) -->
+            <div class="grid-2 mb-3">
+                <div class="summary-card">
+                    <div class="metric-label">
+                        <i class="fas fa-wallet text-primary"></i>
+                        예수금
+                    </div>
+                    <div class="metric-value metric-large" x-text="formatCurrency(data?.예수금)"></div>
+                </div>
+                <div class="summary-card">
+                    <div class="metric-label">
+                        <i class="fas fa-coins text-warning"></i>
+                        D+2추정예수금
+                    </div>
+                    <div class="metric-value metric-large" x-text="formatCurrency(data?.['D+2추정예수금'])"></div>
+                </div>
+            </div>
+
+            <div class="grid-2 mb-3">
+                <div class="summary-card">
+                    <div class="metric-label">
+                        <i class="fas fa-chart-pie text-info"></i>
+                        유가잔고평가액
+                    </div>
+                    <div class="metric-value metric-large" x-text="formatCurrency(data?.유가잔고평가액)"></div>
+                </div>
+                <div class="summary-card">
+                    <div class="metric-label">
+                        <i class="fas fa-piggy-bank text-success"></i>
+                        예탁자산평가액
+                    </div>
+                    <div class="metric-value metric-large" x-text="formatCurrency(data?.예탁자산평가액)"></div>
+                </div>
+            </div>
+
+            <!-- 상세 정보 (토글) -->
+            <div x-show="summary_full" x-transition.duration.300ms class="fade-in">
+                <div class="grid-3">
+                    <div class="summary-card">
+                        <div class="metric-label">
+                            <i class="fas fa-shopping-cart text-primary"></i>
+                            총매입금액
+                        </div>
+                        <div class="metric-value" x-text="formatCurrency(data?.총매입금액)"></div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="metric-label">
+                            <i class="fas fa-calculator text-info"></i>
+                            추정예탁자산
+                        </div>
+                        <div class="metric-value" x-text="formatCurrency(data?.추정예탁자산)"></div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="metric-label">
+                            <i class="fas fa-hand-holding-usd text-warning"></i>
+                            매도담보대출금
+                        </div>
+                        <div class="metric-value" x-text="formatCurrency(data?.매도담보대출금)"></div>
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="summary-card">
+                        <div class="metric-label">
+                            <i class="fas fa-calendar-day text-primary"></i>
+                            당일투자원금
+                        </div>
+                        <div class="metric-value" x-text="formatCurrency(data?.당일투자원금)"></div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="metric-label">
+                            <i class="fas fa-calendar-week text-info"></i>
+                            당월투자원금
+                        </div>
+                        <div class="metric-value" x-text="formatCurrency(data?.당월투자원금)"></div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="metric-label">
+                            <i class="fas fa-history text-secondary"></i>
+                            누적투자원금
+                        </div>
+                        <div class="metric-value" x-text="formatCurrency(data?.누적투자원금)"></div>
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="summary-card">
+                        <div class="metric-label">
+                            <i class="fas fa-chart-line"></i>
+                            당일투자손익
+                        </div>
+                        <div class="metric-value" :class="getProfitClass(data?.당일투자손익)" x-text="formatCurrency(data?.당일투자손익)"></div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="metric-label">
+                            <i class="fas fa-chart-line"></i>
+                            당월투자손익
+                        </div>
+                        <div class="metric-value" :class="getProfitClass(data?.당월투자손익)" x-text="formatCurrency(data?.당월투자손익)"></div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="metric-label">
+                            <i class="fas fa-chart-line"></i>
+                            누적투자손익
+                        </div>
+                        <div class="metric-value" :class="getProfitClass(data?.누적투자손익)" x-text="formatCurrency(data?.누적투자손익)"></div>
+                    </div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="summary-card">
+                        <div class="metric-label">
+                            <i class="fas fa-percentage"></i>
+                            당일손익율
+                        </div>
+                        <div class="metric-value" :class="getProfitClass(data?.당일손익율)" x-text="formatPercent(data?.당일손익율)"></div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="metric-label">
+                            <i class="fas fa-percentage"></i>
+                            당월손익율
+                        </div>
+                        <div class="metric-value" :class="getProfitClass(data?.당월손익율)" x-text="formatPercent(data?.당월손익율)"></div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="metric-label">
+                            <i class="fas fa-percentage"></i>
+                            누적손익율
+                        </div>
+                        <div class="metric-value" :class="getProfitClass(data?.누적손익율)" x-text="formatPercent(data?.누적손익율)"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 옵션 2: 심플 카드 그리드 -->
+        <div class="container-fluid mb-5">
+            <h3 class="mb-4">
+                <i class="fas fa-th-large text-primary me-2"></i>
+                심플 카드 레이아웃
+            </h3>
+            
+            <!-- 주요 지표 2열 -->
+            <div class="grid-2 mb-4">
+                <div class="metric-card">
+                    <div class="metric-label">
+                        <i class="fas fa-wallet text-primary"></i>
+                        예수금
+                    </div>
+                    <div class="metric-value text-primary" x-text="formatCurrency(data?.예수금)"></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">
+                        <i class="fas fa-chart-pie text-info"></i>
+                        유가잔고평가액
+                    </div>
+                    <div class="metric-value text-info" x-text="formatCurrency(data?.유가잔고평가액)"></div>
+                </div>
+            </div>
+
+            <!-- 3열 그리드 -->
+            <div class="grid-3" x-show="summary_full" x-transition>
+                <div class="metric-card">
+                    <div class="metric-label">
+                        <i class="fas fa-coins text-warning"></i>
+                        D+2추정예수금
+                    </div>
+                    <div class="metric-value" x-text="formatCurrency(data?.['D+2추정예수금'])"></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">
+                        <i class="fas fa-piggy-bank text-success"></i>
+                        예탁자산평가액
+                    </div>
+                    <div class="metric-value" x-text="formatCurrency(data?.예탁자산평가액)"></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">
+                        <i class="fas fa-calculator text-secondary"></i>
+                        추정예탁자산
+                    </div>
+                    <div class="metric-value" x-text="formatCurrency(data?.추정예탁자산)"></div>
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                <button @click="summary_full = !summary_full" class="btn btn-outline-primary rounded-pill px-4">
+                    <i class="fas" :class="summary_full ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                    <span x-text="summary_full ? '간단히 보기' : '더 보기'"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 옵션 3: 대시보드 스타일 -->
+        <div class="container-fluid">
+            <h3 class="mb-4">
+                <i class="fas fa-tachometer-alt text-success me-2"></i>
+                대시보드 스타일
+            </h3>
+            
+            <div class="row g-3">
+                <div class="col-md-6 col-xl-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <div class="text-primary mb-2">
+                                <i class="fas fa-wallet fa-2x"></i>
+                            </div>
+                            <h6 class="card-title text-muted">예수금</h6>
+                            <h4 class="text-primary mb-0" x-text="formatCurrency(data?.예수금)"></h4>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-xl-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <div class="text-info mb-2">
+                                <i class="fas fa-chart-pie fa-2x"></i>
+                            </div>
+                            <h6 class="card-title text-muted">유가잔고평가액</h6>
+                            <h4 class="text-info mb-0" x-text="formatCurrency(data?.유가잔고평가액)"></h4>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-xl-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <div class="text-success mb-2">
+                                <i class="fas fa-piggy-bank fa-2x"></i>
+                            </div>
+                            <h6 class="card-title text-muted">예탁자산평가액</h6>
+                            <h4 class="text-success mb-0" x-text="formatCurrency(data?.예탁자산평가액)"></h4>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-xl-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <div class="mb-2" :class="getProfitClass(data?.누적투자손익) === 'profit-positive' ? 'text-success' : 'text-danger'">
+                                <i class="fas fa-chart-line fa-2x"></i>
+                            </div>
+                            <h6 class="card-title text-muted">누적투자손익</h6>
+                            <h4 class="mb-0" :class="getProfitClass(data?.누적투자손익)" x-text="formatCurrency(data?.누적투자손익)"></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
