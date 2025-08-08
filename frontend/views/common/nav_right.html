@@ -5,12 +5,14 @@
             <i class="far fa-star"></i>
         </a>
     </li>
+    {% if page_path and page_path != 'main' %}
     <li class="nav-item">
         <!-- 다른 새로고침 아이콘 -->
         <a href="/page?path={{page_path}}" class="nav-link text-primary" title="새로고침">
             <i class="fas fa-redo-alt"></i>새로고침
         </a>
     </li>
+    {% endif %}
     <li class="nav-item">
         <!-- 다른 날짜 아이콘 -->
         <span class="nav-link text-primary">

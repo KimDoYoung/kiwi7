@@ -55,7 +55,7 @@ async def display_main(request: Request):
     logger.debug(f"****************today_str in /main: {today_str}")
     stk_code = request.cookies.get("stk_code")
     context = { "request": request,  
-                "page_path": '/main',
+                "page_path": 'main',
                 "user_id":  user_id, 
                 "today": today_str,
                 "stk_code": stk_code,
@@ -78,14 +78,16 @@ async def page(
     
     extra_params = {k: v for k, v in request.query_params.items()}
 
-    
     today = get_today()
+    page_path = path.strip('/')
+
     context = { "request": request,  
                 "user_id":  user_id, 
+                "page_path": page_path,
                 "today": today,
                 **extra_params}
 
-    func = PAGE_CONTEXT_PROVIDERS.get(path.strip('/'))
+    func = PAGE_CONTEXT_PROVIDERS.get(page_path)
     if func:
         try:
             data = await func(user_id) if callable(func) and func.__code__.co_flags & 0x80 else func()
@@ -95,7 +97,7 @@ async def page(
     else:
         data = {"title":"주식매매"}
         context["data"] = data
-    template_page = f"template/{path.lstrip('/')}.html"
+    template_page = f"template/{page_path}.html"
     logger.debug(f"template_page 호출됨: {template_page}")
     return render_template(template_page, context)    
 
