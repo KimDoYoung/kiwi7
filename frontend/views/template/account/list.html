@@ -15,7 +15,7 @@ TODO:
 {% block style %}
 {% endblock %}
 {% block content %}
-<div class="container mt-4" x-data="kt00004_component" x-init="init_local()">
+<div class="container mt-4" x-data="kt00004_component"  >
     <!-- 계좌명과 헤드 시작-->
     <div class="d-flex align-items-center">
         <span x-text="data?.계좌명"></span>
@@ -175,6 +175,7 @@ TODO:
 {% endraw %}
 {% endblock %}
 {% block script %}
+<!-- <script src="/public/js/configs/kiwoom-loader.js"></script> -->
 <script src="/public/js/configs/kiwoom-configs.js"></script>
 <script src="/public/js/utils/kiwoom-utils.js"></script>
 <script src="/public/js/components/kiwoom-base.js"></script>
@@ -183,34 +184,35 @@ TODO:
     document.addEventListener('alpine:init', () => {
         Alpine.data('kt00004_component', () => {
             let base = window.KiwoomBase('kt00004');
-            base.summary_show = false,
-            base.profit = 0; //나의 수익
-            base.profitFilter = 'all'; // 필터
-            // const baseOriginalInit = base.init;
-
-            base.init_local = function() {
-                // if (baseOriginalInit) {
-                //     baseOriginalInit.call(this);
-                // }
-                this.$watch('profitFilter', (newValue, oldValue) => {
-                    console.log('profitFilter changed from', oldValue, 'to', newValue);
-                    this.clearCache();
-                    this.onProfitFilterChange(newValue);
-                });
-                this.addCallback((data) => {
-                    this.profit = data?.['유가잔고평가액'] - data?.['총매입금액'];
-                });
-            };
-            base.onProfitFilterChange = function(filterValue) {
-                console.log('필터가 변경되었습니다:', filterValue);
-                this.clearFilters();
-                if (filterValue === 'plus') {
-                    this.addFilter(item => item.손익율 > 0);
-                } else if (filterValue === 'minus') {
-                    this.addFilter(item => item.손익율 < 0);
+            const component = {
+                ...base,
+                summary_show: false,
+                profit: 0,
+                profitFilter: 'all',
+                init(){
+                    if(base.init){
+                        base.init.call(this);
+                    }
+                    this.$watch('profitFilter', (newValue, oldValue) => {
+                        console.log('profitFilter changed from', oldValue, 'to', newValue);
+                        this.clearCache();
+                        this.onProfitFilterChange(newValue);
+                    });
+                    this.addCallback((data) => {
+                        this.profit = data?.['유가잔고평가액'] - data?.['총매입금액'];
+                    });
+                },
+                onProfitFilterChange(filterValue) {
+                    console.log('필터가 변경되었습니다:', filterValue);
+                    this.clearFilters();
+                    if (filterValue === 'plus') {
+                        this.addFilter(item => item.손익율 > 0);
+                    } else if (filterValue === 'minus') {
+                        this.addFilter(item => item.손익율 < 0);
+                    }
                 }
-            };
-            return base;
+            }
+            return component;
         });        
     });
 </script>

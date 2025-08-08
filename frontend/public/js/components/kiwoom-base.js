@@ -1,6 +1,8 @@
 // static/js/components/kiwoom-base.js
-window.KiwoomBase = function(configKey) {
+window.KiwoomBase = async function(configKey) {
     const config = window.KiwoomConfigs[configKey];
+    // debugger;
+    // const config = await window.loadKiwoomConfig(configKey);
     if (!config) {
         throw new Error(`Config not found for key: ${configKey}`);
     }
