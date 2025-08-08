@@ -14,7 +14,7 @@ async def main():
          
         request_data = KiwoomRequest(
             api_id='ka10099',
-            payload={'mrkt_tp': '0'}
+            payload={'mrkt_tp': '3'}
         )        
         response = await kiwoom_api.send_request(request_data)
         print("-----------------------------------------------------------\n")

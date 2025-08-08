@@ -24,7 +24,21 @@ TODO:
             <input class="form-check-input" type="checkbox" id="summaryFullCheck" x-model="summary_full">
             <label class="form-check-label" for="summaryFullCheck">전체보기</label>
         </div>
-    </div>  
+    </div> 
+    <div class="d-flex align-items-center mt-2 gap-4">
+        <div>
+            <span>자산:</span>
+            <span class="fw-bold" x-text="Number(data?.추정예탁자산).toLocaleString() + ' 원'"></span>
+        </div>
+        <div>
+            <span>수익:</span>
+            <span class="fw-bold" x-text="profit.toLocaleString() + ' 원'"></span>
+        </div>
+        <div>
+            <span>매수가능:</span>
+            <span class="fw-bold" x-text="Number(data?.['D+2추정예수금']).toLocaleString() + ' 원'"></span>
+        </div>
+    </div>
     <!-- 계좌명과 헤드 끝-->
     <!-- 계좌 요약 정보 시작--> 
     <div class="rounded-3 shadow-sm bg-white p-1 mt-4">
@@ -94,6 +108,16 @@ TODO:
     <!-- 계좌 요약 정보 끝--> 
     <!-- 데이터 테이블  시작-->
     <div class="mt-4">
+        <div class="mt-2 mb-2 d-flex justify-content-between align-items-center">
+            <button class="btn btn-outline-success btn-sm me-2" title="엑셀로 저장" @click="exportCSV()">
+                <i class="fa fa-file-excel"></i>
+            </button>
+            <select class="form-select form-select-sm w-auto" x-model="profitFilter">
+                <option value="all">전체</option>
+                <option value="plus">+손익율</option>
+                <option value="minus">-손익율</option>
+            </select>
+        </div>
         <div class="table-responsive">
             <table class="table table-bordered table-hover align-middle text-center">
                 <thead class="table-light">
@@ -116,7 +140,7 @@ TODO:
                     </tr>
                 </thead>
                 <tbody x-show="data && !loading">
-                    <template x-for="item in get_sorted_items()" :key="item.종목코드">
+                    <template x-for="item in sorted_items" :key="item.종목코드">
                         <tr>
                             <template x-for="column in getTableColumns()" :key="column.key">
                                 <td x-text="getCellValue(item, column)"
@@ -134,7 +158,7 @@ TODO:
                         </td>
                     </tr>
                 </tbody>
-                <tbody x-show="!loading && (!data || get_sorted_items().length === 0)">
+                <tbody x-show="!loading && (!data || sorted_items.length === 0)">
                     <tr>
                         <td :colspan="getTableColumns().length" class="text-center py-4 text-muted">
                             표시할 데이터가 없습니다.
@@ -161,11 +185,32 @@ TODO:
             let base = window.KiwoomBase('kt00004');
             const component = {
                 ...base,
+                profit: 0, //나의 수익
+                profitFilter: 'all', // 필터
                 init(){
                     if(base.init){
-                        return base.init.call(this);
-                    } 
+                        base.init.call(this);
+                    }
+                    
+                    // profitFilter 변경 감지
+                    this.$watch('profitFilter', (newValue, oldValue) => {
+                        console.log('profitFilter changed from', oldValue, 'to', newValue);
+                        this.onProfitFilterChange(newValue);
+                    });
+                    this.addCallback((data) => {
+                        this.profit = data?.['유가잔고평가액'] - data?.['총매입금액'];
+                    });
                 },
+                onProfitFilterChange(filterValue) {
+                    console.log('필터가 변경되었습니다:', filterValue);
+                    this.clearFilters();
+                    if (filterValue === 'plus') {
+                        this.addFilter(item => item.손익율 > 0);
+                    } else if (filterValue === 'minus') {
+                        this.addFilter(item => item.손익율 < 0);
+                    }
+                },
+
             }
             return component;
         });        

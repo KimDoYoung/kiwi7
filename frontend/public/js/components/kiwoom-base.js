@@ -12,7 +12,16 @@ window.KiwoomBase = function(configKey) {
         loading: false,
         sort_key: config.table.columns.find(col => col.sortable)?.key || config.table.columns[0].key,
         sort_asc: true,
-        summary_full: false,
+        
+        // 캐시 : sorted_items 용
+        _cached_items: null,
+        _cache_key: '',        
+        
+        // 필터 관련 속성 추가
+        filter_functions: [],  // 필터 함수들을 배열로 저장
+        
+        // 콜백 관련 속성 추가
+        callbacks: [],  // 데이터 fetch 후 실행할 콜백 함수들
 
         config,  // 설정 객체 내부 보관용
 
@@ -33,7 +42,18 @@ window.KiwoomBase = function(configKey) {
                 window.KiwoomUtils.autoRefreshManager.stopAll();
             });
         },
-
+        async _get_data_hash() {
+            if (!this.data) return 0;
+            
+            const dataString = JSON.stringify(this.data);
+            const encoder = new TextEncoder();
+            const data = encoder.encode(dataString);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            
+            // 해시를 숫자로 변환 (처음 8바이트만 사용)
+            const hashArray = new Uint32Array(hashBuffer.slice(0, 8));
+            return hashArray[0] ^ hashArray[1]; // XOR로 32비트로 축소
+        },
         // 정렬
         sortBy(key) {
             if (this.sort_key === key) {
@@ -44,7 +64,48 @@ window.KiwoomBase = function(configKey) {
             }
         },
 
-        // 데이터에서 배열 찾기
+        // 필터 함수 추가
+        addFilter(filterFunc) {
+            if (typeof filterFunc === 'function') {
+                this.filter_functions.push(filterFunc);
+                console.log(`🔍 Filter function added. Total filters: ${this.filter_functions.length}`);
+            } else {
+                console.error('❌ addFilter expects a function');
+            }
+        },
+
+        // 모든 필터 초기화
+        clearFilters() {
+            this.filter_functions = [];
+            console.log('✅ All filter functions cleared');
+        },
+        // 캐쉬 clear
+        clearCache(){
+            this._cache_key=undefined;
+            this._cached_items=undefined;
+        },
+        // 콜백 함수 추가
+        addCallback(callbackFunc) {
+            if (typeof callbackFunc === 'function') {
+                this.callbacks.push(callbackFunc);
+                console.log(`✅ Callback function added. Total callbacks: ${this.callbacks.length}`);
+            } else {
+                console.error('❌ addCallback expects a function');
+            }
+        },
+
+        // 모든 콜백 초기화
+        clearCallbacks() {
+            this.callbacks = [];
+            console.log('✅ All callback functions cleared');
+        },
+
+        // 활성 필터 개수
+        get activeFilterCount() {
+            return this.filter_functions.length;
+        },
+
+        // 데이터에서 배열 찾기 : data는 항목들 과 list로 구성된다.
         findArrayInData() {
             if (!this.data) return null;
 
@@ -63,7 +124,33 @@ window.KiwoomBase = function(configKey) {
             return null;
         },
 
-        get_sorted_items (){
+        // Alpine.js용 캐시된 정렬 아이템 (getter)
+        get sorted_items() {
+            // 데이터가 없거나 로딩 중이면 빈 배열 반환
+            if (!this.data || this.loading) {
+                console.log('❌ No data or loading, returning empty array');
+                return [];
+            }
+            
+            // 데이터가 있을 때만 캐시 키 생성
+            // const dataHash = this.data ? JSON.stringify(this.data).length : 0; // 간단한 해시 대용
+            const dataHash = this._get_data_hash();
+            const currentCacheKey = `${this.sort_key}-${this.sort_asc}-${this.filter_functions.length}-${dataHash}`;
+            
+            if (this._cache_key !== currentCacheKey) {
+                console.log('🔄 sorted_items 캐시 갱신 중...', currentCacheKey);
+                this._cached_items = this.get_sorted_items();
+                this._cache_key = currentCacheKey;
+            } else {
+                console.log('📋 sorted_items 캐시에서 반환');
+            }
+            
+            return this._cached_items || [];
+        },        
+
+        //
+        // 필터링 + 정렬된 아이템 가져오기 (기존 get_sorted_items 수정)
+        get_sorted_items() {
             if (this.loading || !this.data) {
                 console.log('❌ No data or loading, returning empty array');
                 return [];
@@ -79,33 +166,69 @@ window.KiwoomBase = function(configKey) {
             if (!items || !Array.isArray(items)) {
                 return [];
             }
-            const sortedItems = window.KiwoomUtils.sortArray([...items], this.sort_key, this.sort_asc);
-            console.log('✅ Returning sorted items:', sortedItems.length, 'items');
-            return sortedItems;
 
-        },
-        // 정렬된 아이템
-        get sorted_items1() {
-            if (this.loading || !this.data) {
-                console.log('❌ No data or loading, returning empty array');
-                return [];
+            // 1. 필터링 먼저 적용
+            let filteredItems = items;
+            if (this.filter_functions.length > 0) {
+                filteredItems = items.filter(item => {
+                    // 모든 필터 함수를 통과해야 함
+                    return this.filter_functions.every(filterFunc => {
+                        try {
+                            return filterFunc(item);
+                        } catch (error) {
+                            console.error('❌ Filter function error:', error);
+                            return true; // 에러 시 통과시킴
+                        }
+                    });
+                });
+                console.log(`🔍 Filtered ${items.length} → ${filteredItems.length} items using ${this.filter_functions.length} filter(s)`);
             }
 
-            let items = this.data[config.table.data_key];
+            // 2. 정렬 적용
+            const sortedItems = window.KiwoomUtils.sortArray([...filteredItems], this.sort_key, this.sort_asc);
+            console.log(`✅ Returning ${sortedItems.length} items (${this.filter_functions.length} filters applied, sorted: ${this.sort_key})`);
+            
+            return sortedItems;
+        },
 
+        // 필터링된 총 개수 (정렬 전)
+        get filteredItemCount() {
+            if (this.loading || !this.data) return 0;
+            
+            let items = this.data?.[config.table.data_key];
             if (!items || !Array.isArray(items)) {
-                console.warn('⚠️ Configured key not found, searching for arrays...');
                 items = this.findArrayInData();
             }
+            if (!items || !Array.isArray(items)) return 0;
 
-            if (!items || !Array.isArray(items)) {
-                return [];
+            if (this.filter_functions.length > 0) {
+                return items.filter(item => {
+                    return this.filter_functions.every(filterFunc => {
+                        try {
+                            return filterFunc(item);
+                        } catch (error) {
+                            console.error('❌ Filter function error:', error);
+                            return true;
+                        }
+                    });
+                }).length;
             }
-
-            const sortedItems = window.KiwoomUtils.sortArray([...items], this.sort_key, this.sort_asc);
-            console.log('✅ Returning sorted items:', sortedItems.length, 'items');
-            return sortedItems;
+            return items.length;
         },
+
+        // 전체 아이템 개수 (필터링 전)
+        get totalItemCount() {
+            if (this.loading || !this.data) return 0;
+            
+            let items = this.data?.[config.table.data_key];
+            if (!items || !Array.isArray(items)) {
+                items = this.findArrayInData();
+            }
+            if (!items || !Array.isArray(items)) return 0;
+            
+            return items.length;
+        },
+
         getTableColumns() {            
             try {
                 if (!this.config.table?.columns) {
@@ -161,6 +284,19 @@ window.KiwoomBase = function(configKey) {
 
                     console.log("✅ API로 데이터를 가져옴:", this.data);
 
+                    // 콜백 함수들 실행
+                    if (this.callbacks.length > 0) {
+                        console.log(`📞 Executing ${this.callbacks.length} callback(s)...`);
+                        for (const callback of this.callbacks) {
+                            try {
+                                await callback(this.data, this);
+                            } catch (error) {
+                                console.error('❌ Callback execution error:', error);
+                            }
+                        }
+                        console.log('✅ All callbacks executed');
+                    }
+
                     this.$nextTick(() => {
                         console.log("✅ fetch 후 DOM 갱신됨");
                         this.$dispatch('data-updated');
@@ -177,10 +313,11 @@ window.KiwoomBase = function(configKey) {
             }
         },
 
-        // CSV 내보내기
+        // CSV 내보내기 (필터링된 데이터로)
         exportCSV() {
             const filename = `${config.title}_${new Date().toISOString().split('T')[0]}.csv`;
-            window.KiwoomUtils.exportToCSV(this.sorted_items, config.table.columns, filename);
+            let filtered_sorted_data = this.get_sorted_items();
+            window.KiwoomUtils.exportToCSV(filtered_sorted_data, config.table.columns, filename);
         },
 
         // 수동 새로고침

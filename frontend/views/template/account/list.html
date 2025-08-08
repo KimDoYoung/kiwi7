@@ -1,352 +1,218 @@
+<!--
+    - 이 템플릿은 계좌의 요약 정보와 종목별 평가 현황을 Alpine.js로 동적으로 표시합니다.
+    - summary_full 체크박스로 상세 요약정보를 토글할 수 있습니다.
+    - fetch_kiwoom() 함수는 API를 호출하여 데이터를 갱신합니다.
+    - 각 데이터는 toLocaleString()으로 통화 형식으로 표시됩니다.
+    - 손익금액/손익율은 양수/음수에 따라 색상이 다르게 표시됩니다.
+TODO: 
+    1. head click sorting, summary 더 예쁘게, 새로고침 5초마다 refrsh
+    2. 종목코드 클릭, 종목명 클릭(상세정보)
+    3. csv저장, 엑셀저장
+
+
+-->
 {% extends 'common/base.html' %}
-
 {% block style %}
-<style>
-.kiwoom-loading { opacity: 0.6; }
-.sortable-header { cursor: pointer; user-select: none; }
-.sortable-header:hover { background-color: #f8f9fa; }
-.clickable-cell { cursor: pointer; }
-.clickable-cell:hover { background-color: #f0f0f0; }
-.debug-info { font-size: 12px; color: #666; margin: 5px 0; }
-</style>
 {% endblock %}
-
 {% block content %}
-<div x-data="kt00004_component" @data-updated="console.log('Data updated event received')">
-    <span x-text="name"></span>
-    
-    <!-- 종합 디버깅 정보 -->
-    <div class="debug-info">
-        <strong>Debug Info:</strong><br>
-        Loading: <span x-text="loading"></span> | 
-        Data exists: <span x-text="!!data"></span><br>
-        Config exists: <span x-text="!!_config"></span> | 
-        Config key: <span x-text="_config ? 'kt00004' : 'missing'"></span><br>
-        Summary config: <span x-text="!!_config?.summary"></span> | 
-        Table config: <span x-text="!!_config?.table"></span><br>
-        Data key: <span x-text="_config?.table?.data_key || 'missing'"></span><br>
-        Sort key: <span x-text="sort_key || 'missing'"></span><br>
-        <strong style="color: blue;">Summary rows (getter): <span x-text="summaryRows.length"></span></strong><br>
-        <strong style="color: red;">Summary rows (function): <span x-text="getSummaryRows().length"></span></strong><br>
-        Sorted items: <span x-text="sorted_items.length"></span><br>
-        직접접근: <span x-text="data?.종목별계좌평가현황?.length || 0"></span>
+<div class="container mt-4" x-data="kt00004_component" x-init="init_local()">
+    <!-- 계좌명과 헤드 시작-->
+    <div class="d-flex align-items-center">
+        <span x-text="data?.계좌명"></span>
+        <span class="ms-2">(<span x-text="data?.지점명"></span>)</span>
+        <div class="form-check ms-3 mt-0">
+            <input class="form-check-input" type="checkbox" id="summaryFullCheck" x-model="summary_show">
+            <label class="form-check-label" for="summaryFullCheck">계좌상세</label>
+        </div>
+    </div> 
+    <div class="d-flex align-items-center mt-2 gap-4">
+        <div>
+            <span>자산:</span>
+            <span class="fw-bold" x-text="Number(data?.추정예탁자산).toLocaleString() + ' 원'"></span>
+        </div>
+        <div>
+            <span>수익:</span>
+            <span class="fw-bold" x-text="profit.toLocaleString() + ' 원'"></span>
+        </div>
+        <div>
+            <span>매수가능:</span>
+            <span class="fw-bold" x-text="Number(data?.['D+2추정예수금']).toLocaleString() + ' 원'"></span>
+        </div>
     </div>
-    
-    <div class="container mt-4">
-        
-        <!-- 에러/성공 메시지 -->
-        <div class="alert alert-danger" x-show="return_code !== 0">
-            <strong>오류:</strong> <span x-text="return_msg"></span>
-        </div>
-        
-        <!-- 헤더 -->
-        <div class="d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center">
-                <span x-text="data?.계좌명"></span>
-                <span class="ms-2">(<span x-text="data?.지점명"></span>)</span>
-                <div class="form-check ms-3 mt-0">
-                    <input class="form-check-input" type="checkbox" id="summaryFullCheck" x-model="summary_full">
-                    <label class="form-check-label" for="summaryFullCheck">전체보기</label>
-                </div>
-            </div>
-            
-            <!-- 액션 버튼들 -->
-            <div class="btn-group">
-                <button class="btn btn-outline-secondary" @click="refresh()" :disabled="loading" title="새로고침">
-                    <i class="fa fa-refresh" :class="{'fa-spin': loading}"></i>
-                </button>
-                <button class="btn btn-outline-success" @click="exportCSV()" :disabled="!sorted_items.length" title="CSV 내보내기">
-                    <i class="fa fa-download"></i>
-                </button>
-            </div>
-        </div>
+    <!-- 계좌명과 헤드 끝-->
+    <!-- 계좌 요약 정보 시작--> 
+    <div class="rounded-3 shadow-sm bg-white p-1 mt-4" x-show="summary_show">
+        <table class="mt-2 table table-bordered table-striped align-middle">
+        <tbody>
+            <tr>
+            <th class="bg-light">예수금</th>
+            <td class="text-end" x-text="Number(data?.예수금).toLocaleString() + ' 원'"></td>
 
-        <!-- 요약 테이블 (getter 사용) -->
-        <div x-show="data">
-            <h5 class="mt-3">요약 정보</h5>
-            <template x-if="summaryRows.length > 0">
-                <div>
-                    <h6>Hello...</h6>
-                    <table class="mt-2 table table-bordered table-striped align-middle">
-                        <tbody>
-                            <template x-for="(row, index) in summaryRows" :key="index">
-                                <tr>
-                                    <template x-for="field in row" :key="field?.key || index + '_null'">
-                                        <td colspan="2" x-if="!field"></td>
-                                        <template x-if="field">
-                                            <th class="bg-light" x-text="field.label"></th>
-                                            <td class="text-end" 
-                                                x-text="getSummaryValue(field)"
-                                                :class="field.color_class || ''">
-                                            </td>
-                                        </template>
-                                    </template>
-                                </tr>
-                            </template>
-                        </tbody>
-                    </table>
-                </div>
-            </template>
+            <th class="bg-light">D+2추정예수금</th>
+            <td class="text-end fw-bold" x-text="Number(data?.['D+2추정예수금']).toLocaleString() + ' 원'"></td>
+            </tr>
+            <tr>
+            <th class="bg-light">유가잔고평가액</th>
+            <td class="text-end" x-text="Number(data?.유가잔고평가액).toLocaleString() + ' 원'"></td>
 
-            
-            <!-- 요약 데이터 없을 때 -->
-            <template x-if="summaryRows.length === 0">
-                <div class="alert alert-info">
-                    요약 데이터가 없습니다.
-                </div>
-            </template>
+            <th class="bg-light">예탁자산평가액</th>
+            <td class="text-end" x-text="Number(data?.예탁자산평가액).toLocaleString() + ' 원'"></td>
+            </tr>
+            <tr>
+            <th class="bg-light">총매입금액</th>
+            <td class="text-end" x-text="Number(data?.총매입금액).toLocaleString() + ' 원'"></td>
+
+            <th class="bg-light">추정예탁자산</th>
+            <td class="text-end" x-text="Number(data?.추정예탁자산).toLocaleString() + ' 원'"></td>
+            </tr>
+            <tr>
+            <th class="bg-light">매도담보대출금</th>
+            <td class="text-end" x-text="Number(data?.매도담보대출금).toLocaleString() + ' 원'"></td>
+
+            <th class="bg-light">당일투자원금</th>
+            <td class="text-end" x-text="Number(data?.당일투자원금).toLocaleString() + ' 원'"></td>
+            </tr>
+            <tr>
+            <th class="bg-light">당월투자원금</th>
+            <td class="text-end" x-text="Number(data?.당월투자원금).toLocaleString() + ' 원'"></td>
+
+            <th class="bg-light">누적투자원금</th>
+            <td class="text-end" x-text="Number(data?.누적투자원금).toLocaleString() + ' 원'"></td>
+            </tr>
+            <tr>
+            <th class="bg-light">당일투자손익</th>
+            <td class="text-end text-danger" x-text="Number(data?.당일투자손익).toLocaleString() + ' 원'"></td>
+
+            <th class="bg-light">당월투자손익</th>
+            <td class="text-end text-danger" x-text="Number(data?.당월투자손익).toLocaleString() + ' 원'"></td>
+            </tr>
+            <tr>
+            <th class="bg-light">누적투자손익</th>
+            <td class="text-end text-danger" x-text="Number(data?.누적투자손익).toLocaleString() + ' 원'"></td>
+
+            <th class="bg-light">당일손익율</th>
+            <td class="text-end" x-text="data?.당일손익율 + ' %'"></td>
+            </tr>
+            <tr>
+            <th class="bg-light">당월손익율</th>
+            <td class="text-end" x-text="data?.당월손익율 + ' %'"></td>
+
+            <th class="bg-light">누적손익율</th>
+            <td class="text-end" x-text="data?.누적손익율 + ' %'"></td>
+            </tr>
+        </tbody>
+        </table>
+
+    </div>
+
+    <!-- 계좌 요약 정보 끝--> 
+    <!-- 데이터 테이블  시작-->
+    <div class="mt-4">
+        <div class="mt-2 mb-2 d-flex justify-content-between align-items-center">
+            <select class="form-select form-select-sm w-auto" x-model="profitFilter">
+                <option value="all">전체</option>
+                <option value="plus">+손익율</option>
+                <option value="minus">-손익율</option>
+            </select>
+            <button class="btn btn-outline-success btn-sm me-2" title="엑셀로 저장" @click="exportCSV()">
+                <i class="fa fa-file-excel"></i>
+            </button>
         </div>
-
-        <!-- 데이터 테이블 -->
-        <div class="mt-4">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover align-middle text-center">
-                    <thead class="table-light">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle text-center">
+                <thead class="table-light">
+                    <tr>
+                        <template x-for="column in getTableColumns()" :key="column.key">
+                            <th>
+                                <template x-if="column.sortable">
+                                    <a href="#" @click.prevent="sortBy(column.key)" 
+                                        class="text-decoration-none text-dark sortable-header">
+                                        <span x-text="column.label"></span>
+                                        <span x-show="sort_key === column.key" 
+                                                x-text="sort_asc ? '▲' : '▼'"></span>
+                                    </a>
+                                </template>
+                                <template x-if="!column.sortable">
+                                    <span x-text="column.label"></span>
+                                </template>
+                            </th>
+                        </template>
+                    </tr>
+                </thead>
+                <tbody x-show="data && !loading">
+                    <template x-for="item in sorted_items" :key="item.종목코드">
                         <tr>
                             <template x-for="column in getTableColumns()" :key="column.key">
-                                <th>
-                                    <template x-if="column.sortable">
-                                        <a href="#" @click.prevent="sortBy(column.key)" 
-                                           class="text-decoration-none text-dark sortable-header">
-                                            <span x-text="column.label"></span>
-                                            <span x-show="sort_key === column.key" 
-                                                  x-text="sort_asc ? '▲' : '▼'"></span>
-                                        </a>
-                                    </template>
-                                    <template x-if="!column.sortable">
-                                        <span x-text="column.label"></span>
-                                    </template>
-                                </th>
+                                <td x-text="getCellValue(item, column)"
+                                    :class="getCellClass(item, column) + (column.clickable ? ' clickable-cell' : '')"
+                                    @click="handleCellClick(item, column)">
+                                </td>
                             </template>
                         </tr>
-                    </thead>
-                    <tbody x-show="data && !loading">
-                        <template x-for="item in sorted_items" :key="item.종목코드">
-                            <tr>
-                                <template x-for="column in getTableColumns()" :key="column.key">
-                                    <td x-text="getCellValue(item, column)"
-                                        :class="getCellClass(item, column) + (column.clickable ? ' clickable-cell' : '')"
-                                        @click="handleCellClick(item, column)">
-                                    </td>
-                                </template>
-                            </tr>
-                        </template>
-                    </tbody>
-                    <tbody x-show="loading">
-                        <tr>
-                            <td :colspan="getTableColumns().length" class="text-center py-4">
-                                <i class="fa fa-spinner fa-spin"></i> 데이터를 불러오는 중...
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tbody x-show="!loading && (!data || sorted_items.length === 0)">
-                        <tr>
-                            <td :colspan="getTableColumns().length" class="text-center py-4 text-muted">
-                                표시할 데이터가 없습니다.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>        
-        </div>
-    </div>
+                    </template>
+                </tbody>
+                <tbody x-show="loading">
+                    <tr>
+                        <td :colspan="getTableColumns().length" class="text-center py-4">
+                            <i class="fa fa-spinner fa-spin"></i> 데이터를 불러오는 중...
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody x-show="!loading && (!data || sorted_items.length === 0)">
+                    <tr>
+                        <td :colspan="getTableColumns().length" class="text-center py-4 text-muted">
+                            표시할 데이터가 없습니다.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>        
+    </div> 
+    <!-- 데이터 테이블 끝-->   
 </div>
+{% raw %}
+<!--handlebar scripts-->
+{% endraw %}
 {% endblock %}
-
 {% block script %}
 <script src="/public/js/configs/kiwoom-configs.js"></script>
 <script src="/public/js/utils/kiwoom-utils.js"></script>
 <script src="/public/js/components/kiwoom-base.js"></script>
-
+{% raw %}
 <script>
-document.addEventListener('alpine:init', () => {
-    console.log('🚀 Initializing kt00004_component');
-    
-    // 먼저 의존성 확인
-    console.log('📋 Dependencies check:', {
-        KiwoomConfigs: !!window.KiwoomConfigs,
-        KiwoomBase: !!window.KiwoomBase,
-        KiwoomUtils: !!window.KiwoomUtils,
-        kt00004Config: !!window.KiwoomConfigs?.kt00004
-    });
-    
-    if (!window.KiwoomConfigs?.kt00004) {
-        console.error('❌ kt00004 config not found!');
-        return;
-    }
-    
-    Alpine.data('kt00004_component', () => {
-        console.log('🔧 Creating component instance...');
-        
-        // 베이스 컴포넌트 확장
-        let base;
-        let config;
-        
-        try {
-            base = window.KiwoomBase('kt00004');
-            config = window.KiwoomConfigs.kt00004;
-            console.log('✅ Base component created:', !!base);
-            console.log('✅ Config loaded:', !!config);
-        } catch (error) {
-            console.error('❌ Error creating base component:', error);
-            return {
-                error: true,
-                errorMessage: error.message
-            };
-        }
-        
-        const component = {
-            ...base,
-            
-            // 컴포넌트 초기화 확인
-            init() {
-                console.log('🎯 Component init called');
-                console.log('Config check in init:', {
-                    hasConfig: !!this._config,
-                    configSummary: !!this._config?.summary,
-                    configTable: !!this._config?.table,
-                    dataKey: this._config?.table?.data_key
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('kt00004_component', () => {
+            let base = window.KiwoomBase('kt00004');
+            base.summary_show = false,
+            base.profit = 0; //나의 수익
+            base.profitFilter = 'all'; // 필터
+            // const baseOriginalInit = base.init;
+
+            base.init_local = function() {
+                // if (baseOriginalInit) {
+                //     baseOriginalInit.call(this);
+                // }
+                this.$watch('profitFilter', (newValue, oldValue) => {
+                    console.log('profitFilter changed from', oldValue, 'to', newValue);
+                    this.clearCache();
+                    this.onProfitFilterChange(newValue);
                 });
-                
-                // 부모 init 호출
-                if (base.init) {
-                    return base.init.call(this);
+                this.addCallback((data) => {
+                    this.profit = data?.['유가잔고평가액'] - data?.['총매입금액'];
+                });
+            };
+            base.onProfitFilterChange = function(filterValue) {
+                console.log('필터가 변경되었습니다:', filterValue);
+                this.clearFilters();
+                if (filterValue === 'plus') {
+                    this.addFilter(item => item.손익율 > 0);
+                } else if (filterValue === 'minus') {
+                    this.addFilter(item => item.손익율 < 0);
                 }
-            },
-            
-            // Computed property로 summary rows 캐싱
-            get summaryRows() {
-                try {
-                    return this.getSummaryRows();
-                } catch (error) {
-                    console.error('❌ Error in summaryRows getter:', error);
-                    return [];
-                }
-            },
-
-            // 요약 테이블 행 생성 (더 안전한 버전)
-            getSummaryRows() {
-                console.log('🔍 getSummaryRows called');
-                
-                try {
-                    // null 체크
-                    if (!this._config) {
-                        console.error('❌ No _config in getSummaryRows');
-                        return [];
-                    }
-                    
-                    if (!this._config.summary) {
-                        console.warn('⚠️ No summary config found, returning empty array');
-                        return [];
-                    }
-                    
-                    // basic_fields가 없으면 빈 배열로 처리
-                    const basic = this._config.summary.basic_fields;
-                    if (!basic || !Array.isArray(basic)) {
-                        console.warn('⚠️ No basic_fields found');
-                        return [];
-                    }
-                    
-                    const extended = this.summary_full ? (this._config.summary.extended_fields || []) : [];
-                    const allFields = [...basic, ...extended];
-                    
-                    console.log('📋 Summary fields:', { 
-                        basicLength: basic.length, 
-                        extendedLength: extended.length, 
-                        totalLength: allFields.length 
-                    });
-                    
-                    if (allFields.length === 0) {
-                        console.warn('⚠️ No fields to display');
-                        return [];
-                    }
-                    
-                    const rows = [];
-                    for (let i = 0; i < allFields.length; i += 2) {
-                        rows.push([allFields[i], allFields[i + 1] || null]);
-                    }
-                    
-                    console.log('✅ Summary rows created:', rows.length);
-                    return rows;
-                    
-                } catch (error) {
-                    console.error('❌ Error in getSummaryRows:', error);
-                    return []; // 에러 시 빈 배열 반환
-                }
-            },
-
-            // 테이블 컬럼 반환 (강화된 에러 처리)
-            getTableColumns() {
-                console.log('🔍 getTableColumns called');
-                
-                try {
-                    if (!this._config?.table?.columns) {
-                        console.error('❌ No table columns config');
-                        return [];
-                    }
-                    
-                    const columns = this._config.table.columns;
-                    console.log('📊 Table columns:', columns.length);
-                    return columns;
-                } catch (error) {
-                    console.error('❌ Error in getTableColumns:', error);
-                    return [];
-                }
-            },
-
-            // 정렬된 아이템 getter (강화된 버전)
-            get sorted_items() {
-                console.log('🔍 sorted_items getter called');
-                
-                try {
-                    if (this.loading || !this.data) {
-                        console.log('⏳ Loading or no data');
-                        return [];
-                    }
-                    
-                    if (!this._config?.table?.data_key) {
-                        console.error('❌ No data_key in config');
-                        return [];
-                    }
-                    
-                    const dataKey = this._config.table.data_key;
-                    const items = this.data[dataKey];
-                    
-                    console.log('📊 Items check:', {
-                        dataKey,
-                        hasItems: !!items,
-                        isArray: Array.isArray(items),
-                        length: Array.isArray(items) ? items.length : 'not array'
-                    });
-                    
-                    if (!Array.isArray(items)) {
-                        console.error('❌ Items not array or missing');
-                        return [];
-                    }
-                    
-                    // 정렬 없이 먼저 반환해보기
-                    console.log('✅ Returning items without sorting:', items.length);
-                    return items;
-                    
-                } catch (error) {
-                    console.error('❌ Error in sorted_items:', error);
-                    return [];
-                }
-            },
-
-            // 셀 클릭 처리
-            handleCellClick(item, column) {
-                if (column.key === '종목코드' || column.key === '종목명') {
-                    if (confirm(`${item.종목명}(${item.종목코드}) 상세 정보를 보시겠습니까?`)) {
-                        console.log('Navigate to stock detail:', item.종목코드);
-                    }
-                }
-            }
-        };
-        
-        console.log('🎯 Component created:', component);
-        return component;
+            };
+            return base;
+        });        
     });
-});
 </script>
+{% endraw %}
 {% endblock %}
