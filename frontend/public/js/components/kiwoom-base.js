@@ -22,6 +22,9 @@ window.KiwoomBase = function(config) {
         // 콜백 관련
         callbacks: [],
 
+        // cell 클릭 함수들
+        clickHandlers: {},
+
         config,  // 설정 객체 보관
 
         init() {
@@ -126,6 +129,63 @@ window.KiwoomBase = function(config) {
             this.callbacks = [];
             console.log('✅ All callback functions cleared');
         },
+
+        // ⭐ 클릭 핸들러 등록
+        addClickHandler(columnKey, handler) {
+            if (typeof handler === 'function') {
+                this.clickHandlers[columnKey] = handler;
+                console.log(`✅ Click handler added for column: ${columnKey}`);
+            } else {
+                console.error(`❌ addClickHandler expects a function for column: ${columnKey}`);
+            }
+        },
+
+        // ⭐ 모든 클릭 핸들러 초기화
+        clearClickHandlers() {
+            this.clickHandlers = {};
+            console.log('✅ All click handlers cleared');
+        },
+        // ⭐ 셀 클릭 핸들러 (개선됨)
+        handleCellClick(item, column) {
+            if (!column.clickable) return;
+
+            console.log(`셀 click : ${column.key}`, item);
+
+            // 등록된 커스텀 핸들러가 있는지 확인
+            if (this.clickHandlers[column.key]) {
+                try {
+                    console.log("등록된 cell 클릭...")
+                    this.clickHandlers[column.key](item, column, this);
+                } catch (error) {
+                    console.error(`❌ Click handler error for ${column.key}:`, error);
+                }
+                return;
+            }
+
+            // 기본 핸들러 (커스텀 핸들러가 없을 때)
+            this.defaultCellClickHandler(item, column);
+        },
+
+        // ⭐ 기본 클릭 핸들러
+        defaultCellClickHandler(item, column) {
+            switch (column.key) {
+                case '종목코드':
+                    console.log('기본 종목코드 클릭:', item[column.key]);
+                    const stk_code = (item[column.key] || '').match(/\d{6}/)?.[0] || '';
+                    window.open(`https://finance.naver.com/item/main.naver?code=${stk_code}`, '_blank');
+                    break;
+                    
+                case '종목명':
+                    console.log('기본 종목명 클릭:', item[column.key]);
+                    // 기본 동작: 알림
+                    alert(`종목명: ${item[column.key]}`);
+                    break;
+                    
+                default:
+                    console.log('기본 셀 클릭:', column.key, item[column.key]);
+            }
+        },
+
 
         // 활성 필터 개수
         get activeFilterCount() {
@@ -354,11 +414,11 @@ window.KiwoomBase = function(config) {
         },
 
         // 셀 클릭 핸들러
-        handleCellClick(item, column) {
-            if (column.clickable) {
-                console.log('Cell clicked:', item, column.key);
-            }
-        },
+        // handleCellClick(item, column) {
+        //     if (column.clickable) {
+        //         console.log('Cell clicked:', item, column.key);
+        //     }
+        // },
 
         // API 호출
         async fetch_data() {

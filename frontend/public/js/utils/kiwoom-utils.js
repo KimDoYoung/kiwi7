@@ -58,8 +58,6 @@ window.KiwoomUtils = {
         const rows = data.map(item => 
             columns.map(col => {
                 let value;
-                
-                // ⭐ 파생 컬럼 처리
                 if (col.derived && col.formula) {
                     try {
                         value = col.formula(item);
