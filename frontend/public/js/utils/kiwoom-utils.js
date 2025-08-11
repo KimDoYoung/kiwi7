@@ -4,11 +4,13 @@ window.KiwoomUtils = {
     formatValue(value, format) {
         if (value === null || value === undefined || value === '') return '';
         
+        const numValue = Number(value); 
+        
         switch (format) {
             case 'number':
-                return Number(value).toLocaleString();
+                return numValue.toLocaleString();
             case 'currency':
-                return Number(value).toLocaleString() + ' 원';
+                return numValue.toLocaleString() + ' 원';
             case 'percent':
                 return value + ' %';
             case 'profit':
@@ -55,10 +57,28 @@ window.KiwoomUtils = {
         const headers = columns.map(col => col.label).join(',');
         const rows = data.map(item => 
             columns.map(col => {
-                let value = item[col.key] || '';
+                let value;
+                
+                // ⭐ 파생 컬럼 처리
+                if (col.derived && col.formula) {
+                    try {
+                        value = col.formula(item);
+                        // 포맷팅 적용
+                        if (col.format) {
+                            value = this.formatValue(value, col.format);
+                        }
+                    } catch (error) {
+                        console.error(`Error calculating derived column ${col.key}:`, error);
+                        value = '';
+                    }
+                } else {
+                    // 일반 컬럼 처리
+                    value = item[col.key] || '';
+                }
+                
                 // CSV를 위해 콤마가 포함된 값은 따옴표로 감싸기
-                if (typeof value === 'string' && value.includes(',')) {
-                    value = `"${value}"`;
+                if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
+                    value = `"${value.replace(/"/g, '""')}"`;  // 따옴표 이스케이프 처리
                 }
                 return value;
             }).join(',')

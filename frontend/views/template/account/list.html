@@ -145,7 +145,7 @@
                         <tr>
                             <template x-for="column in getTableColumns()" :key="column.key">
                                 <td x-text="getCellValue(item, column)"
-                                    :class="getCellClass(item, column) + (column.clickable ? ' clickable-cell' : '') + (column.format === 'number' ? ' text-end' : '')"
+                                    :class="getCellClass(item, column) + (column.clickable ? ' clickable-cell' : '') + ((column.format === 'number' || column.format === 'profit') ? ' text-end' : '')"
                                     @click="handleCellClick(item, column)">
                                 </td>
                             </template>
