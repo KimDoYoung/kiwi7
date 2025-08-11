@@ -1,8 +1,10 @@
-// static/js/components/kiwoom-base.js
+/**
+ * KiwoomBase 생성자
+ * 
+ * @param {*} config 
+ * @returns 
+ */
 window.KiwoomBase = function(config) {
-    // 동적으로 설정 파일 로드
-    //const config = await window.loadKiwoomConfig(configKey);
-    // debugger;
     if (!config) {
         throw new Error(`api에 따른 설정값을 인자가 필요합니다. `);
     }

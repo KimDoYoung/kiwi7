@@ -4,12 +4,6 @@
     - fetch_kiwoom() 함수는 API를 호출하여 데이터를 갱신합니다.
     - 각 데이터는 toLocaleString()으로 통화 형식으로 표시됩니다.
     - 손익금액/손익율은 양수/음수에 따라 색상이 다르게 표시됩니다.
-TODO: 
-    1. head click sorting, summary 더 예쁘게, 새로고침 5초마다 refrsh
-    2. 종목코드 클릭, 종목명 클릭(상세정보)
-    3. csv저장, 엑셀저장
-
-
 -->
 {% extends 'common/base.html' %}
 {% block style %}
@@ -201,12 +195,6 @@ TODO:
                     if (base.init) {
                         base.init.call(this);
                     }   
-                    // KiwoomBase를 비동기적으로 생성
-                    // this.base = window.KiwoomBase(kt00004);
-                    
-                    // base의 속성들을 현재 컴포넌트에 복사 (필요한 것만)
-                    // this.data = this.base.data;
-                    // this.loading = this.base.loading;
                     
                     // 필터 변경 감시
                     this.$watch('profitFilter', (newValue, oldValue) => {
@@ -231,7 +219,6 @@ TODO:
                     }
                 },
                 
-                // Proxy methods to base
                 get sorted_items() {
                     return this.getSortedCachedItems();
                 },
