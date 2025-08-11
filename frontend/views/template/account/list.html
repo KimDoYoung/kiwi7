@@ -133,6 +133,9 @@
                                 </template>
                             </th>
                         </template>
+                        <template x-if="hasActionButtons()">
+                            <th>Actions</th>
+                        </template>
                     </tr>
                 </thead>
                 <tbody x-show="data && !loading">
@@ -140,8 +143,23 @@
                         <tr>
                             <template x-for="column in getTableColumns()" :key="column.key">
                                 <td x-text="getCellValue(item, column)"
-                                    :class="getCellClass(item, column) + (column.clickable ? ' clickable-cell' : '')"
+                                    :class="getCellClass(item, column) + (column.clickable ? ' clickable-cell' : '') + (column.format === 'number' ? ' text-end' : '')"
                                     @click="handleCellClick(item, column)">
+                                </td>
+                            </template>
+                            <template x-if="hasActionButtons()">
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <template x-if="actions.includes('buy')">
+                                            <button type="button" class="btn btn-sm btn-danger" @click="buy(item)" title="매수(buy)">買</button>
+                                        </template>
+                                        <template x-if="actions.includes('sell')">
+                                            <button type="button" class="btn btn-sm btn-primary" @click="sell(item)" title="매도(sell)">賣</button>
+                                        </template>
+                                        <template x-if="actions.includes('detail')">
+                                            <button type="button" class="btn btn-sm btn-info" @click="detail(item)" title="종목상세(detail info)">詳</button>
+                                        </template>
+                                    </div>
                                 </td>
                             </template>
                         </tr>
@@ -227,6 +245,9 @@
                 },
                 get filtered_item_count() {
                     return this.filteredItemCount();
+                },
+                get actions(){
+                    return this.getActions();
                 }
             };
         });        

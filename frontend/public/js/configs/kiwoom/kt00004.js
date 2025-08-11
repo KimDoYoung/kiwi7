@@ -2,6 +2,7 @@
 const kt00004 ={
         title: '계좌평가현황',
         api_endpoint: 'kt00004',
+        action_buttons: ['buy', 'sell', 'detail'],
         payload: {
             qry_tp: "0",
             dmst_stex_tp: "KRX"
@@ -36,14 +37,28 @@ const kt00004 ={
                 { key: '보유수량', label: '보유수량', sortable: true, format: 'number' },
                 { key: '평균단가', label: '평균단가', sortable: true, format: 'number' },
                 { key: '현재가', label: '현재가', sortable: true, format: 'number' },
+                // 👇 파생 컬럼 추가
+                { 
+                    key: '주당손익', 
+                    label: '1주당', 
+                    sortable: true, 
+                    align: 'right', 
+                    format: 'profit',
+                    derived: true,  // 파생 컬럼 표시
+                    formula: (item) => {
+                        const 현재가 = parseInt(item.현재가, 10) || 0;
+                        const 평균단가 = parseInt(item.평균단가, 10) || 0;
+                        return 현재가 - 평균단가;
+                    }
+                },                
                 { key: '평가금액', label: '평가금액', sortable: true, format: 'number' },
                 { key: '손익금액', label: '손익금액', sortable: true, format: 'number', profit_loss: true },
                 { key: '손익율', label: '손익율', sortable: true, format: 'percent', profit_loss: true },
-                { key: '대출일', label: '대출일', sortable: true },
+                // { key: '대출일', label: '대출일', sortable: true },
                 { key: '매입금액', label: '매입금액', sortable: true, format: 'number' },
                 { key: '결제잔고', label: '결제잔고', sortable: true, format: 'number' },
-                { key: '전일매수수량', label: '전일매수', format: 'number' },
-                { key: '전일매도수량', label: '전일매도', format: 'number' },
+                // { key: '전일매수수량', label: '전일매수', format: 'number' },
+                // { key: '전일매도수량', label: '전일매도', format: 'number' },
                 { key: '금일매수수량', label: '금일매수', format: 'number' },
                 { key: '금일매도수량', label: '금일매도', format: 'number' }
             ]

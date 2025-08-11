@@ -11,6 +11,9 @@ window.KiwoomUtils = {
                 return Number(value).toLocaleString() + ' 원';
             case 'percent':
                 return value + ' %';
+            case 'profit':
+                const formattedValue = numValue.toLocaleString();
+                return numValue >= 0 ? '+' + formattedValue : formattedValue;                
             default:
                 return value;
         }

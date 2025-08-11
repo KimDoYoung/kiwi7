@@ -1,4 +1,14 @@
-// kiwoom-base.js 수정
+/**
+ * KiwoomBase 생성자
+ * - 키움API와 상호작용하는 기본 클래스
+ * TODO
+ * 1. button buy/sell/detail
+ * 2. 종목코드 클릭(naver)
+ * 3. 종목명 클릭시(하단의 상세)
+ * 4. 숫자는 오른쪽 정렬
+ * @param {*} config 
+ * @returns 
+ */
 window.KiwoomBase = function(config) {
     if (!config) {
         throw new Error(`api에 따른 설정값을 인자가 필요합니다. `);
@@ -12,22 +22,23 @@ window.KiwoomBase = function(config) {
         sort_key: config.table.columns.find(col => col.sortable)?.key || config.table.columns[0].key,
         sort_asc: true,
         
-        // 캐시 관련
+        // 캐시 : sorted_items 용
         _cached_items: null,
         _cache_key: '',        
         
-        // 필터 관련
-        filter_functions: [],
+        // 필터 관련 속성 추가
+        filter_functions: [],  // 필터 함수들을 배열로 저장
         
-        // 콜백 관련
-        callbacks: [],
+        // 콜백 관련 속성 추가
+        callbacks: [],  // 데이터 fetch 후 실행할 콜백 함수들
 
-        config,  // 설정 객체 보관
-
+        config,  // 설정 객체 내부 보관용
+ 
         init() {
             this.fetch_data();
 
             if (config.auto_refresh) {
+                // console.log(`🔁 Starting auto-refresh for ${configKey} every ${config.auto_refresh} ms`);
                 window.KiwoomUtils.autoRefreshManager.start(
                     config.api_endpoint,
                     () => this.fetch_data(),
@@ -39,7 +50,6 @@ window.KiwoomBase = function(config) {
                 window.KiwoomUtils.autoRefreshManager.stopAll();
             });
         },
-
         async _get_data_hash() {
             if (!this.data) return 0;
             
@@ -48,36 +58,10 @@ window.KiwoomBase = function(config) {
             const data = encoder.encode(dataString);
             const hashBuffer = await crypto.subtle.digest('SHA-256', data);
             
+            // 해시를 숫자로 변환 (처음 8바이트만 사용)
             const hashArray = new Uint32Array(hashBuffer.slice(0, 8));
-            return hashArray[0] ^ hashArray[1];
+            return hashArray[0] ^ hashArray[1]; // XOR로 32비트로 축소
         },
-
-        // ⭐ formatValue 메서드 추가
-        formatValue(value, format) {
-            if (value === null || value === undefined || value === '') {
-                return '-';
-            }
-
-            const numValue = parseFloat(value);
-            if (isNaN(numValue)) {
-                return value;
-            }
-
-            switch (format) {
-                case 'number':
-                    return numValue.toLocaleString();
-                case 'percent':
-                    return numValue.toFixed(2) + '%';
-                case 'profit':
-                    const formattedValue = numValue.toLocaleString();
-                    return formattedValue;
-                case 'currency':
-                    return numValue.toLocaleString() + '원';
-                default:
-                    return value;
-            }
-        },
-
         // 정렬
         sortBy(key) {
             if (this.sort_key === key) {
@@ -86,7 +70,6 @@ window.KiwoomBase = function(config) {
                 this.sort_key = key;
                 this.sort_asc = true;
             }
-            this.clearCache();
         },
 
         // 필터 함수 추가
@@ -104,13 +87,11 @@ window.KiwoomBase = function(config) {
             this.filter_functions = [];
             console.log('✅ All filter functions cleared');
         },
-
-        // 캐시 clear
+        // 캐쉬 clear
         clearCache(){
-            this._cache_key = undefined;
-            this._cached_items = undefined;
+            this._cache_key=undefined;
+            this._cached_items=undefined;
         },
-
         // 콜백 함수 추가
         addCallback(callbackFunc) {
             if (typeof callbackFunc === 'function') {
@@ -132,7 +113,7 @@ window.KiwoomBase = function(config) {
             return this.filter_functions.length;
         },
 
-        // 데이터에서 배열 찾기
+        // 데이터에서 배열 찾기 : data는 항목들 과 list로 구성된다.
         findArrayInData() {
             if (!this.data) return null;
 
@@ -153,11 +134,14 @@ window.KiwoomBase = function(config) {
 
         // Alpine.js용 캐시된 정렬 아이템 (getter)
         getSortedCachedItems() {
+            // 데이터가 없거나 로딩 중이면 빈 배열 반환
             if (!this.data || this.loading) {
                 console.log('❌ No data or loading, returning empty array');
                 return [];
             }
             
+            // 데이터가 있을 때만 캐시 키 생성
+            // const dataHash = this.data ? JSON.stringify(this.data).length : 0; // 간단한 해시 대용
             const dataHash = this._get_data_hash();
             const currentCacheKey = `${this.sort_key}-${this.sort_asc}-${this.filter_functions.length}-${dataHash}`;
             
@@ -172,7 +156,8 @@ window.KiwoomBase = function(config) {
             return this._cached_items || [];
         },        
 
-        // 필터링 + 정렬된 아이템 가져오기
+        //
+        // 필터링 + 정렬된 아이템 가져오기 (기존 get_sorted_items 수정)
         getSortedItems() {
             if (this.loading || !this.data) {
                 console.log('❌ No data or loading, returning empty array');
@@ -194,53 +179,27 @@ window.KiwoomBase = function(config) {
             let filteredItems = items;
             if (this.filter_functions.length > 0) {
                 filteredItems = items.filter(item => {
+                    // 모든 필터 함수를 통과해야 함
                     return this.filter_functions.every(filterFunc => {
                         try {
                             return filterFunc(item);
                         } catch (error) {
                             console.error('❌ Filter function error:', error);
-                            return true;
+                            return true; // 에러 시 통과시킴
                         }
                     });
                 });
                 console.log(`🔍 Filtered ${items.length} → ${filteredItems.length} items using ${this.filter_functions.length} filter(s)`);
             }
 
-            // 2. 정렬 적용 (파생 컬럼 지원)
-            const sortedItems = [...filteredItems].sort((a, b) => {
-                const column = this.config.table.columns.find(col => col.key === this.sort_key);
-                let aValue, bValue;
-
-                if (column && column.derived && column.formula) {
-                    // 파생 컬럼인 경우
-                    aValue = column.formula(a);
-                    bValue = column.formula(b);
-                } else {
-                    // 일반 컬럼인 경우
-                    aValue = a[this.sort_key];
-                    bValue = b[this.sort_key];
-                }
-
-                // 숫자 형태로 변환 시도
-                const aNum = parseFloat(aValue);
-                const bNum = parseFloat(bValue);
-                
-                if (!isNaN(aNum) && !isNaN(bNum)) {
-                    return this.sort_asc ? aNum - bNum : bNum - aNum;
-                }
-                
-                // 문자열 비교
-                const aStr = String(aValue || '');
-                const bStr = String(bValue || '');
-                return this.sort_asc ? aStr.localeCompare(bStr) : bStr.localeCompare(aStr);
-            });
-            
+            // 2. 정렬 적용
+            const sortedItems = window.KiwoomUtils.sortArray([...filteredItems], this.sort_key, this.sort_asc);
             console.log(`✅ Returning ${sortedItems.length} items (${this.filter_functions.length} filters applied, sorted: ${this.sort_key})`);
             
             return sortedItems;
         },
 
-        // 필터링된 총 개수
+        // 필터링된 총 개수 (정렬 전)
         filteredItemCount() {
             if (this.loading || !this.data) return 0;
             
@@ -265,7 +224,7 @@ window.KiwoomBase = function(config) {
             return items.length;
         },
 
-        // 전체 아이템 개수
+        // 전체 아이템 개수 (필터링 전)
         totalItemCount() {
             if (this.loading || !this.data) return 0;
             
@@ -296,10 +255,10 @@ window.KiwoomBase = function(config) {
         // 요약 필드 포맷팅
         getSummaryValue(field) {
             const value = this.data?.[field.key];
-            return this.formatValue(value, 'currency');
+            return window.KiwoomUtils.formatValue(value, 'currency');
         },
 
-        // ⭐ 셀 값 포맷팅 (수정됨)
+        // 셀 값 포맷팅
         getCellValue(item, column) {
             if (column.derived && column.formula) {
                 // 파생 컬럼인 경우 formula 함수 실행
@@ -312,26 +271,11 @@ window.KiwoomBase = function(config) {
             }
         },
 
-        // ⭐ 셀 클래스 (수정됨)
+        // 셀 클래스
         getCellClass(item, column) {
-            let classes = []; // ⭐ classes 배열 초기화
-
-            // 정렬 기준 추가
-            if (column.align) {
-                classes.push('text-' + column.align);
-            }
-
             if (column.profit_loss) {
-                const value = parseFloat(item[column.key]);
-                if (!isNaN(value)) {
-                    if (value > 0) {
-                        classes.push('text-danger');
-                    } else if (value < 0) {
-                        classes.push('text-primary');
-                    }
-                }
+                return window.KiwoomUtils.getProfitLossClass(item[column.key]);
             }
-
             // profit 형식이거나 파생 컬럼이 profit 관련인 경우 색상 적용
             if (column.format === 'profit' || column.key === '주당손익') {
                 let value;
@@ -343,9 +287,9 @@ window.KiwoomBase = function(config) {
                 
                 if (!isNaN(value)) {
                     if (value > 0) {
-                        classes.push('text-danger');
+                        classes.push('text-success fw-bold');
                     } else if (value < 0) {
-                        classes.push('text-primary');
+                        classes.push('text-danger fw-bold');
                     }
                 }
             }
@@ -386,27 +330,23 @@ window.KiwoomBase = function(config) {
                         console.log('✅ All callbacks executed');
                     }
 
-                    // Alpine.js의 nextTick 대신 setTimeout 사용
-                    setTimeout(() => {
+                    this.$nextTick(() => {
                         console.log("✅ fetch 후 DOM 갱신됨");
-                        // Alpine.js 이벤트 디스패치
-                        if (typeof this.$dispatch === 'function') {
-                            this.$dispatch('data-updated');
-                        }
-                    }, 0);
+                        this.$dispatch('data-updated');
+                    });
                 } else {
                     throw new Error(response.error_message || '알 수 없는 오류가 발생했습니다.');
                 }
             } catch (err) {
                 this.return_code = -1;
                 this.return_msg = '오류: ' + err.message;
-                console.error(`API 호출 오류:`, err);
+                // console.error(`[${configKey}] API 호출 오류:`, err);
             } finally {
                 this.loading = false;
             }
         },
 
-        // CSV 내보내기
+        // CSV 내보내기 (필터링된 데이터로)
         exportCSV() {
             const filename = `${config.title}_${new Date().toISOString().split('T')[0]}.csv`;
             let filtered_sorted_data = this.getSortedItems();
@@ -430,12 +370,10 @@ window.KiwoomBase = function(config) {
                 );
             }
         },
-
-        // action_buttons
+        //action_buttons
         hasActionButtons() {
             return config.action_buttons && config.action_buttons.length > 0;
         },
-
         getActions(){
             return config.action_buttons;
         }
