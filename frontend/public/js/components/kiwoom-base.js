@@ -1,10 +1,10 @@
 // static/js/components/kiwoom-base.js
-window.KiwoomBase = async function(configKey) {
-    const config = window.KiwoomConfigs[configKey];
+window.KiwoomBase = function(config) {
+    // 동적으로 설정 파일 로드
+    //const config = await window.loadKiwoomConfig(configKey);
     // debugger;
-    // const config = await window.loadKiwoomConfig(configKey);
     if (!config) {
-        throw new Error(`Config not found for key: ${configKey}`);
+        throw new Error(`api에 따른 설정값을 인자가 필요합니다. `);
     }
 
     return {
@@ -26,15 +26,14 @@ window.KiwoomBase = async function(configKey) {
         callbacks: [],  // 데이터 fetch 후 실행할 콜백 함수들
 
         config,  // 설정 객체 내부 보관용
-
-        // 초기화
-        async init() {
-            await this.fetch_data();
+ 
+        init() {
+            this.fetch_data();
 
             if (config.auto_refresh) {
-                console.log(`🔁 Starting auto-refresh for ${configKey} every ${config.auto_refresh} ms`);
+                // console.log(`🔁 Starting auto-refresh for ${configKey} every ${config.auto_refresh} ms`);
                 window.KiwoomUtils.autoRefreshManager.start(
-                    configKey,
+                    config.api_endpoint,
                     () => this.fetch_data(),
                     config.auto_refresh
                 );
@@ -127,7 +126,7 @@ window.KiwoomBase = async function(configKey) {
         },
 
         // Alpine.js용 캐시된 정렬 아이템 (getter)
-        get sorted_items() {
+        getSortedCachedItems() {
             // 데이터가 없거나 로딩 중이면 빈 배열 반환
             if (!this.data || this.loading) {
                 console.log('❌ No data or loading, returning empty array');
@@ -141,7 +140,7 @@ window.KiwoomBase = async function(configKey) {
             
             if (this._cache_key !== currentCacheKey) {
                 console.log('🔄 sorted_items 캐시 갱신 중...', currentCacheKey);
-                this._cached_items = this.get_sorted_items();
+                this._cached_items = this.getSortedItems();
                 this._cache_key = currentCacheKey;
             } else {
                 console.log('📋 sorted_items 캐시에서 반환');
@@ -152,7 +151,7 @@ window.KiwoomBase = async function(configKey) {
 
         //
         // 필터링 + 정렬된 아이템 가져오기 (기존 get_sorted_items 수정)
-        get_sorted_items() {
+        getSortedItems() {
             if (this.loading || !this.data) {
                 console.log('❌ No data or loading, returning empty array');
                 return [];
@@ -194,7 +193,7 @@ window.KiwoomBase = async function(configKey) {
         },
 
         // 필터링된 총 개수 (정렬 전)
-        get filteredItemCount() {
+        filteredItemCount() {
             if (this.loading || !this.data) return 0;
             
             let items = this.data?.[config.table.data_key];
@@ -219,7 +218,7 @@ window.KiwoomBase = async function(configKey) {
         },
 
         // 전체 아이템 개수 (필터링 전)
-        get totalItemCount() {
+        totalItemCount() {
             if (this.loading || !this.data) return 0;
             
             let items = this.data?.[config.table.data_key];
@@ -309,7 +308,7 @@ window.KiwoomBase = async function(configKey) {
             } catch (err) {
                 this.return_code = -1;
                 this.return_msg = '오류: ' + err.message;
-                console.error(`[${configKey}] API 호출 오류:`, err);
+                // console.error(`[${configKey}] API 호출 오류:`, err);
             } finally {
                 this.loading = false;
             }
@@ -318,7 +317,7 @@ window.KiwoomBase = async function(configKey) {
         // CSV 내보내기 (필터링된 데이터로)
         exportCSV() {
             const filename = `${config.title}_${new Date().toISOString().split('T')[0]}.csv`;
-            let filtered_sorted_data = this.get_sorted_items();
+            let filtered_sorted_data = this.getSortedItems();
             window.KiwoomUtils.exportToCSV(filtered_sorted_data, config.table.columns, filename);
         },
 
@@ -329,11 +328,11 @@ window.KiwoomBase = async function(configKey) {
 
         // 자동 새로고침 토글
         toggleAutoRefresh() {
-            if (window.KiwoomUtils.autoRefreshManager.timers[configKey]) {
-                window.KiwoomUtils.autoRefreshManager.stop(configKey);
+            if (window.KiwoomUtils.autoRefreshManager.timers[config.api_endpoint]) {
+                window.KiwoomUtils.autoRefreshManager.stop(config.api_endpoint);
             } else {
                 window.KiwoomUtils.autoRefreshManager.start(
-                    configKey,
+                    config.api_endpoint,
                     () => this.fetch_data(),
                     config.auto_refresh
                 );
