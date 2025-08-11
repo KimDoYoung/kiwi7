@@ -1,7 +1,11 @@
 /**
  * KiwoomBase 생성자
  * - 키움API와 상호작용하는 기본 클래스
- * 
+ * TODO
+ * 1. button buy/sell/detail
+ * 2. 종목코드 클릭(naver)
+ * 3. 종목명 클릭시(하단의 상세)
+ * 4. 숫자는 오른쪽 정렬
  * @param {*} config 
  * @returns 
  */

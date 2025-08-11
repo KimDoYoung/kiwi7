@@ -1,6 +1,5 @@
-// public/js/configs/kiwoom/kt00004.js
-window.KiwoomConfigs = window.KiwoomConfigs || {};
-window.KiwoomConfigs["kt00004"] = {
+// 계좌잔고 페이지 설정
+const kt00004 ={
         title: '계좌평가현황',
         api_endpoint: 'kt00004',
         payload: {
@@ -50,4 +49,4 @@ window.KiwoomConfigs["kt00004"] = {
             ]
         },
         auto_refresh: 0 //0이면 자동 refresh 비활성화, 3000이면 3초
-}    
+    };
