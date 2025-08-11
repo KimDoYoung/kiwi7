@@ -1,0 +1,5 @@
+.kiwoom-loading { opacity: 0.6; }
+.sortable-header { cursor: pointer; user-select: none; }
+.sortable-header:hover { background-color: #f8f9fa; }
+.clickable-cell { cursor: pointer;  }
+.clickable-cell:hover { background-color: #f0f0f0; color: #007bff; text-decoration: underline; }
