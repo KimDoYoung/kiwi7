@@ -1,5 +1,6 @@
 /**
  * KiwoomBase 생성자
+ * - 키움API와 상호작용하는 기본 클래스
  * 
  * @param {*} config 
  * @returns 
