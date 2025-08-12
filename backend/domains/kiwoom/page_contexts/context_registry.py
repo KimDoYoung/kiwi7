@@ -9,5 +9,5 @@ PAGE_CONTEXT_PROVIDERS = {
     "account/list": account_list,
     "order/buy": order_buy,
     "order/sell": order_sell,
-    "settings/edit": settings,
+    "settings/edit": settings
 }
