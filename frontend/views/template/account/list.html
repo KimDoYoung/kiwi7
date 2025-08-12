@@ -248,7 +248,14 @@ document.addEventListener('alpine:init', () => {
             },
             get actions(){
                 return this.getActions();
-            }                       
+            },
+            buy(item) {
+                console.log('구매:', item);
+                let stk_code  = item.종목코드;
+                let stk_name = item.종목명;
+                // let qty = item.보유수량 || 0;
+                showBuySellCanvas('KIS',  stk_code, stk_name , "매수", 1, 0);
+            }
         }
     });
 
