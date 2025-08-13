@@ -254,70 +254,35 @@ document.addEventListener('alpine:init', () => {
                 let stk_code  = item.종목코드;
                 let stk_name = item.종목명;
                 // let qty = item.보유수량 || 0;
-                showBuySellCanvas('KIS',  stk_code, stk_name , "매수", 1, 0);
-            }
+                // 기존 showBuySellCanvas 호출 대신 offcanvasBuySell 토글
+                showBuySellCanvas({
+                    stk_code: stk_code,
+                    stk_name: stk_name,
+                    which: '매수',
+                    qty: 1,
+                    cost: item.매입가 || 0
+                });
+            },
+            sell(item) {
+                console.log('판매:', item);
+                let stk_code  = item.종목코드;
+                let stk_name = item.종목명;
+                let qty = Number(item.보유수량) || 0;
+                // let qty = item.보유수량 || 0;
+                // 기존 showBuySellCanvas 호출 대신 offcanvasBuySell 토글
+                showBuySellCanvas({
+                    stk_code: stk_code,
+                    stk_name: stk_name,
+                    which: '매도',
+                    qty: qty,
+                    cost:  0
+                });
+            },
+
         }
     });
 
 });
-    // document.addEventListener('alpine:init', () => {
-    //     Alpine.data('kt00004_component', () => {
-    //         let base = window.KiwoomBase(kt00004);
-    //         return {
-
-    //             ...base,  // 기본 속성들
-    //             // 기본 속성들
-    //             data: null,
-    //             loading: true,
-    //             summary_show: false,
-    //             profit: 0,
-    //             profitFilter: 'all',
-    //             base: null, // KiwoomBase 인스턴스를 저장할 변수
-                
-    //             // 초기화
-    //             init() {
-    //                 if (base.init) {
-    //                     base.init.call(this);
-    //                 }   
-                    
-    //                 // 필터 변경 감시
-    //                 this.$watch('profitFilter', (newValue, oldValue) => {
-    //                     console.log('profitFilter changed from', oldValue, 'to', newValue);
-    //                     this.clearCache();
-    //                     this.onProfitFilterChange(newValue);
-    //                 });
-                    
-    //                 // 콜백 등록
-    //                 this.addCallback((data) => {
-    //                     this.profit = data?.['유가잔고평가액'] - data?.['총매입금액'];
-    //                 });
-    //             },
-                
-    //             onProfitFilterChange(filterValue) {
-    //                 console.log('필터가 변경되었습니다:', filterValue);
-    //                 this.clearFilters();
-    //                 if (filterValue === 'plus') {
-    //                     this.addFilter(item => item.손익율 > 0);
-    //                 } else if (filterValue === 'minus') {
-    //                     this.addFilter(item => item.손익율 < 0);
-    //                 }
-    //             },
-                
-    //             get sorted_items() {
-    //                 return this.getSortedCachedItems();
-    //             },
-    //             get total_item_count() {
-    //                 return this.totalItemCount() ;
-    //             },
-    //             get filtered_item_count() {
-    //                 return this.filteredItemCount();
-    //             },
-    //             get actions(){
-    //                 return this.getActions();
-    //             }
-    //         };
-    //     });        
-    // });
 </script>
 {% endraw %}
 {% endblock %}

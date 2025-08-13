@@ -3,3 +3,11 @@
 .sortable-header:hover { background-color: #f8f9fa; }
 .clickable-cell { cursor: pointer;  }
 .clickable-cell:hover { background-color: #f0f0f0; color: #007bff; text-decoration: underline; }
+
+.bg-buy {
+    background-color: #efaaaa;
+}
+
+.bg-sell {
+    background-color: #a3c4e9;
+}

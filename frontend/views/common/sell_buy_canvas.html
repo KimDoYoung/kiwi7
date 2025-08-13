@@ -1,11 +1,11 @@
 <!-- 매수/매도용 Offcanvas component -->
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasBuySell" aria-labelledby="offcanvasExampleLabel" >
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasExampleLabel">매수/매도</h5>
+        <h2 class="offcanvas-title" id="offcanvasExampleLabel">매수/매도</h2>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-        <div class="mb-3 p-2">
+        <!-- <div class="mb-3 p-2">
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="kisorls" id="kisorls1" value="KIS">
                 <label class="form-check-label" for="kisorls1">KIS-한국투자증권</label>
@@ -14,17 +14,26 @@
                 <input class="form-check-input" type="radio" name="kisorls" id="kisorls2" value="LS">
                 <label class="form-check-label" for="kisorls2">LS증권</label>
             </div>
-        </div>        
-        <div id="offcanvaBuy" class="bg-buy mb-3 p-2">
-            <h2>매수</h2>
+        </div>         -->
+        <div id="offcanvasBuy" class="bg-buy mb-3 p-2">
             <form action="" id="buy-form">
+                <div class="mb-3 p-2">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="market" id="market-krx" value="KRX" required checked>
+                        <label class="form-check-label" for="market-krx">KRX</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="market" id="market-nxt" value="NXT">
+                        <label class="form-check-label" for="market-nxt">NXT</label>
+                    </div>
+                </div>
                 <div class="row mb-3">
                     <div class="col-4">
-                        <label for="pdno" class="form-label">상품번호</label>
+                        <label for="pdno" class="form-label">종목번호</label>
                         <input type="text" class="form-control" name="pdno" required>
                     </div>
                     <div class="col-8">
-                        <label for="pdno" class="form-label">상품명칭</label>
+                        <label for="pdno" class="form-label">종목명</label>
                         <input type="text" class="form-control" name="pdnm" readonly required>
                     </div>
                 </div>
@@ -42,16 +51,25 @@
                 <button type="button" class="btn btn-secondary btnClearBuySell">초기화</button>
             </form>
         </div> 
-        <div id="offcanvasBuySell" class="bg-sell p-2">
-            <h2>매도</h2>
+        <div id="offcanvasSell" class="bg-sell p-2">
             <form action="" id="sell-form">
+                <div class="mb-3 p-2">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="market" id="market-krx1" value="KRX" required checked>
+                        <label class="form-check-label" for="market-krx1">KRX</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="market" id="market-nxt1" value="NXT">
+                        <label class="form-check-label" for="market-nxt1">NXT</label>
+                    </div>
+                </div>
                 <div class="row mb-3 p-2">
                     <div class="col">
-                        <label for="pdno" class="form-label">상품번호</label>
+                        <label for="pdno" class="form-label">종목번호</label>
                         <input type="text" class="form-control" name="pdno" required>
                     </div>
                     <div class="col">
-                        <label for="pdno" class="form-label">상품명칭</label>
+                        <label for="pdno" class="form-label">종목명</label>
                         <input type="text" class="form-control" name="pdnm" readonly required>
                     </div>
                 </div>
