@@ -1,49 +1,195 @@
    function cleanStockCode(stk_code){
        return stk_code.replace(/[^0-9]/g, '');
    }
-   function showCompanyCanvas(stk_code){
-        // const url = '/api/v1/mystock/company-info/' + stk_code;
-        // getFetch(url).then(data => {
-        //     console.log(data); 
-        //     const name_code = data.naver.stk_name + ' (' + data.naver.stk_code + ')';
-        //     const $companyCanvas = $('#offcanvasCompany');
-        //     $companyCanvas.find('#offcanvasCompanyName').text(name_code);
-        //     $companyCanvas.find('#offcanvas-naver-company-summary').text(data.naver.company_summary);
-        //     $companyCanvas.find('#offcanvas-naver-market-cap').text(data.naver.market_cap);
-        //     $companyCanvas.find('#offcanvas-naver-market-cap-rank').text(data.naver.market_cap_rank);
-        //     $companyCanvas.find('#offcanvas-naver-num-of-shares').text(data.naver.num_of_shares);
-        //     //현재가
-        //     let price_data = data.current_price.output;
-        //     $companyCanvas.find('#offcanvas-stck_prpr').text(JuliaUtil.displayMoney(price_data.stck_prpr));
-        //     $companyCanvas.find('#offcanvas-prdy_vrss').text(JuliaUtil.displayMoney(data.current_price.output.prdy_vrss));
-        //     $companyCanvas.find('#offcanvas-prdy_ctrt').text(data.current_price.output.prdy_ctrt);
-        //     $companyCanvas.find('#offcanvas-acml_vol').text(JuliaUtil.displayMoney(data.current_price.output.acml_vol));
-        //     $companyCanvas.find('#offcanvas-acml_tr_pbmn').text(moneyFormat(data.current_price.output.acml_tr_pbmn));
-        //     //candle chart
-        //     const chart_data = data.price_history.output;
-        //     let columns = [];
-        //     let columns1 = ['data1'];
-        //     let columns2 = ['x'];
-        //     //시가,고가,저가,종가
-        //     // debugger;
-        //     for (let i = chart_data.length - 1; i >= 0; i--) {
-        //         let item = chart_data[i];
-        //         columns1.push([Number(item.stck_oprc), Number(item.stck_hgpr), Number(item.stck_lwpr), Number(item.stck_clpr)]);
-        //         columns2.push(item.stck_bsop_date);
-        //     }
-        //     let start_ymd = columns2[1].substring(0, 4) + '-' + columns2[1].substring(4, 6) + '-' + columns2[1].substring(6, 8);
-        //     let end_ymd = columns2[chart_data.length-1].substring(0, 4) + '-' + columns2[chart_data.length-1].substring(4, 6) + '-' + columns2[chart_data.length-1].substring(6, 8);
-        //     let x_name = `${data.naver.stk_name} (${start_ymd}~${end_ymd})`;
-        //     columns.push(columns1);
-        //     //columns.push(columns2);
+   /**
+    * 종목코드를 기반으로 회사 정보를 하단의 canvas에 표시합니다.
+    * @param {string} stk_code - 종목코드
+    */
+   async function showCompanyCanvas(stk_code) {
+        const cleanCode = cleanStockCode(stk_code);
+        console.log("showCompanyCanvas:", cleanCode);
+
+        // offcanvas 요소 찾기
+        const companyCanvas = document.getElementById('offcanvasCompany');
+        if (!companyCanvas) {
+            console.error('offcanvasCompany element not found');
+            return;
+        }
+
+        // 로딩 상태 표시
+        showCompanyLoading(true);
+
+        try {
+            const url = `/api/v1/kiwoom/stock/${cleanCode}`;
+            const response = await getFetch(url);
             
-        //     offcanvasCompany.toggle();
-        //     create_billboard_candle_chart("offcanvas_daily_chart",columns, x_name)
-        // }).catch(error=> {
-        //     console.error(error.message); 
-        //     showAlertError(error);
-        // });
+            if (response.success && response.data) {
+                console.log("회사 정보:", response.data);
+                renderCompanyInfo(response.data);
+                showCompanyOffcanvas();
+            } else {
+                throw new Error(response.error_message || '주식 정보를 가져올 수 없습니다.');
+            }
+        } catch (error) {
+            console.error('회사 정보 조회 오류:', error);
+            showCompanyError(error.message);
+        } finally {
+            showCompanyLoading(false);
+        }
+    }
+
+    /**
+     * 회사 정보를 렌더링합니다.
+     * @param {Object} data - API에서 받은 주식 데이터
+     */
+    function renderCompanyInfo(data) {
+        // 제목 설정
+        const title = `${data.종목명} (${data.종목코드})`;
+        updateElement('#offcanvasCompanyName', title);
+
+        // 현재가 정보
+        const currentPrice = parseInt(data.현재가?.replace(/[^0-9-]/g, '')) || 0;
+        const prevDiff = parseInt(data.전일대비?.replace(/[^0-9-]/g, '')) || 0;
+        const changeRate = parseFloat(data.등락율) || 0;
         
+        updateElement('#current-price', formatNumber(Math.abs(currentPrice)));
+        updateElement('#price-diff', formatPriceDiff(prevDiff));
+        updateElement('#change-rate', `${changeRate}%`);
+        
+        // 가격 색상 적용
+        const priceColor = prevDiff > 0 ? 'text-danger' : prevDiff < 0 ? 'text-primary' : 'text-dark';
+        document.querySelector('#current-price')?.setAttribute('class', `fs-4 fw-bold ${priceColor}`);
+        document.querySelector('#price-diff')?.setAttribute('class', `${priceColor}`);
+        document.querySelector('#change-rate')?.setAttribute('class', `${priceColor}`);
+
+        // 거래 정보
+        updateElement('#volume', formatNumber(parseInt(data.거래량) || 0));
+        updateElement('#high-price', formatNumber(parseInt(data.고가?.replace(/[^0-9]/g, '')) || 0));
+        updateElement('#low-price', formatNumber(parseInt(data.저가?.replace(/[^0-9]/g, '')) || 0));
+        updateElement('#open-price', formatNumber(parseInt(data.시가?.replace(/[^0-9]/g, '')) || 0));
+
+        // 기업 정보
+        updateElement('#market-cap', data.시가총액 ? `${formatNumber(parseInt(data.시가총액))}억` : '-');
+        updateElement('#shares', data.상장주식 ? `${formatNumber(parseInt(data.상장주식))}만주` : '-');
+        
+        // 재무 정보
+        updateElement('#per', data.PER || '-');
+        updateElement('#pbr', data.PBR || '-');
+        updateElement('#eps', data.EPS ? formatNumber(parseInt(data.EPS)) : '-');
+        updateElement('#bps', data.BPS ? formatNumber(parseInt(data.BPS)) : '-');
+        updateElement('#roe', data.ROE ? `${data.ROE}%` : '-');
+
+        // 52주 최고/최저
+        updateElement('#year-high', formatNumber(parseInt(data.연중최고?.replace(/[^0-9]/g, '')) || 0));
+        updateElement('#year-low', formatNumber(parseInt(data.연중최저?.replace(/[^0-9]/g, '')) || 0));
+
+        // 우측 영역 - 기업 개요
+        updateElement('#company-summary', data.company_summary || '기업 개요 정보가 없습니다.');
+        
+        // 우측 영역 - 기업 상세 정보
+        updateElement('#market-name', data.시장명 || '-');
+        updateElement('#sector-name', data.업종명 || '-');
+        updateElement('#company-size', data.회사크기분류 || '-');
+        updateElement('#company-type', data.회사분류 || '-');
+        updateElement('#listing-date', formatDate(data.상장일) || '-');
+        
+        // 재무 상세 정보
+        updateElement('#revenue', data.매출액 ? `${formatNumber(parseInt(data.매출액))}억` : '-');
+        updateElement('#operating-profit', data.영업이익 ? `${formatNumber(parseInt(data.영업이익))}억` : '-');
+        updateElement('#net-income', data.당기순이익 ? `${formatNumber(parseInt(data.당기순이익))}억` : '-');
+        
+        // 주식 상세 정보
+        updateElement('#face-value', data.액면가 ? `${formatNumber(parseInt(data.액면가))}${data.액면가단위 || '원'}` : '-');
+        updateElement('#capital', data.자본금 ? `${formatNumber(parseInt(data.자본금))}억` : '-');
+        updateElement('#float-ratio', data.유통비율 ? `${data.유통비율}%` : '-');
+        updateElement('#foreign-ownership', data.외인소진률 ? `${data.외인소진률}%` : '-');
+        updateElement('#credit-ratio', data.신용비율 ? `${data.신용비율}%` : '-');
+        
+        // 투자 정보
+        updateElement('#stock-status', data.종목상태 || '-');
+        updateElement('#supervision-status', data.감리구분 || '-');
+        updateElement('#nxt-available', data.NXT가능여부 === 'Y' ? '가능' : '불가능');
+        
+        // 250일 최고/최저 (있는 경우)
+        if (data['250최고']) {
+            updateElement('#high-250', formatNumber(parseInt(data['250최고']?.replace(/[^0-9]/g, '')) || 0));
+            updateElement('#high-250-date', formatDate(data['250최고가일']));
+            updateElement('#high-250-ratio', `${data['250최고가대비율']}%`);
+            document.getElementById('high-250-card')?.classList.remove('d-none');
+        }
+        if (data['250최저']) {
+            updateElement('#low-250', formatNumber(parseInt(data['250최저']?.replace(/[^0-9]/g, '')) || 0));
+            updateElement('#low-250-date', formatDate(data['250최저가일']));
+            updateElement('#low-250-ratio', `${data['250최저가대비율']}%`);
+            document.getElementById('low-250-card')?.classList.remove('d-none');
+        }
+    }
+
+    /**
+     * 날짜를 포맷합니다 (YYYYMMDD -> YYYY-MM-DD)
+     */
+    function formatDate(dateString) {
+        if (!dateString || dateString.length !== 8) return dateString;
+        return `${dateString.substring(0, 4)}-${dateString.substring(4, 6)}-${dateString.substring(6, 8)}`;
+    }
+
+    /**
+     * 회사 정보 offcanvas를 표시합니다.
+     */
+    function showCompanyOffcanvas() {
+        const companyCanvas = document.getElementById('offcanvasCompany');
+        let offcanvasCompany = bootstrap.Offcanvas.getInstance(companyCanvas);
+        
+        if (!offcanvasCompany) {
+            offcanvasCompany = new bootstrap.Offcanvas(companyCanvas);
+        }
+        
+        offcanvasCompany.show();
+    }
+
+    /**
+     * 로딩 상태를 표시/숨김합니다.
+     */
+    function showCompanyLoading(show) {
+        const loadingEl = document.getElementById('company-loading');
+        if (loadingEl) {
+            loadingEl.style.display = show ? 'block' : 'none';
+        }
+    }
+
+    /**
+     * 오류 메시지를 표시합니다.
+     */
+    function showCompanyError(message) {
+        updateElement('#offcanvasCompanyName', '정보 조회 실패');
+        updateElement('#company-error', `오류: ${message}`);
+        showCompanyOffcanvas();
+    }
+
+    /**
+     * DOM 요소의 텍스트를 안전하게 업데이트합니다.
+     */
+    function updateElement(selector, text) {
+        const element = document.querySelector(selector);
+        if (element) {
+            element.textContent = text;
+        }
+    }
+
+    /**
+     * 숫자를 천 단위 구분자와 함께 포맷합니다.
+     */
+    function formatNumber(num) {
+        return Number(num).toLocaleString();
+    }
+
+    /**
+     * 가격 차이를 포맷합니다.
+     */
+    function formatPriceDiff(diff) {
+        if (diff > 0) return `+${formatNumber(diff)}`;
+        if (diff < 0) return formatNumber(diff);
+        return '0';
     }
     // 오른쪽에서 나오는 매수/매도 offcanvas를 보이게 하는 함수
     function showBuySellCanvas(params = {}) {

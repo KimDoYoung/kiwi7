@@ -223,7 +223,12 @@ document.addEventListener('alpine:init', () => {
                 // 콜백 등록
                 this.addCallback((data) => {
                     this.profit = data?.['유가잔고평가액'] - data?.['총매입금액'];
-                });                
+                });
+                // add 종목명 클릭 handler
+                this.addClickHandler('종목명', (item) => {
+                    console.log('종목명 클릭:', item);
+                    showCompanyCanvas(item.종목코드);
+                }); 
             },
             get total_item_count(){
                 return this.totalItemCount() || 0;
@@ -278,7 +283,11 @@ document.addEventListener('alpine:init', () => {
                     cost:  0
                 });
             },
-
+            detail(item) {
+                console.log('상세 정보:', item);
+                // 종목 상세 정보를 보여주는 로직을 여기에 추가
+                showCompanyCanvas(item.종목코드);
+            },
         }
     });
 
