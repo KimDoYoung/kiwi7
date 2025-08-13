@@ -20,6 +20,37 @@ def get_name_by_code(code: str):
     else:
         return None
 
+def extract_index_data(soup,area_selector):
+    """각 영역(KOSPI, KOSDAQ, KOSPI200)에서 지수, 전일대비, 등락률을 추출"""
+    area = soup.select_one(area_selector)
+    if not area:
+        return None
+    
+    nums = area.select_one(".num_quot").find_all("span", class_=["num", "num2", "num3"])
+    
+    index_value = nums[0].get_text(strip=True)  # 지수
+    diff = nums[1].get_text(strip=True)         # 전일대비
+    change_rate = nums[2].get_text(strip=True).replace("퍼센트", "").replace("%", "")  # 등락률
+    
+    return {
+        "index": index_value,
+        "diff": diff,
+        "rate": change_rate
+    }
+
+def get_jisu_from_naver():
+    '''네이버에서 지수를 가져온다.'''
+    page = requests.get("https://finance.naver.com/")
+    soup = BeautifulSoup(page.text, 'html.parser')
+    kospi_data = extract_index_data(soup, ".kospi_area")
+    kosdaq_data = extract_index_data(soup, ".kosdaq_area")
+    kospi_200 = extract_index_data(soup, ".kospi200_area")
+    return {
+        "KOSPI": kospi_data,
+        "KOSDAQ": kosdaq_data,
+        "KOSPI200": kospi_200
+    }
+
 def get_summary_from_naver(stk_code: str):
     '''주식 코드로부터 주식 요약 정보를 가져온다.'''
     page = requests.get(f"https://finance.naver.com/item/main.nhn?code={stk_code}")

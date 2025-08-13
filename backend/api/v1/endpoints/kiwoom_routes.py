@@ -6,9 +6,10 @@ from backend.core.logger import get_logger
 from backend.domains.kiwoom.kiwoom_service import get_kiwoom_api, get_token_manager
 from backend.domains.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomRequest, KiwoomResponse
 from backend.utils.kiwi_utils import merge_dicts
-from backend.utils.naver_utils import get_summary_from_naver
+from backend.utils.naver_utils import get_summary_from_naver, get_jisu_from_naver
 router = APIRouter()
 logger = get_logger(__name__)
+
 
 @router.post("/{api_id}", response_model=KiwoomResponse)
 async def kiwoom_rest_api(api_id: str, req: KiwoomRequest):
@@ -106,3 +107,35 @@ async def get_stock_info(stk_code: str):
     except Exception as e:
         logger.error(f"Error occurred while fetching stock info: {e}")
         return KiwoomApiHelper.create_error_response(error_code="999", error_message="Internal server error")
+
+@router.get("/jisu")
+async def get_jisu():
+    '''지수 정보 조회'''
+    logger.info("지수 정보 조회 요청 받음")
+    
+    try:
+        #  TODO 현재가 장마감인지 확인
+        jisu_data = get_jisu_from_naver()  # await 제거 (동기 함수)
+        if not jisu_data:
+            return {
+                "success": False,
+                "error_code": "999",
+                "error_message": "지수 정보를 가져오는데 실패했습니다"
+            }
+        
+        logger.info(f"지수 정보 조회 성공: {jisu_data}")
+        return jisu_data
+        
+    except Exception as e:
+        logger.error(f"지수 정보 조회 중 오류 발생: {e}")
+        return {
+            "success": False,
+            "error_code": "999",
+            "error_message": "지수 정보 조회 중 오류가 발생했습니다"
+        }
+
+# TODO /mystock/prices table mystock에 있는 종목의 현재가격을 리턴한다.
+# TODO 테이블 mystock: stk_cd, stk_nm, 보유, 관심,
+# 데몬이 있어야한다. 데몬의 이름이 있으면 좋겠다. 그리고 그녀석에게 명령 리스트
+# mycmds 테이블: cmd_id, cmd_name, cmd_description데몬은 
+# 지금이 장중인지 확인하는 명령을 가지고 있어야 한다. 

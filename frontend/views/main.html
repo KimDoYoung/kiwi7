@@ -1,144 +1,190 @@
 {% extends "common/base.html" %}
 
 {% block content %}
-<div x-data="orderForm()" class="container mt-4">
+<div x-data="main_data()" class="container mt-4">
+    <!-- 지수 정보 카드 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-line me-2"></i>주요 지수
+                    </h5>
+                    <button @click="refreshJisu()" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-sync-alt" :class="{ 'fa-spin': loading }"></i>
+                        새로고침
+                    </button>
+                </div>
+                <div class="card-body">
+                    <!-- 로딩 상태 -->
+                    <div x-show="loading" class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2 text-muted">지수 정보를 불러오는 중...</p>
+                    </div>
 
-  <form @submit.prevent="submit" class="row g-3 needs-validation" novalidate>
-    <!-- 국내거래소구분 -->
-    <div class="col-md-6">
-      <label class="form-label">국내거래소구분</label>
-      <select class="form-select" x-model="dmst_stex_tp" required>
-        <option value="">선택...</option>
-        <option value="KRX">KRX</option>
-        <option value="NXT">NXT</option>
-        <option value="SOR">SOR</option>
-      </select>
-    </div>
+                    <!-- 지수 정보 표시 -->
+                    <div x-show="!loading" class="row g-3">
+                        <!-- KOSPI -->
+                        <div class="col-md-4">
+                            <div class="border rounded p-3 h-100">
+                                <div class="text-center">
+                                    <h6 class="text-muted fw-bold mb-2">KOSPI</h6>
+                                    <div class="fs-3 fw-bold mb-1" 
+                                         :class="getIndexColorClass(jisu.KOSPI?.diff)"
+                                         x-text="formatIndex(jisu.KOSPI?.index)">
+                                        -
+                                    </div>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <span class="me-2"
+                                              :class="getIndexColorClass(jisu.KOSPI?.diff)"
+                                              x-text="formatDiff(jisu.KOSPI?.diff)">
+                                            -
+                                        </span>
+                                        <span :class="getIndexColorClass(jisu.KOSPI?.diff)"
+                                              x-text="jisu.KOSPI?.rate || '-'">
+                                            -
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-    <!-- 종목코드 -->
-    <div class="col-md-6">
-      <label class="form-label">종목코드</label>
-      <input type="text" class="form-control" x-model="stk_cd" maxlength="12" required>
-    </div>
+                        <!-- KOSDAQ -->
+                        <div class="col-md-4">
+                            <div class="border rounded p-3 h-100">
+                                <div class="text-center">
+                                    <h6 class="text-muted fw-bold mb-2">KOSDAQ</h6>
+                                    <div class="fs-3 fw-bold mb-1"
+                                         :class="getIndexColorClass(jisu.KOSDAQ?.diff)"
+                                         x-text="formatIndex(jisu.KOSDAQ?.index)">
+                                        -
+                                    </div>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <span class="me-2"
+                                              :class="getIndexColorClass(jisu.KOSDAQ?.diff)"
+                                              x-text="formatDiff(jisu.KOSDAQ?.diff)">
+                                            -
+                                        </span>
+                                        <span :class="getIndexColorClass(jisu.KOSDAQ?.diff)"
+                                              x-text="jisu.KOSDAQ?.rate || '-'">
+                                            -
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-    <!-- 주문수량 -->
-    <div class="col-md-6">
-      <label class="form-label">주문수량</label>
-      <input type="text" class="form-control" x-model="ord_qty" maxlength="12" required>
-    </div>
+                        <!-- KOSPI200 -->
+                        <div class="col-md-4">
+                            <div class="border rounded p-3 h-100">
+                                <div class="text-center">
+                                    <h6 class="text-muted fw-bold mb-2">KOSPI200</h6>
+                                    <div class="fs-3 fw-bold mb-1"
+                                         :class="getIndexColorClass(jisu.KOSPI200?.diff)"
+                                         x-text="formatIndex(jisu.KOSPI200?.index)">
+                                        -
+                                    </div>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <span class="me-2"
+                                              :class="getIndexColorClass(jisu.KOSPI200?.diff)"
+                                              x-text="formatDiff(jisu.KOSPI200?.diff)">
+                                            -
+                                        </span>
+                                        <span :class="getIndexColorClass(jisu.KOSPI200?.diff)"
+                                              x-text="jisu.KOSPI200?.rate || '-'">
+                                            -
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-    <!-- 주문단가 -->
-    <div class="col-md-6">
-      <label class="form-label">주문단가</label>
-      <input type="text" class="form-control" x-model="ord_uv" maxlength="12">
-    </div>
-
-    <!-- 매매구분 -->
-    <div class="col-md-12">
-      <label class="form-label">매매구분</label>
-      <select class="form-select" x-model="trde_tp" required>
-        <option value="">선택...</option>
-        <option value="0">보통</option>
-        <option value="3">시장가</option>
-        <option value="5">조건부지정가</option>
-        <option value="6">최유리지정가</option>
-        <option value="7">최우선지정가</option>
-        <option value="10">보통(IOC)</option>
-        <option value="13">시장가(IOC)</option>
-        <option value="16">최유리(IOC)</option>
-        <option value="20">보통(FOK)</option>
-        <option value="23">시장가(FOK)</option>
-        <option value="26">최유리(FOK)</option>
-        <option value="28">스톱지정가</option>
-        <option value="29">중간가</option>
-        <option value="30">중간가(IOC)</option>
-        <option value="31">중간가(FOK)</option>
-        <option value="61">장시작전시간외</option>
-        <option value="62">시간외단일가</option>
-        <option value="81">장마감후시간외</option>
-      </select>
-    </div>
-
-    <!-- 조건단가 -->
-    <div class="col-md-6">
-      <label class="form-label">조건단가</label>
-      <input type="text" class="form-control" x-model="cond_uv" maxlength="12">
-    </div>
-
-    <!-- 전송 결과 -->
-    <div class="col-12">
-      <button type="submit" class="btn btn-primary">주문 전송</button>
-    </div>
-
-    <div class="col-12" x-show="result" x-text="result" class="mt-2 text-success fw-bold"></div>
-    <div class="col-12" x-show="error" x-text="error" class="mt-2 text-danger fw-bold"></div>
-  </form>
-
-  <!-- 결과 표시 영역 -->
-  <div class="mt-4" x-show="result || error">
-    <div class="card">
-      <div class="card-header">
-        <h5 class="card-title mb-0">처리 결과</h5>
-      </div>
-      <div class="card-body">
-        <!-- 성공 메시지 -->
-        <div x-show="result" class="alert alert-success" role="alert">
-          <i class="bi bi-check-circle-fill me-2"></i>
-          <span x-text="result"></span>
+                    <!-- 오류 메시지 -->
+                    <div x-show="error" class="alert alert-danger mt-3">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <span x-text="error"></span>
+                    </div>
+                </div>
+            </div>
         </div>
-        
-        <!-- 에러 메시지 -->
-        <div x-show="error" class="alert alert-danger" role="alert">
-          <i class="bi bi-exclamation-triangle-fill me-2"></i>
-          <span x-text="error"></span>
-        </div>
-      </div>
     </div>
-  </div>
 </div>
 
 <script>
-  function orderForm() {
+  function main_data() {
     return {
-      dmst_stex_tp: 'KRX',
-      stk_cd: '',
-      ord_qty: '1',
-      ord_uv: '',
-      trde_tp: '3',
-      cond_uv: '',
-      result: '',
-      error: '',
+      jisu: {},
+      loading: false,
+      error: null,
 
-      async submit() {
-        this.result = '';
-        this.error = '';
+      async init() {
+        // 페이지 로드 시 지수 정보 가져오기
+        await this.refreshJisu();
+      },
+
+      async refreshJisu() {
+        this.loading = true;
+        this.error = null;
+        
         try {
-          const payload = {
-            dmst_stex_tp: this.dmst_stex_tp,
-            stk_cd: this.stk_cd,
-            ord_qty: this.ord_qty,
-            ord_uv: this.ord_uv || null,
-            trde_tp: this.trde_tp,
-            cond_uv: this.cond_uv || null,
+          // 실제 API 호출
+          const response = await fetch('/api/v1/kiwoom/jisu');
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          
+          // 성공 응답인지 확인
+          if (data.success === false) {
+            throw new Error(data.error_message || '지수 정보를 불러오는데 실패했습니다.');
+          }
+          
+          this.jisu = data;
+          
+        } catch (error) {
+          console.error('지수 정보 조회 실패:', error);
+          this.error = error.message || '지수 정보를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.';
+          
+          // 오류 발생 시 임시 데이터 표시 (개발용)
+          this.jisu = {
+            'KOSPI': {'index': 'N/A', 'diff': 'N/A', 'rate': 'N/A'},
+            'KOSDAQ': {'index': 'N/A', 'diff': 'N/A', 'rate': 'N/A'},
+            'KOSPI200': {'index': 'N/A', 'diff': 'N/A', 'rate': 'N/A'}
           };
-
-          // fetch-util.js의 callKiwoomApi 함수 사용
-          const response = await callKiwoomApi('kt10000', payload);
-
-          if (response.success) {
-            this.result = response.data.return_msg || '주문이 성공적으로 처리되었습니다.';
-            console.log('주문 응답:', response.data);
-          } else {
-            throw new Error(response.error_message || '알 수 없는 오류가 발생했습니다.');
-          }
-        } catch (err) {
-          if (err instanceof KiwiError) {
-            this.error = `에러 ${err.status}: ${err.message}`;
-          } else {
-            this.error = '에러: ' + err.message;
-          }
-          console.error('주문 처리 오류:', err);
+        } finally {
+          this.loading = false;
         }
+      },
+
+      // 지수 값 포맷 (콤마 추가)
+      formatIndex(value) {
+        if (!value) return '-';
+        return value; // 이미 콤마가 포함된 문자열
+      },
+
+      // 등락폭 포맷 (+/- 기호 추가)
+      formatDiff(diff) {
+        if (!diff) return '-';
+        const numDiff = parseFloat(diff);
+        if (numDiff > 0) {
+          return `+${diff}`;
+        }
+        return diff;
+      },
+
+      // 등락에 따른 색상 클래스 반환
+      getIndexColorClass(diff) {
+        if (!diff) return 'text-muted';
+        const numDiff = parseFloat(diff);
+        if (numDiff > 0) {
+          return 'text-danger'; // 상승 - 빨간색
+        } else if (numDiff < 0) {
+          return 'text-primary'; // 하락 - 파란색
+        }
+        return 'text-muted'; // 보합 - 회색
       }
     };
   }
@@ -148,5 +194,4 @@
 
 {% block script %}
 <!-- <script src="/public/js/fetch-util.js"></script> -->
-<script src="/public/js/main.js"></script>
 {% endblock %}
