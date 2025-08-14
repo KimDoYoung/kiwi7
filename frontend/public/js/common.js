@@ -333,7 +333,25 @@ document.addEventListener('DOMContentLoaded', function() {
             handleClearBuySell(e);
         }
     });
+
+    updateTodayTime();
+    setInterval(updateTodayTime, 1000);
 });
+// 실시간 날짜/시간 표시
+function updateTodayTime() {
+    const days = ['일', '월', '화', '수', '목', '금', '토'];
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const hh = String(now.getHours()).padStart(2, '0');
+    const min = String(now.getMinutes()).padStart(2, '0');
+    const ss = String(now.getSeconds()).padStart(2, '0');
+    const dayKor = days[now.getDay()];
+    const formatted = `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss} (${dayKor})`;
+    const el = document.getElementById('span_today_time');
+    if (el) el.textContent = formatted;
+}
 // 매수 처리 함수
 async function processBuyOrder({ market, pdno, pdnm, qty, cost }) {
     console.log('매수 주문 처리 시작:', {market, pdno, pdnm, qty, cost });

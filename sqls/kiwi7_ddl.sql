@@ -41,3 +41,19 @@ CREATE TABLE IF NOT EXISTS kdemon_state (
   status         TEXT NOT NULL,  -- 'stopped' | 'running'
   updated_at     TEXT NOT NULL
 );
+
+-- ---------------------------------------------------------------
+-- my_stock
+-- ---------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS mystock (
+  stk_cd     TEXT    NOT NULL,                               -- 종목코드 (PK)
+  stk_nm     TEXT    NOT NULL,                               -- 종목명
+  is_hold    INTEGER NOT NULL DEFAULT 0                      -- 보유여부 (0/1)
+             CHECK (is_hold IN (0,1)),
+  is_watch   INTEGER NOT NULL DEFAULT 0                      -- 관심여부 (0/1)
+             CHECK (is_watch IN (0,1)),
+  note       TEXT,                                           -- 메모
+  created_at TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S','now','localtime')),
+  updated_at TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S','now','localtime')),
+  PRIMARY KEY (stk_cd)
+);

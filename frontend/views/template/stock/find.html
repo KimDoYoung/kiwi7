@@ -69,8 +69,12 @@
                             <template x-for="(item, index) in data" :key="item.종목코드 || index">
                                 <tr>
                                     <td x-text="index + 1"></td>
-                                    <td x-text="item.종목코드 || '-'"></td>
-                                    <td x-text="item.종목명 || '-'"></td>
+                                    <td>
+                                        <a href="javascript:void(0);" @click="goNaver(item.종목코드)" x-text="item.종목코드 || '-'"></a>
+                                    </td>
+                                    <td>
+                                        <a href="javascript:void(0);" @click="showDetail(item)" x-text="item.종목명 || '-'"></a>
+                                    </td>
                                     <td x-text="item.시장명  || '-'"></td>
                                     <td class="text-end" x-text="item.업종명 || '-'"></td>
                                     <td class="text-end" x-text="item.상장주식수 ? Number(item.상장주식수).toLocaleString() : '-'"></td>
@@ -172,6 +176,16 @@ document.addEventListener('alpine:init', () => {
                 } finally {
                     this.loading = false;
                 }
+            },
+            // 하단offCanvas로  상세 정보 표시 메서드 추가
+            showDetail(item) {
+                // 상세 정보 표시 로직
+                console.log('상세 정보:', item);
+                showCompanyCanvas(item.종목코드);
+            },
+            goNaver(stk_code) {
+                const url = `https://finance.naver.com/item/main.naver?code=${stk_code}`;
+                window.open(url, '_blank');
             }
         }
     });

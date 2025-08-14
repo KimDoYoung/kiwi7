@@ -122,8 +122,6 @@ async def get_jisu():
     market = await checker.getMarket(now)
     
     try:
-        #  TODO 현재가 장마감인지 확인
-
         jisu_data = get_jisu_from_naver()  # await 제거 (동기 함수)
         if not jisu_data:
             return {
@@ -143,8 +141,4 @@ async def get_jisu():
             "error_message": "지수 정보 조회 중 오류가 발생했습니다"
         }
 
-# TODO /mystock/prices table mystock에 있는 종목의 현재가격을 리턴한다.
-# TODO 테이블 mystock: stk_cd, stk_nm, 보유, 관심,
-# 데몬이 있어야한다. 데몬의 이름이 있으면 좋겠다. 그리고 그녀석에게 명령 리스트
-# mycmds 테이블: cmd_id, cmd_name, cmd_description데몬은 
-# 지금이 장중인지 확인하는 명령을 가지고 있어야 한다. 
+
