@@ -4,7 +4,9 @@ class Config:
     def __init__(self):
         self.PROFILE_NAME = os.getenv('KIWI7_MODE', 'local')
         load_dotenv(dotenv_path=f'.env.{self.PROFILE_NAME}')
-        
+
+        self.GODATA_API_KEY = os.getenv('GODATA_API_KEY', '')
+
         # KIWOOM API 관련 키
         self.KIWOOM_ACCT_NO = os.getenv('KIWOOM_ACCT_NO', '1033-4006')
         self.KIWOOM_APP_KEY = os.getenv('KIWOOM_APP_KEY', '')

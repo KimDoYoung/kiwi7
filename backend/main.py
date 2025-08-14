@@ -11,6 +11,7 @@ from backend.core.jwtmiddleware import JWTAuthMiddleware
 from backend.api.v1.endpoints.user_routes import router as user_router
 from backend.api.v1.endpoints.home_routes import router as home_router
 from backend.api.v1.endpoints.kiwoom_routes import router as kiwoom_router
+from backend.api.v1.endpoints.kdemon_routes import router as kdemon_router
 
 from backend.core.exception_handler import add_exception_handlers
 
@@ -43,9 +44,10 @@ def add_middlewares(app: FastAPI):
 
 def add_routes(app: FastAPI):
     # API 라우터 포함
-    app.include_router(home_router) # 화면
+    app.include_router(home_router) 
     app.include_router(user_router, prefix="/api/v1/user", tags=["user"])
     app.include_router(kiwoom_router, prefix="/api/v1/kiwoom", tags=["kiwoom"])
+    app.include_router(kdemon_router, prefix="/api/v1/kdemon", tags=["kdemon"])
 
 def add_event_handlers(app: FastAPI):
     ''' 이벤트 핸들러 설정 '''
@@ -71,9 +73,8 @@ async def startup_event():
     if not os.path.exists(parent_dir):
         logger.info(f"DB 디렉토리가 존재하지 않습니다. 생성합니다: {parent_dir}")
         os.makedirs(parent_dir, exist_ok=True)
-    if not os.path.exists(db_path):
-        logger.info(f"DB 파일이 존재하지 않습니다. 생성합니다: {db_path}")
-        create_kiwi7_db(db_path)
+    create_kiwi7_db(db_path)
+        
     logger.info(f"DB 파일 경로: {db_path}")
 
 async def shutdown_event():
