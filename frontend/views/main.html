@@ -8,7 +8,7 @@
             <div class="card shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
-                        <i class="fas fa-chart-line me-2"></i>주요 지수
+                        <i class="fas fa-chart-line me-2"></i><span x-text="market_name"></span>
                     </h5>
                     <button @click="refreshJisu()" class="btn btn-outline-primary btn-sm">
                         <i class="fas fa-sync-alt" :class="{ 'fa-spin': loading }"></i>
@@ -117,6 +117,7 @@
   function main_data() {
     return {
       jisu: {},
+      market_name: '',
       loading: false,
       error: null,
 
@@ -143,7 +144,15 @@
           }
           
           this.jisu = data;
-          
+          console.info(this.jisu)
+          let market = this.jisu.market
+          if (market == 'KRX'){
+            this.market_name = '한국거래소(KRX)'
+          }else if (market == 'NXT'){
+            this.market_name = '넥스트레이드(NXT)'
+          }else{
+            this.market_name = "장마감"
+          }
         } catch (error) {
           console.error('지수 정보 조회 실패:', error);
           this.error = error.message || '지수 정보를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.';

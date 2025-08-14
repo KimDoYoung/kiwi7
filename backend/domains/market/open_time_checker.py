@@ -29,7 +29,7 @@ from zoneinfo import ZoneInfo
 from backend.core.config import config  # GODATA_API_KEY, TZ
 
 Market = Literal["KRX", "NXT"]
-KST = ZoneInfo(getattr(config, "TZ", "Asia/Seoul"))
+KST = ZoneInfo(getattr(config, "TIME_ZONE", "Asia/Seoul"))
 
 def now_kst() -> datetime:
     return datetime.now(tz=KST)

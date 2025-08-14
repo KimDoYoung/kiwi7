@@ -1,12 +1,17 @@
 # APIRouter 인스턴스 생성
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from fastapi import APIRouter
 from backend.core.exceptions import KiwoomApiException
 from backend.core.logger import get_logger
 
 from backend.domains.kiwoom.kiwoom_service import get_kiwoom_api, get_token_manager
 from backend.domains.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomRequest, KiwoomResponse
+from backend.domains.market.open_time_checker import OpenTimeChecker
 from backend.utils.kiwi_utils import merge_dicts
 from backend.utils.naver_utils import get_summary_from_naver, get_jisu_from_naver
+from backend.core.config import config
+
 router = APIRouter()
 logger = get_logger(__name__)
 
@@ -112,9 +117,13 @@ async def get_stock_info(stk_code: str):
 async def get_jisu():
     '''지수 정보 조회'''
     logger.info("지수 정보 조회 요청 받음")
+    checker = OpenTimeChecker.get()
+    now = datetime.now(tz=ZoneInfo(config.TIME_ZONE))
+    market = await checker.getMarket(now)
     
     try:
         #  TODO 현재가 장마감인지 확인
+
         jisu_data = get_jisu_from_naver()  # await 제거 (동기 함수)
         if not jisu_data:
             return {
@@ -122,7 +131,7 @@ async def get_jisu():
                 "error_code": "999",
                 "error_message": "지수 정보를 가져오는데 실패했습니다"
             }
-        
+        jisu_data['market'] = market if market else '장마감'
         logger.info(f"지수 정보 조회 성공: {jisu_data}")
         return jisu_data
         

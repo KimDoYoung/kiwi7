@@ -11,6 +11,8 @@ class Config:
         self.KIWOOM_ACCT_NO = os.getenv('KIWOOM_ACCT_NO', '1033-4006')
         self.KIWOOM_APP_KEY = os.getenv('KIWOOM_APP_KEY', '')
         self.KIWOOM_SECRET_KEY = os.getenv('KIWOOM_SECRET_KEY', '')
+        # TimeZone
+        self.TIME_ZONE = "Asia/Seoul"
 
         # BASE_DIR 설정
         self.BASE_DIR = os.getenv('BASE_DIR', 'c:\\kiwi7')
