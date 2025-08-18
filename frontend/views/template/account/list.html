@@ -28,7 +28,7 @@
         </div>
         <div>
             <span>수익:</span>
-            <span class="fw-bold" x-text="profit.toLocaleString() + ' 원'"></span>
+            <span class="fw-bold" x-text="profit.toLocaleString() + ' 원'" :class="formatClass(profit)"></span>
         </div>
         <div>
             <span>매수가능:</span>
@@ -288,6 +288,14 @@ document.addEventListener('alpine:init', () => {
                 // 종목 상세 정보를 보여주는 로직을 여기에 추가
                 showCompanyCanvas(item.종목코드);
             },
+            formatClass(value) {
+                if (value > 0) {
+                    return 'text-danger';
+                } else if (value < 0) {
+                    return 'text-primary';
+                }
+                return '';
+            }
         }
     });
 

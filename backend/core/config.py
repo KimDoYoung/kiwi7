@@ -24,7 +24,7 @@ class Config:
 
         self.JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY','kiwi77_secret_key_1234_!@#$')
         self.ALGORITHM = os.getenv('ALGORITHM','HS256')
-        self.ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES', 30)
+        self.ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES', 60)
         self.ACCESS_TOKEN_NAME = os.getenv('ACCESS_TOKEN_NAME', 'kiwi7_token')
         
         self.DATA_FOLDER = self.BASE_DIR + '/data'

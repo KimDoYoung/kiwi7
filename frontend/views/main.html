@@ -6,14 +6,27 @@
     <div class="row mb-4">
         <div class="col-12">
             <div class="card shadow-sm">
+                <!-- card-header 부분 수정 -->
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
                         <i class="fas fa-chart-line me-2"></i><span x-text="market_name"></span>
                     </h5>
-                    <button @click="refreshJisu()" class="btn btn-outline-primary btn-sm">
-                        <i class="fas fa-sync-alt" :class="{ 'fa-spin': loading }"></i>
-                        새로고침
-                    </button>
+                    <div class="d-flex align-items-center gap-3">
+                        <!-- 자동 새로고침 스위치 -->
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="autoRefreshSwitch" 
+                                x-model="autoRefresh" @change="toggleAutoRefresh()">
+                            <label class="form-check-label" for="autoRefreshSwitch">
+                                자동
+                            </label>
+                        </div>
+                        
+                        <!-- 새로고침 버튼 -->
+                        <button @click="refreshJisu()" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-sync-alt" :class="{ 'fa-spin': loading }"></i>
+                            새로고침
+                        </button>
+                    </div>
                 </div>
                 <div class="card-body">
                     <!-- 로딩 상태 -->
@@ -32,18 +45,18 @@
                                 <div class="text-center">
                                     <h6 class="text-muted fw-bold mb-2">KOSPI</h6>
                                     <div class="fs-3 fw-bold mb-1" 
-                                         :class="getIndexColorClass(jisu.KOSPI?.diff)"
+                                         :class="getIndexColorClass(jisu.KOSPI?.rate)"
                                          x-text="formatIndex(jisu.KOSPI?.index)">
                                         -
                                     </div>
                                     <div class="d-flex justify-content-center align-items-center">
                                         <span class="me-2"
-                                              :class="getIndexColorClass(jisu.KOSPI?.diff)"
-                                              x-text="formatDiff(jisu.KOSPI?.diff)">
+                                              :class="getIndexColorClass(jisu.KOSPI?.rate)"
+                                              x-text="formatDiff(jisu.KOSPI?.diff, jisu.KOSPI?.rate)">
                                             -
                                         </span>
-                                        <span :class="getIndexColorClass(jisu.KOSPI?.diff)"
-                                              x-text="jisu.KOSPI?.rate || '-'">
+                                        <span :class="getIndexColorClass(jisu.KOSPI?.rate)"
+                                              x-text="(jisu.KOSPI?.rate || '-') + '%'">
                                             -
                                         </span>
                                     </div>
@@ -57,18 +70,18 @@
                                 <div class="text-center">
                                     <h6 class="text-muted fw-bold mb-2">KOSDAQ</h6>
                                     <div class="fs-3 fw-bold mb-1"
-                                         :class="getIndexColorClass(jisu.KOSDAQ?.diff)"
+                                         :class="getIndexColorClass(jisu.KOSDAQ?.rate)"
                                          x-text="formatIndex(jisu.KOSDAQ?.index)">
                                         -
                                     </div>
                                     <div class="d-flex justify-content-center align-items-center">
                                         <span class="me-2"
-                                              :class="getIndexColorClass(jisu.KOSDAQ?.diff)"
-                                              x-text="formatDiff(jisu.KOSDAQ?.diff)">
+                                              :class="getIndexColorClass(jisu.KOSDAQ?.rate)"
+                                              x-text="formatDiff(jisu.KOSDAQ?.diff, jisu.KOSDAQ?.rate)">
                                             -
                                         </span>
-                                        <span :class="getIndexColorClass(jisu.KOSDAQ?.diff)"
-                                              x-text="jisu.KOSDAQ?.rate || '-'">
+                                        <span :class="getIndexColorClass(jisu.KOSDAQ?.rate)"
+                                              x-text="(jisu.KOSDAQ?.rate || '-') + '%'">
                                             -
                                         </span>
                                     </div>
@@ -82,18 +95,18 @@
                                 <div class="text-center">
                                     <h6 class="text-muted fw-bold mb-2">KOSPI200</h6>
                                     <div class="fs-3 fw-bold mb-1"
-                                         :class="getIndexColorClass(jisu.KOSPI200?.diff)"
+                                         :class="getIndexColorClass(jisu.KOSPI200?.rate)"
                                          x-text="formatIndex(jisu.KOSPI200?.index)">
                                         -
                                     </div>
                                     <div class="d-flex justify-content-center align-items-center">
                                         <span class="me-2"
-                                              :class="getIndexColorClass(jisu.KOSPI200?.diff)"
-                                              x-text="formatDiff(jisu.KOSPI200?.diff)">
+                                              :class="getIndexColorClass(jisu.KOSPI200?.rate)"
+                                              x-text="formatDiff(jisu.KOSPI200?.diff, jisu.KOSPI200?.rate)">
                                             -
                                         </span>
-                                        <span :class="getIndexColorClass(jisu.KOSPI200?.diff)"
-                                              x-text="jisu.KOSPI200?.rate || '-'">
+                                        <span :class="getIndexColorClass(jisu.KOSPI200?.rate)"
+                                              x-text="(jisu.KOSPI200?.rate || '-') + '%'">
                                             -
                                         </span>
                                     </div>
@@ -112,7 +125,10 @@
         </div>
     </div>
 </div>
+    
+{% endblock %}
 
+{% block script %}
 <script>
   function main_data() {
     return {
@@ -120,12 +136,47 @@
       market_name: '',
       loading: false,
       error: null,
+      autoRefresh: false,        // 자동 새로고침 상태
+      autoRefreshInterval: null, // 자동 새로고침 인터벌 ID
+      refreshIntervalSeconds: 30, // 30초마다 새로고침
 
       async init() {
         // 페이지 로드 시 지수 정보 가져오기
         await this.refreshJisu();
       },
+      // 자동 새로고침 토글
+      toggleAutoRefresh() {
+        if (this.autoRefresh) {
+          // 자동 새로고침 시작
+          this.startAutoRefresh();
+          console.log('자동 새로고침 시작 (30초 간격)');
+        } else {
+          // 자동 새로고침 중지
+          this.stopAutoRefresh();
+          console.log('자동 새로고침 중지');
+        }
+      },      
+      // 자동 새로고침 시작
+      startAutoRefresh() {
+        // 기존 인터벌이 있다면 정리
+        this.stopAutoRefresh();
+        
+        // 새로운 인터벌 설정 (30초마다)
+        this.autoRefreshInterval = setInterval(async () => {
+          if (this.autoRefresh && !this.loading) {
+            console.log('자동 새로고침 실행...');
+            await this.refreshJisu();
+          }
+        }, this.refreshIntervalSeconds * 1000);
+      },
 
+      // 자동 새로고침 중지
+      stopAutoRefresh() {
+        if (this.autoRefreshInterval) {
+          clearInterval(this.autoRefreshInterval);
+          this.autoRefreshInterval = null;
+        }
+      },
       async refreshJisu() {
         this.loading = true;
         this.error = null;
@@ -152,6 +203,7 @@
             this.market_name = '넥스트레이드(NXT)'
           }else{
             this.market_name = "장마감"
+            this.stopAutoRefresh()
           }
         } catch (error) {
           console.error('지수 정보 조회 실패:', error);
@@ -175,11 +227,13 @@
       },
 
       // 등락폭 포맷 (+/- 기호 추가)
-      formatDiff(diff) {
+      formatDiff(diff, rate) {
         if (!diff) return '-';
         const numDiff = parseFloat(diff);
-        if (numDiff > 0) {
-          return `+${diff}`;
+        if (rate > 0) {
+            return `▲${diff}`;
+        }else{
+            return `▼${diff}`;
         }
         return diff;
       },
@@ -198,9 +252,5 @@
     };
   }
 </script>
-    
-{% endblock %}
 
-{% block script %}
-<!-- <script src="/public/js/fetch-util.js"></script> -->
 {% endblock %}
