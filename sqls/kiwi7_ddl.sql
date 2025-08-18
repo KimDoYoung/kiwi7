@@ -57,3 +57,35 @@ CREATE TABLE IF NOT EXISTS mystock (
   updated_at TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S','now','localtime')),
   PRIMARY KEY (stk_cd)
 );
+-- ---------------------------------------------------------------
+-- stk_diary : 주식에 대한 생각을 기록
+-- ---------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS stk_diary (
+    ymd       TEXT PRIMARY KEY,                     -- 날짜 (YYYYMMDD)
+    note      TEXT NOT NULL,                     -- 일지 내용
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 생성 시각
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- 수정 시각
+);
+
+-- ---------------------------------------------------------------
+-- stk_history : 특정종목에 대한 매매 기록
+-- ---------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS stk_history (
+  id        INTEGER PRIMARY KEY AUTOINCREMENT,  -- 고유 ID
+  stk_cd    TEXT    NOT NULL,                     -- 종목코드 (FK)
+  stk_nm    TEXT    NOT NULL,                     -- 종목명
+  ymd       TEXT    NOT NULL,
+  note      TEXT    NOT NULL,                      -- 메모
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 생성 시각
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- 수정 시각
+);
+-- ---------------------------------------------------------------
+-- stk_cache : 전일종가와 같은 종목에 대한 일시적인 값 기록
+-- ---------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS stk_cache (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,    -- 고유 ID
+  stk_cd     TEXT    NOT NULL,                     -- 종목코드
+  name       TEXT    NOT NULL,                     -- 종목명
+  value      TEXT    NOT NULL,                     -- 전일종가 등 값
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP   -- 생성 시각
+);
