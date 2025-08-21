@@ -76,13 +76,15 @@ async def page(
     if not user_id:
         raise HTTPException(status_code=401, detail="Invalid token-현재 사용자 정보가 없습니다")
     
+    # 추가적인 쿼리 파라미터를 딕셔너리로 변환
     extra_params = {k: v for k, v in request.query_params.items()}
 
     today = get_today()
     page_path = path.strip('/')
 
     context = { "request": request,  
-                "user_id":  user_id, 
+                "user_id":  user_id,
+                "version" : config.VERSION,
                 "page_path": page_path,
                 "today": today,
                 **extra_params}
@@ -90,8 +92,20 @@ async def page(
     func = PAGE_CONTEXT_PROVIDERS.get(page_path)
     if func:
         try:
-            data = await func(user_id) if callable(func) and func.__code__.co_flags & 0x80 else func()
-            context["data"] = data
+            # 함수가 async인지 확인
+            is_async = callable(func) and func.__code__.co_flags & 0x80
+            
+            # 함수가 매개변수를 받는지 확인
+            func_params = func.__code__.co_argcount if callable(func) else 0
+            
+            if func_params > 0:
+                # context를 매개변수로 전달
+                data = await func(context) if is_async else func(context)
+            else:
+                # 매개변수가 없는 기존 함수 호환성 유지
+                data = await func() if is_async else func()
+                
+            context["data"] = data            
         except Exception as e:
             logger.error(f"{path}용 데이터 로딩 실패: {e}")
     else:
