@@ -26,6 +26,7 @@ from backend.domains.settings.settings_service import SettingsService
 from backend.utils.kiwi_utils import get_today
 from backend.core.template_engine import render_template
 from backend.core.security import create_jwt_access_token, get_current_user
+from backend.domains.settings.settings_service import get_settings_service
 
 from backend.core.logger import get_logger
 from backend.page_contexts.context_registry import PAGE_CONTEXT_PROVIDERS
@@ -33,9 +34,6 @@ from backend.page_contexts.context_registry import PAGE_CONTEXT_PROVIDERS
 logger = get_logger(__name__)
 
 router = APIRouter()
-
-def get_settings_service():
-    return SettingsService()  # 매번 새로운 인스턴스를 생성하거나, 싱글톤 사용
 
 @router.get("/", response_class=HTMLResponse, include_in_schema=False)
 def display_root(request: Request):
