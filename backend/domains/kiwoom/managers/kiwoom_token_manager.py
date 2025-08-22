@@ -6,16 +6,17 @@ import aiohttp
 from backend.core.logger import get_logger
 from backend.core.config import config
 from backend.core.exceptions import KiwoomAuthException
-from backend.domains.user.user_service import UserService
+from backend.domains.settings.settings_service import SettingsService
+
 
 logger = get_logger(__name__)
 
 class KiwoomTokenManager:
-    def __init__(self, user_service: Optional[UserService] = None):
+    def __init__(self, settings_service: Optional[SettingsService] = None):
         self.app_key = config.KIWOOM_APP_KEY
         self.app_secret = config.KIWOOM_SECRET_KEY
         self.base_url = "https://api.kiwoom.com"
-        self.user_service = user_service or UserService()
+        self.settings_service = settings_service or SettingsService()
 
         self.token_type: Optional[str] = None
         self.token: Optional[str] = None
@@ -134,13 +135,13 @@ class KiwoomTokenManager:
             return True
 
     async def _load_token_from_db(self):
-        token_info = await self.user_service.get("ACCESS_TOKEN")
-        time_info = await self.user_service.get("ACCESS_TOKEN_EXPIRED_TIME")
+        token_info = await self.settings_service.get("ACCESS_TOKEN")
+        time_info = await self.settings_service.get("ACCESS_TOKEN_EXPIRED_TIME")
         self.token = token_info.value if token_info else None
         self.expires_dt = time_info.value if time_info else None
         logger.info("토큰 정보를 데이터베이스에서 로드했습니다. token: %s, expires_dt: %s", self.token[:10] if self.token else None, self.expires_dt)
 
     async def _save_token_to_db(self):
-        await self.user_service.set("ACCESS_TOKEN", self.token)
-        await self.user_service.set("ACCESS_TOKEN_EXPIRED_TIME", self.expires_dt)
+        await self.settings_service.set("ACCESS_TOKEN", self.token)
+        await self.settings_service.set("ACCESS_TOKEN_EXPIRED_TIME", self.expires_dt)
         logger.info("토큰 정보를 데이터베이스에 저장했습니다. token: %s, expires_dt: %s", self.token[:10] if self.token else None, self.expires_dt)
