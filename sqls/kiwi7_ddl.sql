@@ -45,9 +45,10 @@ CREATE TABLE IF NOT EXISTS kdemon_state (
 -- ---------------------------------------------------------------
 -- my_stock
 -- ---------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS mystock (
+CREATE TABLE IF NOT EXISTS my_stock (
   stk_cd     TEXT    NOT NULL,                               -- 종목코드 (PK)
   stk_nm     TEXT    NOT NULL,                               -- 종목명
+  sector     TEXT    NULL,                                   -- 분야
   is_hold    INTEGER NOT NULL DEFAULT 0                      -- 보유여부 (0/1)
              CHECK (is_hold IN (0,1)),
   is_watch   INTEGER NOT NULL DEFAULT 0                      -- 관심여부 (0/1)
@@ -58,23 +59,25 @@ CREATE TABLE IF NOT EXISTS mystock (
   PRIMARY KEY (stk_cd)
 );
 -- ---------------------------------------------------------------
--- stk_diary : 주식에 대한 생각을 기록
+-- stk_diary : 주식에 대한 생각을 기록, 종목토론
 -- ---------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS stk_diary (
-    ymd       TEXT PRIMARY KEY,                     -- 날짜 (YYYYMMDD)
+    id        INTEGER PRIMARY KEY AUTOINCREMENT,  -- 고유 ID
+    ymd       TEXT NOT NULL,                     -- 날짜 (YYYYMMDD)
+    stk_cd    TEXT NULL,                     -- 종목코드 (FK)
     note      TEXT NOT NULL,                     -- 일지 내용
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 생성 시각
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- 수정 시각
 );
 
 -- ---------------------------------------------------------------
--- stk_history : 특정종목에 대한 매매 기록
+-- stk_trades_history : 특정종목에 대한 매매 기록
 -- ---------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS stk_history (
+CREATE TABLE IF NOT EXISTS stk_trades_history (
   id        INTEGER PRIMARY KEY AUTOINCREMENT,  -- 고유 ID
   stk_cd    TEXT    NOT NULL,                     -- 종목코드 (FK)
   stk_nm    TEXT    NOT NULL,                     -- 종목명
-  ymd       TEXT    NOT NULL,
+  ymd       TEXT    NOT NULL,                     -- 거래일 (YYYYMMDD)     
   note      TEXT    NOT NULL,                      -- 메모
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 생성 시각
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- 수정 시각

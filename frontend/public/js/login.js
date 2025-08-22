@@ -7,6 +7,42 @@ function loginApp() {
         showPassword: false,
         isLoading: false,
         errorMessage: '',
+        password: '', // 4자리 비밀번호 저장 (문자열로 초기화)
+        
+        // Alpine.js 초기화 함수
+        init() {
+            console.log('Alpine.js 초기화됨');
+            this.password = ''; // 명시적 초기화
+        },
+        
+        /**
+         * 숫자 패드에서 숫자 클릭 시 호출
+         * @param {number} num - 클릭된 숫자 (0-9)
+         */
+        addNumber(num) {
+            // 4자리까지만 입력 가능
+            if (this.password.length < 4) {
+                this.password += num.toString();
+                this.errorMessage = ''; // 에러 메시지 초기화
+            }
+        },
+        
+        /**
+         * 백스페이스 버튼 클릭 시 마지막 숫자 제거
+         */
+        removeLastNumber() {
+            if (this.password.length > 0) {
+                this.password = this.password.slice(0, -1);
+            }
+        },
+        
+        /**
+         * 클리어 버튼 클릭 시 모든 숫자 제거
+         */
+        clearPassword() {
+            this.password = '';
+            this.errorMessage = '';
+        },
         
         /**
          * 로그인 함수 - 폼 제출 시 호출됩니다
@@ -20,11 +56,18 @@ function loginApp() {
             
             // 폼 데이터 가져오기 (간단한 방법)
             const userId = document.getElementById('userId').value;
-            const password = document.getElementById('password').value;
+            const password = this.password; // Alpine.js 데이터에서 가져오기
             
             // 기본 검증
             if (!userId || !password) {
                 this.errorMessage = '아이디와 비밀번호를 입력하세요.';
+                this.isLoading = false;
+                return;
+            }
+            
+            // 비밀번호 4자리 검증
+            if (password.length !== 4) {
+                this.errorMessage = '비밀번호는 4자리 숫자여야 합니다.';
                 this.isLoading = false;
                 return;
             }
@@ -67,7 +110,7 @@ function loginApp() {
          */
         fillTestAccount() {
             document.getElementById('userId').value = 'admin';
-            document.getElementById('password').value = '1234';
+            this.password = '1234'; // Alpine.js 데이터로 설정
             this.errorMessage = '';
         }
     }
