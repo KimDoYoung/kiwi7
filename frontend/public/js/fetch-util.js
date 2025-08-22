@@ -1,4 +1,3 @@
-
 /**
  * fetch API 호출시 server로 부터 받은 response가 에러인 경우 
  * status와 detail을 저장하는 Error클래스

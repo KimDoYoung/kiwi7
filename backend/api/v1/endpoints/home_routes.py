@@ -28,7 +28,7 @@ from backend.core.template_engine import render_template
 from backend.core.security import create_jwt_access_token, get_current_user
 
 from backend.core.logger import get_logger
-from backend.domains.kiwoom.page_contexts.context_registry import PAGE_CONTEXT_PROVIDERS
+from backend.page_contexts.context_registry import PAGE_CONTEXT_PROVIDERS
 
 logger = get_logger(__name__)
 

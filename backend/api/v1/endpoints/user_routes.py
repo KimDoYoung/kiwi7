@@ -14,3 +14,4 @@ logger = get_logger(__name__)
 async def get_user(user_id: str):
     user_service = get_user_service()
     return user_service.list_all()
+

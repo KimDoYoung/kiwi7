@@ -42,7 +42,10 @@ applyTo: '**/*.py'
 ---
 1. `http://localhost:8001/page?path=stock/find`과 같이 새로운 경로를 추가합니다.
 2. /page는 home_routes에 포함되어 있습니다.
-3. /
+3. path가 stock/find라면 frontend/views/template 하위에 stock폴더 그 안에 find.html을 생성합니다.
+4. path에 따라서 할당된 함수를 수행한다. 그 결과를 jinja2 템플릿에 전달하여 렌더링합니다.
+5. path에 따라서 할당된 함수는 backend.page_contexts.context_registry에서 가져옵니다.
+6. 랜더링된 후에는 alpine.js를 사용하여 동적인 기능을 추가합니다.
 
 ```python
 
