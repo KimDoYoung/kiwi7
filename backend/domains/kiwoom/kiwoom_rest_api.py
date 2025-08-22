@@ -15,9 +15,10 @@ import aiohttp
 from backend.domains.kiwoom.managers.kiwoom_token_manager import KiwoomTokenManager
 from backend.domains.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomRequest
 from backend.domains.kiwoom.models.kiwoom_schema import KiwoomResponse
+from backend.domains.settings.settings_service import SettingsService
 from backend.domains.stock_api import StockApi
 from backend.core.config import config
-from backend.domains.user.user_service import UserService
+
 from backend.core.logger import get_logger
 
 logger = get_logger(__name__)
@@ -30,7 +31,7 @@ class KiwoomRestApi(StockApi):
     
     def __init__(self, token_manager: KiwoomTokenManager):
         """키움 API 클래스 초기화"""
-        super().__init__(config.KIWOOM_ACCT_NO, UserService())
+        super().__init__(config.KIWOOM_ACCT_NO, SettingsService())
         self.token_manager = token_manager
     
 

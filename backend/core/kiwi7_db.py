@@ -239,19 +239,19 @@ def create_minimal_database(db_path: str):
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
         
-        # 기본 사용자 설정 테이블
+        # 기본 설정 테이블
         cursor.execute('''
-            CREATE TABLE IF NOT EXISTS users (
+            CREATE TABLE IF NOT EXISTS settings (
                 name TEXT PRIMARY KEY,
                 value TEXT NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         ''')
         
-        # 기본 사용자 데이터 삽입
-        cursor.execute('INSERT OR IGNORE INTO users (name, value) VALUES (?, ?)', 
+        # 기본 설정 데이터 삽입
+        cursor.execute('INSERT OR IGNORE INTO settings (name, value) VALUES (?, ?)', 
                       ('user_id', 'kdy987'))
-        cursor.execute('INSERT OR IGNORE INTO users (name, value) VALUES (?, ?)', 
+        cursor.execute('INSERT OR IGNORE INTO settings (name, value) VALUES (?, ?)', 
                       ('user_pw', '1111'))
         
         conn.commit()

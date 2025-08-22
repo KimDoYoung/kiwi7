@@ -21,8 +21,8 @@ from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi import status
 
 from backend.core.config import config
-from backend.domains.user.user_model import AccessToken
-from backend.domains.user.user_service import UserService
+from backend.domains.settings.settings_model import AccessToken
+from backend.domains.settings.settings_service import SettingsService
 from backend.utils.kiwi_utils import get_today
 from backend.core.template_engine import render_template
 from backend.core.security import create_jwt_access_token, get_current_user
@@ -34,8 +34,8 @@ logger = get_logger(__name__)
 
 router = APIRouter()
 
-def get_user_service():
-    return UserService()  # 매번 새로운 인스턴스를 생성하거나, 싱글톤 사용
+def get_settings_service():
+    return SettingsService()  # 매번 새로운 인스턴스를 생성하거나, 싱글톤 사용
 
 @router.get("/", response_class=HTMLResponse, include_in_schema=False)
 def display_root(request: Request):
@@ -139,11 +139,11 @@ async def login_for_access_token(
     response: Response,  # Response 추가
     userId: str = Form(...),
     password: str = Form(...),
-    user_service: UserService = Depends(get_user_service)
+    settings_service: SettingsService = Depends(get_settings_service)
 ):
     ''' SQLite 기반 로그인 처리 '''
-    saved_user_id = await user_service.get("user_id")
-    saved_password = await user_service.get("user_pw")
+    saved_user_id = await settings_service.get("user_id")
+    saved_password = await settings_service.get("user_pw")
 
     if not saved_user_id or not saved_password:
         raise HTTPException(status_code=400, detail="사용자 정보가 DB에 등록되어 있지 않습니다.")

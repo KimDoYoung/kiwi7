@@ -8,7 +8,7 @@ from backend.core.kiwi7_db import create_kiwi7_db
 from backend.core.logger import get_logger
 from backend.core.config import config
 from backend.core.jwtmiddleware import JWTAuthMiddleware
-from backend.api.v1.endpoints.user_routes import router as user_router
+from backend.api.v1.endpoints.settings_routes import router as settings_router
 from backend.api.v1.endpoints.home_routes import router as home_router
 from backend.api.v1.endpoints.kiwoom_routes import router as kiwoom_router
 from backend.api.v1.endpoints.kdemon_routes import router as kdemon_router
@@ -45,7 +45,7 @@ def add_middlewares(app: FastAPI):
 def add_routes(app: FastAPI):
     # API 라우터 포함
     app.include_router(home_router) 
-    app.include_router(user_router, prefix="/api/v1/user", tags=["user"])
+    app.include_router(settings_router, prefix="/api/v1/settings", tags=["settings"])
     app.include_router(kiwoom_router, prefix="/api/v1/kiwoom", tags=["kiwoom"])
     app.include_router(kdemon_router, prefix="/api/v1/kdemon", tags=["kdemon"])
 

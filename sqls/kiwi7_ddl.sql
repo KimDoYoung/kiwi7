@@ -1,11 +1,11 @@
--- user table 실상은 name value
-CREATE TABLE IF NOT EXISTS users (
+-- settings table 실상은 name value
+CREATE TABLE IF NOT EXISTS settings (
     name TEXT PRIMARY KEY,
     value TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-INSERT OR IGNORE INTO users (name, value) VALUES ('user_id', 'kdy987');
-INSERT OR IGNORE INTO users (name, value) VALUES ('user_pw', '1111');
+INSERT OR IGNORE INTO settings (name, value) VALUES ('user_id', 'kdy987');
+INSERT OR IGNORE INTO settings (name, value) VALUES ('user_pw', '1111');
 
 -- kdemon_rules: 자동매매 룰
 CREATE TABLE IF NOT EXISTS kdemon_rules (
