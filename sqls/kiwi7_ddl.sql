@@ -92,3 +92,24 @@ CREATE TABLE IF NOT EXISTS stk_cache (
   value      TEXT    NOT NULL,                     -- 전일종가 등 값
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP   -- 생성 시각
 );
+-- ---------------------------------------------------------------
+-- 종목 기본정보 국내주식 > 종목정보 > 종목정보 리스트(ka10099) 결과를 넣어두기 위함
+-- ---------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS stk_info (
+  code                TEXT PRIMARY KEY,                                      -- 종목코드(단축코드)
+  name                TEXT,                                                  -- 종목명
+  list_count          TEXT,                                                  -- 상장주식수 (API 원문: String)
+  audit_info          TEXT,                                                  -- 감리구분
+  reg_day             TEXT,                                                  -- 상장일 (YYYYMMDD)
+  last_price          TEXT,                                                  -- 전일종가
+  state               TEXT,                                                  -- 종목상태
+  market_code         TEXT,                                                  -- 시장구분코드
+  market_name         TEXT,                                                  -- 시장명
+  up_name             TEXT,                                                  -- 업종명
+  up_size_name        TEXT,                                                  -- 회사크기분류
+  company_class_name  TEXT,                                                  -- 회사분류 (코스닥만 존재)
+  order_warning       TEXT CHECK (order_warning IN ('0','1','2','3','4','5')), 
+  -- 투자유의종목여부: 0 해당없음, 2 정리매매, 3 단기과열, 4 투자위험, 5 투자경과, 1 ETF투자주의요망
+  nxt_enable          TEXT CHECK (nxt_enable IN ('Y','N')),                  -- NXT 가능여부 (Y/N)
+  created_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP                    -- 생성 시각
+);
