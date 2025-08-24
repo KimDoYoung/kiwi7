@@ -146,7 +146,7 @@ async def login_for_access_token(
     if not saved_user_id or not saved_password:
         raise HTTPException(status_code=400, detail="사용자 정보가 DB에 등록되어 있지 않습니다.")
 
-    if userId != saved_user_id.value or password != saved_password.value:
+    if userId != saved_user_id or password != saved_password:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="아이디 또는 비밀번호가 틀립니다.",

@@ -185,6 +185,18 @@ class StkInfoService:
 
         # 업데이트된 데이터 반환
         return self._get_by_code_sync(code)
+    
+    async def delete_all(self) ->bool:
+        """ 모든 레코드 삭제 """
+        import asyncio  
+        loop = asyncio.get_event_loop()
+        def _delete_all_sync():
+            with self._get_conn() as conn:
+                cur = conn.cursor()
+                cur.execute("DELETE FROM stk_info")
+                conn.commit()
+                return True
+        return await loop.run_in_executor(None, _delete_all_sync)
 
     async def delete(self, code: str) -> bool:
         """종목 정보 삭제"""

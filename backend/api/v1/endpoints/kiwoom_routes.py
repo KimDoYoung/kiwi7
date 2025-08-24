@@ -141,4 +141,3 @@ async def get_jisu():
             "error_message": "지수 정보 조회 중 오류가 발생했습니다"
         }
 
-

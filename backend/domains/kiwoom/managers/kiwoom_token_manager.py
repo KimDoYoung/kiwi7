@@ -137,8 +137,8 @@ class KiwoomTokenManager:
     async def _load_token_from_db(self):
         token_info = await self.settings_service.get("ACCESS_TOKEN")
         time_info = await self.settings_service.get("ACCESS_TOKEN_EXPIRED_TIME")
-        self.token = token_info.value if token_info else None
-        self.expires_dt = time_info.value if time_info else None
+        self.token = token_info if token_info else None
+        self.expires_dt = time_info if time_info else None
         logger.info("토큰 정보를 데이터베이스에서 로드했습니다. token: %s, expires_dt: %s", self.token[:10] if self.token else None, self.expires_dt)
 
     async def _save_token_to_db(self):

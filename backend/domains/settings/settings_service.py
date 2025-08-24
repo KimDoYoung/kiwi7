@@ -33,7 +33,7 @@ class SettingsService:
     async def get(self, key) -> Optional[str]:
         """설정값 조회 - SettingsKey 또는 문자열을 받을 수 있음"""
         if isinstance(key, SettingsKey):
-            name = key
+            name = key.value
         else:
             name = key
         
@@ -87,8 +87,14 @@ class SettingsService:
             logger.error(f"설정값 저장 실패: {e}")
             return False
 
-    def delete(self, name: str):
+    async def delete(self, name: str):
         """설정값 삭제"""
+        import asyncio
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(None, self._delete_sync, name)
+    
+    def _delete_sync(self, name: str):
+        """동기적으로 설정값 삭제"""
         if name in self.settings:
             del self.settings[name]
             with self._get_conn() as conn:
@@ -96,8 +102,14 @@ class SettingsService:
                 cur.execute("DELETE FROM settings WHERE name = ?", (name,))
                 conn.commit()
 
-    def list_all(self):
+    async def list_all(self):
         """모든 설정값 목록 반환"""
+        import asyncio
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(None, self._list_all_sync)
+    
+    def _list_all_sync(self):
+        """동기적으로 모든 설정값 목록 반환"""
         return list(self.settings.values())
 
 #---------------------------------------------------------
@@ -108,4 +120,5 @@ def get_settings_service() -> SettingsService:
     """SettingsService 싱글턴 인스턴스 반환"""
     global instance_settings_service
     if instance_settings_service is None:
-        instance_settings_service
+        instance_settings_service = SettingsService()
+    return instance_settings_service
