@@ -99,3 +99,18 @@ async def page(
     logger.debug(f"template_page 호출됨: {template_page}")
     return render_template(template_page, context)  
 ```
+
+--- 
+api 작성(router파일의 함수)
+---
+- table의 ddl은 sql/kiwi7_ddl.sql에 정의되어 있습니다.
+- table 1개 당 1개의 model파일과 1개의 service파일이 domains/폴더 하위에 있습니다.
+- 각 model과 service는 해당 table의 CRUD 기능을 수행합니다.
+- get_<tablename>_service로 해당 테이블의 service를 가져옵니다.
+- 키움증권의 api호출은 KiwoomRestApi 객체를  `kiwoom_api = await get_kiwoom_api()`  로 생성하고
+- 아래와 같이 id와 payload를 전달하여 호출합니다.
+```python
+ response = await api.send_request(KiwoomRequest(api_id="ka10099", payload={"mrkt_tp": mrkt_tp}))
+ ```
+- api 호출은 request는 비동기적으로 처리됩니다.
+- KiwoomApiHelper를 사용하여 응답을 처리합니다.

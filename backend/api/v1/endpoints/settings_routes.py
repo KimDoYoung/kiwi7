@@ -44,7 +44,7 @@ async def update_stk_info(force: bool = False):
     # settings 에서 LAST_STK_INFO_FILL 을 찾아서
     settings_service = get_settings_service()
     last_fill_time = await settings_service.get(SettingsKey.LAST_STK_INFO_FILL)
-    #  유효시간이 지낫거나, force이면
+    #  유효시간이 지났거나, force이면
     if not last_fill_time or (not force and is_time_exceeded(last_fill_time)) or force:
         # kiwoom에서 가져온다.
         api = await get_kiwoom_api()
