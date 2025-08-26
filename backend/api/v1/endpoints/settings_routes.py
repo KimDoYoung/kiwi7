@@ -5,6 +5,7 @@ from backend.core.logger import get_logger
 from backend.domains.services.dependency import get_service
 from backend.domains.models.settings_model import SettingInfo
 from backend.api.common.stock_functions import stk_info_fill
+from backend.domains.services.settings_keys import SettingsKey
 
 # APIRouter 인스턴스 생성
 router = APIRouter()
@@ -31,7 +32,9 @@ async def update_stk_info(force: bool = False):
     try:
         # stk_info_fill은 비동기 함수이므로 await 사용
         await stk_info_fill(force=force)
-        return create_success_response("stk_info 테이블이 업데이트되었습니다.")
+        service = get_service("settings")
+        last_fill_time = await service.get(SettingsKey.LAST_STK_INFO_FILL)
+        return create_success_response("stk_info 테이블이 업데이트되었습니다.", data={"last_stk_info_fill": last_fill_time})
     except Exception as e:
         logger.error(f"stk_info 테이블 업데이트 중 오류 발생: {str(e)}")
         # api_helpers의 create_error_response 사용 (메시지만 전달)

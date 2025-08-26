@@ -6,17 +6,17 @@ import aiohttp
 from backend.core.logger import get_logger
 from backend.core.config import config
 from backend.core.exceptions import KiwoomAuthException
-from backend.domains.services.settings_service import SettingsService
+from backend.domains.services.dependency import get_service
 
 
 logger = get_logger(__name__)
 
 class KiwoomTokenManager:
-    def __init__(self, settings_service: Optional[SettingsService] = None):
+    def __init__(self):
         self.app_key = config.KIWOOM_APP_KEY
         self.app_secret = config.KIWOOM_SECRET_KEY
         self.base_url = "https://api.kiwoom.com"
-        self.settings_service = settings_service or SettingsService()
+        self.settings_service = get_service("settings")
 
         self.token_type: Optional[str] = None
         self.token: Optional[str] = None

@@ -9,9 +9,9 @@
         <div x-show="result" class="alert alert-info mt-3" x-text="result"></div>
     </div>
     <hr class="my-3">
-    <div class="mt-3">
+    <div class="mt-3 stk_info_fill">
         <p>종목의 기본정보 테이블(stk_info)테이블을 다시 강제로 채웁니다. 이 테이블은 종목찾기에서 사용되며 종목코드에 해당하는 종목명을 찾는 것 등에 사용됩니다.
-        <p>최종 동작시각:<span>{{data.last_stk_code_fill_time}}</span>
+        <p>최종 동작시각: <span x-text="last_stk_info_fill"></span>
         <p><button type="button" class="btn btn-primary" @click="fill_stk_info()">주식종목정보 채우기</button>
         <div x-show="result_fill_stk_info" class="alert alert-info mt-3" x-text="result_fill_stk_info"></div>
     </div>
@@ -21,7 +21,6 @@
 {% endraw %}
 {% endblock %}
 {% block script %}
-{% raw %}
 <script>
 // Alpine 컴포넌트 팩토리 함수
 function createSettingsComponent() {
@@ -30,7 +29,7 @@ function createSettingsComponent() {
         data: null,
         result: null,
         result_fill_stk_info: null,
-
+        last_stk_info_fill: '{{data.last_stk_info_fill or ""}}',
         // === 초기화 ===
         init() {
             console.log('Initializing data_settings');
@@ -62,10 +61,13 @@ function createSettingsComponent() {
             try {
                 const response = await putFetch('/api/v1/settings/stk_info?force=true');
                 console.log(response);
-                
-                this.result_fill_stk_info = response.success 
-                    ? 'stk_info 테이블이 성공적으로 채워졌습니다.'
-                    : `stk_info 테이블 채우기에 실패했습니다. ${response.message || '관리자에게 문의하세요.'}`;
+                  
+                if (response.success) {
+                    this.result_fill_stk_info = 'stk_info 테이블이 성공적으로 채워졌습니다.';
+                    this.last_stk_info_fill = response.data.last_stk_info_fill;
+                } else {
+                    this.result_fill_stk_info = `stk_info 테이블 채우기에 실패했습니다. ${response.message || '관리자에게 문의하세요.'}`;
+                }
                     
             } catch (error) {
                 console.error('stk_info 테이블 채우기 오류:', error);
@@ -80,5 +82,4 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('data_settings', createSettingsComponent);
 });
 </script>
-{% endraw %}
 {% endblock %}
