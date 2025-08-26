@@ -1,5 +1,5 @@
 from backend.core.config import config
-from backend.domains.stocks.stk_trade_history_model import StkTradeHistory, StkTradeHistoryCreate, StkTradeHistoryUpdate, StkTradeHistoryFilter
+from backend.domains.models.stk_trade_history_model import StkTradeHistory, StkTradeHistoryCreate, StkTradeHistoryUpdate, StkTradeHistoryFilter
 from backend.core.logger import get_logger
 from typing import List, Optional, Dict
 import sqlite3
@@ -288,11 +288,11 @@ class StkTradeHistoryService:
 
 #---------------------------------------------------------
 # StkTradeHistoryService의 싱글턴 인스턴스를 관리하기 위한 전역 변수와 getter 함수
-instance_stk_trade_history_service: StkTradeHistoryService = None
+# instance_stk_trade_history_service: StkTradeHistoryService = None
 
-def get_stk_trade_history_service() -> StkTradeHistoryService:
-    """StkTradeHistoryService 싱글턴 인스턴스 반환"""
-    global instance_stk_trade_history_service
-    if instance_stk_trade_history_service is None:
-        instance_stk_trade_history_service = StkTradeHistoryService()
-    return instance_stk_trade_history_service
+# def get_stk_trade_history_service() -> StkTradeHistoryService:
+#     """StkTradeHistoryService 싱글턴 인스턴스 반환"""
+#     global instance_stk_trade_history_service
+#     if instance_stk_trade_history_service is None:
+#         instance_stk_trade_history_service = StkTradeHistoryService()
+#     return instance_stk_trade_history_service

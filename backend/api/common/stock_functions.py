@@ -3,18 +3,22 @@ from backend.api.common.api_helpers import create_error_response, get_current_ti
 from backend.api.common.validators import validate_market_type
 from backend.domains.kiwoom.kiwoom_service import get_kiwoom_api
 from backend.domains.kiwoom.models.kiwoom_schema import KiwoomRequest
+from backend.domains.services.dependency import get_service
 from backend.domains.services.settings_keys import SettingsKey
-from backend.domains.services.settings_service import get_settings_service
-from backend.domains.services.stk_info_model import StkInfoBulkCreate, StkInfoCreate
-from backend.domains.services.stk_info_service import get_stk_info_service
+from backend.domains.models.stk_info_model import StkInfoBulkCreate, StkInfoCreate
+# from backend.domains.services.stk_info_service import get_stk_info_service
 from backend.utils.kiwi_utils import is_time_exceeded
 from backend.core.logger import get_logger
 
 logger = get_logger(__name__)
 
-async def stk_info_fill(force:bool=False):            
+async def stk_info_fill(force:bool=False):
+    """ 
+    stk_info 테이블을 채운다. 만약 force가 True이면 무조건 채운다.
+    force가 False이면  settings테이블의 LAST_STK_INFO_FILL을 체크해서 일정시간이 지났다면 채운다.
+    """
     # settings 에서 LAST_STK_INFO_FILL 을 찾아서
-    settings_service = get_settings_service()
+    settings_service = get_service("settings")
     last_fill_time = await settings_service.get(SettingsKey.LAST_STK_INFO_FILL)
     #  유효시간이 지났거나, force이면
     if not last_fill_time or (not force and is_time_exceeded(last_fill_time)) or force:
@@ -33,7 +37,7 @@ async def stk_info_fill(force:bool=False):
             else:
                 logger.error(f"Failed to fetch stock info for market type {mrkt_tp}: {response.error_message}")
         if results:
-            stk_info_service = get_stk_info_service()
+            stk_info_service = get_service("stk_info")
             await stk_info_service.delete_all()
             logger.info("stk_info 테이블의 레코드를 모두 삭제함")
             

@@ -1,5 +1,5 @@
 from backend.core.config import config
-from backend.domains.stocks.stk_diary_model import StkDiary, StkDiaryCreate, StkDiaryUpdate, StkDiaryFilter
+from backend.domains.models.stk_diary_model import StkDiary, StkDiaryCreate, StkDiaryUpdate, StkDiaryFilter
 from backend.core.logger import get_logger
 from typing import List, Optional, Dict
 import sqlite3
@@ -234,11 +234,11 @@ class StkDiaryService:
 
 #---------------------------------------------------------
 # StkDiaryService의 싱글턴 인스턴스를 관리하기 위한 전역 변수와 getter 함수
-instance_stk_diary_service: StkDiaryService = None
+# instance_stk_diary_service: StkDiaryService = None
 
-def get_stk_diary_service() -> StkDiaryService:
-    """StkDiaryService 싱글턴 인스턴스 반환"""
-    global instance_stk_diary_service
-    if instance_stk_diary_service is None:
-        instance_stk_diary_service = StkDiaryService()
-    return instance_stk_diary_service
+# def get_stk_diary_service() -> StkDiaryService:
+#     """StkDiaryService 싱글턴 인스턴스 반환"""
+#     global instance_stk_diary_service
+#     if instance_stk_diary_service is None:
+#         instance_stk_diary_service = StkDiaryService()
+#     return instance_stk_diary_service

@@ -1,5 +1,5 @@
 from backend.core.config import config
-from backend.domains.services.stk_cache_model import StkCache, StkCacheCreate, StkCacheUpdate, StkCacheFilter
+from backend.domains.models.stk_cache_model import StkCache, StkCacheCreate, StkCacheUpdate, StkCacheFilter
 from backend.core.logger import get_logger
 from typing import List, Optional, Dict
 import sqlite3
@@ -320,11 +320,11 @@ class StkCacheService:
 
 #---------------------------------------------------------
 # StkCacheService의 싱글턴 인스턴스를 관리하기 위한 전역 변수와 getter 함수
-instance_stk_cache_service: StkCacheService = None
+# instance_stk_cache_service: StkCacheService = None
 
-def get_stk_cache_service() -> StkCacheService:
-    """StkCacheService 싱글턴 인스턴스 반환"""
-    global instance_stk_cache_service
-    if instance_stk_cache_service is None:
-        instance_stk_cache_service = StkCacheService()
-    return instance_stk_cache_service
+# def get_stk_cache_service() -> StkCacheService:
+#     """StkCacheService 싱글턴 인스턴스 반환"""
+#     global instance_stk_cache_service
+#     if instance_stk_cache_service is None:
+#         instance_stk_cache_service = StkCacheService()
+#     return instance_stk_cache_service

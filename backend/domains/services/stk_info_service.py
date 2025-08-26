@@ -15,7 +15,7 @@
 버전: 1.0
 """
 from backend.core.config import config
-from backend.domains.stocks.stk_info_model import StkInfo, StkInfoCreate, StkInfoUpdate, StkInfoFilter, StkInfoBulkCreate
+from backend.domains.models.stk_info_model import StkInfo, StkInfoCreate, StkInfoUpdate, StkInfoFilter, StkInfoBulkCreate
 from backend.core.logger import get_logger
 from typing import List, Optional, Dict, Tuple
 import sqlite3
@@ -494,10 +494,10 @@ class StkInfoService:
 
 #---------------------------------------------------------
 # StkInfoService의 싱글턴 인스턴스를 관리하기 위한 전역 변수와 getter 함수
-instance_stk_info_service: StkInfoService = None
+# instance_stk_info_service: StkInfoService = None
 
-def get_stk_info_service() -> StkInfoService:
-    global instance_stk_info_service
-    if instance_stk_info_service is None:
-        instance_stk_info_service = StkInfoService()
-    return instance_stk_info_service
+# def get_stk_info_service() -> StkInfoService:
+#     global instance_stk_info_service
+#     if instance_stk_info_service is None:
+#         instance_stk_info_service = StkInfoService()
+#     return instance_stk_info_service

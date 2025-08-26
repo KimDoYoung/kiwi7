@@ -1,5 +1,5 @@
 from backend.core.config import config
-from backend.domains.services.my_stock_model import MyStock, MyStockCreate, MyStockUpdate, MyStockFilter
+from backend.domains.models.my_stock_model import MyStock, MyStockCreate, MyStockUpdate, MyStockFilter
 from backend.core.logger import get_logger
 from typing import List, Optional, Dict
 import sqlite3
@@ -258,10 +258,10 @@ class MyStockService:
 
 #---------------------------------------------------------
 # MyStockService의 싱글턴 인스턴스를 관리하기 위한 전역 변수와 getter 함수
-instance_my_stock_service: MyStockService = None
+# instance_my_stock_service: MyStockService = None
 
-def get_my_stock_service() -> MyStockService:
-    global instance_my_stock_service
-    if instance_my_stock_service is None:
-        instance_my_stock_service = MyStockService()
-    return instance_my_stock_service
+# def get_my_stock_service() -> MyStockService:
+#     global instance_my_stock_service
+#     if instance_my_stock_service is None:
+#         instance_my_stock_service = MyStockService()
+#     return instance_my_stock_service

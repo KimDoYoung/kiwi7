@@ -8,8 +8,11 @@
         <button type="button" class="btn btn-primary" @click="issue_new_token()">키움 토큰 재발급</button>
         <div x-show="result" class="alert alert-info mt-3" x-text="result"></div>
     </div>
+    <hr class="my-3">
     <div class="mt-3">
-        <button type="button" class="btn btn-primary" @click="fill_stk_info()">주식종목정보 채우기</button>
+        <p>종목의 기본정보 테이블(stk_info)테이블을 다시 강제로 채웁니다. 이 테이블은 종목찾기에서 사용되며 종목코드에 해당하는 종목명을 찾는 것 등에 사용됩니다.
+        <p>최종 동작시각:<span>{{data.last_stk_code_fill_time}}</span>
+        <p><button type="button" class="btn btn-primary" @click="fill_stk_info()">주식종목정보 채우기</button>
         <div x-show="result_fill_stk_info" class="alert alert-info mt-3" x-text="result_fill_stk_info"></div>
     </div>
 </div>

@@ -114,11 +114,11 @@ class SettingsService:
 
 #---------------------------------------------------------
 # SettingsService의 싱글턴 인스턴스를 관리하기 위한 전역 변수와 getter 함수
-instance_settings_service: SettingsService = None
+# instance_settings_service: SettingsService = None
 
-def get_settings_service() -> SettingsService:
-    """SettingsService 싱글턴 인스턴스 반환"""
-    global instance_settings_service
-    if instance_settings_service is None:
-        instance_settings_service = SettingsService()
-    return instance_settings_service
+# def get_settings_service() -> SettingsService:
+#     """SettingsService 싱글턴 인스턴스 반환"""
+#     global instance_settings_service
+#     if instance_settings_service is None:
+#         instance_settings_service = SettingsService()
+#     return instance_settings_service

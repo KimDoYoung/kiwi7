@@ -43,8 +43,8 @@ def get_service(name: str):
     }
     
     if name not in service_classes:
-        raise ValueError(f"알 수 없는 서비스: {name}")
+        raise ValueError(f"알 수 없는 DB 서비스(테이블명과 그에 따른 service가 없음): {name}")
     
-    _services[name] = service_classes[name]
+    _services[name] = service_classes[name]()
     
     return _services[name]

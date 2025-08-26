@@ -16,17 +16,16 @@
 """
 
 from datetime import datetime, timedelta
-from fastapi import APIRouter, Depends, Form, HTTPException, Query, Request, Response
+from fastapi import APIRouter, Form, HTTPException, Query, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi import status
 
 from backend.core.config import config
 from backend.domains.models.settings_model import AccessToken
-from backend.domains.services.settings_service import SettingsService
+from backend.domains.services.dependency import get_service
 from backend.utils.kiwi_utils import get_today
 from backend.core.template_engine import render_template
 from backend.core.security import create_jwt_access_token, get_current_user
-from backend.domains.services.settings_service import get_settings_service
 
 from backend.core.logger import get_logger
 from backend.page_contexts.context_registry import PAGE_CONTEXT_PROVIDERS
@@ -136,10 +135,10 @@ async def logout(response: Response):
 async def login_for_access_token(
     response: Response,  # Response 추가
     userId: str = Form(...),
-    password: str = Form(...),
-    settings_service: SettingsService = Depends(get_settings_service)
+    password: str = Form(...)
 ):
     ''' SQLite 기반 로그인 처리 '''
+    settings_service = get_service("settings")
     saved_user_id = await settings_service.get("user_id")
     saved_password = await settings_service.get("user_pw")
 
