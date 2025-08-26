@@ -114,3 +114,49 @@ api 작성(router파일의 함수)
  ```
 - api 호출은 request는 비동기적으로 처리됩니다.
 - KiwoomApiHelper를 사용하여 응답을 처리합니다.
+
+---
+Html의 작성
+---
+- html 파일은 frontend/views/template 하위에 생성합니다.
+- html 파일은 jinja2 템플릿 엔진을 사용하여 작성합니다.
+- html 파일은 bootstrap5를 사용하여 스타일링합니다.
+- html 파일은 alpine.js를 사용하여 동적인 기능을 추가합니다.
+- 아래 내용을 html파일의 template로 사용할 것
+```html
+{% extends 'common/base.html' %}
+{% block style %}
+{% endblock %}
+{% block content %}
+<div x-data="data_settings"  class="container mt-4">
+</div>
+{% raw %}
+<!--handlebar scripts-->
+{% endraw %}
+{% endblock %}
+{% block script %}
+{% raw %}
+<script>
+// Alpine 컴포넌트 팩토리 함수
+function createSettingsComponent() {
+    return {
+        // === 상태 변수 ===
+        data: null,
+    
+        // === 초기화 ===
+        init() {
+            console.log('Initializing data_settings');
+        },
+	
+    };
+}
+
+// Alpine.js 컴포넌트 등록
+document.addEventListener('alpine:init', () => {
+    Alpine.data('data_settings', createSettingsComponent);
+});
+</script>
+{% endraw %}
+{% endblock %}
+
+```

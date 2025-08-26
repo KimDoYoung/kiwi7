@@ -20,48 +20,62 @@
 {% block script %}
 {% raw %}
 <script>
-    document.addEventListener('alpine:init', () => {
-        Alpine.data('data_settings', () => ({
-            data: null,
-            result : null,
-            result_fill_stk_info: null, //stk_info채우기
-            init() {
-                console.log('Initializing data_settings');
-            },
-            issue_new_token(){
-                console.log('토큰 재발급요청...');
-                getFetch('/api/v1/kiwoom/issue-new-token')
-                    .then(response => {
-                        console.log(response)
-                        if (response.success) {
-                            this.result = '토큰이 성공적으로 재발급되었습니다.';
-                        } else {
-                            this.result = '토큰 재발급에 실패했습니다. 관리자에게 문의하세요.' + error.message;
-                        }
-                    })
-                    .catch(error => {
-                        console.error('토큰 재발급 오류:', error);
-                        this.result = '토큰 재발급에 실패했습니다. 관리자에게 문의하세요.' + error.message;
-                    });
-            },
-            fill_stk_info(){
-                console.log("stk_info 테이블 채우기")
-                putFetch('/api/v1/settings/stk_info?force=true')
-                    .then(response => {
-                        console.log(response)
-                        if (response.success) {
-                            this.result_fill_stk_info = 'stk_info 테이블이 성공적으로 채워졌습니다.';
-                        } else {
-                            this.result_fill_stk_info = 'stk_info 테이블 채우기에 실패했습니다. 관리자에게 문의하세요.' + error.message;
-                        }
-                    })
-                    .catch(error => {
-                        console.error('stk_info 테이블 채우기 오류:', error);
-                        this.result_fill_stk_info = 'stk_info 테이블 채우기에 실패했습니다. 관리자에게 문의하세요.' + error.message;
-                    });
+// Alpine 컴포넌트 팩토리 함수
+function createSettingsComponent() {
+    return {
+        // === 상태 변수 ===
+        data: null,
+        result: null,
+        result_fill_stk_info: null,
+
+        // === 초기화 ===
+        init() {
+            console.log('Initializing data_settings');
+        },
+
+        // === API 호출 메서드 ===
+        async issue_new_token() {
+            console.log('토큰 재발급요청...');
+            this.result = null;
+            
+            try {
+                const response = await getFetch('/api/v1/kiwoom/issue-new-token');
+                console.log(response);
+                
+                this.result = response.success 
+                    ? '토큰이 성공적으로 재발급되었습니다.'
+                    : `토큰 재발급에 실패했습니다. ${response.message || '관리자에게 문의하세요.'}`;
+                    
+            } catch (error) {
+                console.error('토큰 재발급 오류:', error);
+                this.result = `토큰 재발급에 실패했습니다. ${error.message || '관리자에게 문의하세요.'}`;
             }
-        }));
-    });
+        },
+
+        async fill_stk_info() {
+            console.log("stk_info 테이블 채우기");
+            this.result_fill_stk_info = null;
+            
+            try {
+                const response = await putFetch('/api/v1/settings/stk_info?force=true');
+                console.log(response);
+                
+                this.result_fill_stk_info = response.success 
+                    ? 'stk_info 테이블이 성공적으로 채워졌습니다.'
+                    : `stk_info 테이블 채우기에 실패했습니다. ${response.message || '관리자에게 문의하세요.'}`;
+                    
+            } catch (error) {
+                console.error('stk_info 테이블 채우기 오류:', error);
+                this.result_fill_stk_info = `stk_info 테이블 채우기에 실패했습니다. ${error.message || '관리자에게 문의하세요.'}`;
+            }
+        }
+    };
+}
+
+// Alpine.js 컴포넌트 등록
+document.addEventListener('alpine:init', () => {
+    Alpine.data('data_settings', createSettingsComponent);
+});
 </script>
 {% endraw %}
 {% endblock %}
