@@ -114,6 +114,25 @@ api 작성(router파일의 함수)
  ```
 - api 호출은 request는 비동기적으로 처리됩니다.
 - KiwoomApiHelper를 사용하여 응답을 처리합니다.
+- route의 api 함수 코드 예시
+```python
+@router.put("/stk_info")
+async def update_stk_info(force: bool = False):
+    """stk_info 테이블 업데이트"""
+    try:
+        # stk_info_fill은 비동기 함수이므로 await 사용
+        await stk_info_fill(force=force)
+        service = get_service("settings")
+        last_fill_time = await service.get(SettingsKey.LAST_STK_INFO_FILL)
+        return KiwoomApiHelper.create_success_response(data={"last_stk_info_fill": last_fill_time})
+    except Exception as e:
+        logger.error(f"stk_info 테이블 업데이트 중 오류 발생: {str(e)}")
+        # api_helpers의 create_error_response 사용 (메시지만 전달)
+        return KiwoomApiHelper.create_error_response(
+            error_code="STK_INFO_UPDATE_ERROR",
+            error_message=f"stk_info 테이블 업데이트 중 오류가 발생했습니다: {str(e)}"
+        )
+```
 
 ---
 Html의 작성
