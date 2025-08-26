@@ -1,13 +1,12 @@
 
-from backend.api.common.api_helpers import create_error_response, get_current_timestamp
 from backend.api.common.validators import validate_market_type
 from backend.domains.kiwoom.kiwoom_service import get_kiwoom_api
-from backend.domains.kiwoom.models.kiwoom_schema import KiwoomRequest
+from backend.domains.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomRequest
 from backend.domains.services.dependency import get_service
 from backend.domains.services.settings_keys import SettingsKey
 from backend.domains.models.stk_info_model import StkInfoBulkCreate, StkInfoCreate
 # from backend.domains.services.stk_info_service import get_stk_info_service
-from backend.utils.kiwi_utils import is_time_exceeded
+from backend.utils.kiwi_utils import get_current_timestamp, is_time_exceeded
 from backend.core.logger import get_logger
 
 logger = get_logger(__name__)
@@ -29,7 +28,7 @@ async def stk_info_fill(force:bool=False):
         results = []
         for mrkt_tp in mrkt_types:
             if not validate_market_type(mrkt_tp):
-                return create_error_response(f"유효하지 않은 시장 타입: {mrkt_tp}")
+                return KiwoomApiHelper.create_error_response(error_code="999", error_message=f"유효하지 않은 시장 타입: {mrkt_tp}")
             response = await api.send_request(KiwoomRequest(api_id="ka10099", payload={"mrkt_tp": mrkt_tp}))
             if response.success:
                 # 성공적으로 데이터를 가져온 경우

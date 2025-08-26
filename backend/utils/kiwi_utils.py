@@ -1,5 +1,8 @@
 
 
+import datetime
+
+
 def is_time_exceeded(time_str:str, time_:str) -> bool:
     ''' time_str을 datetime으로m  time_ : 30s, 10m, 10d 형식의 문자열, 초과시 true'''
     datetime = datetime.datetime.strptime(time_str, '%Y-%m-%d %H:%M:%S')
@@ -12,6 +15,15 @@ def is_time_exceeded(time_str:str, time_:str) -> bool:
     else:
         raise ValueError("Invalid time format")
     return datetime + delta < datetime.datetime.now()
+
+def get_current_timestamp() -> str:
+    """
+    현재 타임스탬프를 ISO 형식으로 반환하는 헬퍼 함수
+    
+    Returns:
+        str: ISO 형식의 현재 시간
+    """
+    return datetime.now().isoformat()
 
 def get_today() -> str:
     """오늘 날짜를 'YYYY-MM-DD' 형식으로 반환합니다."""
