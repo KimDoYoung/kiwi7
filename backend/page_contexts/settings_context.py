@@ -1,6 +1,6 @@
 from backend.core.logger import get_logger
 from backend.domains.services.dependency import get_service
-from backend.domains.settings_keys import SettingsKeys
+from backend.domains.services.settings_keys import SettingsKeys
 
 logger = get_logger(__name__)
 
