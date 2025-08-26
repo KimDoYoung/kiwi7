@@ -13,7 +13,9 @@ logger = get_logger(__name__)
 
 async def stk_info_fill(force:bool=False):
     """ 
-    stk_info 테이블을 채운다. 만약 force가 True이면 무조건 채운다.
+    stk_info 테이블을 채운다. 
+    만약 force가 True이면 무조건 채운다. 
+    모두 지우고 채운다.
     force가 False이면  settings테이블의 LAST_STK_INFO_FILL을 체크해서 일정시간이 지났다면 채운다.
     """
     # settings 에서 LAST_STK_INFO_FILL 을 찾아서
@@ -78,3 +80,15 @@ async def stk_info_fill(force:bool=False):
                 get_current_timestamp()
             )
             logger.info("LAST_STK_INFO_FILL 타임스탬프 업데이트 완료")
+
+async def last_print_and_nxt_yn_list(stk_code_list):
+    ''' 
+    stk_code_list를 받아서 종목정보조회ka10100을 호출해서 모은 후 리스트로 리턴
+    TODO : cache에서 조회 오늘 날짜로 조회 된 것이 있는것 name: 
+    '''
+    api = await get_kiwoom_api()
+    results = []
+    for stk_cd in stk_code_list:
+        response = await api.send_request(KiwoomRequest(api_id="ka10100", payload={"stk_cd": stk_cd}))
+        results.append(response)
+    return results
