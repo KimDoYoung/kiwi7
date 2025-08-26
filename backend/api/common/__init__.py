@@ -5,6 +5,7 @@ API 엔드포인트에서 공통으로 사용하는 함수들을 모은 모듈
 from .api_helpers import *
 from .validators import *
 from .formatters import *
+from .stock_functions import *
 
 __all__ = [
     # api_helpers에서 export할 함수들
@@ -27,4 +28,7 @@ __all__ = [
     "format_number",
     "format_date_yyyymmdd",
     "format_profit_loss",
+    
+    # 주식 정보 업데이트
+    "stk_info_fill"
 ]

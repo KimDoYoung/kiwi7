@@ -6,7 +6,7 @@ import aiohttp
 from backend.core.logger import get_logger
 from backend.core.config import config
 from backend.core.exceptions import KiwoomAuthException
-from backend.domains.settings.settings_service import SettingsService
+from backend.domains.services.settings_service import SettingsService
 
 
 logger = get_logger(__name__)

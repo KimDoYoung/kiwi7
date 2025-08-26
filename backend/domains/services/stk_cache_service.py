@@ -1,5 +1,5 @@
 from backend.core.config import config
-from backend.domains.stocks.stk_cache_model import StkCache, StkCacheCreate, StkCacheUpdate, StkCacheFilter
+from backend.domains.services.stk_cache_model import StkCache, StkCacheCreate, StkCacheUpdate, StkCacheFilter
 from backend.core.logger import get_logger
 from typing import List, Optional, Dict
 import sqlite3

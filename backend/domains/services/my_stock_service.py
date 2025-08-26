@@ -1,5 +1,5 @@
 from backend.core.config import config
-from backend.domains.stocks.my_stock_model import MyStock, MyStockCreate, MyStockUpdate, MyStockFilter
+from backend.domains.services.my_stock_model import MyStock, MyStockCreate, MyStockUpdate, MyStockFilter
 from backend.core.logger import get_logger
 from typing import List, Optional, Dict
 import sqlite3
