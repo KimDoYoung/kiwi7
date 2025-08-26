@@ -1,6 +1,6 @@
 from backend.core.config import config
 from backend.domains.services.settings_keys import SettingsKey
-from backend.domains.services.settings_model import SettingInfo
+from backend.domains.models.settings_model import SettingInfo
 from backend.core.logger import get_logger
 from typing import Dict, Optional
 import sqlite3

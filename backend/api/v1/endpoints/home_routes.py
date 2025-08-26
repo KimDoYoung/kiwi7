@@ -21,7 +21,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi import status
 
 from backend.core.config import config
-from backend.domains.services.settings_model import AccessToken
+from backend.domains.models.settings_model import AccessToken
 from backend.domains.services.settings_service import SettingsService
 from backend.utils.kiwi_utils import get_today
 from backend.core.template_engine import render_template
