@@ -12,6 +12,7 @@ from backend.api.v1.endpoints.settings_routes import router as settings_router
 from backend.api.v1.endpoints.home_routes import router as home_router
 from backend.api.v1.endpoints.kiwoom_routes import router as kiwoom_router
 from backend.api.v1.endpoints.kdemon_routes import router as kdemon_router
+from backend.api.v1.endpoints.stock_routes import router as stock_router
 
 from backend.core.exception_handler import add_exception_handlers
 
@@ -48,6 +49,7 @@ def add_routes(app: FastAPI):
     app.include_router(settings_router, prefix="/api/v1/settings", tags=["settings"])
     app.include_router(kiwoom_router, prefix="/api/v1/kiwoom", tags=["kiwoom"])
     app.include_router(kdemon_router, prefix="/api/v1/kdemon", tags=["kdemon"])
+    app.include_router(stock_router, prefix="/api/v1/stock", tags=["stock"])
 
 def add_event_handlers(app: FastAPI):
     ''' 이벤트 핸들러 설정 '''

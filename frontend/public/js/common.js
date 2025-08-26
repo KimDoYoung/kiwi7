@@ -20,7 +20,7 @@
         showCompanyLoading(true);
 
         try {
-            const url = `/api/v1/kiwoom/stock/${cleanCode}`;
+            const url = `/api/v1/stock/info/${cleanCode}`;
             const response = await getFetch(url);
             
             if (response.success && response.data) {
