@@ -94,7 +94,7 @@ class StkCacheService:
             cur.execute("""
                 SELECT id, stk_cd, name, value, created_at
                 FROM stk_cache
-                WHERE stk_cd = ? AND name = ?
+                WHERE stk_cd = ? AND name = ? AND  created_at >= datetime('now', '-8 hours')
                 ORDER BY created_at DESC
                 LIMIT 1
             """, (stk_cd, name))

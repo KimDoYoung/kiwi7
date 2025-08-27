@@ -1,6 +1,8 @@
 
 
 import datetime
+import json
+from typing import Any, Dict
 
 
 def is_time_exceeded(time_str:str, time_:str) -> bool:
@@ -154,3 +156,45 @@ def merge_multiple_dicts(*dicts: dict, merge_strategy: str = "override") -> dict
             result = merge_dicts(result, d, merge_strategy)
     
     return result
+
+
+def to_dict(obj: Any) -> Dict:
+    """
+    객체를 dict로 변환
+    - dict 그대로 반환
+    - JSON 문자열 → json.loads()로 파싱
+    - Pydantic v2 → model_dump()
+    - Pydantic v1 → dict()
+    - 일반 객체 → __dict__
+    """
+    if isinstance(obj, dict):
+        return obj
+    if isinstance(obj, str):
+        try:
+            # JSON 문자열을 dict로 파싱 시도
+            return json.loads(obj)
+        except json.JSONDecodeError:
+            raise TypeError(f"String is not valid JSON: {obj[:100]}...")
+    if hasattr(obj, "model_dump") and callable(obj.model_dump):
+        return obj.model_dump()
+    if hasattr(obj, "dict") and callable(obj.dict):
+        return obj.dict()
+    if hasattr(obj, "__dict__"):
+        return dict(obj.__dict__)
+    raise TypeError(f"Unsupported object type for to_dict: {type(obj)}")
+
+def to_str(obj: Any, ensure_ascii: bool=False) -> str:
+    """
+    객체를 JSON 문자열로 변환
+    - dict 변환 후 json.dumps
+    - datetime 객체는 ISO 형식 문자열로 변환
+    """
+    try:
+        def datetime_handler(obj):
+            if isinstance(obj, datetime.datetime):
+                return obj.isoformat()
+            raise TypeError(f'Object of type {obj.__class__.__name__} is not JSON serializable')
+        
+        return json.dumps(to_dict(obj), ensure_ascii=ensure_ascii, default=datetime_handler)
+    except Exception as e:
+        raise ValueError(f"Failed to serialize object: {e}")
