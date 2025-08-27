@@ -9,3 +9,13 @@ def account_list():
     }
     
     return context_data
+
+def account_detail(context):
+    """계좌 상세 정보를 가져오는 함수"""
+
+    context_data = {
+        "title": "계좌상세정보",
+        "stk_cd" : context.get("stk_cd")
+    }
+
+    return context_data

@@ -316,7 +316,8 @@ function createKt00004Component() {
 
         detail(item) {
             console.log('상세 정보:', item);
-            showCompanyCanvas(item.종목코드);
+            let stk_cd = item['종목코드'].replace(/[^0-9]/g, '')
+            window.location.href = `page?path=stock/detail&stk_cd=${stk_cd}`;
         },
 
         // === 유틸리티 메서드 ===
