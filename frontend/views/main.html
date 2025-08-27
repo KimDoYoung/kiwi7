@@ -277,11 +277,19 @@
       autoRefreshInterval_mystock: null,
       refreshIntervalSeconds_mystock: 30,
 
-      async init() {
-        // 페이지 로드 시 지수 정보 가져오기
-        await this.refreshJisu();
-        await this.refreshMyStock();
-      },
+        async init() {
+        // 두 API를 동시에 비동기로 호출
+        try {
+            await Promise.all([
+                this.refreshJisu(),
+                this.refreshMyStock()
+            ]);
+            console.log('모든 초기 데이터 로드 완료');
+        } catch (error) {
+            console.error('초기 데이터 로드 중 오류 발생:', error);
+            // 개별 함수에서 이미 에러 처리를 하고 있으므로 여기서는 로그만 출력
+        }
+        },
       // 자동 새로고침 토글
       toggleAutoRefresh_jisu() {
         if (this.autoRefresh_jisu) {

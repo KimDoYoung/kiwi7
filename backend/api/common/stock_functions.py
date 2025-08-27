@@ -83,7 +83,7 @@ async def stk_info_fill(force:bool=False):
             logger.info("LAST_STK_INFO_FILL 타임스탬프 업데이트 완료")
 
 async def get_stock_name(stk_code: str) -> str:
-    ''' stk_code로 stk_name을 구한다'''
+    ''' stk_code로 stk_name을 구한다. stk_info테이블에서 구하고 없으면 api로 구함'''
     stk_info_service = get_service("stk_info")
     stk_info = await stk_info_service.get_by_code(stk_code)
     if stk_info and stk_info.name:

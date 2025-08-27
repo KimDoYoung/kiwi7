@@ -20,8 +20,8 @@ async def get_my_stocks():
         
         if not stocks:
             logger.info("등록된 My Stock이 없습니다.")
-            return KiwoomApiHelper.create_success_response(data=[])
-        
+            return KiwoomApiHelper.create_success_response(data={"list":[]})
+
         api = await get_kiwoom_api()
         result = []
         
@@ -36,6 +36,8 @@ async def get_my_stocks():
                 
                 if response.success:
                     korea_data = KiwoomApiHelper.to_korea_data(response.data, response.api_info['api_id'])
+                    korea_data['is_hold'] = stock.is_hold
+                    korea_data['is_watch'] = stock.is_watch
                     result.append(korea_data)
                     logger.debug(f"✅ {stock.stk_cd} 조회 성공")
                 else:
@@ -43,7 +45,7 @@ async def get_my_stocks():
                     
             except Exception as e:
                 logger.error(f"❌ {stock.stk_cd} 조회 중 오류: {str(e)}")
-                continue
+                return KiwoomApiHelper.create_error_response(error_code="MY_STOCK_ERROR", error_message=str(e))
         
         logger.info(f"My Stock 조회 완료: {len(result)}개 종목 정보 반환")
         return KiwoomApiHelper.create_success_response(data={"list": result})
