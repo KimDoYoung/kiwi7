@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alert 테스트</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>🚨 Alert 시스템 테스트</h2>
+        
+        <!-- Alert Component -->
+        <div id="alert" class="alert d-flex align-items-center d-none" role="alert">
+            <i id="alertIcon" class="bi me-2"></i>
+            <div>
+                <span id="alertStatus" class="me-2"></span>
+                <span id="alertMessage"></span>
+            </div>
+            <button type="button" class="btn-close ms-auto" aria-label="Close" onclick="hideAlert()"></button>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <h4>🎯 showAlert 함수 테스트</h4>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-success" onclick="showAlert('성공적으로 저장되었습니다!', 'success')">성공 Alert</button>
+                    <button class="btn btn-danger" onclick="showAlert('오류가 발생했습니다!', 'error')">오류 Alert</button>
+                    <button class="btn btn-warning" onclick="showAlert('주의가 필요합니다!', 'warning')">경고 Alert</button>
+                    <button class="btn btn-info" onclick="showAlert('정보를 확인하세요!', 'info')">정보 Alert</button>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <h4>🔧 showAlertError 함수 테스트 (호환성)</h4>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-danger" onclick="testAlertError1()">기본 오류</button>
+                    <button class="btn btn-outline-danger" onclick="testAlertError2()">상태코드 포함 오류</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <h4>⏱️ 지속시간 테스트</h4>
+            <div class="d-grid gap-2 d-md-flex">
+                <button class="btn btn-outline-primary" onclick="showAlert('1초 후 사라집니다', 'info', 1000)">1초 Alert</button>
+                <button class="btn btn-outline-primary" onclick="showAlert('자동으로 사라지지 않습니다', 'warning', 0)">영구 Alert</button>
+                <button class="btn btn-outline-secondary" onclick="hideAlert()">수동 닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Alert 함수들
+        function showAlert(message, type = 'error', duration = 5000) {
+            const alertConfig = {
+                success: {
+                    class: 'alert-success',
+                    icon: 'bi-check-circle',
+                    prefix: '[성공]'
+                },
+                error: {
+                    class: 'alert-danger',
+                    icon: 'bi-exclamation-triangle',
+                    prefix: '[오류]'
+                },
+                warning: {
+                    class: 'alert-warning',
+                    icon: 'bi-exclamation-triangle',
+                    prefix: '[경고]'
+                },
+                info: {
+                    class: 'alert-info',
+                    icon: 'bi-info-circle',
+                    prefix: '[정보]'
+                }
+            };
+
+            const config = alertConfig[type] || alertConfig.error;
+            const $alert = document.getElementById('alert');
+            const $alertIcon = document.getElementById('alertIcon');
+            const $alertStatus = document.getElementById('alertStatus');
+            const $alertMessage = document.getElementById('alertMessage');
+
+            if (!$alert || !$alertIcon || !$alertStatus || !$alertMessage) {
+                console.error('Alert elements not found');
+                return;
+            }
+
+            // Alert 스타일 초기화
+            $alert.className = `alert d-flex align-items-center ${config.class}`;
+            $alertIcon.className = `bi ${config.icon} me-2`;
+            $alertStatus.textContent = config.prefix;
+            $alertMessage.textContent = message;
+
+            // Alert 표시
+            $alert.classList.remove('d-none');
+
+            // 지정된 시간 후 자동으로 숨김
+            if (duration > 0) {
+                setTimeout(() => {
+                    hideAlert();
+                }, duration);
+            }
+        }
+
+        function hideAlert() {
+            const $alert = document.getElementById('alert');
+            if ($alert) {
+                $alert.classList.add('d-none');
+            }
+        }
+
+        function showAlertError(error) {
+            const statusCode = error.status;
+            const detail = error.detail || error.message;
+            const message = statusCode ? `[${statusCode}] ${detail}` : detail;
+            
+            showAlert(message, 'error', 5000);
+        }
+
+        // 테스트 함수들
+        function testAlertError1() {
+            showAlertError({
+                message: "서버 연결에 실패했습니다"
+            });
+        }
+
+        function testAlertError2() {
+            showAlertError({
+                status: 404,
+                detail: "요청한 리소스를 찾을 수 없습니다"
+            });
+        }
+    </script>
+</body>
+</html>

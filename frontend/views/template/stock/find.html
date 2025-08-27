@@ -79,7 +79,7 @@
                                     <th class="text-center" style="width: 80px;">상장일</th>
                                     <th class="text-end" style="width: 80px;">전일종가</th>
                                     <th class="text-center" style="width: 70px;">NXT가능</th>
-                                    <th class="text-center" style="width: 60px;">상세정보</th>
+                                    <th class="text-center" style="width: 80px;">액션</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -113,13 +113,22 @@
                                                   x-text="item.nxt_enable || '-'"></span>
                                         </td>
                                         <td class="text-center">
-                                            <button class="btn btn-outline-primary btn-sm" 
-                                                    @click="showDetail(item)"
-                                                    :disabled="!item.code"
-                                                    title="상세정보 보기"
-                                                    style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
-                                                <i class="bi bi-info-circle"></i>
-                                            </button>
+                                            <div class="d-flex gap-1">
+                                                <button class="btn btn-outline-primary btn-sm" 
+                                                        @click="showDetail(item)"
+                                                        :disabled="!item.code"
+                                                        title="상세정보 보기"
+                                                        style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="bi bi-info-circle"></i>
+                                                </button>
+                                                <button class="btn btn-outline-success btn-sm" 
+                                                        @click="addMyStock(item)"
+                                                        :disabled="!item.code"
+                                                        title="My Stock 추가(Watching)"
+                                                        style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="bi bi-plus"></i>
+                                                </button>
+                                            </div>                                         
                                         </td>
                                     </tr>
                                 </template>
@@ -256,6 +265,22 @@ document.addEventListener('alpine:init', () => {
                 
                 const url = `https://finance.naver.com/item/main.naver?code=${stk_code}`;
                 window.open(url, '_blank');
+            },
+            addMyStock(item){
+                if (!item.code) {
+                    this.showMessage('종목코드가 없습니다.', 'error');
+                    return;
+                }
+                let stk_cd = item.code;
+                putFetch('/api/v1/mystock/' + stk_cd)
+                .then(response => {
+                    console.log('My Stock 추가 응답:', response);
+                    if (response.success) {
+                        this.showMessage(`'${item.name}' 종목이 My Stock에 추가되었습니다.`, 'info');
+                    } else {
+                        this.showMessage(response.error_message || 'My Stock 추가 중 오류가 발생했습니다.', 'error');
+                    }
+                });
             }
         }
     });

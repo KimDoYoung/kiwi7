@@ -31,10 +31,16 @@ class KiwoomRequest(BaseModel):
     def validate_payload(self) -> List[str]:
         """
         payload의 유효성을 검증합니다.
+        kiwi7_로 시작하는 api_id는 자체 API이므로 검증을 스킵합니다.
         Returns:
             List[str]: 오류 메시지 목록 (빈 리스트면 유효함)
         """
         errors = []
+        
+        # kiwi7_로 시작하는 자체 API는 검증 스킵
+        if self.api_id.startswith('kiwi7_'):
+            return errors
+        
         api_def = KIWOOM_REQUEST_DEF.get(self.api_id)
         if not api_def:
             errors.append(f"API 정의를 찾을 수 없습니다: {self.api_id}")
@@ -179,6 +185,7 @@ class KiwoomApiHelper:
     def validate_api_request(request: KiwoomRequest) -> bool:
         """
         API 요청의 유효성을 검증합니다.
+        kiwi7_로 시작하는 api_id는 자체 API이므로 검증을 스킵합니다.
         
         Args:
             request: 검증할 키움 API 요청 객체
@@ -186,6 +193,10 @@ class KiwoomApiHelper:
         Returns:
             bool: 유효성 검증 결과 (True: 유효, False: 유효하지 않음)
         """
+        # kiwi7_로 시작하는 자체 API는 검증 스킵
+        if request.api_id.startswith('kiwi7_'):
+            return True
+        
         # API ID 존재 여부 확인
         if request.api_id not in KIWOOM_REQUEST_DEF:
             return False
@@ -205,6 +216,7 @@ class KiwoomApiHelper:
     def get_validation_errors(request: KiwoomRequest) -> List[str]:
         """
         API 요청의 유효성 검증 오류 목록을 반환합니다.
+        kiwi7_로 시작하는 api_id는 자체 API이므로 검증을 스킵합니다.
         
         Args:
             request: 검증할 키움 API 요청 객체
@@ -213,6 +225,10 @@ class KiwoomApiHelper:
             List[str]: 유효성 검증 오류 메시지 목록 (빈 리스트면 유효함)
         """
         errors = []
+        
+        # kiwi7_로 시작하는 자체 API는 검증 스킵
+        if request.api_id.startswith('kiwi7_'):
+            return errors
         
         # API ID 존재 여부 확인
         if request.api_id not in KIWOOM_REQUEST_DEF:

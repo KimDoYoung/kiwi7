@@ -123,4 +123,5 @@ async def find_stock(request: KiwoomRequest):
             error_message=f"종목 검색 중 오류가 발생했습니다: {str(e)}",
             status_code=500,
             api_info={"api_id": "stock_find", "description": "종목 검색"}
-        )    
+        )
+    

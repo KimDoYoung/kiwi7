@@ -299,17 +299,75 @@
             });
         $('.toast').toast('show');
     }
-    //alsert 에러메세지 표시
+    
+    // 범용 Alert 함수 - 다양한 유형의 Alert 표시
+    function showAlert(message, type = 'info', duration = 5000) {
+        const alertConfig = {
+            success: {
+                class: 'alert-success',
+                icon: 'bi-check-circle',
+                prefix: '[성공]'
+            },
+            error: {
+                class: 'alert-danger',
+                icon: 'bi-exclamation-triangle',
+                prefix: '[오류]'
+            },
+            warning: {
+                class: 'alert-warning',
+                icon: 'bi-exclamation-triangle',
+                prefix: '[경고]'
+            },
+            info: {
+                class: 'alert-info',
+                icon: 'bi-info-circle',
+                prefix: '[정보]'
+            }
+        };
+
+        const config = alertConfig[type] || alertConfig.error;
+        const $alert = document.getElementById('alert');
+        const $alertIcon = document.getElementById('alertIcon');
+        const $alertStatus = document.getElementById('alertStatus');
+        const $alertMessage = document.getElementById('alertMessage');
+
+        if (!$alert || !$alertIcon || !$alertStatus || !$alertMessage) {
+            console.error('Alert elements not found');
+            return;
+        }
+
+        // Alert 스타일 초기화
+        $alert.className = `alert d-flex align-items-center ${config.class}`;
+        $alertIcon.className = `bi ${config.icon} me-2`;
+        $alertStatus.textContent = config.prefix;
+        $alertMessage.textContent = message;
+
+        // Alert 표시
+        $alert.classList.remove('d-none');
+
+        // 지정된 시간 후 자동으로 숨김
+        if (duration > 0) {
+            setTimeout(() => {
+                hideAlert();
+            }, duration);
+        }
+    }
+
+    // Alert 숨김 함수
+    function hideAlert() {
+        const $alert = document.getElementById('alert');
+        if ($alert) {
+            $alert.classList.add('d-none');
+        }
+    }
+
+    // 기존 showAlertError 함수 - 호환성 유지하면서 showAlert 사용
     function showAlertError(error) {
         const statusCode = error.status;
         const detail = error.detail || error.message;
-        // const $alert = $('#alertError')
-        // $alert.find('#alertErrorStatus').text(statusCode);
-        // $alert.find('#alertErrorMessage').text(detail);
-        // $alert.removeClass('d-none');
-        // setTimeout(() => {
-        //     $alert.addClass('d-none');
-        // }, 5000);
+        const message = statusCode ? `[${statusCode}] ${detail}` : detail;
+        
+        showAlert(message, 'error', 5000);
     }
 /**
  * document ready 이벤트 핸들러 등록

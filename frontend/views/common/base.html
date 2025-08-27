@@ -24,7 +24,6 @@
 </head>
 <body">
 
-{% include "common/error_alert.html" %}
 {% include "common/loading.html" %}
 
 {% include "common/nav.html" %}
@@ -33,6 +32,8 @@
     <div id="alert-container"></div> <!-- 웹소켓으로 받은 체결정보를 여기서 보여준다.-->
     {% block content %}{% endblock %}
 </div>
+
+{% include "common/alert.html" %}
 
 {% include "common/sell_buy_canvas.html" %}
 {% include "common/error_toast.html" %}

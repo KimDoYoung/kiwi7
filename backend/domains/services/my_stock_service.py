@@ -255,6 +255,49 @@ class MyStockService:
                 'watching': row[2] or 0
             }
 
+    def upsert_watching(self, stk_cd: str, stk_nm: Optional[str] = None, sector: Optional[str] = None) -> MyStock:
+        """종목이 존재하면 업데이트 watching을 1로, 없으면 생성 watching을 1로"""
+        existing = self._get_by_code_sync(stk_cd)
+        if existing:
+            update_data = MyStockUpdate()
+            if stk_nm is not None:
+                update_data.stk_nm = stk_nm
+            if sector is not None:
+                update_data.sector = sector
+            update_data.is_watch = 1
+            return self._update_sync(stk_cd, update_data)
+        else:
+            create_data = MyStockCreate(
+                stk_cd=stk_cd,
+                stk_nm=stk_nm or "",
+                sector=sector or "",
+                is_hold=0,
+                is_watch=1,
+                note=""
+            )
+            return self._create_sync(create_data)
+
+    def upsert_holding(self, stk_cd: str, stk_nm: Optional[str] = None, sector: Optional[str] = None) -> MyStock:
+        """종목이 존재하면 업데이트 holding을 1로, 없으면 생성 holding을 1로"""
+        existing = self._get_by_code_sync(stk_cd)
+        if existing:
+            update_data = MyStockUpdate()
+            if stk_nm is not None:
+                update_data.stk_nm = stk_nm
+            if sector is not None:
+                update_data.sector = sector
+            update_data.is_hold = 1
+            return self._update_sync(stk_cd, update_data)
+        else:
+            create_data = MyStockCreate(
+                stk_cd=stk_cd,
+                stk_nm=stk_nm or "",
+                sector=sector or "",
+                is_hold=1,
+                is_watch=0,
+                note=""
+            )
+            return self._create_sync(create_data)
 
 #---------------------------------------------------------
 # MyStockService의 싱글턴 인스턴스를 관리하기 위한 전역 변수와 getter 함수

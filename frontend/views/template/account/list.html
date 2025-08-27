@@ -113,9 +113,14 @@
                 </select>
                 <div>종목갯수 : <span x-text="filtered_item_count"></span> / <span x-text="total_item_count"></span></div>
             </div>
-            <button class="btn btn-outline-success btn-sm" title="엑셀로 저장" @click="exportCSV()">
-                <i class="bi bi-file-earmark-excel"></i>
-            </button>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-success btn-sm" title="엑셀로 저장" @click="exportCSV()">
+                    <i class="bi bi-file-earmark-excel"></i>
+                </button>
+                <button class="btn btn-outline-success btn-sm" title="My Stock에 저장" @click="addMyStock()">
+                    <i class="bi bi-plus-lg"></i>
+                </button>
+            </div>            
         </div>
         <div class="table-responsive">
             <table class="table table-bordered table-hover align-middle text-center">
@@ -319,6 +324,31 @@ function createKt00004Component() {
             if (value > 0) return 'text-danger';
             if (value < 0) return 'text-primary';
             return '';
+        },
+        addMyStock() {
+            let list = this.data["종목별계좌평가현황"]
+            let codes = []
+            for (let i = 0; i < list.length; i++) {
+                code  = list[i]["종목코드"]
+                if (!/^[0-9]+$/.test(code)) {
+                    code = code.replace(/[^0-9]/g, '')
+                } 
+                codes.push(code)
+            }
+            postFetch('/api/v1/mystock/bulk', {
+                api_id: 'kiwi7_mystock_bulk_add',
+                payload: {
+                    codes : codes
+                },
+            }).then(response => {
+                if (response.success) {
+                    showAlert('My Stock에 추가되었습니다.', 'success');
+                } else {
+                    showAlert('My Stock 추가에 실패했습니다: ' + response.error_message, 'error');
+                }
+            });
+            console.log('My Stock에 추가:', this.data);
+            // My Stock에 추가하는 로직 구현
         }
     };
 }

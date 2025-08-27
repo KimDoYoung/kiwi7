@@ -31,6 +31,13 @@
             <span x-text="stk_info.result"></span>
         </div>
     </div>
+    <hr class="my-3">
+    <div class="mt-3 stk_cache_delete">
+        stk_cache삭제 
+        <button type="button" class="btn btn-danger" @click="delete_stk_cache()">
+            <i class="fas fa-trash-alt me-1"></i>캐시 삭제
+        </button>
+    </div>    
 </div>
 {% raw %}
 <!--handlebar scripts-->

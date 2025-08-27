@@ -82,6 +82,23 @@ async def stk_info_fill(force:bool=False):
             )
             logger.info("LAST_STK_INFO_FILL 타임스탬프 업데이트 완료")
 
+async def get_stock_name(stk_code: str) -> str:
+    ''' stk_code로 stk_name을 구한다'''
+    stk_info_service = get_service("stk_info")
+    stk_info = await stk_info_service.get_by_code(stk_code)
+    if stk_info and stk_info.name:
+        return stk_info.name
+    else:
+        api = await get_kiwoom_api()
+        api_response = await api.send_request(KiwoomRequest(api_id="ka10001", payload={"stk_cd": stk_code}))
+        if api_response.success and api_response.data:
+            name = api_response.data.get("stk_nm", "")
+            if name:
+                return name
+            else:
+                logger.error(f"get_stock_name 함수에서 ka10001 요청은 성공했으나 이름이 없음: {stk_code}")
+    return None
+
 async def fetch_stk_info(stk_code_list):
     ''' 
     stk_code_list를 받아서 종목정보조회ka10100을 호출해서 모은 후 리스트로 리턴
