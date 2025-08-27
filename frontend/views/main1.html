@@ -16,7 +16,6 @@
 /* My Stock 카드 스타일 */
 .stock-card {
     transition: all 0.2s ease;
-    cursor: pointer;
     border-width: 2px !important;
 }
 .stock-card:hover {
@@ -33,6 +32,22 @@
     flex-direction: column;
     justify-content: space-between;
     padding: 0.75rem;
+}
+
+/* 클릭 가능한 종목명/코드 스타일 */
+.clickable-stock:hover {
+    text-decoration: underline;
+    opacity: 0.8;
+}
+
+/* 삭제 버튼 스타일 */
+.delete-btn:hover .fa-times {
+    color: #dc3545 !important;
+    transform: scale(1.1);
+}
+
+.delete-btn {
+    transition: all 0.2s ease;
 }
 </style>
 {% endblock %}
@@ -162,92 +177,130 @@
         </div>
     </div>
 
-    <!-- My Stock 정보 카드 -->
+    <!-- My Stock 정보 카드 부분 수정 -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="card shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">
-                        <i class="bi bi-star me-2"></i>My Stock
-                    </h5>
-                    <div class="d-flex align-items-center gap-3">
-                        <!-- 자동 새로고침 스위치 -->
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="autoRefreshMyStockSwitch" 
-                                x-model="autoRefresh_mystock" @change="toggleAutoRefresh_mystock()">
-                            <label class="form-check-label" for="autoRefreshMyStockSwitch">
-                                자동
+                    <h6 class="card-title mb-0">
+                        <i class="fas fa-star text-warning me-2"></i>My Stock
+                    </h6>
+                    <div class="d-flex align-items-center">
+                        <div class="form-check form-switch me-3">
+                            <input 
+                                class="form-check-input" 
+                                type="checkbox" 
+                                id="autoRefreshMyStock"
+                                x-model="autoRefresh_mystock"
+                                @change="toggleAutoRefresh_mystock()"
+                            >
+                            <label class="form-check-label" for="autoRefreshMyStock">
+                                <small>자동갱신</small>
                             </label>
                         </div>
-                        
-                        <!-- 새로고침 버튼 -->
-                        <button @click="refreshMyStock()" class="btn btn-outline-success btn-sm">
-                            <i class="bi bi-arrow-clockwise" :style="loading_mystock ? 'animation: spin 1s linear infinite;' : ''"></i>
-                            새로고침
+                        <button 
+                            @click="refreshMyStock()" 
+                            class="btn btn-outline-primary btn-sm"
+                            :disabled="loading_mystock"
+                        >
+                            <i class="fas fa-sync" :class="{'fa-spin': loading_mystock}"></i>
                         </button>
                     </div>
                 </div>
                 <div class="card-body">
                     <!-- 로딩 상태 -->
-                    <div x-show="loading_mystock" class="text-center py-4">
-                        <div class="spinner-border text-success" role="status">
+                    <div x-show="loading_mystock" class="text-center py-3">
+                        <div class="spinner-border spinner-border-sm text-primary" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>
-                        <p class="mt-2 text-muted">My Stock 정보를 불러오는 중...</p>
+                        <small class="text-muted ms-2">데이터를 불러오는 중...</small>
                     </div>
 
-                    <!-- My Stock 정보 표시 -->
-                    <div x-show="!loading_mystock && mystocks.length > 0">
-                        <!-- 카드 그리드 -->
-                        <div class="row g-3">
-                            <template x-for="stock in mystocks" :key="stock.종목코드">
-                                <div class="col-xxl-2 col-xl-2 col-lg-3 col-md-4 col-sm-6">
-                                    <div class="card stock-card h-100" :class="'border-' + getStockBorderClass(stock.대비기호)">
-                                        <div class="card-body p-2">
-                                            <!-- 상단: 종목명 + 등락율 -->
-                                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                                <div class="flex-grow-1">
-                                                    <h6 class="card-title mb-1 fw-bold text-truncate" 
-                                                        x-text="stock.종목명 + '(' + stock.종목코드 + ')'" 
-                                                        :title="stock.종목명 + '(' + stock.종목코드 + ')'"></h6>
+                    <!-- 에러 상태 -->
+                    <div x-show="error_mystock" class="alert alert-danger py-2 mb-2">
+                        <small x-text="error_mystock"></small>
+                    </div>
+
+                    <!-- My Stock 리스트 -->
+                    <div x-show="!loading_mystock && !error_mystock">
+                        <template x-if="mystocks.length === 0">
+                            <div class="text-center py-3 text-muted">
+                                <i class="fas fa-inbox fa-2x mb-2"></i>
+                                <p class="mb-0">보유 종목이나 관심 종목이 없습니다.</p>
+                            </div>
+                        </template>
+                        
+                        <template x-if="mystocks.length > 0">
+                            <div class="row">
+                                <template x-for="stock in mystocks" :key="stock.code">
+                                    <div class="col-md-6 col-lg-4 mb-3">
+                                        <div class="stock-card card h-100 border">
+                                            <div class="card-body position-relative">
+                                                <!-- 조건부 삭제 버튼: is_hold = 0, is_watch = 1일 때만 표시 -->
+                                                <template x-if="stock.is_hold === 0 && stock.is_watch === 1">
+                                                    <button 
+                                                        @click="removeFromWatchlist(stock.code, stock.name)"
+                                                        class="btn btn-sm position-absolute delete-btn"
+                                                        style="top: 5px; right: 5px; padding: 2px 5px; font-size: 10px; line-height: 1; border: none; background: none;"
+                                                        title="관심종목에서 제거"
+                                                    >
+                                                        <i class="fas fa-times text-muted"></i>
+                                                    </button>
+                                                </template>
+
+                                                <!-- 클릭 가능한 종목명 -->
+                                                <h6 
+                                                    @click="onStockClick(stock.code, stock.name)"
+                                                    class="card-title mb-1 clickable-stock"
+                                                    style="cursor: pointer; color: #007bff; font-size: 0.9rem;"
+                                                    title="종목 상세보기"
+                                                    x-text="stock.name"
+                                                ></h6>
+                                                
+                                                <!-- 클릭 가능한 종목코드 -->
+                                                <p 
+                                                    @click="onStockClick(stock.code, stock.name)"
+                                                    class="text-muted mb-2 clickable-stock"
+                                                    style="cursor: pointer; font-size: 0.8rem;"
+                                                    title="종목 상세보기"
+                                                    x-text="stock.code"
+                                                ></p>
+
+                                                <!-- 보유/관심 뱃지 -->
+                                                <div class="mb-2">
+                                                    <template x-if="stock.is_hold === 1">
+                                                        <span class="badge bg-success me-1" style="font-size: 0.7rem;">보유</span>
+                                                    </template>
+                                                    <template x-if="stock.is_watch === 1">
+                                                        <span class="badge bg-info" style="font-size: 0.7rem;">관심</span>
+                                                    </template>
                                                 </div>
-                                            </div>
-                                            
-                                            <!-- 중단: 현재가 -->
-                                            <div class="mb-2">
-                                                <div class="fs-5 fw-bold" 
-                                                     :class="getStockColorClass(stock.대비기호)"
-                                                     x-text="formatPrice(stock.현재가)">
+
+                                                <!-- 가격 정보 -->
+                                                <div class="price-info">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <span class="fw-bold" style="font-size: 0.9rem;" x-text="formatPrice(stock.current_price)"></span>
+                                                        <span 
+                                                            class="small"
+                                                            :class="getPriceColorClass(stock.change_rate)"
+                                                            x-text="(stock.change_rate > 0 ? '+' : '') + stock.change_rate + '%'"
+                                                        ></span>
+                                                    </div>
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <span 
+                                                            class="small"
+                                                            :class="getPriceColorClass(stock.change_amount)"
+                                                            x-text="(stock.change_amount > 0 ? '+' : '') + formatPrice(stock.change_amount)"
+                                                        ></span>
+                                                        <span class="small text-muted" x-text="'거래량: ' + formatVolume(stock.volume)"></span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            
-                                            <!-- 하단: 전일대비 + 상태 -->
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <span class="small"
-                                                      :class="getStockColorClass(stock.대비기호)"
-                                                      x-text="'전일대비 ' + formatStockDiff(stock.전일대비, stock.대비기호) + ' (' + formatRateOnly(stock.등락율, stock.대비기호) + '%)'">
-                                                </span>
-                                                <span class="badge bg-light text-dark small" 
-                                                      x-text="stock.거래상태">
-                                                </span>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </template>
-                        </div>
-                    </div>
-
-                    <!-- 데이터 없음 -->
-                    <div x-show="!loading_mystock && mystocks.length === 0" class="text-center py-4">
-                        <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
-                        <p class="text-muted mt-2">등록된 종목이 없습니다.</p>
-                    </div>
-
-                    <!-- 오류 메시지 -->
-                    <div x-show="error_mystock" class="alert alert-danger mt-3">
-                        <i class="bi bi-exclamation-triangle me-2"></i>
-                        <span x-text="error_mystock"></span>
+                                </template>
+                            </div>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -277,7 +330,7 @@
       autoRefreshInterval_mystock: null,
       refreshIntervalSeconds_mystock: 30,
 
-        async init() {
+    async init() {
         // 두 API를 동시에 비동기로 호출
         try {
             await Promise.all([
@@ -289,9 +342,14 @@
             console.error('초기 데이터 로드 중 오류 발생:', error);
             // 개별 함수에서 이미 에러 처리를 하고 있으므로 여기서는 로그만 출력
         }
-        },
+    },
+    onStockClick(code, name) {
+        console.log(`종목 클릭: ${name} (${code})`);
+        // 종목 상세 정보 새 창으로 열기 (네이버 증권)
+        window.open(`https://finance.naver.com/item/main.nhn?code=${code}`, '_blank');
+    },    
       // 자동 새로고침 토글
-      toggleAutoRefresh_jisu() {
+    toggleAutoRefresh_jisu() {
         if (this.autoRefresh_jisu) {
           // 자동 새로고침 시작
           this.startAutoRefresh_jisu();
