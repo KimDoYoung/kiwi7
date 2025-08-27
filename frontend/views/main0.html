@@ -1,0 +1,548 @@
+{% extends "common/base.html" %}
+
+{% block style %}
+<style>
+.stock-row {
+    transition: background-color 0.2s ease;
+    border-radius: 4px;
+}
+.stock-row:hover {
+    background-color: rgba(0,123,255,0.05);
+}
+.stock-row:last-child {
+    border-bottom: none !important;
+}
+
+/* My Stock 카드 스타일 */
+.stock-card {
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border-width: 2px !important;
+}
+.stock-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.stock-card .card-title {
+    font-size: 0.8rem;
+    line-height: 1.1;
+}
+.stock-card .card-body {
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.75rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div x-data="main_data()" class="container mt-4">
+    <!-- 지수 정보 카드 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <!-- card-header 부분 수정 -->
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-graph-up me-2"></i><span x-text="market_name"></span>
+                    </h5>
+                    <div class="d-flex align-items-center gap-3">
+                        <!-- 자동 새로고침 스위치 -->
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="autoRefreshSwitch" 
+                                x-model="autoRefresh_jisu" @change="toggleAutoRefresh_jisu()">
+                            <label class="form-check-label" for="autoRefreshSwitch">
+                                자동
+                            </label>
+                        </div>
+                        
+                        <!-- 새로고침 버튼 -->
+                        <button @click="refreshJisu()" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-arrow-clockwise" :style="loading_jisu ? 'animation: spin 1s linear infinite;' : ''"></i>
+                            새로고침
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- 로딩 상태 -->
+                    <div x-show="loading_jisu" class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2 text-muted">지수 정보를 불러오는 중...</p>
+                    </div>
+
+                    <!-- 지수 정보 표시 -->
+                    <div x-show="!loading_jisu" class="row g-3">
+                        <!-- KOSPI -->
+                        <div class="col-md-4">
+                            <div class="border rounded p-3 h-100">
+                                <div class="text-center">
+                                    <h6 class="text-muted fw-bold mb-2">KOSPI</h6>
+                                    <div class="fs-3 fw-bold mb-1" 
+                                         :class="getIndexColorClass(jisu.KOSPI?.rate)"
+                                         x-text="formatIndex(jisu.KOSPI?.index)">
+                                        -
+                                    </div>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <span class="me-2"
+                                              :class="getIndexColorClass(jisu.KOSPI?.rate)"
+                                              x-text="formatDiff(jisu.KOSPI?.diff, jisu.KOSPI?.rate)">
+                                            -
+                                        </span>
+                                        <span :class="getIndexColorClass(jisu.KOSPI?.rate)"
+                                              x-text="(jisu.KOSPI?.rate || '-') + '%'">
+                                            -
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- KOSDAQ -->
+                        <div class="col-md-4">
+                            <div class="border rounded p-3 h-100">
+                                <div class="text-center">
+                                    <h6 class="text-muted fw-bold mb-2">KOSDAQ</h6>
+                                    <div class="fs-3 fw-bold mb-1"
+                                         :class="getIndexColorClass(jisu.KOSDAQ?.rate)"
+                                         x-text="formatIndex(jisu.KOSDAQ?.index)">
+                                        -
+                                    </div>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <span class="me-2"
+                                              :class="getIndexColorClass(jisu.KOSDAQ?.rate)"
+                                              x-text="formatDiff(jisu.KOSDAQ?.diff, jisu.KOSDAQ?.rate)">
+                                            -
+                                        </span>
+                                        <span :class="getIndexColorClass(jisu.KOSDAQ?.rate)"
+                                              x-text="(jisu.KOSDAQ?.rate || '-') + '%'">
+                                            -
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- KOSPI200 -->
+                        <div class="col-md-4">
+                            <div class="border rounded p-3 h-100">
+                                <div class="text-center">
+                                    <h6 class="text-muted fw-bold mb-2">KOSPI200</h6>
+                                    <div class="fs-3 fw-bold mb-1"
+                                         :class="getIndexColorClass(jisu.KOSPI200?.rate)"
+                                         x-text="formatIndex(jisu.KOSPI200?.index)">
+                                        -
+                                    </div>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <span class="me-2"
+                                              :class="getIndexColorClass(jisu.KOSPI200?.rate)"
+                                              x-text="formatDiff(jisu.KOSPI200?.diff, jisu.KOSPI200?.rate)">
+                                            -
+                                        </span>
+                                        <span :class="getIndexColorClass(jisu.KOSPI200?.rate)"
+                                              x-text="(jisu.KOSPI200?.rate || '-') + '%'">
+                                            -
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 오류 메시지 -->
+                    <div x-show="error_jisu" class="alert alert-danger mt-3">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <span x-text="error_jisu"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Stock 정보 카드 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-star me-2"></i>My Stock
+                    </h5>
+                    <div class="d-flex align-items-center gap-3">
+                        <!-- 자동 새로고침 스위치 -->
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="autoRefreshMyStockSwitch" 
+                                x-model="autoRefresh_mystock" @change="toggleAutoRefresh_mystock()">
+                            <label class="form-check-label" for="autoRefreshMyStockSwitch">
+                                자동
+                            </label>
+                        </div>
+                        
+                        <!-- 새로고침 버튼 -->
+                        <button @click="refreshMyStock()" class="btn btn-outline-success btn-sm">
+                            <i class="bi bi-arrow-clockwise" :style="loading_mystock ? 'animation: spin 1s linear infinite;' : ''"></i>
+                            새로고침
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- 로딩 상태 -->
+                    <div x-show="loading_mystock" class="text-center py-4">
+                        <div class="spinner-border text-success" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2 text-muted">My Stock 정보를 불러오는 중...</p>
+                    </div>
+
+                    <!-- My Stock 정보 표시 -->
+                    <div x-show="!loading_mystock && mystocks.length > 0">
+                        <!-- 카드 그리드 -->
+                        <div class="row g-3">
+                            <template x-for="stock in mystocks" :key="stock.종목코드">
+                                <div class="col-xxl-2 col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                                    <div class="card stock-card h-100" :class="'border-' + getStockBorderClass(stock.대비기호)">
+                                        <div class="card-body p-2">
+                                            <!-- 상단: 종목명 + 등락율 -->
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <div class="flex-grow-1">
+                                                    <h6 class="card-title mb-1 fw-bold text-truncate" 
+                                                        x-text="stock.종목명 + '(' + stock.종목코드 + ')'" 
+                                                        :title="stock.종목명 + '(' + stock.종목코드 + ')'"></h6>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- 중단: 현재가 -->
+                                            <div class="mb-2">
+                                                <div class="fs-5 fw-bold" 
+                                                     :class="getStockColorClass(stock.대비기호)"
+                                                     x-text="formatPrice(stock.현재가)">
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- 하단: 전일대비 + 상태 -->
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="small"
+                                                      :class="getStockColorClass(stock.대비기호)"
+                                                      x-text="'전일대비 ' + formatStockDiff(stock.전일대비, stock.대비기호) + ' (' + formatRateOnly(stock.등락율, stock.대비기호) + '%)'">
+                                                </span>
+                                                <span class="badge bg-light text-dark small" 
+                                                      x-text="stock.거래상태">
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- 데이터 없음 -->
+                    <div x-show="!loading_mystock && mystocks.length === 0" class="text-center py-4">
+                        <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
+                        <p class="text-muted mt-2">등록된 종목이 없습니다.</p>
+                    </div>
+
+                    <!-- 오류 메시지 -->
+                    <div x-show="error_mystock" class="alert alert-danger mt-3">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <span x-text="error_mystock"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+{% endblock %}
+
+{% block script %}
+<script>
+  function main_data() {
+    return {
+      jisu: {},
+      market_name: '',
+      loading_jisu: false,
+      error_jisu: null,
+      autoRefresh_jisu: false,        // 자동 새로고침 상태
+      autoRefreshInterval_jisu: null, // 자동 새로고침 인터벌 ID
+      refreshIntervalSeconds_jisu: 30, // 30초마다 새로고침
+
+      // My Stock 관련 변수들
+      mystocks: [],
+      loading_mystock: false,
+      error_mystock: null,
+      autoRefresh_mystock: false,
+      autoRefreshInterval_mystock: null,
+      refreshIntervalSeconds_mystock: 30,
+
+        async init() {
+        // 두 API를 동시에 비동기로 호출
+        try {
+            await Promise.all([
+                this.refreshJisu(),
+                this.refreshMyStock()
+            ]);
+            console.log('모든 초기 데이터 로드 완료');
+        } catch (error) {
+            console.error('초기 데이터 로드 중 오류 발생:', error);
+            // 개별 함수에서 이미 에러 처리를 하고 있으므로 여기서는 로그만 출력
+        }
+        },
+      // 자동 새로고침 토글
+      toggleAutoRefresh_jisu() {
+        if (this.autoRefresh_jisu) {
+          // 자동 새로고침 시작
+          this.startAutoRefresh_jisu();
+          console.log('자동 새로고침 시작 (30초 간격)');
+        } else {
+          // 자동 새로고침 중지
+          this.stopAutoRefresh_jisu();
+          console.log('자동 새로고침 중지');
+        }
+      },      
+      // 자동 새로고침 시작
+      startAutoRefresh_jisu() {
+        // 기존 인터벌이 있다면 정리
+        this.stopAutoRefresh_jisu();
+        
+        // 새로운 인터벌 설정 (30초마다)
+        this.autoRefreshInterval_jisu = setInterval(async () => {
+          if (this.autoRefresh_jisu && !this.loading_jisu) {
+            console.log('자동 새로고침 실행...');
+            await this.refreshJisu();
+          }
+        }, this.refreshIntervalSeconds_jisu * 1000);
+      },
+
+      // 자동 새로고침 중지
+      stopAutoRefresh_jisu() {
+        if (this.autoRefreshInterval_jisu) {
+          clearInterval(this.autoRefreshInterval_jisu);
+          this.autoRefreshInterval_jisu = null;
+        }
+      },
+      async refreshJisu() {
+        this.loading_jisu = true;
+        this.error_jisu = null;
+        
+        try {
+          // 실제 API 호출
+          const response = await fetch('/api/v1/kiwoom/jisu');
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          
+          // 성공 응답인지 확인
+          if (data.success === false) {
+            throw new Error(data.error_message || '지수 정보를 불러오는데 실패했습니다.');
+          }
+          
+          this.jisu = data;
+          console.info(this.jisu)
+          let market = this.jisu.market
+          if (market == 'KRX'){
+            this.market_name = '한국거래소(KRX)'
+          }else if (market == 'NXT'){
+            this.market_name = '넥스트레이드(NXT)'
+          }else{
+            this.market_name = "장마감"
+            this.stopAutoRefresh_jisu()
+          }
+        } catch (error) {
+          console.error('지수 정보 조회 실패:', error);
+          this.error_jisu = error.message || '지수 정보를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.';
+          
+          // 오류 발생 시 임시 데이터 표시 (개발용)
+          this.jisu = {
+            'KOSPI': {'index': 'N/A', 'diff': 'N/A', 'rate': 'N/A'},
+            'KOSDAQ': {'index': 'N/A', 'diff': 'N/A', 'rate': 'N/A'},
+            'KOSPI200': {'index': 'N/A', 'diff': 'N/A', 'rate': 'N/A'}
+          };
+        } finally {
+          this.loading_jisu = false;
+        }
+      },
+      async refreshMyStock(){
+        this.loading_mystock = true;
+        this.error_mystock = null;
+        
+        try {
+          const response = await fetch('/api/v1/mystock/');
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          console.info("data:" + JSON.stringify(data));
+          if (data.success === false) {
+            throw new Error(data.error_message || 'My Stock 정보를 불러오는데 실패했습니다.');
+          }
+          
+          this.mystocks = data.data.list || [];
+          console.info('My Stock 정보:', this.mystocks);
+          
+        } catch (error) {
+          console.error('My Stock 조회 실패:', error);
+          this.error_mystock = error.message || 'My Stock 정보를 불러오는데 실패했습니다.';
+          this.mystocks = [];
+        } finally {
+          this.loading_mystock = false;
+        }
+      },
+
+      // My Stock 자동 새로고침 토글
+      toggleAutoRefresh_mystock() {
+        if (this.autoRefresh_mystock) {
+          this.startAutoRefresh_mystock();
+          console.log('My Stock 자동 새로고침 시작 (30초 간격)');
+        } else {
+          this.stopAutoRefresh_mystock();
+          console.log('My Stock 자동 새로고침 중지');
+        }
+      },
+
+      // My Stock 자동 새로고침 시작
+      startAutoRefresh_mystock() {
+        this.stopAutoRefresh_mystock();
+        
+        this.autoRefreshInterval_mystock = setInterval(async () => {
+          if (this.autoRefresh_mystock && !this.loading_mystock) {
+            console.log('My Stock 자동 새로고침 실행...');
+            await this.refreshMyStock();
+          }
+        }, this.refreshIntervalSeconds_mystock * 1000);
+      },
+
+      // My Stock 자동 새로고침 중지
+      stopAutoRefresh_mystock() {
+        if (this.autoRefreshInterval_mystock) {
+          clearInterval(this.autoRefreshInterval_mystock);
+          this.autoRefreshInterval_mystock = null;
+        }
+      },
+
+      // 지수 값 포맷 (콤마 추가)
+      formatIndex(value) {
+        if (!value) return '-';
+        return value; // 이미 콤마가 포함된 문자열
+      },
+
+      // 등락폭 포맷 (+/- 기호 추가)
+      formatDiff(diff, rate) {
+        if (!diff) return '-';
+        const numDiff = parseFloat(diff);
+        if (rate > 0) {
+            return `▲${diff}`;
+        }else{
+            return `▼${diff}`;
+        }
+        return diff;
+      },
+
+      // 등락에 따른 색상 클래스 반환
+      getIndexColorClass(diff) {
+        if (!diff) return 'text-muted';
+        const numDiff = parseFloat(diff);
+        if (numDiff > 0) {
+          return 'text-danger'; // 상승 - 빨간색
+        } else if (numDiff < 0) {
+          return 'text-primary'; // 하락 - 파란색
+        }
+        return 'text-muted'; // 보합 - 회색
+      },
+
+      // My Stock 전용 함수들
+      // 가격 포맷 (콤마 추가, 기호 제거)
+      formatPrice(price) {
+        if (!price) return '-';
+        // 숫자만 추출 (기호 제거)
+        const numericPrice = price.toString().replace(/[+\-▲▼]/g, '');
+        return numericPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      },
+
+      // 주식 등락 포맷 (대비기호에 따라)
+      formatStockDiff(diff, compareSign) {
+        if (!diff) return '-';
+        
+        switch(compareSign) {
+          case '2': // 상승
+            return `▲${diff}`;
+          case '5': // 하락  
+            return `▼${diff}`;
+          case '3': // 보합
+            return diff;
+          default:
+            return diff;
+        }
+      },
+
+      // 숫자만 반환 (대비기호 없이)
+      formatNumberOnly(value) {
+        if (!value) return '-';
+        return value.toString();
+      },
+
+      // 등락율용 포맷 (삼각형 없이 +/- 기호만)
+      formatRateOnly(rate, compareSign) {
+        if (!rate) return '-';
+        
+        switch(compareSign) {
+          case '2': // 상승
+            return `${rate}`;
+          case '5': // 하락  
+            return `${rate}`;
+          case '3': // 보합
+            return rate;
+          default:
+            return rate;
+        }
+      },
+
+      // 주식 색상 클래스 (대비기호 기준)
+      getStockColorClass(compareSign) {
+        switch(compareSign) {
+          case '2': // 상승
+            return 'text-danger'; // 빨간색
+          case '5': // 하락
+            return 'text-primary'; // 파란색  
+          case '3': // 보합
+            return 'text-muted'; // 회색
+          default:
+            return 'text-muted';
+        }
+      },
+
+      // 카드 테두리 색상 클래스
+      getStockBorderClass(compareSign) {
+        switch(compareSign) {
+          case '2': // 상승
+            return 'danger'; 
+          case '5': // 하락
+            return 'primary';
+          case '3': // 보합
+            return 'secondary';
+          default:
+            return 'light';
+        }
+      },
+
+      // 뱃지 배경 색상 클래스
+      getStockBadgeClass(compareSign) {
+        switch(compareSign) {
+          case '2': // 상승
+            return 'danger'; 
+          case '5': // 하락
+            return 'primary';
+          case '3': // 보합
+            return 'secondary';
+          default:
+            return 'light';
+        }
+      }
+    };
+  }
+</script>
+
+{% endblock %}
