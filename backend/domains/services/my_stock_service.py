@@ -177,7 +177,7 @@ class MyStockService:
         if conditions:
             query += " WHERE " + " AND ".join(conditions)
 
-        query += " ORDER BY stk_cd"
+        query += " ORDER BY updated_at DESC"
 
         with self._get_conn() as conn:
             cur = conn.cursor()

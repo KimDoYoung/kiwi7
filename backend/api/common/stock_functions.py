@@ -102,7 +102,7 @@ async def get_stock_name(stk_code: str) -> str:
 async def fetch_stk_info(stk_code_list):
     ''' 
     stk_code_list를 받아서 종목정보조회ka10100을 호출해서 모은 후 리스트로 리턴
-    TODO : cache에서 조회 오늘 날짜로 조회 된 것이 있는것 name: 
+    캐시에서 먼저 찾고, 없으면 API 호출
     '''
     api_id = "ka10100"
     cache_service = get_service("stk_cache")
