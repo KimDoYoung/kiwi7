@@ -1,3 +1,13 @@
+def stock_find(context):
+    """종목찾기"""
+
+    context_data = {
+        "title": "종목찾기",
+    }
+
+    return context_data
+
+
 def stock_detail(context):
     """종목상세"""
 
