@@ -21,6 +21,16 @@
             <input class="form-check-input" type="checkbox" id="summaryFullCheck" x-model="summary_show">
             <label class="form-check-label" for="summaryFullCheck">계좌상세</label>
         </div>
+        <div class="form-check form-switch ms-3 mt-0">
+            <input class="form-check-input" type="checkbox" id="autoRefreshCheck" x-model="autoRefresh">
+            <label class="form-check-label fw-bold" for="autoRefreshCheck">
+                자동 새로고침 
+                <span x-show="!autoRefresh" class="badge bg-secondary ms-1">30초</span>
+                <span x-show="autoRefresh" 
+                      :class="`badge ms-1 ${countdown <= 5 ? 'bg-warning' : 'bg-primary'}`" 
+                      x-text="`${countdown}초`"></span>
+            </label>
+        </div>
     </div> 
     <div class="d-flex align-items-center mt-2 gap-4">
         <div>
@@ -217,11 +227,16 @@ function createKt00004Component() {
         summary_show: false,
         profit: 0,
         profitFilter: 'all',
+        autoRefresh: false,           // 자동 새로고침 스위치 상태
+        countdownInterval: null,      // 카운트다운 인터벌 ID
+        countdown: 30,                // 카운트다운 값
 
         // === 초기화 ===
         init() {
             this.initializeBase();
             this.setupWatchers();
+            this.setupAutoRefreshWatcher();
+            this.setupCleanup();
             this.registerCallbacks();
             this.registerClickHandlers();
         },
@@ -238,6 +253,55 @@ function createKt00004Component() {
                 this.clearFilters(); 
                 this.onProfitFilterChange(newValue);
             });
+        },
+
+        // === 자동 새로고침 관리 ===
+        setupAutoRefreshWatcher() {
+            // autoRefresh 상태 변화 감지
+            this.$watch('autoRefresh', (newValue) => {
+                if (newValue) {
+                    this.startAutoRefresh();
+                } else {
+                    this.stopAutoRefresh();
+                }
+            });
+        },
+
+        setupCleanup() {
+            // 페이지 언로드 시 인터벌 정리
+            window.addEventListener('beforeunload', () => {
+                this.stopAutoRefresh();
+            });
+        },
+
+        startAutoRefresh() {
+            console.log('자동 새로고침 시작 (30초 간격)');
+            this.countdown = 30;
+            
+            // 카운트다운 시작 (1초마다)
+            this.countdownInterval = setInterval(() => {
+                if (this.autoRefresh) {
+                    this.countdown--;
+                    
+                    if (this.countdown <= 0) {
+                        // 카운트다운이 0이 되면 새로고침 실행
+                        if (!this.loading) {
+                            console.log('자동 새로고침 실행...');
+                            this.fetch_data(); // kiwoom-base의 fetch_data 함수 호출
+                        }
+                        this.countdown = 30; // 카운트다운 리셋
+                    }
+                }
+            }, 1000); // 1초마다 카운트다운
+        },
+
+        stopAutoRefresh() {
+            console.log('자동 새로고침 중지');
+            if (this.countdownInterval) {
+                clearInterval(this.countdownInterval);
+                this.countdownInterval = null;
+            }
+            this.countdown = 30; // 카운트다운 리셋
         },
 
         registerCallbacks() {
@@ -316,8 +380,7 @@ function createKt00004Component() {
 
         detail(item) {
             console.log('상세 정보:', item);
-            let stk_cd = item['종목코드'].replace(/[^0-9]/g, '')
-            window.location.href = `page?path=stock/detail&stk_cd=${stk_cd}`;
+            showCompanyCanvas(item.종목코드);
         },
 
         // === 유틸리티 메서드 ===
