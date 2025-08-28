@@ -9,6 +9,30 @@
 {% extends 'common/base.html' %}
 {% block style %}
 <style>
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.clickable-cell {
+    cursor: pointer;
+}
+
+.clickable-cell:hover {
+    background-color: #f8f9fa;
+}
+
+.sortable-header {
+    cursor: pointer;
+}
+
+.sortable-header:hover {
+    background-color: #e9ecef;
+}
 </style>
 {% endblock %}
 {% block content %}
@@ -202,6 +226,250 @@
     </div> 
     <!-- 데이터 테이블 끝-->   
 </div>
+<div class="container mt-4" x-data="ka10075_component" > 
+    <!-- 미체결 주문 -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 x-text="title" class="mb-0"></h5>
+        <div class="d-flex align-items-center gap-2">
+            <small class="text-muted">총 <span x-text="items.length"></span>건</small>
+            <button class="btn btn-outline-primary btn-sm" @click="fetchData()" :disabled="loading">
+                <i class="bi bi-arrow-clockwise" :class="{'spin': loading}"></i> 새로고침
+            </button>
+        </div>
+    </div>
+    
+    <div x-show="loading" class="text-center py-4">
+        <i class="bi bi-arrow-clockwise spin"></i> 미체결 데이터를 불러오는 중...
+    </div>
+    
+    <div x-show="!loading && items.length === 0" class="text-center py-4 text-muted">
+        미체결 주문이 없습니다.
+    </div>
+    
+    <div x-show="!loading && items.length > 0" class="table-responsive">
+        <table class="table table-bordered table-hover align-middle text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>시간</th>
+                    <th>종목명</th>
+                    <th>주문구분</th>
+                    <th>주문가격</th>
+                    <th>주문수량</th>
+                    <th>미체결수량</th>
+                    <th>현재가</th>
+                    <th>주문상태</th>
+                    <th>거래소</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template x-for="item in items" :key="item.주문번호">
+                    <tr>
+                        <td x-text="formatTime(item.시간)"></td>
+                        <td x-text="item.종목명" class="text-start"></td>
+                        <td>
+                            <span :class="item.주문구분.includes('매수') ? 'text-danger' : 'text-primary'" 
+                                  x-text="item.주문구분"></span>
+                        </td>
+                        <td x-text="Number(item.주문가격).toLocaleString() + '원'" class="text-end"></td>
+                        <td x-text="Number(item.주문수량).toLocaleString() + '주'" class="text-end"></td>
+                        <td x-text="Number(item.미체결수량).toLocaleString() + '주'" class="text-end fw-bold text-warning"></td>
+                        <td class="text-end">
+                            <span :class="getPriceClass(item.현재가)" 
+                                  x-text="formatPriceText(item.현재가)"></span>
+                        </td>
+                        <td>
+                            <span :class="item.주문상태 === '접수' ? 'badge bg-info' : 'badge bg-secondary'" 
+                                  x-text="item.주문상태"></span>
+                        </td>
+                        <td x-text="item.거래소구분텍스트"></td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-sm btn-outline-danger" 
+                                        @click="cancelOrder(item)" title="주문취소">취소</button>
+                                <button type="button" class="btn btn-sm btn-outline-info" 
+                                        @click="modifyOrder(item)" title="주문수정">수정</button>
+                                <button type="button" class="btn btn-sm btn-outline-success" 
+                                        @click="showDetail(item)" title="상세정보">詳</button>
+                            </div>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="container mt-4" x-data="ka10076_component" > 
+    <!-- 체결 주문 -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 x-text="title" class="mb-0"></h5>
+        <div class="d-flex align-items-center gap-2">
+            <small class="text-muted">총 <span x-text="items.length"></span>건</small>
+            <button class="btn btn-outline-primary btn-sm" @click="fetchData()" :disabled="loading">
+                <i class="bi bi-arrow-clockwise" :class="{'spin': loading}"></i> 새로고침
+            </button>
+        </div>
+    </div>
+    
+    <div x-show="loading" class="text-center py-4">
+        <i class="bi bi-arrow-clockwise spin"></i> 체결 데이터를 불러오는 중...
+    </div>
+    
+    <div x-show="!loading && items.length === 0" class="text-center py-4 text-muted">
+        체결 주문이 없습니다.
+    </div>
+    
+    <div x-show="!loading && items.length > 0" class="table-responsive">
+        <table class="table table-bordered table-hover align-middle text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>주문시간</th>
+                    <th>종목명</th>
+                    <th>주문구분</th>
+                    <th>매매구분</th>
+                    <th>주문가격</th>
+                    <th>체결가</th>
+                    <th>주문수량</th>
+                    <th>체결량</th>
+                    <th>미체결수량</th>
+                    <th>수수료</th>
+                    <th>세금</th>
+                    <th>주문상태</th>
+                    <th>거래소</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template x-for="item in items" :key="item.주문번호">
+                    <tr>
+                        <td x-text="formatTime(item.주문시간)"></td>
+                        <td x-text="item.종목명" class="text-start"></td>
+                        <td>
+                            <span :class="item.주문구분.includes('매수') ? 'text-danger' : 'text-primary'" 
+                                  x-text="item.주문구분"></span>
+                        </td>
+                        <td x-text="item.매매구분"></td>
+                        <td class="text-end">
+                            <span x-text="formatOrderPrice(item.주문가격, item.매매구분)"></span>
+                        </td>
+                        <td x-text="Number(item.체결가).toLocaleString() + '원'" class="text-end fw-bold text-success"></td>
+                        <td x-text="Number(item.주문수량).toLocaleString() + '주'" class="text-end"></td>
+                        <td x-text="Number(item.체결량).toLocaleString() + '주'" class="text-end fw-bold text-primary"></td>
+                        <td x-text="Number(item.미체결수량).toLocaleString() + '주'" class="text-end"></td>
+                        <td x-text="Number(item.당일매매수수료).toLocaleString() + '원'" class="text-end text-muted"></td>
+                        <td x-text="Number(item.당일매매세금).toLocaleString() + '원'" class="text-end text-muted"></td>
+                        <td>
+                            <span class="badge bg-success" x-text="item.주문상태"></span>
+                        </td>
+                        <td x-text="item.거래소구분텍스트"></td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- 미체결 주문 상세 정보 Modal -->
+<div class="modal fade" id="unfillOrderDetailModal" tabindex="-1" aria-labelledby="unfillOrderDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="unfillOrderDetailModalLabel">미체결 주문 상세 정보</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <th class="bg-light">주문번호</th>
+                                    <td id="modal-order-no"></td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">종목명</th>
+                                    <td id="modal-stock-name"></td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">종목코드</th>
+                                    <td id="modal-stock-code"></td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">주문구분</th>
+                                    <td id="modal-order-type"></td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">매매구분</th>
+                                    <td id="modal-trade-type"></td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">주문가격</th>
+                                    <td id="modal-order-price"></td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">주문수량</th>
+                                    <td id="modal-order-qty"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <th class="bg-light">미체결수량</th>
+                                    <td id="modal-unfill-qty" class="fw-bold text-warning"></td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">체결누계금액</th>
+                                    <td id="modal-fill-amount"></td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">현재가</th>
+                                    <td id="modal-current-price"></td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">매수호가</th>
+                                    <td id="modal-buy-price"></td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">매도호가</th>
+                                    <td id="modal-sell-price"></td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">주문상태</th>
+                                    <td id="modal-order-status"></td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">주문시간</th>
+                                    <td id="modal-order-time"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded">
+                            <div>
+                                <strong>거래소:</strong> <span id="modal-exchange"></span>
+                            </div>
+                            <div>
+                                <strong>원주문번호:</strong> <span id="modal-orig-order-no"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger" id="modal-cancel-order">주문 취소</button>
+                <button type="button" class="btn btn-outline-info" id="modal-modify-order">주문 수정</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% raw %}
 <!--handlebar scripts-->
 {% endraw %}
@@ -417,9 +685,263 @@ function createKt00004Component() {
     };
 }
 
+function createKa10075Component() {
+    return {
+        title: '미체결 주문',
+        loading: false,
+        items: [],
+        
+        fetchData() {
+            this.loading = true;
+            const payload = {
+                all_stk_tp: '0', // 0:전체, 1:종목
+                trde_tp: '0',    // 0:전체, 1:매도, 2:매수
+                stk_cd: '',      // 종목코드 (all_stk_tp가 1일 때 사용)
+                stex_tp: '0'     // 0:통합, 1:KRX, 2:NXT
+            };
+
+            callKiwoomApi('ka10075', payload)
+                .then(response => {
+                    console.log('미체결 주문 데이터:', response);
+                    if (response.success && response.data) {
+                        // API 응답에서 미체결 주문 리스트 추출 (한글 키 사용)
+                        this.items = response.data.미체결 || [];
+                        console.log('미체결 주문 항목들:', this.items);
+                    } else {
+                        this.items = [];
+                        console.error('미체결 주문 데이터 오류:', response.error_message);
+                    }
+                })
+                .catch(error => {
+                    console.error('미체결 주문 데이터 가져오기 오류:', error);
+                    this.items = [];
+                    showAlert('미체결 주문 데이터를 가져오는데 실패했습니다.', 'error');
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
+
+        formatTime(timeStr) {
+            if (!timeStr) return '';
+            // HHMMSS 형식을 HH:MM:SS로 변환
+            if (timeStr.length === 6) {
+                return `${timeStr.slice(0,2)}:${timeStr.slice(2,4)}:${timeStr.slice(4,6)}`;
+            }
+            return timeStr;
+        },
+
+        formatPrice(priceStr) {
+            if (!priceStr) return '0원';
+            // 현재가에서 +/- 부호 제거하고 숫자만 추출
+            const price = priceStr.toString().replace(/[+-]/g, '');
+            const numPrice = Number(price);
+            if (isNaN(numPrice)) return priceStr;
+            
+            return numPrice.toLocaleString() + '원';
+        },
+
+        formatPriceText(priceStr) {
+            if (!priceStr) return '0원';
+            // 현재가에서 +/- 부호 제거하고 숫자만 추출
+            const price = priceStr.toString().replace(/[+-]/g, '');
+            const numPrice = Number(price);
+            if (isNaN(numPrice)) return priceStr;
+            
+            return numPrice.toLocaleString() + '원';
+        },
+
+        getPriceClass(priceStr) {
+            if (!priceStr) return '';
+            // 원래 값이 음수였다면 파란색, 양수면 빨간색
+            const isNegative = priceStr.toString().startsWith('-');
+            return isNegative ? 'text-primary' : 'text-danger';
+        },
+
+        cancelOrder(item) {
+            console.log('주문 취소:', item);
+            const confirmMsg = `${item.종목명} ${item.주문구분} 주문을 취소하시겠습니까?\n주문번호: ${item.주문번호}`;
+            
+            if (confirm(confirmMsg)) {
+                const api_id = "kt10003";
+                const payload = {
+                    	"dmst_stex_tp" : item.거래소구분텍스트, //국내거래소구분
+                        "orig_ord_no" : item.주문번호, //원주문번호
+                        "stk_cd" : item.종목코드, //종목코드
+                        "cncl_qty" : item.미체결수량 //취소수량
+                }
+                callKiwoomApi(api_id, payload)
+                    .then(response => {
+                        console.log('주문 취소 응답:', response);
+                        if (response.success) {
+                            showAlert('주문이 성공적으로 취소되었습니다.', 'success');
+                            this.fetchData(); // 미체결 주문 목록 새로고침
+                        } else {
+                            showAlert('주문 취소에 실패했습니다: ' + response.error_message, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('주문 취소 오류:', error);
+                        showAlert('주문 취소 중 오류가 발생했습니다.', 'error');
+                    });
+                
+            }
+        },
+
+        modifyOrder(item) {
+            console.log('주문 수정:', item);
+            const { 종목코드, 종목명, 주문구분, 주문가격, 미체결수량 } = item;
+            
+            // 매수/매도 판별
+            const isBuy = 주문구분.includes('매수');
+            
+            showBuySellCanvas({
+                stk_code: 종목코드,
+                stk_name: 종목명,
+                which: isBuy ? '매수' : '매도',
+                qty: Number(미체결수량),
+                cost: Number(주문가격),
+                isModify: true,
+                ordNo: item.주문번호
+            });
+        },
+
+        showDetail(item) {
+            console.log('상세 정보:', item);
+            
+            // Modal의 각 필드에 데이터 설정
+            document.getElementById('modal-order-no').textContent = item.주문번호;
+            document.getElementById('modal-stock-name').textContent = item.종목명;
+            document.getElementById('modal-stock-code').textContent = item.종목코드;
+            document.getElementById('modal-order-type').innerHTML = 
+                `<span class="${item.주문구분.includes('매수') ? 'text-danger' : 'text-primary'}">${item.주문구분}</span>`;
+            document.getElementById('modal-trade-type').textContent = item.매매구분;
+            document.getElementById('modal-order-price').textContent = Number(item.주문가격).toLocaleString() + '원';
+            document.getElementById('modal-order-qty').textContent = Number(item.주문수량).toLocaleString() + '주';
+            document.getElementById('modal-unfill-qty').textContent = Number(item.미체결수량).toLocaleString() + '주';
+            document.getElementById('modal-fill-amount').textContent = Number(item.체결누계금액).toLocaleString() + '원';
+            
+            // 현재가 색상 적용
+            const currentPriceElement = document.getElementById('modal-current-price');
+            const priceClass = this.getPriceClass(item.현재가);
+            currentPriceElement.innerHTML = `<span class="${priceClass}">${this.formatPriceText(item.현재가)}</span>`;
+            
+            document.getElementById('modal-buy-price').innerHTML = 
+                `<span class="text-danger">${this.formatPriceText(item.매수호가)}</span>`;
+            document.getElementById('modal-sell-price').innerHTML = 
+                `<span class="text-primary">${this.formatPriceText(item.매도호가)}</span>`;
+            document.getElementById('modal-order-status').innerHTML = 
+                `<span class="${item.주문상태 === '접수' ? 'badge bg-info' : 'badge bg-secondary'}">${item.주문상태}</span>`;
+            document.getElementById('modal-order-time').textContent = this.formatTime(item.시간);
+            document.getElementById('modal-exchange').textContent = item.거래소구분텍스트;
+            document.getElementById('modal-orig-order-no').textContent = item.원주문번호;
+            
+            // Modal 버튼 이벤트 설정
+            const cancelBtn = document.getElementById('modal-cancel-order');
+            const modifyBtn = document.getElementById('modal-modify-order');
+            
+            // 기존 이벤트 리스너 제거
+            const newCancelBtn = cancelBtn.cloneNode(true);
+            const newModifyBtn = modifyBtn.cloneNode(true);
+            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+            modifyBtn.parentNode.replaceChild(newModifyBtn, modifyBtn);
+            
+            // 새 이벤트 리스너 추가
+            newCancelBtn.addEventListener('click', () => {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('unfillOrderDetailModal'));
+                modal.hide();
+                this.cancelOrder(item);
+            });
+            
+            newModifyBtn.addEventListener('click', () => {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('unfillOrderDetailModal'));
+                modal.hide();
+                this.modifyOrder(item);
+            });
+            
+            // Modal 표시
+            const modal = new bootstrap.Modal(document.getElementById('unfillOrderDetailModal'));
+            modal.show();
+        },
+
+        init() {
+            console.log('미체결 주문 컴포넌트 초기화');
+            this.fetchData();
+        }
+    };
+}
+
+function createKa10076Component() {
+    return {
+        title: '체결 주문',
+        loading: false,
+        items: [],
+        
+        fetchData() {
+            this.loading = true;
+            const payload = {
+                stk_cd: '',      // 종목코드
+                qry_tp: '0',     // 0:전체, 1:종목  
+                sell_tp: '0',    // 0:전체, 1:매도, 2:매수
+                ord_no: '',      // 주문번호
+                stex_tp: '0'     // 0:통합, 1:KRX, 2:NXT
+            };
+
+            callKiwoomApi('ka10076', payload)
+                .then(response => {
+                    console.log('체결 주문 데이터:', response);
+                    if (response.success && response.data) {
+                        // API 응답에서 체결 주문 리스트 추출 (한글 키 사용)
+                        this.items = response.data.체결 || [];
+                        console.log('체결 주문 항목들:', this.items);
+                    } else {
+                        this.items = [];
+                        console.error('체결 주문 데이터 오류:', response.error_message);
+                    }
+                })
+                .catch(error => {
+                    console.error('체결 주문 데이터 가져오기 오류:', error);
+                    this.items = [];
+                    showAlert('체결 주문 데이터를 가져오는데 실패했습니다.', 'error');
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
+
+        formatTime(timeStr) {
+            if (!timeStr) return '';
+            // HHMMSS 형식을 HH:MM:SS로 변환
+            if (timeStr.length === 6) {
+                return `${timeStr.slice(0,2)}:${timeStr.slice(2,4)}:${timeStr.slice(4,6)}`;
+            }
+            return timeStr;
+        },
+
+        formatOrderPrice(priceStr, orderType) {
+            if (!priceStr) return '시장가';
+            const price = Number(priceStr);
+            
+            // 시장가 주문의 경우 (주문가격이 0)
+            if (price === 0) {
+                return '시장가';
+            }
+            
+            return price.toLocaleString() + '원';
+        },
+
+        init() {
+            console.log('체결 주문 컴포넌트 초기화');
+            this.fetchData();
+        }
+    };
+}
+
 // Alpine.js 컴포넌트 등록
 document.addEventListener('alpine:init', () => {
     Alpine.data('kt00004_component', createKt00004Component);
+    Alpine.data('ka10075_component', createKa10075Component);
+    Alpine.data('ka10076_component', createKa10076Component);
 });
 </script>
 {% endraw %}

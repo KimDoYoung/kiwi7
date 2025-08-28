@@ -5,6 +5,10 @@ applyTo: '**/*.py'
 - 주석은 주로 한글로 작성되어야 합니다.
 - 주석은 코드의 목적과 기능을 명확하게 설명해야 합니다.   
 - logger.info(), logger.debug(), logger.error() 등을 사용하여 로그를 남기는데 한글을 주로 쓴다.
+- 키움증권 REST API를 사용하여 주식매매를 하는 시스템으로서 문서를 코딩해 놓음
+    * backend/domains/models/kiwoom_request_definition.py
+    * backend/domains/models/kiwoom_response_definition.py
+- 위 2가지 문서를 참조하여 키움증권 API를 호출하고 응답을 처리합니다.
 
 --
 기술스택
