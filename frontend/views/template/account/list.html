@@ -770,6 +770,7 @@ function createKa10075Component() {
                         "stk_cd" : item.종목코드, //종목코드
                         "cncl_qty" : item.미체결수량 //취소수량
                 }
+                console.log(payload);
                 callKiwoomApi(api_id, payload)
                     .then(response => {
                         console.log('주문 취소 응답:', response);
