@@ -1,0 +1,239 @@
+<!-- 종목 찾기 모달 -->
+<div class="modal fade" id="stkFindModal" tabindex="-1" aria-labelledby="stkFindModalLabel" aria-hidden="true" x-data="stk_find_modal()">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="stkFindModalLabel">
+                    <i class="bi bi-search me-2"></i>종목 찾기
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- 검색 영역 -->
+                <form @submit.prevent="searchStock" class="mb-4">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="stkFindInput"
+                                   placeholder="종목명 또는 종목코드를 입력하세요 (예: 삼성전자, 005930)" 
+                                   x-model="keyword"
+                                   required>
+                        </div>
+                        <div class="col-md-2">
+                            <select class="form-select" x-model="limit">
+                                <option value="10">10개</option>
+                                <option value="20" selected>20개</option>
+                                <option value="50">50개</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" 
+                                    class="btn btn-primary w-100" 
+                                    :disabled="loading || !keyword.trim()">
+                                <span x-show="loading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                <i x-show="!loading" class="bi bi-search me-1"></i>
+                                <span x-text="loading ? '검색중...' : '검색'"></span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- 메시지 영역 -->
+                <div x-show="msg" 
+                     class="alert" 
+                     :class="msgType === 'error' ? 'alert-danger' : 'alert-info'" 
+                     role="alert">
+                    <i :class="msgType === 'error' ? 'bi bi-exclamation-triangle' : 'bi bi-info-circle'" class="me-2"></i>
+                    <span x-text="msg"></span>
+                </div>
+
+                <!-- 로딩 상태 -->
+                <div x-show="loading" class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2 text-muted">검색 중입니다...</p>
+                </div>
+
+                <!-- 검색 결과 -->
+                <div x-show="!loading && results.length > 0" style="max-height: 400px; overflow-y: auto;">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sm">
+                            <thead class="table-light sticky-top">
+                                <tr>
+                                    <th style="width: 80px;">종목코드</th>
+                                    <th style="width: 150px;">종목명</th>
+                                    <th style="width: 80px;">시장</th>
+                                    <th class="text-center" style="width: 80px;">액션</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="(item, index) in results" :key="item.code || index">
+                                    <tr>
+                                        <td>
+                                            <span class="fw-bold" x-text="item.code || '-'"></span>
+                                        </td>
+                                        <td>
+                                            <span x-text="item.name || '-'"></span>
+                                        </td>
+                                        <td>
+                                            <span class="badge" 
+                                                  :class="getMarketBadgeClass(item.market_name)"
+                                                  x-text="item.market_name || '-'"></span>
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-success btn-sm" 
+                                                    @click="addToMyStock(item)"
+                                                    :disabled="!item.code"
+                                                    title="My Stock에 추가">
+                                                <i class="bi bi-plus"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 결과 없음 -->
+                <div x-show="!loading && results.length === 0 && keyword && searched" 
+                     class="text-center py-4">
+                    <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
+                    <p class="text-muted mt-2">검색 결과가 없습니다.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// 종목 찾기 모달 Alpine.js 컴포넌트
+function stk_find_modal() {
+    return {
+        loading: false,
+        msg: null,
+        msgType: 'info',
+        keyword: '',
+        limit: 20,
+        results: [],
+        searched: false,
+
+        init() {
+            console.log('종목 찾기 모달 초기화');
+            
+            // 모달이 열릴 때 input에 포커스
+            const modal = document.getElementById('stkFindModal');
+            if (modal) {
+                modal.addEventListener('shown.bs.modal', () => {
+                    const input = document.getElementById('stkFindInput');
+                    if (input) {
+                        input.focus();
+                        input.select(); // 기존 텍스트가 있다면 모두 선택
+                    }
+                });
+                
+                // 모달이 닫힐 때 데이터 초기화 (선택사항)
+                modal.addEventListener('hidden.bs.modal', () => {
+                    this.resetModal();
+                });
+            }
+        },
+
+        async searchStock() {
+            if (!this.keyword.trim()) {
+                this.showMessage('검색어를 입력해주세요.', 'error');
+                return;
+            }
+
+            this.loading = true;
+            this.msg = null;
+            this.results = [];
+            this.searched = false;
+
+            try {
+                const response = await postFetch('/api/v1/stock/find', {
+                    api_id: "stock_find",
+                    payload: {
+                        keyword: this.keyword.trim(),
+                        limit: parseInt(this.limit)
+                    }
+                });
+
+                if (response.success) {
+                    this.results = response.data?.results || [];
+                    this.searched = true;
+                    
+                    if (this.results.length === 0) {
+                        this.showMessage(`'${this.keyword}' 검색 결과가 없습니다.`, 'info');
+                    } else {
+                        this.showMessage(`검색 결과 ${this.results.length}건을 찾았습니다.`, 'info');
+                    }
+                } else {
+                    this.showMessage(response.error_message || '검색 중 오류가 발생했습니다.', 'error');
+                }
+
+            } catch (error) {
+                console.error('검색 오류:', error);
+                this.showMessage('검색 중 오류가 발생했습니다: ' + error.message, 'error');
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async addToMyStock(item) {
+            if (!item.code) {
+                this.showMessage('종목코드가 없습니다.', 'error');
+                return;
+            }
+
+            try {
+                const response = await putFetch('/api/v1/mystock/' + item.code);
+                
+                if (response.success) {
+                    this.showMessage(`'${item.name}' 종목이 My Stock에 추가되었습니다.`, 'info');
+                    // 성공 시 showAlert 호출 (전역 함수)
+                    if (typeof showAlert === 'function') {
+                        showAlert(`'${item.name}' 종목이 My Stock에 추가되었습니다.`, 'success');
+                    }
+                } else {
+                    this.showMessage(response.error_message || 'My Stock 추가 중 오류가 발생했습니다.', 'error');
+                }
+                
+            } catch (error) {
+                console.error('My Stock 추가 오류:', error);
+                this.showMessage('My Stock 추가 중 오류가 발생했습니다: ' + error.message, 'error');
+            }
+        },
+
+        showMessage(message, type = 'info') {
+            this.msg = message;
+            this.msgType = type;
+            
+            setTimeout(() => {
+                this.msg = null;
+            }, 3000);
+        },
+
+        getMarketBadgeClass(marketName) {
+            if (!marketName) return 'bg-secondary';
+            
+            const market = marketName.toLowerCase();
+            if (market.includes('코스피')) return 'bg-primary';
+            if (market.includes('코스닥')) return 'bg-success';
+            if (market.includes('etf')) return 'bg-warning text-dark';
+            return 'bg-info text-dark';
+        },
+
+        // 모달 데이터 초기화
+        resetModal() {
+            this.keyword = '';
+            this.results = [];
+            this.msg = null;
+            this.searched = false;
+            this.loading = false;
+        }
+    }
+}
+</script>

@@ -15,7 +15,6 @@ def account_detail(context):
 
     context_data = {
         "title": "계좌상세정보",
-        "stk_cd" : context.get("stk_cd")
     }
 
     return context_data

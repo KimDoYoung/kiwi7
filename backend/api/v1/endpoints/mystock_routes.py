@@ -10,6 +10,19 @@ from backend.domains.services.dependency import get_service
 router = APIRouter()
 logger = get_logger(__name__)
 
+@router.delete("/{stk_cd}", response_model=KiwoomResponse)
+async def delete_code_from_my_stocks(stk_cd:str):
+    ''' my_stock에서 종목삭제 '''
+    logger.info(f"My Stock에서 종목삭제 요청 받음: stk_cd={stk_cd}")
+    try:
+        service = get_service("my_stock")
+        await service.delete(stk_cd)
+        return KiwoomApiHelper.create_success_response(data={"stk_code": stk_cd})
+    except Exception as e:
+        logger.error(f"나의 관심종목에서 {stk_cd} 코드삭제에 실패함: {e}")
+        return KiwoomApiHelper.create_error_response(error_code="MY_STOCK_DELETE_ERROR", error_message=str(e))
+
+
 @router.get("/", response_model=KiwoomResponse)
 async def get_my_stocks():
     ''' my_stock을 모두 조회(추가된 역순으로 최대 50개까지) ka10001을 호출 '''
