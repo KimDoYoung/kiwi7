@@ -83,6 +83,20 @@
                             </div>
                         </div>
                         
+                        <!-- 자동 새로고침 스위치 -->
+                        <div class="col-auto">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="autoRefresh" x-model="autoRefresh">
+                                <label class="form-check-label fw-bold" for="autoRefresh">
+                                    자동 새로고침 
+                                    <span x-show="!autoRefresh" class="badge bg-secondary ms-1">30초</span>
+                                    <span x-show="autoRefresh" 
+                                          :class="`badge ms-1 ${countdown <= 5 ? 'bg-warning' : 'bg-primary'}`" 
+                                          x-text="`${countdown}초`"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
                         <!-- 결과 요약 -->
                         <div class="col-auto ms-auto">
                             <span class="badge bg-primary" x-text="`총 ${filteredStocks.length}개`"></span>
@@ -250,6 +264,10 @@ function createMyStockComponent() {
         data: { list: [] },  // 초기값을 빈 배열로 설정
         loading: false,
         showSummary: false,  // 요약보기 스위치 상태
+        autoRefresh: false,  // 자동 새로고침 스위치 상태
+        autoRefreshInterval: null,  // 자동 새로고침 인터벌 ID
+        countdownInterval: null,    // 카운트다운 인터벌 ID
+        countdown: 30,              // 카운트다운 값
         
         // === 필터 상태 ===
         filters: {
@@ -496,6 +514,57 @@ function createMyStockComponent() {
         // === 초기화 ===   
         init() {
             this.fetchMyStock();
+            this.setupAutoRefreshWatcher();
+            this.setupCleanup();
+        },
+
+        // === 자동 새로고침 관리 ===
+        setupAutoRefreshWatcher() {
+            // autoRefresh 상태 변화 감지
+            this.$watch('autoRefresh', (newValue) => {
+                if (newValue) {
+                    this.startAutoRefresh();
+                } else {
+                    this.stopAutoRefresh();
+                }
+            });
+        },
+
+        setupCleanup() {
+            // 페이지 언로드 시 인터벌 정리
+            window.addEventListener('beforeunload', () => {
+                this.stopAutoRefresh();
+            });
+        },
+
+        startAutoRefresh() {
+            console.log('자동 새로고침 시작 (30초 간격)');
+            this.countdown = 30;
+            
+            // 카운트다운 시작 (1초마다)
+            this.countdownInterval = setInterval(() => {
+                if (this.autoRefresh) {
+                    this.countdown--;
+                    
+                    if (this.countdown <= 0) {
+                        // 카운트다운이 0이 되면 새로고침 실행
+                        if (!this.loading) {
+                            console.log('자동 새로고침 실행...');
+                            this.fetchMyStock();
+                        }
+                        this.countdown = 30; // 카운트다운 리셋
+                    }
+                }
+            }, 1000); // 1초마다 카운트다운
+        },
+
+        stopAutoRefresh() {
+            console.log('자동 새로고침 중지');
+            if (this.countdownInterval) {
+                clearInterval(this.countdownInterval);
+                this.countdownInterval = null;
+            }
+            this.countdown = 30; // 카운트다운 리셋
         }
     };
 }
