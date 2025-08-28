@@ -20,8 +20,9 @@
     border-width: 2px !important;
 }
 .stock-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    opacity: 0.9;
 }
 .stock-card .card-title {
     font-size: 0.8rem;
@@ -202,14 +203,30 @@
                         <div class="row g-3">
                             <template x-for="stock in mystocks" :key="stock.종목코드">
                                 <div class="col-xxl-2 col-xl-2 col-lg-3 col-md-4 col-sm-6">
-                                    <div class="card stock-card h-100" :class="'border-' + getStockBorderClass(stock.대비기호)">
+                                    <div class="card stock-card h-100" 
+                                         :class="'border-' + getStockBorderClass(stock.대비기호)"
+                                         @click="goDetail(stock.종목코드, stock.종목명)"
+                                         style="cursor: pointer;">
                                         <div class="card-body p-2">
-                                            <!-- 상단: 종목명 + 등락율 -->
+                                            <!-- 상단: 종목명 + 아이콘 -->
                                             <div class="d-flex justify-content-between align-items-start mb-2">
                                                 <div class="flex-grow-1">
                                                     <h6 class="card-title mb-1 fw-bold text-truncate" 
-                                                        x-text="stock.종목명 + '(' + stock.종목코드 + ')'" 
-                                                        :title="stock.종목명 + '(' + stock.종목코드 + ')'"></h6>
+                                                        x-text="stock.종목명" 
+                                                        :title="stock.종목명"></h6>
+                                                    <div class="d-flex align-items-center">
+                                                        <small class="text-muted me-2" x-text="stock.종목코드"></small>
+                                                        <!-- 보유 아이콘 -->
+                                                        <i x-show="stock.is_hold == 1" 
+                                                           class="bi bi-wallet-fill text-success me-1" 
+                                                           title="보유 종목"
+                                                           style="font-size: 0.8rem;"></i>
+                                                        <!-- 관심 아이콘 -->
+                                                        <i x-show="stock.is_watch == 1" 
+                                                           class="bi bi-heart-fill text-warning" 
+                                                           title="관심 종목"
+                                                           style="font-size: 0.8rem;"></i>
+                                                    </div>
                                                 </div>
                                             </div>
                                             
@@ -225,7 +242,7 @@
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <span class="small"
                                                       :class="getStockColorClass(stock.대비기호)"
-                                                      x-text="'전일대비 ' + formatStockDiff(stock.전일대비, stock.대비기호) + ' (' + formatRateOnly(stock.등락율, stock.대비기호) + '%)'">
+                                                      x-text="'' + formatStockDiff(stock.전일대비, stock.대비기호) + ' (' + formatRateOnly(stock.등락율, stock.대비기호) + '%)'">
                                                 </span>
                                                 <span class="badge bg-light text-dark small" 
                                                       x-text="stock.거래상태">
@@ -540,6 +557,16 @@
           default:
             return 'light';
         }
+      },
+
+      // 종목 상세 페이지로 이동
+      goDetail(stockCode, stockName) {
+        console.log(`종목 상세 페이지로 이동: ${stockCode} - ${stockName}`);
+        // 종목 코드에서 숫자만 추출 (괄호 등 제거)
+        const cleanCode = stockCode.replace(/[^0-9]/g, '');        
+        
+        // 같은 탭에서 열기
+        window.location.href = "page?path=stock/detail&stk_cd=" + cleanCode;
       }
     };
   }
