@@ -1,4 +1,4 @@
-   // 전역 상태 관리
+// 전역 상태 관리
    window.kiwiGlobal = window.kiwiGlobal || {
        selectedStockCode: null
    };
@@ -675,4 +675,59 @@ function setSelectedStockCode(stkCd) {
 function clearSelectedStockCode() {
     window.kiwiGlobal.selectedStockCode = null;
     console.log('전역 종목코드 초기화');
+}
+
+/**
+ * 매매일지 모달을 표시합니다. diary 객체가 전달되면 update 모드로 설정합니다.
+ * @param {Object|null} diary - 수정할 일지 객체 (선택)
+ */
+function showDiaryModal(diary = null) {
+    console.log('showDiaryModal 함수 호출됨', diary ? 'diary 전달됨' : '신규 작성');
+
+    try {
+        const modalElement = document.getElementById('stkDiaryModal');
+        if (!modalElement) {
+            console.error('stkDiaryModal 요소를 찾을 수 없습니다.');
+            return;
+        }
+
+        // 모달 내부 Alpine 인스턴스에 diary 전달 시도
+        const setDiaryOnAlpine = () => {
+            // Alpine v3 stores component data on _x_dataStack
+            const alpineInstance = modalElement._x_dataStack && modalElement._x_dataStack[0];
+            if (alpineInstance && typeof alpineInstance.setDiary === 'function') {
+                try {
+                    alpineInstance.setDiary(diary);
+                    console.log('Alpine 컴포넌트에 diary 설정 완료');
+                    return true;
+                } catch (e) {
+                    console.warn('Alpine setDiary 호출 중 오류:', e);
+                }
+            }
+            return false;
+        };
+
+        if (diary) {
+            const ok = setDiaryOnAlpine();
+            if (!ok) {
+                // Alpine 인스턴스가 아직 준비되지 않았을 수 있으므로 커스텀 이벤트로 전달
+                const ev = new CustomEvent('diary:open', { detail: diary });
+                modalElement.dispatchEvent(ev);
+                console.log('diary:open 이벤트로 diary 전달');
+            }
+        }
+
+        // Bootstrap Modal 인스턴스 확보 및 표시
+        let modal = bootstrap.Modal.getInstance(modalElement);
+        if (!modal) {
+            modal = new bootstrap.Modal(modalElement);
+            console.log('새 Bootstrap Modal 인스턴스 생성됨');
+        }
+        modal.show();
+        console.log('모달 표시 완료');
+
+    } catch (error) {
+        console.error('모달 표시 중 오류 발생:', error);
+        console.error('오류 스택:', error.stack);
+    }
 }

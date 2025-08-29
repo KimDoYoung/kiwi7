@@ -22,9 +22,14 @@
             <input type="text" id="note_like" class="form-control" x-model="filter.note_like" placeholder="메모, 키워드 등">
         </div>
         <div class="col-md-1 d-grid">
-            <button type="submit" class="btn btn-success">
-                <i class="bi bi-search"></i> 검색
-            </button>
+            <div class="d-flex gap-1">
+                <button type="submit" class="btn btn-success" title="검색">
+                    <i class="bi bi-search"></i>
+                </button>
+                <button type="button" class="btn btn-outline-secondary" title="초기화" @click="resetFilters()">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                </button>
+            </div>
         </div>
     </form>
     <div>
@@ -101,6 +106,7 @@ function diaryListFilter() {
             // 날짜 변환 (YYYY-MM-DD → YYYYMMDD)
             const ymd_from = this.filter.ymd_from ? this.filter.ymd_from.replace(/-/g, '') : null;
             const ymd_to = this.filter.ymd_to ? this.filter.ymd_to.replace(/-/g, '') : null;
+            if (typeof page === 'object') page = 1;
             const payload = {
                 ymd_from: this.filter.ymd_from ? this.filter.ymd_from.replace(/-/g, '') : null,
                 ymd_to: this.filter.ymd_to ? this.filter.ymd_to.replace(/-/g, '') : null,
@@ -139,14 +145,34 @@ function diaryListFilter() {
             return val;
         },
         editDiary(item) {
-            // TODO: 수정 모달 오픈 등 구현
-            alert('수정 기능은 추후 구현 예정: ID=' + item.id);
+            if (typeof showDiaryModal === 'function') {
+                showDiaryModal(item);                
+            }
         },
         deleteDiary(id) {
             if (confirm('정말 삭제하시겠습니까?')) {
-                // TODO: 삭제 API 호출 구현
-                alert('삭제 기능은 추후 구현 예정: ID=' + id);
+                deleteFetch('/api/v1/diary/' + id)
+                    .then(res => {
+                        if (res.success) {
+                            showAlert('삭제되었습니다.', 'success');
+                            this.searchDiary(this.pagination.page);
+                        } else {
+                            showAlert(res.message || '삭제에 실패했습니다.', 'error');
+                        }
+                    })
+                    .catch(err => {
+                        showAlert(err.message || '삭제 중 오류가 발생했습니다.', 'error');
+                    }); 
             }
+        },
+        resetFilters() {
+            this.filter = {
+                ymd_from: '',
+                ymd_to: '',
+                stk_cd: '',
+                note_like: ''
+            };
+            this.searchDiary(1);
         },
         init(){
             this.searchDiary();

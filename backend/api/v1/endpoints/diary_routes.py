@@ -100,6 +100,7 @@ async def get_diary_list(request : KiwoomRequest):
     end_ymd = request.payload.get("end_ymd", None)
     page = request.payload.get("page", 1)
     limit = request.payload.get("limit", 20)
+    note_like = request.payload.get("note_like", None)
     logger.info(f"주식 일지 목록 조회: 종목코드={stk_cd}, 기간={start_ymd}~{end_ymd}, 페이지={page}")
     
     try:
@@ -110,7 +111,8 @@ async def get_diary_list(request : KiwoomRequest):
         filter_data = StkDiaryFilter(
             ymd_from=start_ymd,
             ymd_to=end_ymd,
-            stk_cd=stk_cd
+            stk_cd=stk_cd,
+            note_like=note_like
         )
         
         # 데이터 조회 (전체 목록)

@@ -80,7 +80,7 @@
                         class="btn btn-primary" 
                         @click="saveDiary()"
                         :disabled="diary_loading || !form.note || !form.note.trim()">
-                    저장
+                    <span x-text="mode === 'update' ? '수정' : '저장'"></span>
                 </button>
             </div>
         </div>
@@ -90,8 +90,10 @@
 <script>
 function diaryFormData() {
     return {
+        mode: 'insert', // 'insert' or 'update'
         form: {
-            ymd: new Date().toISOString().split('T')[0], // YYYY-MM-DD 형식 (input[type="date"]용)
+            id: '',
+            ymd: new Date().toISOString().split('T')[0],
             stk_cd: '',
             note: ''
         },
@@ -218,19 +220,32 @@ function diaryFormData() {
             try {
                 // 날짜를 YYYYMMDD 형식으로 변환
                 const dateStr = this.form.ymd.replace(/-/g, '');
-                
-                const requestData = {
-                    api_id: "diary_create",
-                    payload: {
-                        ymd: dateStr,
-                        stk_cd: this.form.stk_cd || null, // 빈 문자열은 null로
-                        note: this.form.note.trim()
-                    }
-                };
-                
-                console.log('요청 데이터:', requestData);
-
-                const response = await postFetch('/api/v1/diary', requestData);
+                let requestData ;
+                let response;
+                if (this.mode == 'insert') {
+                    requestData = {
+                        api_id: "diary_create",
+                        payload: {
+                            ymd: dateStr,
+                            stk_cd: this.form.stk_cd || null, // 빈 문자열은 null로
+                            note: this.form.note.trim()
+                        }
+                    };
+                    console.log('요청 데이터:', requestData);
+                    response = await postFetch('/api/v1/diary', requestData);
+                } else {
+                    requestData = {
+                        api_id: "diary_update",
+                        payload: {
+                            id: this.form.id,
+                            ymd: dateStr,
+                            stk_cd: this.form.stk_cd || null,
+                            note: this.form.note.trim()
+                        }
+                    };
+                    console.log('요청 데이터:', requestData);
+                    response = await putFetch('/api/v1/diary/' + this.form.id, requestData);
+                }
                 console.log('API 응답 데이터:', response);
 
                 if (response.success) {
@@ -272,8 +287,22 @@ function diaryFormData() {
             this.diary_stockName = '';
             this.diary_loading = false; // 로딩 상태 확실히 초기화
             this.clearDiaryMessages();
-        }
-    };
+        },
+
+        setDiary(diary) {
+            if (diary) {
+                this.mode = 'update';
+                this.form.id = diary.id || '';
+                this.form.ymd = diary.ymd ? diary.ymd.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3') : '';
+                this.form.stk_cd = diary.stk_cd || '';
+                this.form.note = diary.note || '';
+                this.diary_stockName = diary.stk_nm || '';
+            } else {
+                this.mode = 'insert';
+                this.initDiaryForm();
+            }
+        },
+    }
 }
 
 // 모달 이벤트 리스너 추가
@@ -289,10 +318,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (formElement && window.Alpine) {
                     const alpineData = Alpine.$data(formElement);
                     if (alpineData && typeof alpineData.initForm === 'function') {
-                        alpineData.initForm();
+                        // only initialize if in insert mode (avoid overwriting update data)
+                        if (!alpineData.mode || alpineData.mode === 'insert') {
+                            alpineData.initForm();
+                        }
                     }
                 }
             }, 100);
+        });
+        // custom event으로 외부에서 diary 전달 가능
+        diaryModal.addEventListener('diary:open', function(ev) {
+            console.log('diary:open 이벤트 수신', ev.detail);
+            const formElement = diaryModal.querySelector('[x-data]');
+            if (formElement && window.Alpine) {
+                const alpineData = Alpine.$data(formElement);
+                if (alpineData && typeof alpineData.setDiary === 'function') {
+                    alpineData.setDiary(ev.detail);
+                }
+            }
         });
         
         // 모달이 닫힐 때
