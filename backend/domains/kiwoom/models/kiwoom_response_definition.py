@@ -1,6 +1,55 @@
+# kiwoom_response_definition.py
+"""
+모듈 설명: 
+    -   키움 API의 응답 정의를 관리하는 모듈
+주요 기능:
+    - API 응답 형식에 대한 정의를 제공
+    - 프로그램으로 추출함.
+    - python ./extract_kw_resp_def.py c:\\tmp\\kwapi.xlsx > 2.txt
 
+작성자: 김도영
+작성일: 2025-08-29
+버전: 1.0
+"""
 
 KIWOOM_RESPONSE_DEF = {
+'ka00198': [
+    {'key': 'item_inq_rank', 'name': '실시간종목조회순위', 'type': 'list', 'required': False, 'length': None, 'description': 'None'},
+    {'key': 'stk_nm', 'name': '종목명', 'type': 'string', 'required': False, 'length': 40, 'description': 'None'},
+    {'key': 'bigd_rank', 'name': '빅데이터 순위', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'rank_chg', 'name': '순위 등락', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'rank_chg_sign', 'name': '순위 등락 부호', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'past_curr_prc', 'name': '과거 현재가', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'base_comp_sign', 'name': '기준가 대비 부호', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'base_comp_chgr', 'name': '기준가 대비 등락율', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'prev_base_sign', 'name': '직전 기준 대비 부호', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'prev_base_chgr', 'name': '직전 기준 대비 등락율', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'dt', 'name': '일자', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'tm', 'name': '시간', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'stk_cd', 'name': '종목코드', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'}
+],
+
+'ka01690': [
+    {'key': 'dt', 'name': '일자', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'tot_buy_amt', 'name': '총 매입가', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'tot_evlt_amt', 'name': '총 평가금액', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'tot_evltv_prft', 'name': '총 평가손익', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'tot_prft_rt', 'name': '수익률', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'dbst_bal', 'name': '예수금', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'day_stk_asst', 'name': '추정자산', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'buy_wght', 'name': '현금비중', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'day_bal_rt', 'name': '일별잔고수익률', 'type': 'list', 'required': False, 'length': None, 'description': 'None'},
+    {'key': 'cur_prc', 'name': '현재가', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'stk_cd', 'name': '종목코드', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'stk_nm', 'name': '종목명', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'rmnd_qty', 'name': '보유 수량', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'buy_uv', 'name': '매입 단가', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'buy_wght', 'name': '매수비중', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'evltv_prft', 'name': '평가손익', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'prft_rt', 'name': '수익률', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'evlt_amt', 'name': '평가금액', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
+    {'key': 'evlt_wght', 'name': '평가비중', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'}
+],    
 'ka10001': [
     {'key': 'stk_cd', 'name': '종목코드', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},
     {'key': 'stk_nm', 'name': '종목명', 'type': 'string', 'required': False, 'length': 20, 'description': 'None'},

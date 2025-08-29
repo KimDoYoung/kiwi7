@@ -2,186 +2,40 @@
 {% block style %}
 {% endblock %}
 {% block content %}
-<div x-data="profitLose()" class="container mt-4">
-    <h4 class="mb-3"><i class="bi bi-cash-stack me-2 text-success"></i>일자별 종목별 실현손익</h4>
+<div class="container mt-4">
+    <h4 class="mb-3"><i class="bi bi-cash-stack me-2 text-success"></i>계좌 손익 분석</h4>
 
-    <form class="row g-2 align-items-end mb-3" @submit.prevent="searchProfit()">
-        <div class="col-md-3">
-            <label class="form-label">시작일자</label>
-            <input type="date" class="form-control" x-model="filter.strt_dt">
-        </div>
-        <div class="col-md-3">
-            <label class="form-label">종료일자</label>
-            <input type="date" class="form-control" x-model="filter.end_dt">
-        </div>
-        <div class="col-md-2 d-flex gap-1">
-            <button type="submit" class="btn btn-success">검색</button>
-            <button type="button" class="btn btn-outline-secondary" @click="resetFilters">초기화</button>
-        </div>
-    </form>
+    <ul class="nav nav-tabs" id="profitTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="ka10074-tab" data-bs-toggle="tab" data-bs-target="#tab-ka10074" type="button" role="tab" aria-controls="tab-ka10074" aria-selected="true">일자별 실현손익 (ka10074)</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="ka10072-tab" data-bs-toggle="tab" data-bs-target="#tab-ka10072" type="button" role="tab" aria-controls="tab-ka10072" aria-selected="false">종목별 실현손익 (ka10072)</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="ka01690-tab" data-bs-toggle="tab" data-bs-target="#tab-ka01690" type="button" role="tab" aria-controls="tab-ka01690" aria-selected="false">기타(ka01690)</button>
+        </li>
+    </ul>
 
-    <div class="mb-3 row">
-        <div class="col-md-3">
-            <div class="card p-2">
-                <div class="small text-muted">총매수금액</div>
-                <div class="h5 m-0" x-text="formatNumber(summary.tot_buy_amt)"></div>
-            </div>
+    <div class="tab-content border p-0 mt-2" id="profitTabsContent">
+        {% include 'common/kiwoom_api/ka10074.html' %}
+
+        <!-- Placeholder tabs - implement components/adapters for these -->
+        <div id="tab-ka10072" class="tab-pane p-3">
+            <div class="text-muted">ka10072 뷰는 아직 분리되지 않았습니다.</div>
         </div>
-        <div class="col-md-3">
-            <div class="card p-2">
-                <div class="small text-muted">총매도금액</div>
-                <div class="h5 m-0" x-text="formatNumber(summary.tot_sell_amt)"></div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card p-2">
-                <div class="small text-muted">실현손익</div>
-                <div class="h5 m-0" x-text="formatNumber(summary.rlzt_pl)"></div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card p-2">
-                <div class="small text-muted">총수수료/세금</div>
-                <div class="h6 m-0" x-text="formatNumber(summary.trde_cmsn) + ' / ' + formatNumber(summary.trde_tax)"></div>
-            </div>
-        </div>
+    {% include 'common/kiwoom_api/ka01690.html' %}
     </div>
-
-    <div class="table-responsive">
-        <table class="table table-sm table-bordered table-hover align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th style="width:120px;">일자</th>
-                    <th class="text-end">매수금액</th>
-                    <th class="text-end">매도금액</th>
-                    <th class="text-end">당일매도손익</th>
-                    <th class="text-end">당일수수료</th>
-                    <th class="text-end">당일세금</th>
-                </tr>
-            </thead>
-            <tbody>
-                <template x-for="row in records" :key="row.dt">
-                    <tr>
-                        <td x-text="formatYmd(row.dt)"></td>
-                        <td class="text-end" x-text="formatNumber(row.buy_amt)"></td>
-                        <td class="text-end" x-text="formatNumber(row.sell_amt)"></td>
-                        <td class="text-end" x-text="formatNumber(row.tdy_sel_pl)"></td>
-                        <td class="text-end" x-text="formatNumber(row.tdy_trde_cmsn)"></td>
-                        <td class="text-end" x-text="formatNumber(row.tdy_trde_tax)"></td>
-                    </tr>
-                </template>
-                <tr x-show="records.length === 0">
-                    <td colspan="6" class="text-center text-muted">검색 결과가 없습니다.</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- 모든 결과를 한 번에 출력합니다 (페이징 제거) -->
-</div>
 {% endblock %}
 {% block script %}
 <script id="profit-lose">
-    const start_ymd = "{{ data.start_ymd }}";
-    const end_ymd = "{{ data.end_ymd }}";
-    const format_start_ymd = start_ymd ? start_ymd.slice(0,4) + '-' + start_ymd.slice(4,6) + '-' + start_ymd.slice(6,8) : null;
-    const format_end_ymd = end_ymd ? end_ymd.slice(0,4) + '-' + end_ymd.slice(4,6) + '-' + end_ymd.slice(6,8) : null;
+    (function(){
+        const start_ymd = "{{ data.start_ymd }}";
+        const end_ymd = "{{ data.end_ymd }}";
+        window.format_start_ymd = start_ymd ? start_ymd.slice(0,4) + '-' + start_ymd.slice(4,6) + '-' + start_ymd.slice(6,8) : null;
+        window.format_end_ymd = end_ymd ? end_ymd.slice(0,4) + '-' + end_ymd.slice(4,6) + '-' + end_ymd.slice(6,8) : null;
+    })();
 </script>
-{% raw %}
-<script>
-function profitLose() {
-    return {
-        filter: { strt_dt: format_start_ymd, end_dt: format_end_ymd },
-        records: [],
-        summary: { tot_buy_amt: 0, tot_sell_amt: 0, rlzt_pl: 0, trde_cmsn: 0, trde_tax: 0 },
-
-        async searchProfit() {
-            const payload = {
-                strt_dt: this.filter.strt_dt ? this.filter.strt_dt.replace(/-/g, '') : null,
-                end_dt: this.filter.end_dt ? this.filter.end_dt.replace(/-/g, '') : null
-            };
-
-            try {
-                const res = await callKiwoomApi('ka10074', payload);
-                if (res && res.success && res.data) {
-                    const data = res.data;
-
-                    // Normalize keys that may come back in Korean or English
-                    // Use Korean keys only to keep code simple and predictable
-                    const norm = {
-                        tot_buy_amt: data['총매수금액'] ?? data['총 매수금액'] ?? 0,
-                        tot_sell_amt: data['총매도금액'] ?? data['총 매도금액'] ?? 0,
-                        rlzt_pl: data['실현손익'] ?? 0,
-                        trde_cmsn: data['매매수수료'] ?? 0,
-                        trde_tax: data['매매세금'] ?? 0,
-                        dt_rlzt_pl: data['일자별실현손익'] ?? []
-                    };
-
-                    // summary fields
-                    this.summary.tot_buy_amt = norm.tot_buy_amt ?? 0;
-                    this.summary.tot_sell_amt = norm.tot_sell_amt ?? 0;
-                    this.summary.rlzt_pl = norm.rlzt_pl ?? 0;
-                    this.summary.trde_cmsn = norm.trde_cmsn ?? 0;
-                    this.summary.trde_tax = norm.trde_tax ?? 0;
-
-                    // records: normalize each row to expected english keys
-                    let rows = [];
-                    if (Array.isArray(norm.dt_rlzt_pl)) {
-                        rows = norm.dt_rlzt_pl.map(r => ({
-                            dt: r['일자'],
-                            buy_amt: r['매수금액'],
-                            sell_amt: r['매도금액'],
-                            tdy_sel_pl: r['당일매도손익'],
-                            tdy_trde_cmsn: r['당일매매수수료'],
-                            tdy_trde_tax: r['당일매매세금']
-                        }));
-                    } else if (Array.isArray(data)) {
-                        // fallback if data itself is already an array
-                        rows = data;
-                    }
-
-                    this.records = rows;
-                } else {
-                    this.records = [];
-                    this.summary = { tot_buy_amt: 0, tot_sell_amt: 0, rlzt_pl: 0, trde_cmsn: 0, trde_tax: 0 };
-                }
-            } catch (e) {
-                console.error('searchProfit error', e);
-                this.records = [];
-            }
-        },
-
-        resetFilters() {
-            this.filter = { strt_dt: '', end_dt: '' };
-            this.searchProfit();
-        },
-
-    // 페이징 제거: 모든 결과를 한 번에 표시합니다.
-
-        formatYmd(val) {
-            if (!val) return '-';
-            const s = String(val);
-            if (s.length === 8) return s.slice(0,4) + '-' + s.slice(4,6) + '-' + s.slice(6,8);
-            if (s.length >= 10 && s.includes('-')) return s.slice(0,10);
-            return s;
-        },
-
-        formatNumber(val) {
-            if (val === null || val === undefined || val === '') return '-';
-            const n = Number(String(val).replace(/,/g, ''));
-            if (Number.isNaN(n)) return val;
-            return n.toLocaleString();
-        },
-
-        init() {
-            this.searchProfit();
-        }
-    }
-}
-
-document.addEventListener('alpine:init', () => {
-    Alpine.data('profitLose', profitLose);
-});
-</script>
-{% endraw %}
+<script src="/public/js/kiwoom_api/ka10074.component.js"></script>
+<script src="/public/js/kiwoom_api/ka01690.component.js"></script>
 {% endblock %}

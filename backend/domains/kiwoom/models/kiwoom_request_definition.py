@@ -3,6 +3,8 @@
 모듈 설명: 
     - 키움에서 제공하는 excel에서 유틸리티(extract_kw_api_def.py)를 이용해서 KIWOOM_REQUEST_DEF 만듬.
     - API 정의 정보를 관리하고 조회하는 기능을 제공
+    - python ./extract_kw_req_def.py c:\\tmp\\kwapi.xlsx > 1.txt
+    - python ./extract_kw_resp_def.py c:\\tmp\\kwapi.xlsx > 2.txt
 주요 기능:
     - get_required_fields: 필수 필드 목록을 반환
     - get_api_definition: api_id로 KIWOOM_REQUEST_DEF
@@ -33,7 +35,21 @@ KIWOOM_REQUEST_DEF = {
         {'key': 'token', 'name': '접근토큰', 'type': 'string', 'required': True, 'length': None, 'description': ''}
     ]
 },
+'ka00198': {
+    'url': 'https://api.kiwoom.com/api/dostk/stkinfo',
+    'title': '실시간종목조회순위',
+    'body': [
+        {'key': 'qry_tp', 'name': '구분', 'type': 'string', 'required': True, 'length': 1, 'description': '1:1분, 2:10분, 3:1시간, 4:당일 누적, 5:30초'}
+    ]
+},
 
+'ka01690': {
+    'url': 'https://api.kiwoom.com/api/dostk/acnt',
+    'title': '일별잔고수익률',
+    'body': [
+        {'key': 'qry_dt', 'name': '조회일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''}
+    ]
+},
 'ka10001': {
     'url': 'https://api.kiwoom.com/api/dostk/stkinfo',
     'title': '주식기본정보요청',
