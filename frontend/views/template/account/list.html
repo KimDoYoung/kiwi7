@@ -227,146 +227,142 @@
     <!-- 데이터 테이블 끝-->   
 </div>
 <div class="container mt-4" x-data="ka10075_component" > 
-    <!-- 미체결 주문 -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 x-text="title" class="mb-0"></h5>
-        <div class="d-flex align-items-center gap-2">
-            <small class="text-muted">총 <span x-text="items.length"></span>건</small>
-            <button class="btn btn-outline-primary btn-sm" @click="fetchData()" :disabled="loading">
-                <i class="bi bi-arrow-clockwise" :class="{'spin': loading}"></i> 새로고침
-            </button>
+    <!-- 미체결 주문: 데이터 있을 때만 전체 영역 표시 -->
+    <template x-if="items.length > 0">
+        <div>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 x-text="title" class="mb-0"></h5>
+                <div class="d-flex align-items-center gap-2">
+                    <small class="text-muted">총 <span x-text="items.length"></span>건</small>
+                    <button class="btn btn-outline-primary btn-sm" @click="fetchData()" :disabled="loading">
+                        <i class="bi bi-arrow-clockwise" :class="{'spin': loading}"></i> 새로고침
+                    </button>
+                </div>
+            </div>
+            <div x-show="loading" class="text-center py-4">
+                <i class="bi bi-arrow-clockwise spin"></i> 미체결 데이터를 불러오는 중...
+            </div>
+            <div x-show="!loading && items.length > 0" class="table-responsive">
+                <table class="table table-bordered table-hover align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>시간</th>
+                            <th>종목명</th>
+                            <th>주문구분</th>
+                            <th>주문가격</th>
+                            <th>주문수량</th>
+                            <th>미체결수량</th>
+                            <th>현재가</th>
+                            <th>주문상태</th>
+                            <th>거래소</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template x-for="item in items" :key="item.주문번호">
+                            <tr>
+                                <td x-text="formatTime(item.시간)"></td>
+                                <td x-text="item.종목명" class="text-start"></td>
+                                <td>
+                                    <span :class="item.주문구분.includes('매수') ? 'text-danger' : 'text-primary'" 
+                                          x-text="item.주문구분"></span>
+                                </td>
+                                <td x-text="Number(item.주문가격).toLocaleString() + '원'" class="text-end"></td>
+                                <td x-text="Number(item.주문수량).toLocaleString() + '주'" class="text-end"></td>
+                                <td x-text="Number(item.미체결수량).toLocaleString() + '주'" class="text-end fw-bold text-warning"></td>
+                                <td class="text-end">
+                                    <span :class="getPriceClass(item.현재가)" 
+                                          x-text="formatPriceText(item.현재가)"></span>
+                                </td>
+                                <td>
+                                    <span :class="item.주문상태 === '접수' ? 'badge bg-info' : 'badge bg-secondary'" 
+                                          x-text="item.주문상태"></span>
+                                </td>
+                                <td x-text="item.거래소구분텍스트"></td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-sm btn-outline-danger" 
+                                                @click="cancelOrder(item)" title="주문취소">취소</button>
+                                        <button type="button" class="btn btn-sm btn-outline-info" 
+                                                @click="modifyOrder(item)" title="주문수정">수정</button>
+                                        <button type="button" class="btn btn-sm btn-outline-success" 
+                                                @click="showDetail(item)" title="상세정보">詳</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-    
-    <div x-show="loading" class="text-center py-4">
-        <i class="bi bi-arrow-clockwise spin"></i> 미체결 데이터를 불러오는 중...
-    </div>
-    
-    <div x-show="!loading && items.length === 0" class="text-center py-4 text-muted">
-        미체결 주문이 없습니다.
-    </div>
-    
-    <div x-show="!loading && items.length > 0" class="table-responsive">
-        <table class="table table-bordered table-hover align-middle text-center">
-            <thead class="table-light">
-                <tr>
-                    <th>시간</th>
-                    <th>종목명</th>
-                    <th>주문구분</th>
-                    <th>주문가격</th>
-                    <th>주문수량</th>
-                    <th>미체결수량</th>
-                    <th>현재가</th>
-                    <th>주문상태</th>
-                    <th>거래소</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <template x-for="item in items" :key="item.주문번호">
-                    <tr>
-                        <td x-text="formatTime(item.시간)"></td>
-                        <td x-text="item.종목명" class="text-start"></td>
-                        <td>
-                            <span :class="item.주문구분.includes('매수') ? 'text-danger' : 'text-primary'" 
-                                  x-text="item.주문구분"></span>
-                        </td>
-                        <td x-text="Number(item.주문가격).toLocaleString() + '원'" class="text-end"></td>
-                        <td x-text="Number(item.주문수량).toLocaleString() + '주'" class="text-end"></td>
-                        <td x-text="Number(item.미체결수량).toLocaleString() + '주'" class="text-end fw-bold text-warning"></td>
-                        <td class="text-end">
-                            <span :class="getPriceClass(item.현재가)" 
-                                  x-text="formatPriceText(item.현재가)"></span>
-                        </td>
-                        <td>
-                            <span :class="item.주문상태 === '접수' ? 'badge bg-info' : 'badge bg-secondary'" 
-                                  x-text="item.주문상태"></span>
-                        </td>
-                        <td x-text="item.거래소구분텍스트"></td>
-                        <td>
-                            <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-sm btn-outline-danger" 
-                                        @click="cancelOrder(item)" title="주문취소">취소</button>
-                                <button type="button" class="btn btn-sm btn-outline-info" 
-                                        @click="modifyOrder(item)" title="주문수정">수정</button>
-                                <button type="button" class="btn btn-sm btn-outline-success" 
-                                        @click="showDetail(item)" title="상세정보">詳</button>
-                            </div>
-                        </td>
-                    </tr>
-                </template>
-            </tbody>
-        </table>
-    </div>
+    </template>
 </div>
 
 <div class="container mt-4" x-data="ka10076_component" > 
-    <!-- 체결 주문 -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 x-text="title" class="mb-0"></h5>
-        <div class="d-flex align-items-center gap-2">
-            <small class="text-muted">총 <span x-text="items.length"></span>건</small>
-            <button class="btn btn-outline-primary btn-sm" @click="fetchData()" :disabled="loading">
-                <i class="bi bi-arrow-clockwise" :class="{'spin': loading}"></i> 새로고침
-            </button>
+    <!-- 체결 주문: 데이터 있을 때만 전체 영역 표시 -->
+    <template x-if="items.length > 0">
+        <div>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 x-text="title" class="mb-0"></h5>
+                <div class="d-flex align-items-center gap-2">
+                    <small class="text-muted">총 <span x-text="items.length"></span>건</small>
+                    <button class="btn btn-outline-primary btn-sm" @click="fetchData()" :disabled="loading">
+                        <i class="bi bi-arrow-clockwise" :class="{'spin': loading}"></i> 새로고침
+                    </button>
+                </div>
+            </div>
+            <div x-show="loading" class="text-center py-4">
+                <i class="bi bi-arrow-clockwise spin"></i> 체결 데이터를 불러오는 중...
+            </div>
+            <div x-show="!loading && items.length > 0" class="table-responsive">
+                <table class="table table-bordered table-hover align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>주문시간</th>
+                            <th>종목명</th>
+                            <th>주문구분</th>
+                            <th>매매구분</th>
+                            <th>주문가격</th>
+                            <th>체결가</th>
+                            <th>주문수량</th>
+                            <th>체결량</th>
+                            <th>미체결수량</th>
+                            <th>수수료</th>
+                            <th>세금</th>
+                            <th>주문상태</th>
+                            <th>거래소</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template x-for="item in items" :key="item.주문번호">
+                            <tr>
+                                <td x-text="formatTime(item.주문시간)"></td>
+                                <td x-text="item.종목명" class="text-start"></td>
+                                <td>
+                                    <span :class="item.주문구분.includes('매수') ? 'text-danger' : 'text-primary'" 
+                                          x-text="item.주문구분"></span>
+                                </td>
+                                <td x-text="item.매매구분"></td>
+                                <td class="text-end">
+                                    <span x-text="formatOrderPrice(item.주문가격, item.매매구분)"></span>
+                                </td>
+                                <td x-text="Number(item.체결가).toLocaleString() + '원'" class="text-end fw-bold text-success"></td>
+                                <td x-text="Number(item.주문수량).toLocaleString() + '주'" class="text-end"></td>
+                                <td x-text="Number(item.체결량).toLocaleString() + '주'" class="text-end fw-bold text-primary"></td>
+                                <td x-text="Number(item.미체결수량).toLocaleString() + '주'" class="text-end"></td>
+                                <td x-text="Number(item.당일매매수수료).toLocaleString() + '원'" class="text-end text-muted"></td>
+                                <td x-text="Number(item.당일매매세금).toLocaleString() + '원'" class="text-end text-muted"></td>
+                                <td>
+                                    <span class="badge bg-success" x-text="item.주문상태"></span>
+                                </td>
+                                <td x-text="item.거래소구분텍스트"></td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-    
-    <div x-show="loading" class="text-center py-4">
-        <i class="bi bi-arrow-clockwise spin"></i> 체결 데이터를 불러오는 중...
-    </div>
-    
-    <div x-show="!loading && items.length === 0" class="text-center py-4 text-muted">
-        체결 주문이 없습니다.
-    </div>
-    
-    <div x-show="!loading && items.length > 0" class="table-responsive">
-        <table class="table table-bordered table-hover align-middle text-center">
-            <thead class="table-light">
-                <tr>
-                    <th>주문시간</th>
-                    <th>종목명</th>
-                    <th>주문구분</th>
-                    <th>매매구분</th>
-                    <th>주문가격</th>
-                    <th>체결가</th>
-                    <th>주문수량</th>
-                    <th>체결량</th>
-                    <th>미체결수량</th>
-                    <th>수수료</th>
-                    <th>세금</th>
-                    <th>주문상태</th>
-                    <th>거래소</th>
-                </tr>
-            </thead>
-            <tbody>
-                <template x-for="item in items" :key="item.주문번호">
-                    <tr>
-                        <td x-text="formatTime(item.주문시간)"></td>
-                        <td x-text="item.종목명" class="text-start"></td>
-                        <td>
-                            <span :class="item.주문구분.includes('매수') ? 'text-danger' : 'text-primary'" 
-                                  x-text="item.주문구분"></span>
-                        </td>
-                        <td x-text="item.매매구분"></td>
-                        <td class="text-end">
-                            <span x-text="formatOrderPrice(item.주문가격, item.매매구분)"></span>
-                        </td>
-                        <td x-text="Number(item.체결가).toLocaleString() + '원'" class="text-end fw-bold text-success"></td>
-                        <td x-text="Number(item.주문수량).toLocaleString() + '주'" class="text-end"></td>
-                        <td x-text="Number(item.체결량).toLocaleString() + '주'" class="text-end fw-bold text-primary"></td>
-                        <td x-text="Number(item.미체결수량).toLocaleString() + '주'" class="text-end"></td>
-                        <td x-text="Number(item.당일매매수수료).toLocaleString() + '원'" class="text-end text-muted"></td>
-                        <td x-text="Number(item.당일매매세금).toLocaleString() + '원'" class="text-end text-muted"></td>
-                        <td>
-                            <span class="badge bg-success" x-text="item.주문상태"></span>
-                        </td>
-                        <td x-text="item.거래소구분텍스트"></td>
-                    </tr>
-                </template>
-            </tbody>
-        </table>
-    </div>
+    </template>
 </div>
 
 <!-- 미체결 주문 상세 정보 Modal -->
