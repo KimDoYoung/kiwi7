@@ -1,0 +1,143 @@
+<div class="tab-pane fade" id="tab-kt00016" role="tabpanel" aria-labelledby="kt00016-tab">
+    <div x-data="kt00016Component()" x-init="init()" class="p-3">
+        <h5 class="mb-3"><i class="bi bi-bar-chart-line me-2"></i>일별계좌수익률상세현황</h5>
+        <div class="row mb-2">
+            <div class="col-auto">
+                <input type="date" class="form-control form-control-sm" x-model="fr_dt">
+            </div>
+            <div class="col-auto">
+                <input type="date" class="form-control form-control-sm" x-model="to_dt">
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-outline-primary btn-sm" @click="fetchData()" :disabled="loading">
+                    <span x-show="loading" class="spinner-border spinner-border-sm me-2"></span>
+                    조회
+                </button>
+            </div>
+        </div>
+        <template x-if="error">
+            <div class="alert alert-danger py-2" x-text="error"></div>
+        </template>
+        <template x-if="Object.keys(summary).length > 0">
+            <!-- 요약 카드 -->
+            <div class="card shadow-sm mb-3">
+            <div class="card-header bg-white py-2">
+                <h2 class="h6 mb-0">계좌 요약</h2>
+            </div>
+            <div class="card-body">
+                <!-- 신원정보 -->
+                <div class="row g-3 mb-3">
+                <div class="col-12 col-md-4">
+                    <div class="border rounded p-2 h-100">
+                    <div class="text-muted small mb-1">관리사원번호</div>
+                    <div class="fw-semibold" x-text="summary['관리사원번호'] ?? '-'"></div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4">
+                    <div class="border rounded p-2 h-100">
+                    <div class="text-muted small mb-1">관리자명</div>
+                    <div class="fw-semibold" x-text="summary['관리자명'] ?? '-'"></div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4">
+                    <div class="border rounded p-2 h-100">
+                    <div class="text-muted small mb-1">관리자지점</div>
+                    <div class="fw-semibold" x-text="summary['관리자지점'] ?? '-'"></div>
+                    </div>
+                </div>
+                </div>
+
+                <!-- KPI -->
+                <div class="row g-3">
+                <!-- 예수금 (초/말 묶음) -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="bg-light rounded-3 p-3 h-100">
+                    <div class="small text-muted mb-1">예수금</div>
+                    <div class="d-flex justify-content-between">
+                        <span class="small text-muted">초</span>
+                        <span class="fw-semibold" x-text="formatNumber(summary['예수금_초']) ?? '-'"></span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="small text-muted">말</span>
+                        <span class="fw-semibold" x-text="formatNumber(summary['예수금_말']) ?? '-'"></span>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- 유가증권평가금액 (초/말) -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="bg-light rounded-3 p-3 h-100">
+                    <div class="small text-muted mb-1">유가증권평가금액</div>
+                    <div class="d-flex justify-content-between">
+                        <span class="small text-muted">초</span>
+                        <span class="fw-semibold" x-text="formatNumber(summary['유가증권평가금액_초']) ?? '-'"></span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="small text-muted">말</span>
+                        <span class="fw-semibold" x-text="formatNumber(summary['유가증권평가금액_말']) ?? '-'"></span>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- 순자산액계 (초/말) -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="bg-light rounded-3 p-3 h-100">
+                    <div class="small text-muted mb-1">순자산액계</div>
+                    <div class="d-flex justify-content-between">
+                        <span class="small text-muted">초</span>
+                        <span class="fw-semibold" x-text="formatNumber(summary['순자산액계_초']) ?? '-'"></span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="small text-muted">말</span>
+                        <span class="fw-semibold" x-text="formatNumber(summary['순자산액계_말']) ?? '-'"></span>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- 투자원금평잔 -->
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="bg-light rounded-3 p-3 h-100">
+                    <div class="small text-muted mb-1">투자원금평잔</div>
+                    <div class="fs-6 fw-semibold text-end"
+                        x-text="formatNumber(summary['투자원금평잔']) ?? '-'"></div>
+                    </div>
+                </div>
+
+                <!-- 평가손익 -->
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="bg-light rounded-3 p-3 h-100">
+                    <div class="small text-muted mb-1">평가손익</div>
+                    <div class="fs-5 fw-bold text-end"
+                        :class="Number(summary['평가손익']) > 0 ? 'text-danger' : (Number(summary['평가손익']) < 0 ? 'text-primary' : 'text-body')"
+                        x-text="formatNumber(summary['평가손익']) ?? '-'"></div>
+                    </div>
+                </div>
+
+                <!-- 수익률 -->
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="bg-light rounded-3 p-3 h-100">
+                    <div class="small text-muted mb-1">수익률</div>
+                    <div class="fs-5 fw-bold text-end"
+                        :class="(summary['수익률']||'').toString().startsWith('-') ? 'text-primary' : 'text-danger'"
+                        x-text="summary['수익률'] ?? '-'"></div>
+                    </div>
+                </div>
+
+                <!-- 회전율 -->
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="bg-light rounded-3 p-3 h-100">
+                    <div class="small text-muted mb-1">회전율</div>
+                    <div class="fs-6 fw-semibold text-end"
+                        x-text="summary['회전율'] ?? '-'"></div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+
+        </template>
+        <template x-if="message">
+            <div class="alert alert-info py-2" x-text="message"></div>
+        </template>
+    </div>
+</div>

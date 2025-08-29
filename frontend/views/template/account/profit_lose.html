@@ -7,20 +7,24 @@
 
     <ul class="nav nav-tabs" id="profitTabs" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="ka10074-tab" data-bs-toggle="tab" data-bs-target="#tab-ka10074" type="button" role="tab" aria-controls="tab-ka10074" aria-selected="true">일자별 실현손익 (ka10074)</button>
+            <button class="nav-link active" id="ka10074-tab" data-bs-toggle="tab" data-bs-target="#tab-ka10074" type="button" role="tab" aria-controls="tab-ka10074" aria-selected="true">일자별 실현손익</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="ka01690-tab" data-bs-toggle="tab" data-bs-target="#tab-ka01690" type="button" role="tab" aria-controls="tab-ka01690" aria-selected="false">일별잔고수익률(ka01690)</button>
+            <button class="nav-link" id="ka01690-tab" data-bs-toggle="tab" data-bs-target="#tab-ka01690" type="button" role="tab" aria-controls="tab-ka01690" aria-selected="false">일별잔고수익률</button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="ka10072-tab" data-bs-toggle="tab" data-bs-target="#tab-ka10085" type="button" role="tab" aria-controls="tab-ka10072" aria-selected="false">계좌수익율</button>
         </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="kt00016-tab" data-bs-toggle="tab" data-bs-target="#tab-kt00016" type="button" role="tab" aria-controls="tab-kt00016" aria-selected="false">일별계좌수익률상세</button>
+        </li>
     </ul>
 
     <div class="tab-content border p-0 mt-2" id="profitTabsContent">
-    {% include 'common/kiwoom_api/ka10074.html' %}
+    {% include 'common/kiwoom_api/ka10074.html' %} 
     {% include 'common/kiwoom_api/ka10085.html' %}
     {% include 'common/kiwoom_api/ka01690.html' %}
+    {% include 'common/kiwoom_api/kt00016.html' %}
     <!--TODO kt00016-->
     </div>
 {% endblock %}
@@ -36,4 +40,5 @@
 <script src="/public/js/kiwoom_api/ka10074.component.js"></script>
 <script src="/public/js/kiwoom_api/ka01690.component.js"></script>
 <script src="/public/js/kiwoom_api/ka10085.component.js"></script>
+<script src="/public/js/kiwoom_api/kt00016.component.js"></script>
 {% endblock %}
