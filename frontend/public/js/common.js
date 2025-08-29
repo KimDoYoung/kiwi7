@@ -1,3 +1,8 @@
+   // 전역 상태 관리
+   window.kiwiGlobal = window.kiwiGlobal || {
+       selectedStockCode: null
+   };
+
    function cleanStockCode(stk_code){
        return stk_code.replace(/[^0-9]/g, '');
    }
@@ -599,4 +604,75 @@ function handleClearBuySell(e) {
     if (messageArea) {
         messageArea.innerHTML = '';
     }
+}
+
+/**
+ * 매매일지 모달을 표시합니다.
+ * 전역 변수 kiwiGlobal.selectedStockCode에 종목코드가 있으면 자동으로 설정됩니다.
+ */
+function showDiaryModal() {
+    console.log('showDiaryModal 함수 호출됨');
+    
+    // 전역 변수에서 종목코드 확인
+    const stkCd = window.kiwiGlobal?.selectedStockCode || null;
+    if (stkCd) {
+        console.log(`전역 변수에서 종목코드 발견: ${stkCd}`);
+    } else {
+        console.log('종목코드 없음 - 빈 폼으로 모달 열기');
+    }
+    
+    try {
+        const modalElement = document.getElementById('stkDiaryModal');
+        if (modalElement) {
+            console.log('모달 요소 발견, Bootstrap Modal 인스턴스 생성');
+            
+            // 기존 인스턴스가 있는지 확인
+            let modal = bootstrap.Modal.getInstance(modalElement);
+            if (!modal) {
+                // 새 인스턴스 생성
+                modal = new bootstrap.Modal(modalElement);
+                console.log('새 Bootstrap Modal 인스턴스 생성됨');
+            } else {
+                console.log('기존 Bootstrap Modal 인스턴스 사용');
+            }
+            
+            // 모달 표시
+            modal.show();
+            console.log('모달 표시 완료');
+        } else {
+            console.error('stkDiaryModal 요소를 찾을 수 없습니다.');
+        }
+    } catch (error) {
+        console.error('모달 표시 중 오류 발생:', error);
+        console.error('오류 스택:', error.stack);
+    }
+}
+
+/**
+ * 종목코드와 함께 매매일지 모달을 표시합니다.
+ * @param {string} stkCd - 종목코드
+ */
+function showDiaryModalWithStock(stkCd) {
+    if (stkCd) {
+        window.kiwiGlobal.selectedStockCode = stkCd;
+        console.log(`종목코드 ${stkCd}로 일지 모달 열기`);
+    }
+    showDiaryModal();
+}
+
+/**
+ * 전역 종목코드를 설정합니다.
+ * @param {string} stkCd - 종목코드
+ */
+function setSelectedStockCode(stkCd) {
+    window.kiwiGlobal.selectedStockCode = stkCd;
+    console.log(`전역 종목코드 설정: ${stkCd}`);
+}
+
+/**
+ * 전역 종목코드를 초기화합니다.
+ */
+function clearSelectedStockCode() {
+    window.kiwiGlobal.selectedStockCode = null;
+    console.log('전역 종목코드 초기화');
 }

@@ -1,18 +1,18 @@
 """
 주식 일지(stk_diary) 관련 API 엔드포인트
 """
-from fastapi import APIRouter, Query
-from typing import Optional
+from fastapi import APIRouter
 
 from backend.core.logger import get_logger
 from backend.domains.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomRequest, KiwoomResponse
+from backend.domains.models.stk_diary_model import StkDiaryFilter
 from backend.domains.services.dependency import get_service
 
 logger = get_logger(__name__)
 
 router = APIRouter()
 
-@router.post("/create", response_model=KiwoomResponse)
+@router.post("/", response_model=KiwoomResponse)
 async def create_diary(request: KiwoomRequest):
     """주식 일지 생성
     
@@ -86,22 +86,27 @@ async def create_diary(request: KiwoomRequest):
             api_info={"api_id": "diary_create", "description": "주식 일지 생성"}
         )
 
-@router.get("/list", response_model=KiwoomResponse)
-async def get_diary_list(
-    stk_cd: Optional[str] = Query(None, description="종목코드 필터"),
-    start_ymd: Optional[str] = Query(None, description="시작날짜 (YYYYMMDD)"),
-    end_ymd: Optional[str] = Query(None, description="종료날짜 (YYYYMMDD)"),
-    page: int = Query(1, description="페이지 번호"),
-    limit: int = Query(20, description="페이지당 항목 수")
-):
+@router.post("/list", response_model=KiwoomResponse)
+async def get_diary_list(request : KiwoomRequest):
+#     stk_cd: Optional[str] = Query(None, description="종목코드 필터"),
+#     start_ymd: Optional[str] = Query(None, description="시작날짜 (YYYYMMDD)"),
+#     end_ymd: Optional[str] = Query(None, description="종료날짜 (YYYYMMDD)"),
+#     page: int = Query(1, description="페이지 번호"),
+#     limit: int = Query(20, description="페이지당 항목 수")
+# ):
     """주식 일지 목록 조회"""
+    stk_cd = request.payload.get("stk_cd", None)
+    start_ymd = request.payload.get("start_ymd", None)
+    end_ymd = request.payload.get("end_ymd", None)
+    page = request.payload.get("page", 1)
+    limit = request.payload.get("limit", 20)
     logger.info(f"주식 일지 목록 조회: 종목코드={stk_cd}, 기간={start_ymd}~{end_ymd}, 페이지={page}")
     
     try:
         service = get_service("stk_diary")
         
         # 필터 조건 구성
-        from backend.domains.models.stk_diary_model import StkDiaryFilter
+        
         filter_data = StkDiaryFilter(
             ymd_from=start_ymd,
             ymd_to=end_ymd,

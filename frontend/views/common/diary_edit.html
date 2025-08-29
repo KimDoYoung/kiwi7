@@ -1,5 +1,5 @@
 <!-- 매매일지 작성/수정 모달 -->
-<div class="modal fade" id="stkDiaryModal" tabindex="-1" aria-labelledby="stkDiaryModalLabel" aria-hidden="true">
+<div class="modal fade" id="stkDiaryModal" tabindex="-1" aria-labelledby="stkDiaryModalLabel" aria-hidden="true" x-data="diaryFormData()" x-init="initForm()">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -9,7 +9,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
             </div>
             <div class="modal-body">
-                <form id="diaryForm" x-data="diaryFormData()" x-init="initForm()">
+                <form id="diaryForm">
                     <!-- 날짜 선택 -->
                     <div class="row mb-3">
                         <div class="col-md-6">
@@ -112,6 +112,16 @@ function diaryFormData() {
             this.clearDiaryMessages();
             this.diary_loading = false; // 로딩 상태 확실히 초기화
             this.diary_stockName = '';
+            
+            // 전역 상태에서 종목코드 확인
+            if (window.kiwiGlobal && window.kiwiGlobal.selectedStockCode) {
+                this.form.stk_cd = window.kiwiGlobal.selectedStockCode;
+                // 종목명 자동 검색
+                this.searchStock();
+                // 사용 후 초기화
+                window.kiwiGlobal.selectedStockCode = null;
+            }
+            
             // 오늘 날짜로 설정
             const today = new Date();
             const year = today.getFullYear();
@@ -155,22 +165,16 @@ function diaryFormData() {
             this.clearDiaryMessages();
 
             try {
-                const response = await fetch(`/api/v1/stock/info/${this.form.stk_cd}`);
-                if (response.ok) {
-                    const result = await response.json();
-                    if (result.success && result.data) {
-                        this.diary_stockName = result.data.name || '종목명 없음';
-                    } else {
-                        this.diary_errorMessage = '종목 정보를 찾을 수 없습니다.';
-                        this.diary_stockName = '';
-                    }
+                const response = await getFetch(`/api/v1/stock/info/${this.form.stk_cd}`);
+                if (response.success && response.data) {
+                    this.diary_stockName = response.data.name || '종목명 없음';
                 } else {
                     this.diary_errorMessage = '종목 정보를 찾을 수 없습니다.';
                     this.diary_stockName = '';
                 }
             } catch (error) {
                 console.error('Error searching stock:', error);
-                this.diary_errorMessage = '종목 검색 중 오류가 발생했습니다.';
+                this.diary_errorMessage = '종목 검색 중 오류가 발생했습니다: ' + error.message;
                 this.diary_stockName = '';
             } finally {
                 this.diary_loading = false;
@@ -199,10 +203,15 @@ function diaryFormData() {
         },
 
         async saveDiary() {
+            console.log('saveDiary() 함수 시작');
+            console.log('현재 form 데이터:', this.form);
+            
             if (!this.validateForm()) {
+                console.log('validation 실패');
                 return;
             }
 
+            console.log('validation 통과, API 호출 시작');
             this.diary_loading = true;
             this.clearDiaryMessages();
 
@@ -218,19 +227,15 @@ function diaryFormData() {
                         note: this.form.note.trim()
                     }
                 };
+                
+                console.log('요청 데이터:', requestData);
 
-                const response = await fetch('/api/v1/diary/create', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(requestData)
-                });
+                const response = await postFetch('/api/v1/diary', requestData);
+                console.log('API 응답 데이터:', response);
 
-                const result = await response.json();
-
-                if (response.ok && result.success) {
-                    this.diary_successMessage = result.data.message || '주식 일지가 성공적으로 저장되었습니다.';
+                if (response.success) {
+                    console.log('저장 성공');
+                    this.diary_successMessage = response.data?.message || '주식 일지가 성공적으로 저장되었습니다.';
                     
                     // 2초 후 모달 닫기 및 폼 리셋
                     setTimeout(() => {
@@ -241,12 +246,14 @@ function diaryFormData() {
                         this.resetDiaryForm();
                     }, 2000);
                 } else {
-                    this.diary_errorMessage = result.error_message || result.detail || '저장 중 오류가 발생했습니다.';
+                    console.log('저장 실패:', response);
+                    this.diary_errorMessage = response.error_message || response.detail || '저장 중 오류가 발생했습니다.';
                 }
             } catch (error) {
                 console.error('Error saving diary:', error);
-                this.diary_errorMessage = '저장 중 오류가 발생했습니다.';
+                this.diary_errorMessage = '저장 중 오류가 발생했습니다: ' + error.message;
             } finally {
+                console.log('saveDiary() 함수 종료');
                 this.diary_loading = false;
             }
         },
