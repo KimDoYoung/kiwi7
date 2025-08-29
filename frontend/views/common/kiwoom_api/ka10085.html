@@ -1,0 +1,62 @@
+<div x-data="profitKa10085()" id="tab-ka10085" class="tab-pane p-3">
+    <form class="row g-2 align-items-end mb-3" @submit.prevent="search()">
+        <div class="col-auto">
+            <label class="form-label small mb-1">거래소</label>
+            <div class="d-flex gap-2">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="stexTp0" value="0" x-model="stexTp">
+                    <label class="form-check-label" for="stexTp0">통합</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="stexTp1" value="1" x-model="stexTp">
+                    <label class="form-check-label" for="stexTp1">KRX</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="stexTp2" value="2" x-model="stexTp">
+                    <label class="form-check-label" for="stexTp2">NXT</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-primary btn-sm" type="submit">조회</button>
+            <button class="btn btn-outline-secondary btn-sm" type="button" @click="reset()">초기화</button>
+        </div>
+    </form>
+
+    <template x-if="records && records.length">
+        <div class="table-responsive">
+            <table class="table table-sm table-bordered table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>일자</th>
+                        <th>종목코드</th>
+                        <th>종목명</th>
+                        <th class="text-end">보유수량</th>
+                        <th class="text-end">매입가</th>
+                        <th class="text-end">매입금액</th>
+                        <th class="text-end">현재가</th>
+                        <th class="text-end">당일손익</th>
+                        <th class="text-end">수익률</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template x-for="(r, idx) in records" :key="idx">
+                        <tr>
+                            <td x-text="r.일자 || '-' "></td>
+                            <td x-text="r['종목코드'] ?? r.stk_cd ?? '-' "></td>
+                            <td x-text="r['종목명'] ?? r.stk_nm ?? '-' "></td>
+                            <td class="text-end" x-text="formatNumber(r['보유수량'] ?? r.rmnd_qty ?? r['보유 수량'] ?? '-')"></td>
+                            <td class="text-end" x-text="formatNumber(r['매입가'] ?? r['매입 단가'] ?? r.pur_pric ?? r['pur_pric'] ?? '-')"></td>
+                            <td class="text-end" x-text="formatNumber(r['매입금액'] ?? r.pur_amt ?? r['pur_amt'] ?? '-')"></td>
+                            <td class="text-end" x-text="formatNumber(r['현재가'] ?? r.cur_prc ?? '-')"></td>
+                            <td class="text-end" x-text="formatNumber(r['당일매도손익'] ?? r['당일손익'] ?? r.tdy_sel_pl ?? '-')"></td>
+                            <td class="text-end" x-text="calcPrftRt(r)"></td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </template>
+
+    <div x-show="!records || records.length === 0" class="text-muted">표시할 결과가 없습니다.</div>
+</div>

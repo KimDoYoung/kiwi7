@@ -9,24 +9,52 @@
             <button class="btn btn-outline-secondary btn-sm" type="button" @click="reset()">초기화</button>
         </div>
     </form>
-
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body p-2">
-                    <div class="small text-muted">요약</div>
-                    <div class="d-flex flex-wrap gap-2 mt-2">
-                        <div class="me-3"><strong>총 매수금액:</strong> <span x-text="formatNumber(summary.tot_buy_amt)"></span></div>
-                        <div class="me-3"><strong>총 평가금액:</strong> <span x-text="formatNumber(summary.tot_evlt_amt)"></span></div>
-                        <div class="me-3"><strong>총 평가손익:</strong> <span x-text="formatNumber(summary.tot_evltv_prft)"></span></div>
-                        <div class="me-3"><strong>수익률:</strong> <span x-text="summary.tot_prft_rt ?? '-'"></span></div>
-                        <div class="me-3"><strong>예수금:</strong> <span x-text="formatNumber(summary.dbst_bal)"></span></div>
-                    </div>
-                </div>
+    <template x-if="records && records.length">
+<div class="row mb-3">
+  <div class="col-md-12">
+    <div class="card shadow-sm">
+      <div class="card-header bg-light fw-bold small">요약</div>
+      <div class="card-body p-3">
+        <div class="row text-center g-3">
+          <div class="col-6 col-md-2">
+            <div class="border rounded p-2 h-100">
+              <div class="small text-muted">총 매수금액</div>
+              <div class="fw-bold text-primary mt-1" x-text="formatNumber(summary.tot_buy_amt)"></div>
             </div>
+          </div>
+          <div class="col-6 col-md-2">
+            <div class="border rounded p-2 h-100">
+              <div class="small text-muted">총 평가금액</div>
+              <div class="fw-bold text-success mt-1" x-text="formatNumber(summary.tot_evlt_amt)"></div>
+            </div>
+          </div>
+          <div class="col-6 col-md-2">
+            <div class="border rounded p-2 h-100">
+              <div class="small text-muted">총 평가손익</div>
+              <div class="fw-bold" :class="summary.tot_evltv_prft >= 0 ? 'text-success' : 'text-danger'"
+                   x-text="formatNumber(summary.tot_evltv_prft)"></div>
+            </div>
+          </div>
+          <div class="col-6 col-md-2">
+            <div class="border rounded p-2 h-100">
+              <div class="small text-muted">수익률</div>
+              <div class="fw-bold" :class="summary.tot_prft_rt >= 0 ? 'text-success' : 'text-danger'"
+                   x-text="summary.tot_prft_rt ?? '-'"></div>
+            </div>
+          </div>
+          <div class="col-6 col-md-2">
+            <div class="border rounded p-2 h-100">
+              <div class="small text-muted">예수금</div>
+              <div class="fw-bold text-info mt-1" x-text="formatNumber(summary.dbst_bal)"></div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
+</div>
 
+    </template>
     <template x-if="records && records.length">
         <div class="table-responsive">
             <table class="table table-sm table-bordered table-hover align-middle">
