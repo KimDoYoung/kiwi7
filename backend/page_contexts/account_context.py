@@ -11,6 +11,16 @@ def account_list():
     
     return context_data
 
+def account_fill():
+    """체결내역"""
+
+    context_data = {
+        "title": "체결내역",
+    }
+    
+    return context_data
+
+
 def account_detail(context):
     """계좌 상세 정보를 가져오는 함수"""
 

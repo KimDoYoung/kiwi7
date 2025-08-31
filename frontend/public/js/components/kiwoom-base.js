@@ -505,7 +505,7 @@ window.createKiwoomBase = function createKiwoomBase(config, depends = {}) {
         
         // const response = await callApi(config.api_endpoint, config.payload);
         const response = await callApi(endpoint, payload);
-        
+        console.log("응답(kiwoom-base):", response);
         if (!response?.success) {
           throw new Error(response?.error_message || 'API 호출 실패');
         }

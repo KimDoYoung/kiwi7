@@ -1,0 +1,318 @@
+{% extends 'common/base.html' %}
+{% block style %}
+<style>
+.spin {
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="container mt-4" x-data="kt00007_component">
+    <div class="mt-4">
+        <div class="mt-2 mb-2 d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-3">
+                <select class="form-select form-select-sm w-auto" x-model="profitFilter">
+                    <option value="all">전체</option>
+                    <option value="plus">+손익율</option>
+                    <option value="minus">-손익율</option>
+                </select>
+                <div>종목갯수 : <span x-text="filtered_item_count"></span> / <span x-text="total_item_count"></span></div>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-success btn-sm" title="엑셀로 저장" @click="exportCSV()">
+                    <i class="bi bi-file-earmark-excel"></i>
+                </button>
+                <button class="btn btn-outline-success btn-sm" title="My Stock에 저장" @click="addMyStock()">
+                    <i class="bi bi-plus-lg"></i>
+                </button>
+            </div>            
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle text-center">
+                <thead class="table-light">
+                    <tr>
+                        <template x-for="column in getTableColumns()" :key="column.key">
+                            <th>
+                                <template x-if="column.sortable">
+                                    <a href="#" @click.prevent="sortBy(column.key)" 
+                                        class="text-decoration-none text-dark sortable-header">
+                                        <span x-text="column.label"></span>
+                                        <span x-show="sort_key === column.key" 
+                                                x-text="sort_asc ? '▲' : '▼'"></span>
+                                    </a>
+                                </template>
+                                <template x-if="!column.sortable">
+                                    <span x-text="column.label"></span>
+                                </template>
+                            </th>
+                        </template>
+                        <template x-if="hasActionButtons()">
+                            <th>Actions</th>
+                        </template>
+                    </tr>
+                </thead>
+                <tbody x-show="data && !loading">
+                    <template x-for="item in sorted_items" :key="item.종목코드">
+                        <tr>
+                            <template x-for="column in getTableColumns()" :key="column.key">
+                                <td x-text="getCellValue(item, column)"
+                                    :class="getCellClass(item, column) + (column.clickable ? ' clickable-cell' : '') + ((column.format === 'number' || column.format === 'profit') ? ' text-end' : '')"
+                                    @click="handleCellClick(item, column)">
+                                </td>
+                            </template>
+                            <template x-if="hasActionButtons()">
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <template x-if="actions.includes('buy')">
+                                            <button type="button" class="btn btn-sm btn-danger" @click="buy(item)" title="매수(buy)">買</button>
+                                        </template>
+                                        <template x-if="actions.includes('sell')">
+                                            <button type="button" class="btn btn-sm btn-primary" @click="sell(item)" title="매도(sell)">賣</button>
+                                        </template>
+                                        <template x-if="actions.includes('detail')">
+                                            <button type="button" class="btn btn-sm btn-info" @click="detail(item)" title="종목상세(detail info)">詳</button>
+                                        </template>
+                                    </div>
+                                </td>
+                            </template>
+                        </tr>
+                    </template>
+                </tbody>
+                <tbody x-show="loading">
+                    <tr>
+                        <td :colspan="getTableColumns().length" class="text-center py-4">
+                            <i class="bi bi-arrow-clockwise" style="animation: spin 1s linear infinite;"></i> 데이터를 불러오는 중...
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody x-show="!loading && (!data || sorted_items.length === 0)">
+                    <tr>
+                        <td :colspan="getTableColumns().length" class="text-center py-4 text-muted">
+                            표시할 데이터가 없습니다.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>        
+    </div> 
+</div>
+{% endblock %}
+{% block script %}
+<script src="/public/js/configs/kiwoom/kt00007.js"></script>
+<script src="/public/js/utils/kiwoom-utils.js"></script>
+<script src="/public/js/components/kiwoom-base.js"></script>
+<script>
+// Alpine 컴포넌트 등록 예시 (kiwoom-base 활용)
+function createKt00007Component() {
+    const base = window.createKiwoomBase(kt00007, {
+        callApi: callKiwoomApi,
+        utils: window.KiwoomUtils,
+        debug: false
+    });
+
+    return {
+        ...base,
+        
+        // === 상태 변수 ===
+        summary_show: false,
+        profit: 0,
+        profitFilter: 'all',
+        autoRefresh: false,           // 자동 새로고침 스위치 상태
+        countdownInterval: null,      // 카운트다운 인터벌 ID
+        countdown: 30,                // 카운트다운 값
+
+        // === 초기화 ===
+        init() {
+            this.initializeBase();
+            this.setupWatchers();
+            this.setupAutoRefreshWatcher();
+            this.setupCleanup();
+            this.registerCallbacks();
+            this.registerClickHandlers();
+        },
+
+        initializeBase() {
+            if (base.init) {
+                base.init.call(this);
+            }
+        },
+
+        setupWatchers() {
+            this.$watch('profitFilter', (newValue, oldValue) => {
+                console.log('profitFilter changed from', oldValue, 'to', newValue);
+                this.clearFilters(); 
+                this.onProfitFilterChange(newValue);
+            });
+        },
+
+        // === 자동 새로고침 관리 ===
+        setupAutoRefreshWatcher() {
+            // autoRefresh 상태 변화 감지
+            this.$watch('autoRefresh', (newValue) => {
+                if (newValue) {
+                    this.startAutoRefresh();
+                } else {
+                    this.stopAutoRefresh();
+                }
+            });
+        },
+
+        setupCleanup() {
+            // 페이지 언로드 시 인터벌 정리
+            window.addEventListener('beforeunload', () => {
+                this.stopAutoRefresh();
+            });
+        },
+
+        startAutoRefresh() {
+            console.log('자동 새로고침 시작 (30초 간격)');
+            this.countdown = 30;
+            
+            // 카운트다운 시작 (1초마다)
+            this.countdownInterval = setInterval(() => {
+                if (this.autoRefresh) {
+                    this.countdown--;
+                    
+                    if (this.countdown <= 0) {
+                        // 카운트다운이 0이 되면 새로고침 실행
+                        if (!this.loading) {
+                            console.log('자동 새로고침 실행...');
+                            this.fetch_data(); // kiwoom-base의 fetch_data 함수 호출
+                        }
+                        this.countdown = 30; // 카운트다운 리셋
+                    }
+                }
+            }, 1000); // 1초마다 카운트다운
+        },
+
+        stopAutoRefresh() {
+            console.log('자동 새로고침 중지');
+            if (this.countdownInterval) {
+                clearInterval(this.countdownInterval);
+                this.countdownInterval = null;
+            }
+            this.countdown = 30; // 카운트다운 리셋
+        },
+
+        registerCallbacks() {
+            this.addCallback((data) => {
+                this.profit = data?.['유가잔고평가액'] - data?.['총매입금액'];
+            });
+        },
+
+        registerClickHandlers() {
+            this.addClickHandler('종목명', (item) => {
+                console.log('종목명 클릭:', item);
+                showCompanyCanvas(item.종목코드);
+            });
+        },
+
+        // === 계산된 속성 ===
+        get sorted_items() {
+            return this.sortedItems();
+        },
+
+        get total_item_count() {
+            return this.totalItemCount() || 0;
+        },
+
+        get filtered_item_count() {
+            return this.filteredItemCount();
+        },
+
+        get actions() {
+            return this.getActions();
+        },
+
+        // === 필터링 메서드 ===
+        onProfitFilterChange(filterValue) {
+            console.log('필터가 변경되었습니다:', filterValue);
+            this.clearFilters();
+            
+            switch (filterValue) {
+                case 'plus':
+                    this.addFilter(item => item.손익율 > 0);
+                    break;
+                case 'minus':
+                    this.addFilter(item => item.손익율 < 0);
+                    break;
+                // 'all'은 필터를 추가하지 않음
+            }
+        },
+
+        // === 액션 메서드 ===
+        buy(item) {
+            console.log('구매:', item);
+            const { 종목코드: stk_code, 종목명: stk_name, 매입가 } = item;
+            
+            showBuySellCanvas({
+                stk_code,
+                stk_name,
+                which: '매수',
+                qty: 1,
+                cost: 매입가 || 0
+            });
+        },
+
+        sell(item) {
+            console.log('판매:', item);
+            const { 종목코드: stk_code, 종목명: stk_name, 보유수량 } = item;
+            const qty = Number(보유수량) || 0;
+            
+            showBuySellCanvas({
+                stk_code,
+                stk_name,
+                which: '매도',
+                qty,
+                cost: 0
+            });
+        },
+
+        detail(item) {
+            console.log('상세 정보:', item);
+            showCompanyCanvas(item.종목코드);
+        },
+
+        // === 유틸리티 메서드 ===
+        formatClass(value) {
+            if (value > 0) return 'text-danger';
+            if (value < 0) return 'text-primary';
+            return '';
+        },
+        addMyStock() {
+            let list = this.data["종목별계좌평가현황"]
+            let codes = []
+            for (let i = 0; i < list.length; i++) {
+                code  = list[i]["종목코드"]
+                if (!/^[0-9]+$/.test(code)) {
+                    code = code.replace(/[^0-9]/g, '')
+                } 
+                codes.push(code)
+            }
+            postFetch('/api/v1/mystock/bulk', {
+                api_id: 'kiwi7_mystock_bulk_add',
+                payload: {
+                    codes : codes
+                },
+            }).then(response => {
+                if (response.success) {
+                    showAlert('My Stock에 추가되었습니다.', 'success');
+                } else {
+                    showAlert('My Stock 추가에 실패했습니다: ' + response.error_message, 'error');
+                }
+            });
+            console.log('My Stock에 추가:', this.data);
+            // My Stock에 추가하는 로직 구현
+        }
+    };
+}
+
+document.addEventListener('alpine:init', () => {
+    Alpine.data('kt00007_component', createKt00007Component);
+});
+</script>
+{% endblock %}
