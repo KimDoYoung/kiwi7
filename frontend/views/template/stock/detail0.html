@@ -1,0 +1,594 @@
+{# 
+    종목 상세 정보 페이지 - stock/detail.html 
+    1. api_id: ka10001(종목조회), ka10100(일자별시세) 를 사용하여 종목 상세 정보를 조회합니다.
+    2. 추후에 또 다른 stk_cd에 기반을 둔 api_id의 정보를 표시할 수 있도록 확장 가능하게 구조화
+#}
+{% extends 'common/base.html' %}
+{% block style %}
+<style>
+.info-card {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.875rem;
+}
+
+.info-value {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-top: 0.25rem;
+}
+
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 2s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error-card {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+.success-card {
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.tab-pane {
+    min-height: 300px;
+}
+
+.price-up {
+    color: #dc3545;
+}
+
+.price-down {
+    color: #0d6efd;
+}
+
+.price-neutral {
+    color: #6c757d;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div x-data="stockDetailComponent" class="container mt-4">
+    <!-- 헤더 영역 -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1">종목 상세 정보</h2>
+            <div class="text-muted">
+                종목코드: <span class="fw-bold" x-text="stk_cd"></span>
+                <span x-show="ka10001.종목명" class="ms-3">
+                    종목명: <span class="fw-bold" x-text="ka10001.종목명"></span>
+                </span>
+            </div>
+        </div>
+        <div class="btn-group" role="group">
+            <button class="btn btn-outline-primary btn-sm" 
+                    @click="refreshAllData()" 
+                    :disabled="isLoadingAny">
+                <i class="bi bi-arrow-clockwise" :class="{'loading-spinner': isLoadingAny}"></i>
+                전체 새로고침
+            </button>
+            <button class="btn btn-outline-info btn-sm" 
+                    @click="toggleAutoRefresh()">
+                <i class="bi" :class="autoRefresh ? 'bi-pause-fill' : 'bi-play-fill'"></i>
+                자동갱신 <span x-text="autoRefresh ? '중지' : '시작'"></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 기본 정보 카드 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-info-circle me-2"></i>기본 정보
+                    </h5>
+                    <div x-show="loadingStates.ka10001" class="loading-spinner"></div>
+                </div>
+                <div class="card-body">
+                    <div x-show="errors.ka10001" class="alert alert-danger">
+                        <strong>오류:</strong> <span x-text="errors.ka10001"></span>
+                    </div>
+                    
+                    <div x-show="!errors.ka10001">
+                        <div class="row g-3">
+                            <!-- 현재가 그룹 -->
+                            <div class="col-md-6">
+                                <div class="info-card">
+                                    <div class="row g-0">
+                                        <div class="col-6">
+                                            <div class="info-label">현재가</div>
+                                            <div class="info-value" 
+                                                 :class="getPriceClass(ka10001.전일대비)" 
+                                                 x-text="formatPrice(ka10001.현재가)">
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="info-label">전일대비</div>
+                                            <div class="info-value" 
+                                                 :class="getPriceClass(ka10001.전일대비)" 
+                                                 x-text="formatChange(ka10001.전일대비, ka10001.등락률)">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 거래량 그룹 -->
+                            <div class="col-md-6">
+                                <div class="info-card">
+                                    <div class="row g-0">
+                                        <div class="col-6">
+                                            <div class="info-label">거래량</div>
+                                            <div class="info-value" x-text="formatNumber(ka10001.거래량)"></div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="info-label">거래대금</div>
+                                            <div class="info-value" x-text="formatAmount(ka10001.거래대금)"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 추가 상세 정보 -->
+                        <div class="row g-3 mt-2" x-show="showDetailedInfo">
+                            <!-- 시가/고가 그룹 -->
+                            <div class="col-md-6">
+                                <div class="info-card">
+                                    <div class="row g-0">
+                                        <div class="col-6">
+                                            <div class="info-label">시가</div>
+                                            <div class="info-value" x-text="formatPrice(ka10001.시가)"></div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="info-label">고가</div>
+                                            <div class="info-value text-danger" x-text="formatPrice(ka10001.고가)"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 저가/기준가 그룹 -->
+                            <div class="col-md-6">
+                                <div class="info-card">
+                                    <div class="row g-0">
+                                        <div class="col-6">
+                                            <div class="info-label">저가</div>
+                                            <div class="info-value text-primary" x-text="formatPrice(ka10001.저가)"></div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="info-label">기준가</div>
+                                            <div class="info-value" x-text="formatPrice(ka10001.기준가)"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 상한가/하한가 그룹 -->
+                            <div class="col-12" x-show="ka10001.상한가 || ka10001.하한가">
+                                <div class="info-card">
+                                    <div class="row g-0">
+                                        <div class="col-6">
+                                            <div class="info-label">상한가</div>
+                                            <div class="info-value text-danger" x-text="formatPrice(ka10001.상한가)"></div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="info-label">하한가</div>
+                                            <div class="info-value text-primary" x-text="formatPrice(ka10001.하한가)"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-3">
+                            <button class="btn btn-outline-secondary btn-sm" 
+                                    @click="showDetailedInfo = !showDetailedInfo">
+                                <i class="bi" :class="showDetailedInfo ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+                                <span x-text="showDetailedInfo ? '상세정보 접기' : '상세정보 보기'"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 탭 영역 -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs" id="stockDetailTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" 
+                                    id="chart-tab" 
+                                    data-bs-toggle="tab" 
+                                    data-bs-target="#chart-pane" 
+                                    type="button" 
+                                    role="tab">
+                                <i class="bi bi-graph-up me-1"></i>차트
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" 
+                                    id="daily-tab" 
+                                    data-bs-toggle="tab" 
+                                    data-bs-target="#daily-pane" 
+                                    type="button" 
+                                    role="tab">
+                                <i class="bi bi-calendar3 me-1"></i>일별시세
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" 
+                                    id="additional-tab" 
+                                    data-bs-toggle="tab" 
+                                    data-bs-target="#additional-pane" 
+                                    type="button" 
+                                    role="tab">
+                                <i class="bi bi-plus-circle me-1"></i>추가정보
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content">
+                        <!-- 차트 탭 -->
+                        <div class="tab-pane fade show active" id="chart-pane" role="tabpanel">
+                            <div class="d-flex justify-content-center align-items-center" style="min-height: 300px;">
+                                <div class="text-muted">
+                                    <i class="bi bi-graph-up display-1"></i>
+                                    <p class="mt-2">차트 기능은 준비 중입니다</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 일별시세 탭 -->
+                        <div class="tab-pane fade" id="daily-pane" role="tabpanel">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0">일자별 시세 정보</h6>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div x-show="loadingStates.ka10100" class="loading-spinner"></div>
+                                    <button class="btn btn-outline-primary btn-sm" 
+                                            @click="fetchDailyData()" 
+                                            :disabled="loadingStates.ka10100">
+                                        <i class="bi bi-arrow-clockwise"></i>
+                                        새로고침
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div x-show="errors.ka10100" class="alert alert-danger">
+                                <strong>오류:</strong> <span x-text="errors.ka10100"></span>
+                            </div>
+                            
+                            <div x-show="!loadingStates.ka10100 && !errors.ka10100 && ka10100.length > 0" class="table-responsive">
+                                <table class="table table-sm table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>날짜</th>
+                                            <th class="text-end">종가</th>
+                                            <th class="text-end">전일대비</th>
+                                            <th class="text-end">등락률</th>
+                                            <th class="text-end">시가</th>
+                                            <th class="text-end">고가</th>
+                                            <th class="text-end">저가</th>
+                                            <th class="text-end">거래량</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <template x-for="item in ka10100.slice(0, 10)" :key="item.날짜">
+                                            <tr>
+                                                <td x-text="formatDate(item.날짜)"></td>
+                                                <td class="text-end fw-bold" 
+                                                    :class="getPriceClass(item.전일대비)" 
+                                                    x-text="formatPrice(item.종가)"></td>
+                                                <td class="text-end" 
+                                                    :class="getPriceClass(item.전일대비)" 
+                                                    x-text="formatChange(item.전일대비, item.등락률)"></td>
+                                                <td class="text-end" 
+                                                    :class="getPriceClass(item.전일대비)" 
+                                                    x-text="item.등락률 + '%'"></td>
+                                                <td class="text-end" x-text="formatPrice(item.시가)"></td>
+                                                <td class="text-end text-danger" x-text="formatPrice(item.고가)"></td>
+                                                <td class="text-end text-primary" x-text="formatPrice(item.저가)"></td>
+                                                <td class="text-end" x-text="formatNumber(item.거래량)"></td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div x-show="!loadingStates.ka10100 && !errors.ka10100 && ka10100.length === 0" 
+                                 class="text-center text-muted py-4">
+                                일별 시세 데이터가 없습니다.
+                            </div>
+                        </div>
+
+                        <!-- 추가정보 탭 -->
+                        <div class="tab-pane fade" id="additional-pane" role="tabpanel">
+                            <div class="d-flex justify-content-center align-items-center" style="min-height: 300px;">
+                                <div class="text-center text-muted">
+                                    <i class="bi bi-plus-circle display-1"></i>
+                                    <p class="mt-2">추가 API 정보를 여기에 표시할 수 있습니다</p>
+                                    <p class="small">stk_cd 기반의 다른 API 호출 결과를 확장 가능</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% raw %}
+<!--handlebar scripts-->
+{% endraw %}
+{% endblock %}
+
+{% block script %}
+<script id="stock_detail_script">
+const stk_cd = "{{stk_cd}}";
+</script>
+<script src="/public/js/utils/kiwoom-utils.js"></script>
+{% raw %}
+<script>
+// Alpine 컴포넌트 팩토리 함수
+function createStockDetailComponent() {
+    return {
+        // === 상태 변수 ===
+        stk_cd: stk_cd || '',
+        
+        // 로딩 상태
+        loadingStates: {
+            ka10001: false,
+            ka10100: false
+        },
+        
+        // 에러 상태
+        errors: {
+            ka10001: null,
+            ka10100: null
+        },
+        
+        // 데이터 - API별로 구분
+        ka10001: {},  // 기본 정보 (종목조회)
+        ka10100: [],  // 일별 시세 데이터
+        
+        // UI 상태
+        showDetailedInfo: false,
+        autoRefresh: false,
+        refreshInterval: null,
+        
+        // === 초기화 ===
+        init() {
+            console.log('종목 상세 정보 컴포넌트 초기화:', this.stk_cd);
+            if (this.stk_cd) {
+                this.fetchAllData();
+            } else {
+                console.error('종목코드가 없습니다.');
+            }
+            
+            // 페이지 언로드 시 인터벌 정리
+            window.addEventListener('beforeunload', () => {
+                this.stopAutoRefresh();
+            });
+        },
+
+        // === 계산된 속성 ===
+        get isLoadingAny() {
+            return Object.values(this.loadingStates).some(loading => loading);
+        },
+
+        // === API 호출 메서드 ===
+        async fetchAllData() {
+            console.log('모든 데이터 조회 시작');
+            await Promise.all([
+                this.fetchBasicInfo(),
+                this.fetchDailyData()
+            ]);
+        },
+
+        async fetchBasicInfo() {
+            if (!this.stk_cd) return;
+            
+            this.loadingStates.ka10001 = true;
+            this.errors.ka10001 = null;
+            
+            try {
+                console.log('기본 정보 조회 시작:', this.stk_cd);
+                
+                const response = await callKiwoomApi('ka10001', {
+                    stk_cd: this.stk_cd
+                });
+
+                console.log('기본 정보 응답:', response);
+
+                if (response.success && response.data) {
+                    this.ka10001 = response.data;
+                    console.log('기본 정보 설정 완료:', this.ka10001);
+                } else {
+                    throw new Error(response.error_message || '기본 정보 조회 실패');
+                }
+            } catch (error) {
+                console.error('기본 정보 조회 오류:', error);
+                this.errors.ka10001 = error.message;
+                this.ka10001 = {};
+            } finally {
+                this.loadingStates.ka10001 = false;
+            }
+        },
+
+        async fetchDailyData() {
+            if (!this.stk_cd) return;
+            
+            this.loadingStates.ka10100 = true;
+            this.errors.ka10100 = null;
+            
+            try {
+                console.log('일별 시세 조회 시작:', this.stk_cd);
+                
+                const response = await callKiwoomApi('ka10100', {
+                    stk_cd: this.stk_cd,
+                    sdt: '',  // 시작일자 (빈 문자열이면 기본값 사용)
+                    edt: '',  // 종료일자 (빈 문자열이면 기본값 사용)
+                    adj_prc_tp: '1'  // 수정주가구분 (1: 수정주가)
+                });
+
+                console.log('일별 시세 응답:', response);
+
+                if (response.success && response.data) {
+                    // API 응답에서 배열 데이터 찾기
+                    const dataArray = this.findArrayInResponse(response.data);
+                    this.ka10100 = Array.isArray(dataArray) ? dataArray : [];
+                    console.log('일별 시세 설정 완료:', this.ka10100.length, '건');
+                } else {
+                    throw new Error(response.error_message || '일별 시세 조회 실패');
+                }
+            } catch (error) {
+                console.error('일별 시세 조회 오류:', error);
+                this.errors.ka10100 = error.message;
+                this.ka10100 = [];
+            } finally {
+                this.loadingStates.ka10100 = false;
+            }
+        },
+
+        // === 자동 새로고침 관리 ===
+        toggleAutoRefresh() {
+            if (this.autoRefresh) {
+                this.stopAutoRefresh();
+            } else {
+                this.startAutoRefresh();
+            }
+        },
+
+        startAutoRefresh() {
+            this.autoRefresh = true;
+            this.refreshInterval = setInterval(() => {
+                if (!this.isLoadingAny) {
+                    this.fetchBasicInfo(); // 기본 정보만 자동 갱신
+                }
+            }, 30000); // 30초마다
+            console.log('자동 새로고침 시작 (30초 간격)');
+        },
+
+        stopAutoRefresh() {
+            this.autoRefresh = false;
+            if (this.refreshInterval) {
+                clearInterval(this.refreshInterval);
+                this.refreshInterval = null;
+            }
+            console.log('자동 새로고침 중지');
+        },
+
+        refreshAllData() {
+            if (!this.isLoadingAny) {
+                this.fetchAllData();
+            }
+        },
+
+        // === 유틸리티 메서드 ===
+        findArrayInResponse(data) {
+            if (!data || typeof data !== 'object') return null;
+            
+            // 데이터에서 배열 찾기
+            for (const [key, value] of Object.entries(data)) {
+                if (Array.isArray(value) && value.length > 0) {
+                    console.log(`배열 데이터 발견: ${key}, ${value.length}건`);
+                    return value;
+                }
+            }
+            return null;
+        },
+
+        formatPrice(value) {
+            const num = Number(value);
+            return isNaN(num) ? '-' : num.toLocaleString() + '원';
+        },
+
+        formatNumber(value) {
+            const num = Number(value);
+            return isNaN(num) ? '-' : num.toLocaleString();
+        },
+
+        formatAmount(value) {
+            const num = Number(value);
+            if (isNaN(num)) return '-';
+            
+            if (num >= 100000000) { // 1억 이상
+                return (num / 100000000).toFixed(1) + '억원';
+            } else if (num >= 10000) { // 1만 이상
+                return (num / 10000).toFixed(1) + '만원';
+            }
+            return num.toLocaleString() + '원';
+        },
+
+        formatChange(change, rate) {
+            const changeNum = Number(change);
+            const rateNum = Number(rate);
+            
+            if (isNaN(changeNum) || isNaN(rateNum)) return '-';
+            
+            const changeStr = changeNum > 0 ? '+' + changeNum.toLocaleString() : changeNum.toLocaleString();
+            const rateStr = rateNum > 0 ? '+' + rateNum : rateNum;
+            
+            return `${changeStr} (${rateStr}%)`;
+        },
+
+        formatDate(dateStr) {
+            if (!dateStr) return '-';
+            
+            // YYYYMMDD -> YYYY-MM-DD 형식으로 변환
+            if (dateStr.length === 8) {
+                return dateStr.substring(0, 4) + '-' + 
+                       dateStr.substring(4, 6) + '-' + 
+                       dateStr.substring(6, 8);
+            }
+            return dateStr;
+        },
+
+        getPriceClass(value) {
+            const num = Number(value);
+            if (isNaN(num)) return 'price-neutral';
+            
+            if (num > 0) return 'price-up';
+            if (num < 0) return 'price-down';
+            return 'price-neutral';
+        }
+    };
+}
+
+// Alpine.js 컴포넌트 등록
+document.addEventListener('alpine:init', () => {
+    Alpine.data('stockDetailComponent', createStockDetailComponent);
+});
+</script>
+{% endraw %}
+{% endblock %}

@@ -645,7 +645,10 @@ function createKt00004Component() {
 
         detail(item) {
             console.log('상세 정보:', item);
-            showCompanyCanvas(item.종목코드);
+            //showCompanyCanvas(item.종목코드);
+            //윈도우 open 하면서 /page?path=stock/detail&stk_cd=${item.종목코드}
+            window.open(`/page?path=stock/detail&stk_cd=${item.종목코드}`, '_blank');
+            //window.location.href = `/page?path=stock/detail&stk_cd=${item.종목코드}`;
         },
 
         // === 유틸리티 메서드 ===

@@ -1,35 +1,665 @@
+{# 
+    종목 상세 정보 페이지 - stock/detail.html 
+    1. /api/v1/stock/info/{stk_cd} 통합 API를 사용하여 종목 상세 정보를 조회합니다.
+    2. 모든 정보를 세로로 나열하여 한 눈에 볼 수 있도록 구성
+    3. 유사한 정보끼리 그룹화하여 표시
+#}
 {% extends 'common/base.html' %}
 {% block style %}
+<style>
+.info-section {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-weight: 500;
+    color: #6c757d;
+    min-width: 120px;
+}
+
+.info-value {
+    font-weight: 600;
+    color: #212529;
+}
+
+.company-summary {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 1rem;
+    line-height: 1.6;
+    color: #495057;
+    white-space: pre-line;
+}
+
+.price-up {
+    color: #dc3545 !important;
+}
+
+.price-down {
+    color: #0d6efd !important;
+}
+
+.price-neutral {
+    color: #6c757d !important;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    width: 3rem;
+    height: 3rem;
+}
+</style>
 {% endblock %}
+
 {% block content %}
-<div x-data="data_settings"  class="container mt-4">
-<h1>종목 상세 정보</h1>
-{{stk_cd}}
+<div x-data="stockDetailComponent" class="container mt-4">
+    <!-- 로딩 오버레이 -->
+    <div x-show="loading" class="loading-overlay">
+        <div class="text-center">
+            <div class="spinner-border loading-spinner text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="mt-2">종목 정보를 조회하는 중...</div>
+        </div>
+    </div>
+
+    <!-- 헤더 영역 -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1">종목 상세 정보</h2>
+            <div class="text-muted">
+                종목코드: <span class="fw-bold" x-text="stk_cd"></span>
+                <span x-show="stockData.종목명" class="ms-3">
+                    종목명: <span class="fw-bold" x-text="stockData.종목명"></span>
+                </span>
+            </div>
+        </div>
+        <div class="btn-group" role="group">
+            <button class="btn btn-outline-primary btn-sm" 
+                    @click="fetchStockData()" 
+                    :disabled="loading">
+                <i class="bi bi-arrow-clockwise"></i>
+                새로고침
+            </button>
+            <button class="btn btn-outline-info btn-sm" 
+                    @click="toggleAutoRefresh()">
+                <i class="bi" :class="autoRefresh ? 'bi-pause-fill' : 'bi-play-fill'"></i>
+                자동갱신 <span x-text="autoRefresh ? '중지' : '시작'"></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 에러 메시지 -->
+    <div x-show="error" class="alert alert-danger">
+        <strong>오류:</strong> <span x-text="error"></span>
+    </div>
+
+    <div x-show="!loading && !error && stockData.종목코드">
+        <!-- 기업 개요 -->
+        <div class="info-section">
+            <div class="section-title">
+                <i class="bi bi-building me-2"></i>기업 개요
+            </div>
+            <div class="info-row">
+                <span class="info-label">종목코드</span>
+                <span class="info-value" x-text="stockData.종목코드"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">종목명</span>
+                <span class="info-value" x-text="stockData.종목명"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">업종</span>
+                <span class="info-value" x-text="stockData.업종명"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">시장구분</span>
+                <span class="info-value" x-text="stockData.시장명"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">회사규모</span>
+                <span class="info-value" x-text="stockData.회사크기분류"></span>
+            </div>
+            <div x-show="stockData.company_summary" class="mt-3">
+                <div class="info-label mb-2">회사 소개</div>
+                <div class="company-summary" x-text="stockData.company_summary"></div>
+            </div>
+        </div>
+
+        <!-- 현재가 정보 -->
+        <div class="info-section">
+            <div class="section-title">
+                <i class="bi bi-graph-up me-2"></i>현재가 정보
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <span class="info-label">현재가</span>
+                        <span class="info-value" 
+                              :class="getPriceClass(stockData.전일대비)" 
+                              x-text="formatPrice(stockData.현재가)"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">전일대비</span>
+                        <span class="info-value" 
+                              :class="getPriceClass(stockData.전일대비)" 
+                              x-text="formatChange(stockData.전일대비, stockData.등락율)"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">기준가</span>
+                        <span class="info-value" x-text="formatPrice(stockData.기준가)"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <span class="info-label">시가</span>
+                        <span class="info-value" x-text="formatPrice(stockData.시가)"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">고가</span>
+                        <span class="info-value text-danger" x-text="formatPrice(stockData.고가)"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">저가</span>
+                        <span class="info-value text-primary" x-text="formatPrice(stockData.저가)"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 가격 한계 -->
+        <div class="info-section">
+            <div class="section-title">
+                <i class="bi bi-arrows-vertical me-2"></i>가격 한계
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <span class="info-label">상한가</span>
+                        <span class="info-value text-danger" x-text="formatPrice(stockData.상한가)"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">하한가</span>
+                        <span class="info-value text-primary" x-text="formatPrice(stockData.하한가)"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <span class="info-label">연중최고</span>
+                        <span class="info-value text-danger" x-text="formatPrice(stockData.연중최고)"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">연중최저</span>
+                        <span class="info-value text-primary" x-text="formatPrice(stockData.연중최저)"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 거래 정보 -->
+        <div class="info-section">
+            <div class="section-title">
+                <i class="bi bi-activity me-2"></i>거래 정보
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <span class="info-label">거래량</span>
+                        <span class="info-value" x-text="formatNumber(stockData.거래량)"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">거래대비</span>
+                        <span class="info-value" x-text="stockData.거래대비 + '%'"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <span class="info-label">외인소진률</span>
+                        <span class="info-value" x-text="stockData.외인소진률 + '%'"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">신용비율</span>
+                        <span class="info-value" x-text="stockData.신용비율 + '%'"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 기업 규모 -->
+        <div class="info-section">
+            <div class="section-title">
+                <i class="bi bi-pie-chart me-2"></i>기업 규모
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <span class="info-label">시가총액</span>
+                        <span class="info-value" x-text="formatAmount(stockData.시가총액)"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">자본금</span>
+                        <span class="info-value" x-text="formatAmount(stockData.자본금)"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">액면가</span>
+                        <span class="info-value" x-text="formatPrice(stockData.액면가)"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <span class="info-label">상장주식</span>
+                        <span class="info-value" x-text="formatNumber(stockData.상장주식) + '주'"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">유통주식</span>
+                        <span class="info-value" x-text="formatNumber(stockData.유통주식) + '주'"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">유통비율</span>
+                        <span class="info-value" x-text="stockData.유통비율 + '%'"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 투자지표 -->
+        <div class="info-section">
+            <div class="section-title">
+                <i class="bi bi-calculator me-2"></i>투자지표
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <span class="info-label">PER</span>
+                        <span class="info-value" x-text="stockData.PER + '배'"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">PBR</span>
+                        <span class="info-value" x-text="stockData.PBR + '배'"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">ROE</span>
+                        <span class="info-value" x-text="stockData.ROE + '%'"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">EV</span>
+                        <span class="info-value" x-text="stockData.EV + '배'"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <span class="info-label">EPS</span>
+                        <span class="info-value" x-text="formatPrice(stockData.EPS)"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">BPS</span>
+                        <span class="info-value" x-text="formatPrice(stockData.BPS)"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">결산월</span>
+                        <span class="info-value" x-text="stockData.결산월 + '월'"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">상장일</span>
+                        <span class="info-value" x-text="formatDate(stockData.상장일)"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 재무 정보 -->
+        <div class="info-section">
+            <div class="section-title">
+                <i class="bi bi-cash-stack me-2"></i>재무 정보
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="info-row">
+                        <span class="info-label">매출액</span>
+                        <span class="info-value" x-text="formatAmount(stockData.매출액)"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-row">
+                        <span class="info-label">영업이익</span>
+                        <span class="info-value" x-text="formatAmount(stockData.영업이익)"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-row">
+                        <span class="info-label">당기순이익</span>
+                        <span class="info-value" x-text="formatAmount(stockData.당기순이익)"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 250일 기준 정보 -->
+        <div class="info-section">
+            <div class="section-title">
+                <i class="bi bi-calendar-range me-2"></i>250일 기준 정보
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <span class="info-label">250일 최고가</span>
+                        <span class="info-value text-danger" x-text="formatPrice(stockData['250최고'])"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">최고가일</span>
+                        <span class="info-value" x-text="formatDate(stockData['250최고가일'])"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">최고가 대비율</span>
+                        <span class="info-value" 
+                              :class="getPriceClass(stockData['250최고가대비율'])" 
+                              x-text="stockData['250최고가대비율'] + '%'"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <span class="info-label">250일 최저가</span>
+                        <span class="info-value text-primary" x-text="formatPrice(stockData['250최저'])"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">최저가일</span>
+                        <span class="info-value" x-text="formatDate(stockData['250최저가일'])"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">최저가 대비율</span>
+                        <span class="info-value" 
+                              :class="getPriceClass(stockData['250최저가대비율'])" 
+                              x-text="stockData['250최저가대비율'] + '%'"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 예상 체결 정보 -->
+        <div class="info-section" x-show="Number(stockData.예상체결가) > 0 || Number(stockData.예상체결수량) > 0">
+            <div class="section-title">
+                <i class="bi bi-clock me-2"></i>예상 체결 정보
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <span class="info-label">예상체결가</span>
+                        <span class="info-value" x-text="formatPrice(stockData.예상체결가)"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <span class="info-label">예상체결수량</span>
+                        <span class="info-value" x-text="formatNumber(stockData.예상체결수량) + '주'"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 기타 정보 -->
+        <div class="info-section">
+            <div class="section-title">
+                <i class="bi bi-info-circle me-2"></i>기타 정보
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <span class="info-label">대용가</span>
+                        <span class="info-value" x-text="formatPrice(stockData.대용가)"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">감리구분</span>
+                        <span class="info-value" x-text="stockData.감리구분"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">투자유의</span>
+                        <span class="info-value" x-text="stockData.투자유의종목여부 === '1' ? 'Y' : 'N'"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <span class="info-label">종목상태</span>
+                        <span class="info-value" x-text="stockData.종목상태"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">NXT가능</span>
+                        <span class="info-value" x-text="stockData.NXT가능여부"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Kind</span>
+                        <span class="info-value" x-text="stockData.kind"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 데이터 없음 -->
+    <div x-show="!loading && !error && !stockData.종목코드" class="text-center text-muted py-5">
+        <i class="bi bi-search display-1"></i>
+        <p class="mt-2">종목 정보를 찾을 수 없습니다.</p>
+    </div>
 </div>
 {% raw %}
 <!--handlebar scripts-->
 {% endraw %}
 {% endblock %}
+
 {% block script %}
+<script id="stock_detail_script">
+const stk_cd = "{{stk_cd}}".replace(/[^0-9]/g, '');
+</script>
+<script src="/public/js/utils/fetch-util.js"></script>
 {% raw %}
 <script>
 // Alpine 컴포넌트 팩토리 함수
-function createSettingsComponent() {
+function createStockDetailComponent() {
     return {
         // === 상태 변수 ===
-        data: null,
-    
+        stk_cd: stk_cd || '',
+        
+        // 로딩 및 에러 상태
+        loading: false,
+        error: null,
+        
+        // 데이터
+        stockData: {},
+        
+        // UI 상태
+        autoRefresh: false,
+        refreshInterval: null,
+        
         // === 초기화 ===
         init() {
-            console.log('Initializing data_settings');
+            console.log('종목 상세 정보 컴포넌트 초기화:', this.stk_cd);
+            if (this.stk_cd) {
+                this.fetchStockData();
+            } else {
+                this.error = '종목코드가 없습니다.';
+            }
+            
+            // 페이지 언로드 시 인터벌 정리
+            window.addEventListener('beforeunload', () => {
+                this.stopAutoRefresh();
+            });
         },
-	
+
+        // === API 호출 메서드 ===
+        async fetchStockData() {
+            if (!this.stk_cd) return;
+            
+            this.loading = true;
+            this.error = null;
+            
+            try {
+                
+                console.log('종목 정보 조회 시작:', this.stk_cd);
+                
+                const response = await getFetch(`/api/v1/stock/info/${this.stk_cd}`, {});
+
+                console.log('종목 정보 응답:', response);
+
+                if (response.success && response.data) {
+                    this.stockData = response.data;
+                    console.log('종목 정보 설정 완료:', this.stockData);
+                } else {
+                    throw new Error(response.error_message || '종목 정보 조회 실패');
+                }
+            } catch (error) {
+                console.error('종목 정보 조회 오류:', error);
+                this.error = error.message;
+                this.stockData = {};
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        // === 자동 새로고침 관리 ===
+        toggleAutoRefresh() {
+            if (this.autoRefresh) {
+                this.stopAutoRefresh();
+            } else {
+                this.startAutoRefresh();
+            }
+        },
+
+        startAutoRefresh() {
+            this.autoRefresh = true;
+            this.refreshInterval = setInterval(() => {
+                if (!this.loading) {
+                    this.fetchStockData();
+                }
+            }, 30000); // 30초마다
+            console.log('자동 새로고침 시작 (30초 간격)');
+        },
+
+        stopAutoRefresh() {
+            this.autoRefresh = false;
+            if (this.refreshInterval) {
+                clearInterval(this.refreshInterval);
+                this.refreshInterval = null;
+            }
+            console.log('자동 새로고침 중지');
+        },
+
+        // === 포맷팅 메서드 ===
+        formatPrice(value) {
+            if (!value) return '-';
+            // + 또는 - 기호 제거 후 숫자만 추출
+            const cleanValue = String(value).replace(/[^0-9.-]/g, '');
+            const num = Number(cleanValue);
+            return isNaN(num) ? '-' : num.toLocaleString() + '원';
+        },
+
+        formatNumber(value) {
+            if (!value) return '-';
+            const cleanValue = String(value).replace(/[^0-9.-]/g, '');
+            const num = Number(cleanValue);
+            return isNaN(num) ? '-' : num.toLocaleString();
+        },
+
+        formatAmount(value) {
+            if (!value) return '-';
+            const cleanValue = String(value).replace(/[^0-9.-]/g, '');
+            const num = Number(cleanValue);
+            if (isNaN(num)) return '-';
+            
+            if (num >= 100000000) { // 1억 이상
+                return (num / 100000000).toFixed(1) + '억원';
+            } else if (num >= 10000) { // 1만 이상
+                return (num / 10000).toFixed(1) + '만원';
+            }
+            return num.toLocaleString() + '원';
+        },
+
+        formatChange(change, rate) {
+            if (!change || !rate) return '-';
+            
+            const changeValue = String(change).replace(/[^0-9.-]/g, '');
+            const rateValue = String(rate).replace(/[^0-9.-]/g, '');
+            
+            const changeNum = Number(changeValue);
+            const rateNum = Number(rateValue);
+            
+            if (isNaN(changeNum) || isNaN(rateNum)) return '-';
+            
+            const changeStr = changeNum > 0 ? '+' + changeNum.toLocaleString() : changeNum.toLocaleString();
+            const rateStr = rateNum > 0 ? '+' + rateNum : rateNum;
+            
+            return `${changeStr} (${rateStr}%)`;
+        },
+
+        formatDate(dateStr) {
+            if (!dateStr) return '-';
+            
+            // YYYYMMDD -> YYYY-MM-DD 형식으로 변환
+            const cleanDate = String(dateStr).replace(/[^0-9]/g, '');
+            if (cleanDate.length === 8) {
+                return cleanDate.substring(0, 4) + '-' + 
+                       cleanDate.substring(4, 6) + '-' + 
+                       cleanDate.substring(6, 8);
+            }
+            return dateStr;
+        },
+
+        getPriceClass(value) {
+            if (!value) return 'price-neutral';
+            
+            const cleanValue = String(value).replace(/[^0-9.-]/g, '');
+            const num = Number(cleanValue);
+            if (isNaN(num)) return 'price-neutral';
+            
+            // 원본 값에서 + 또는 - 기호 확인
+            const originalStr = String(value);
+            if (originalStr.includes('+') || num > 0) return 'price-up';
+            if (originalStr.includes('-') || num < 0) return 'price-down';
+            return 'price-neutral';
+        }
     };
 }
 
 // Alpine.js 컴포넌트 등록
 document.addEventListener('alpine:init', () => {
-    Alpine.data('data_settings', createSettingsComponent);
+    Alpine.data('stockDetailComponent', createStockDetailComponent);
 });
 </script>
 {% endraw %}
