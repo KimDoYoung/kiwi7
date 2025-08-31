@@ -343,30 +343,26 @@ window.createKiwoomBase = function createKiwoomBase(config, depends = {}) {
     },
 
     _defaultCellClick(item, column) {
-      const defaultHandlers = {
-        '종목코드': (item) => {
-            const code = String(item[column.key] || '').match(/\d{6}/)?.[0];
+        // 공통: 네이버 금융으로 이동하는 함수
+        const openNaverFinance = (value) => {
+            const code = String(value || '').match(/\d{6}/)?.[0];
             if (code) {
-                window.open(`https://finance.naver.com/item/main.naver?code=${code}`, '_blank');
+            window.open(`https://finance.naver.com/item/main.naver?code=${code}`, '_blank');
             }
-        },
-        '종목번호': (item) => {  // 추가
-            const code = String(item[column.key] || '').match(/\d{6}/)?.[0];
-            if (code) {
-                window.open(`https://finance.naver.com/item/main.naver?code=${code}`, '_blank');
-            }
-        },
-        '종목명': (item) => {
-          alert(`종목명: ${item[column.key]}`);
-        }
-      };
+        };
 
-      const handler = defaultHandlers[column.key];
-      if (handler) {
-        handler(item);
-      } else {
-        logger.log('Default cell click:', column.key, item[column.key]);
-      }
+        const defaultHandlers = {
+            '종목코드': (item) => openNaverFinance(item[column.key]),
+            '종목번호': (item) => openNaverFinance(item[column.key]),
+            '종목명':   (item) => alert(`종목명: ${item[column.key]}`)
+        };
+
+        const handler = defaultHandlers[column.key];
+        if (handler) {
+            handler(item);
+        } else {
+            logger.log('Default cell click:', column.key, item[column.key]);
+        }
     },
 
     // ---- 정렬 ----

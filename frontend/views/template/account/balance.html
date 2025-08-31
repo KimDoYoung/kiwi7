@@ -84,11 +84,11 @@
                 <th class="bg-light">예수금</th>
                 <td class="text-end" x-text="Number(data?.예수금).toLocaleString() + ' 원'"></td>
                 <th class="bg-light">예수금D+1</th>
-                <td class="text-end" x-text="Number(data?.예수금D+1).toLocaleString() + ' 원'"></td>
+                <td class="text-end" x-text="Number(data?.['예수금D+1'] ?? 0).toLocaleString() + ' 원'"></td>
             </tr>
             <tr>
                 <th class="bg-light">예수금D+2</th>
-                <td class="text-end fw-bold" x-text="Number(data?.예수금D+2).toLocaleString() + ' 원'"></td>
+                <td class="text-end fw-bold" x-text="Number(data?.['예수금D+2']).toLocaleString() + ' 원'"></td>
                 <th class="bg-light">출금가능금액</th>
                 <td class="text-end" x-text="Number(data?.출금가능금액).toLocaleString() + ' 원'"></td>
             </tr>
