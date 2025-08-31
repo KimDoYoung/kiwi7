@@ -345,10 +345,16 @@ window.createKiwoomBase = function createKiwoomBase(config, depends = {}) {
     _defaultCellClick(item, column) {
       const defaultHandlers = {
         '종목코드': (item) => {
-          const code = String(item[column.key] || '').match(/\d{6}/)?.[0];
-          if (code) {
-            window.open(`https://finance.naver.com/item/main.naver?code=${code}`, '_blank');
-          }
+            const code = String(item[column.key] || '').match(/\d{6}/)?.[0];
+            if (code) {
+                window.open(`https://finance.naver.com/item/main.naver?code=${code}`, '_blank');
+            }
+        },
+        '종목번호': (item) => {  // 추가
+            const code = String(item[column.key] || '').match(/\d{6}/)?.[0];
+            if (code) {
+                window.open(`https://finance.naver.com/item/main.naver?code=${code}`, '_blank');
+            }
         },
         '종목명': (item) => {
           alert(`종목명: ${item[column.key]}`);
