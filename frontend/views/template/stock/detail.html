@@ -87,6 +87,42 @@
     width: 3rem;
     height: 3rem;
 }
+
+.key-metrics {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-top: 1rem;
+}
+
+.key-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.key-metric-item {
+    text-align: center;
+    padding: 0.75rem;
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+}
+
+.key-metric-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+}
+
+.key-metric-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #495057;
+}
 </style>
 {% endblock %}
 
@@ -105,9 +141,9 @@
     <!-- 헤더 영역 -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="mb-1">종목 상세 정보</h2>
+            <!-- <h2 class="mb-1">종목 상세 정보</h2> -->
             <div class="text-muted">
-                종목코드: <span class="fw-bold" x-text="stk_cd"></span>
+                종목코드: <span class="fw-bold" x-text="stk_cd" @click="goNaver(stk_cd)"></span>
                 <span x-show="stockData.종목명" class="ms-3">
                     종목명: <span class="fw-bold" x-text="stockData.종목명"></span>
                 </span>
@@ -139,32 +175,47 @@
             <div class="section-title">
                 <i class="bi bi-building me-2"></i>기업 개요
             </div>
-            <div class="info-row">
-                <span class="info-label">종목코드</span>
-                <span class="info-value" x-text="stockData.종목코드"></span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">종목명</span>
-                <span class="info-value" x-text="stockData.종목명"></span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">업종</span>
-                <span class="info-value" x-text="stockData.업종명"></span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">시장구분</span>
-                <span class="info-value" x-text="stockData.시장명"></span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">회사규모</span>
-                <span class="info-value" x-text="stockData.회사크기분류"></span>
-            </div>
             <div x-show="stockData.company_summary" class="mt-3">
                 <div class="info-label mb-2">회사 소개</div>
                 <div class="company-summary" x-text="stockData.company_summary"></div>
+            </div>            
+            <div class="info-row">
+                <span class="info-label">업종/시장구분/규모</span>
+                <span class="info-value" x-text="`${stockData.업종명}/${stockData.시장명}/${stockData.회사크기분류}`"></span>
+                <span class="info-label ms-4">종목상태</span>
+                <span class="info-value" x-text="stockData.종목상태"></span>
+                <span class="info-label ms-4">감리구분</span>
+                <span class="info-value" x-text="stockData.감리구분"></span>
             </div>
-        </div>
 
+            <!-- 주요 지표 요약 -->
+            <div class="key-metrics">
+                <div class="key-metrics-grid">
+                    <div class="key-metric-item">
+                        <div class="key-metric-label">시가총액</div>
+                        <div class="key-metric-value" x-text="formatAmount(stockData.시가총액)"></div>
+                    </div>
+                    <div class="key-metric-item">
+                        <div class="key-metric-label">매출액</div>
+                        <div class="key-metric-value" x-text="formatAmount(stockData.매출액)"></div>
+                    </div>
+                    <div class="key-metric-item">
+                        <div class="key-metric-label">영업이익</div>
+                        <div class="key-metric-value" x-text="formatAmount(stockData.영업이익)"></div>
+                    </div>
+                    <div class="key-metric-item">
+                        <div class="key-metric-label">상장일</div>
+                        <div class="key-metric-value" x-text="formatDate(stockData.상장일)"></div>
+                    </div>
+                    <div class="key-metric-item">
+                        <div class="key-metric-label">NXT가능</div>
+                        <div class="key-metric-value" x-text="stockData.NXT가능여부"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
         <!-- 현재가 정보 -->
         <div class="info-section">
             <div class="section-title">
@@ -653,6 +704,11 @@ function createStockDetailComponent() {
             if (originalStr.includes('+') || num > 0) return 'price-up';
             if (originalStr.includes('-') || num < 0) return 'price-down';
             return 'price-neutral';
+        },
+        goNaver(stk_cd) {
+            if (!stk_cd) return;
+            const url = `https://finance.naver.com/item/main.naver?code=${stk_cd}`;
+            window.open(url, '_blank');
         }
     };
 }
