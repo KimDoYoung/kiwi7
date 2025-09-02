@@ -113,3 +113,45 @@ CREATE TABLE IF NOT EXISTS stk_info (
   nxt_enable          TEXT CHECK (nxt_enable IN ('Y','N')),                  -- NXT 가능여부 (Y/N)
   created_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP                    -- 생성 시각
 );
+-- ---------------------------------------------------------------
+-- kscheduler_job: 작업 정의
+-- ---------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS kscheduler_job (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  name          TEXT UNIQUE NOT NULL,
+  func_name     TEXT NOT NULL,              -- 실행할 함수 키(레지스트리에서 찾음)
+  schedule_type TEXT NOT NULL,              -- 'interval' | 'cron' | 'once'
+  schedule_expr TEXT NOT NULL,              -- 'interval: seconds=900' | 'cron: 0 1 * * *' | 'once: 2025-09-03T01:00:00'
+  timezone      TEXT DEFAULT 'Asia/Seoul',
+  enabled       INTEGER DEFAULT 1,
+  max_conc      INTEGER DEFAULT 1,
+  overlap_policy TEXT DEFAULT 'skip',       -- 'skip' | 'queue' | 'cancel'
+  timeout_sec   INTEGER DEFAULT 0,          -- 0이면 무제한
+  retry_max     INTEGER DEFAULT 0,          -- 0이면 재시도 없음
+  retry_backoff REAL DEFAULT 2.0,           -- 지수 백오프 배수
+  jitter_sec    INTEGER DEFAULT 0,          -- 0이면 지터 없음
+  next_run_at   TEXT,                       -- ISO8601
+  last_run_at   TEXT,                       -- ISO8601
+  created_at    TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at    TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ---------------------------------------------------------------
+-- kscheduler_run: 실행 이력
+-- ---------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS kscheduler_run_history (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  job_name     TEXT NOT NULL,
+  started_at   TEXT NOT NULL,
+  finished_at  TEXT,
+  status       TEXT,                        -- 'success' | 'error' | 'cancelled' | 'timeout'
+  message      TEXT
+);
+-- ---------------------------------------------------------------
+-- kscheduler_lock: 중복 실행 방지용(멀티 프로세스 실행 시 사용)
+-- ---------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS kscheduler_lock (
+  lock_key     TEXT PRIMARY KEY,            -- e.g. 'job:nightly_scrape'
+  holder       TEXT,                        -- hostname/pid
+  acquired_at  TEXT DEFAULT CURRENT_TIMESTAMP
+);

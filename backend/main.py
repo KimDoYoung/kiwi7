@@ -1,3 +1,4 @@
+import asyncio
 import os
 
 from fastapi import FastAPI
@@ -17,9 +18,11 @@ from backend.api.v1.endpoints.mystock_routes import router as mystock_router
 from backend.api.v1.endpoints.diary_routes import router as diary_router
 
 from backend.core.exception_handler import add_exception_handlers
+from backend.domains.kscheduler.k_scheduler import KScheduler
 
 
 logger = get_logger(__name__)
+schduler: KScheduler | None = None
 
 def create_app() -> FastAPI:
     app = FastAPI(title="Kiwi7 - 주식매매(개인용)", version="0.0.1")
@@ -82,13 +85,21 @@ async def startup_event():
     create_kiwi7_db(db_path)
         
     logger.info(f"DB 파일 경로: {db_path}")
+    logger.info("scheduler 시작함...")
+    global scheduler
+    scheduler = KScheduler(db_path=db_path, poll_sec=1)
+    asyncio.create_task(scheduler.start(worker_count=4))
+    logger.info('---------------------------------')
+    logger.info('Startup 프로세스 종료')
+    logger.info('---------------------------------')
 
 async def shutdown_event():
     ''' Kiwi7 application 종료 '''
     logger.info('---------------------------------')
     logger.info('Shutdown 프로세스 시작')
     logger.info('---------------------------------')
-    
+    if scheduler:
+        scheduler.stop()
     logger.info('---------------------------------')
     logger.info('Shutdown 프로세스 종료')
     logger.info('---------------------------------')
