@@ -13,6 +13,7 @@ from backend.api.v1.endpoints.settings_routes import router as settings_router
 from backend.api.v1.endpoints.home_routes import router as home_router
 from backend.api.v1.endpoints.kiwoom_routes import router as kiwoom_router
 from backend.api.v1.endpoints.kdemon_routes import router as kdemon_router
+from backend.api.v1.endpoints.scheduler_routes import router as scheduler_router
 from backend.api.v1.endpoints.stock_routes import router as stock_router
 from backend.api.v1.endpoints.mystock_routes import router as mystock_router
 from backend.api.v1.endpoints.diary_routes import router as diary_router
@@ -57,6 +58,7 @@ def add_routes(app: FastAPI):
     app.include_router(stock_router, prefix="/api/v1/stock", tags=["stock"])
     app.include_router(mystock_router, prefix="/api/v1/mystock", tags=["mystock"])
     app.include_router(diary_router, prefix="/api/v1/diary", tags=["diary"])
+    app.include_router(scheduler_router, prefix="/api/v1/scheduler", tags=["scheduler"])
 
 def add_event_handlers(app: FastAPI):
     ''' 이벤트 핸들러 설정 '''
