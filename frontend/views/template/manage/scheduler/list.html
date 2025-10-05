@@ -1,0 +1,35 @@
+{% extends 'common/base.html' %}
+{% block style %}
+{% endblock %}
+{% block content %}
+<div x-data="data_scheduler"  class="container mt-4">
+    <h1>스케줄러</h1>
+</div>
+{% raw %}
+<!--handlebar scripts-->
+{% endraw %}
+{% endblock %}
+{% block script %}
+{% raw %}
+<script>
+// Alpine 컴포넌트 팩토리 함수
+function createSchedulerComponent() {
+    return {
+        // === 상태 변수 ===
+        data: null,
+    
+        // === 초기화 ===
+        init() {
+            console.log('Initializing data_scheduler');
+        },
+	
+    };
+}
+
+// Alpine.js 컴포넌트 등록
+document.addEventListener('alpine:init', () => {
+    Alpine.data('data_scheduler', createSchedulerComponent);
+});
+</script>
+{% endraw %}
+{% endblock %}

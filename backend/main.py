@@ -1,3 +1,4 @@
+import asyncio
 import os
 
 from fastapi import FastAPI
@@ -12,14 +13,17 @@ from backend.api.v1.endpoints.settings_routes import router as settings_router
 from backend.api.v1.endpoints.home_routes import router as home_router
 from backend.api.v1.endpoints.kiwoom_routes import router as kiwoom_router
 from backend.api.v1.endpoints.kdemon_routes import router as kdemon_router
+from backend.api.v1.endpoints.scheduler_routes import router as scheduler_router
 from backend.api.v1.endpoints.stock_routes import router as stock_router
 from backend.api.v1.endpoints.mystock_routes import router as mystock_router
 from backend.api.v1.endpoints.diary_routes import router as diary_router
 
 from backend.core.exception_handler import add_exception_handlers
+from backend.domains.kscheduler.k_scheduler import KScheduler
 
 
 logger = get_logger(__name__)
+schduler: KScheduler | None = None
 
 def create_app() -> FastAPI:
     app = FastAPI(title="Kiwi7 - 주식매매(개인용)", version="0.0.1")
@@ -54,6 +58,7 @@ def add_routes(app: FastAPI):
     app.include_router(stock_router, prefix="/api/v1/stock", tags=["stock"])
     app.include_router(mystock_router, prefix="/api/v1/mystock", tags=["mystock"])
     app.include_router(diary_router, prefix="/api/v1/diary", tags=["diary"])
+    app.include_router(scheduler_router, prefix="/api/v1/scheduler", tags=["scheduler"])
 
 def add_event_handlers(app: FastAPI):
     ''' 이벤트 핸들러 설정 '''
@@ -82,13 +87,21 @@ async def startup_event():
     create_kiwi7_db(db_path)
         
     logger.info(f"DB 파일 경로: {db_path}")
+    logger.info("scheduler 시작함...")
+    global scheduler
+    scheduler = KScheduler(db_path=db_path, poll_sec=1)
+    asyncio.create_task(scheduler.start(worker_count=4))
+    logger.info('---------------------------------')
+    logger.info('Startup 프로세스 종료')
+    logger.info('---------------------------------')
 
 async def shutdown_event():
     ''' Kiwi7 application 종료 '''
     logger.info('---------------------------------')
     logger.info('Shutdown 프로세스 시작')
     logger.info('---------------------------------')
-    
+    if scheduler:
+        scheduler.stop()
     logger.info('---------------------------------')
     logger.info('Shutdown 프로세스 종료')
     logger.info('---------------------------------')

@@ -1,40 +1,728 @@
+{# 
+    계좌 상세 정보 페이지 - account/detail.html 
+    3개 API 사용:
+    - ka10085: 계좌수익률요청
+    - kt00003: 추정자산조회요청  
+    - kt00004: 계좌평가현황요청
+#}
 {% extends 'common/base.html' %}
 {% block style %}
+<style>
+.account-summary-card {
+    background: #f8f9fa;
+    color: #495057;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.api-section {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.api-section:hover {
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.api-header {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e9ecef;
+    margin-bottom: 1.5rem;
+}
+
+.api-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #495057;
+    margin: 0;
+}
+
+.api-status {
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.status-loading {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-success {
+    background: #d1edff;
+    color: #0c63e4;
+}
+
+.status-error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+}
+
+.info-label {
+    font-weight: 500;
+    color: #6c757d;
+    font-size: 0.95rem;
+}
+
+.info-value {
+    font-weight: 600;
+    color: #212529;
+    font-size: 1rem;
+}
+
+.profit-positive { color: #dc3545 !important; }
+.profit-negative { color: #0d6efd !important; }
+.profit-neutral  { color: #6c757d !important; }
+
+.loading-spinner { width: 1.5rem; height: 1.5rem; }
+
+.refresh-btn { transition: transform 0.2s ease; }
+.refresh-btn:hover { transform: rotate(180deg); }
+
+.summary-metric {
+    text-align: center;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+}
+
+.summary-metric-value {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.summary-metric-label { font-size: 0.85rem; color: #6c757d; }
+
+/* 숫자/금액 오른쪽 정렬 */
+.text-right {
+    text-align: right !important;
+}
+
+.number-cell {
+    text-align: right;
+}
+
+/* Alpine.js 초기 깜빡임 방지 */
+[x-cloak] { display: none !important; }
+
+.error-message {
+    padding: 1rem;
+    background: #f8d7da;
+    color: #721c24;
+    border-radius: 8px;
+    border-left: 4px solid #dc3545;
+    margin-top: 1rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #6c757d;
+}
+
+.api-refresh-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    border-radius: 20px;
+}
+</style>
 {% endblock %}
+
 {% block content %}
-<div x-data="data_settings"  class="container mt-4">
-    <h1>계좌상세</h1>
-    <ul>
-        <li>kt10085</li>
-        <li>kt00003</li>
-        <li>kt00004</li>
-        <li>kt00010</li>
-    </ul>
+<div x-data="accountDetailComponent" class="container-fluid mt-4">
+    <!-- 전체 로딩 오버레이 -->
+    <!-- <div x-show="globalLoading === true"
+         x-transition
+         x-cloak
+         class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+         style="background: rgba(255,255,255,0.9); z-index: 9999 !important;">
+        <div class="text-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
+            <div class="mt-3">계좌 정보를 조회하는 중...</div>
+        </div>
+    </div> -->
+
+    <!-- 헤더 영역 -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1">
+                <i class="bi bi-person-circle me-2"></i>계좌 상세 정보
+            </h2>
+            <div class="text-muted"><span x-text="account"></span>(<span x-text="bank"></span>) 계좌 현황 및 자산 정보</div>
+        </div>
+        <div class="btn-group" role="group">
+            <button class="btn btn-outline-primary" 
+                    @click="refreshAllData()" 
+                    :disabled="globalLoading">
+                <i class="bi bi-arrow-clockwise refresh-btn"></i>
+                전체 새로고침
+            </button>
+            <button class="btn btn-outline-info" 
+                    @click="toggleAutoRefresh()">
+                <i class="bi" :class="autoRefresh ? 'bi-pause-fill' : 'bi-play-fill'"></i>
+                자동갱신 <span x-text="autoRefresh ? '중지' : '시작'"></span>
+            </button>
+            <button class="btn btn-outline-danger btn-sm" 
+                    @click="forceStopLoading()"
+                    x-show="globalLoading">
+                로딩 강제 중지
+            </button>
+        </div>
+    </div>
+
+    <!-- 계좌 요약 카드 -->
+    <div class="account-summary-card">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="summary-metric">
+                    <div class="summary-metric-value" x-text="formatCurrency(getTotalAsset())"></div>
+                    <div class="summary-metric-label">총 자산</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="summary-metric">
+                    <div class="summary-metric-value" 
+                         :class="getProfitClass(getTotalProfit())"
+                         x-text="formatCurrency(getTotalProfit())"></div>
+                    <div class="summary-metric-label">총 손익</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="summary-metric">
+                    <div class="summary-metric-value" 
+                         :class="getProfitClass(getTotalProfitRate())"
+                         x-text="formatPercent(getTotalProfitRate())"></div>
+                    <div class="summary-metric-label">수익률</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="summary-metric">
+                    <div class="summary-metric-value" x-text="formatCurrency(getAvailableAmount())"></div>
+                    <div class="summary-metric-label">출금가능금액</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- API 섹션들 -->
+    <div class="row">
+        <!-- 계좌수익률 (ka10085) -->
+        <div class="col-lg-6 mb-4">
+            <div class="api-section">
+                <div class="api-header">
+                    <h4 class="api-title">
+                        <i class="bi bi-graph-up-arrow me-2"></i>계좌수익률
+                    </h4>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="api-status" :class="getStatusClass('ka10085')">
+                            <span x-show="apiStatus.ka10085.loading">
+                                <div class="spinner-border loading-spinner me-1" role="status"></div>
+                                로딩중
+                            </span>
+                            <span x-show="!apiStatus.ka10085.loading && apiStatus.ka10085.success">완료</span>
+                            <span x-show="!apiStatus.ka10085.loading && !apiStatus.ka10085.success">오류</span>
+                        </span>
+                        <button class="btn btn-sm btn-outline-secondary api-refresh-btn" 
+                                @click="fetchApiData('ka10085', { stex_tp: '0' })" 
+                                :disabled="apiStatus.ka10085.loading">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div x-show="!apiStatus.ka10085.loading && apiStatus.ka10085.success">
+                    <div x-show="Array.isArray(ka10085_data) && ka10085_data.length > 0">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>종목명</th>
+                                        <th class="text-right">현재가</th>
+                                        <th class="text-right">매입가</th>
+                                        <th class="text-right">보유수량</th>
+                                        <th class="text-right">손익</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template x-for="stock in ka10085_data" :key="stock.종목코드">
+                                        <tr>
+                                            <td><span x-text="stock.종목명"></span></td>
+                                            <td class="text-right"><span x-text="formatPrice(cleanNumber(stock.현재가))"></span></td>
+                                            <td class="text-right"><span x-text="formatPrice(cleanNumber(stock.매입가))"></span></td>
+                                            <td class="text-right"><span x-text="cleanNumber(stock.보유수량) + '주'"></span></td>
+                                            <td class="text-right">
+                                                <span :class="getProfitClass(cleanNumber(stock.현재가) - cleanNumber(stock.매입가))"
+                                                      x-text="formatCurrency((cleanNumber(stock.현재가) - cleanNumber(stock.매입가)) * cleanNumber(stock.보유수량))"></span>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div x-show="apiStatus.ka10085.error" class="error-message">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <span x-text="apiStatus.ka10085.error"></span>
+                </div>
+
+                <div x-show="!apiStatus.ka10085.loading && !apiStatus.ka10085.error && (!Array.isArray(ka10085_data) || ka10085_data.length === 0)" 
+                     class="empty-state">
+                    <i class="bi bi-inbox display-6"></i>
+                    <p class="mt-2">보유 종목이 없습니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 추정자산조회 (kt00003) -->
+        <div class="col-lg-6 mb-4">
+            <div class="api-section">
+                <div class="api-header">
+                    <h4 class="api-title">
+                        <i class="bi bi-wallet2 me-2"></i>추정자산조회
+                    </h4>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="api-status" :class="getStatusClass('kt00003')">
+                            <span x-show="apiStatus.kt00003.loading">
+                                <div class="spinner-border loading-spinner me-1" role="status"></div>
+                                로딩중
+                            </span>
+                            <span x-show="!apiStatus.kt00003.loading && apiStatus.kt00003.success">완료</span>
+                            <span x-show="!apiStatus.kt00003.loading && !apiStatus.kt00003.success">오류</span>
+                        </span>
+                        <button class="btn btn-sm btn-outline-secondary api-refresh-btn" 
+                                @click="fetchApiData('kt00003', { qry_tp: '0' })" 
+                                :disabled="apiStatus.kt00003.loading">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div x-show="!apiStatus.kt00003.loading && apiStatus.kt00003.success">
+                    <div class="info-grid">
+                        <template x-for="(value, key) in kt00003_data" :key="key">
+                            <div class="info-item">
+                                <span class="info-label" x-text="key"></span>
+                                <span class="info-value text-right" x-text="formatCurrency(cleanNumber(value))"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <div x-show="apiStatus.kt00003.error" class="error-message">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <span x-text="apiStatus.kt00003.error"></span>
+                </div>
+
+                <div x-show="!apiStatus.kt00003.loading && !apiStatus.kt00003.error && Object.keys(kt00003_data).length === 0" 
+                     class="empty-state">
+                    <i class="bi bi-inbox display-6"></i>
+                    <p class="mt-2">추정자산 데이터가 없습니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 계좌평가현황 (kt00004) -->
+        <div class="col-12 mb-4">
+            <div class="api-section">
+                <div class="api-header">
+                    <h4 class="api-title">
+                        <i class="bi bi-pie-chart me-2"></i>계좌평가현황
+                    </h4>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="api-status" :class="getStatusClass('kt00004')">
+                            <span x-show="apiStatus.kt00004.loading">
+                                <div class="spinner-border loading-spinner me-1" role="status"></div>
+                                로딩중
+                            </span>
+                            <span x-show="!apiStatus.kt00004.loading && apiStatus.kt00004.success">완료</span>
+                            <span x-show="!apiStatus.kt00004.loading && !apiStatus.kt00004.success">오류</span>
+                        </span>
+                        <button class="btn btn-sm btn-outline-secondary api-refresh-btn" 
+                                @click="fetchApiData('kt00004', { qry_tp: '0', dmst_stex_tp: 'KRX' })" 
+                                :disabled="apiStatus.kt00004.loading">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div x-show="!apiStatus.kt00004.loading && apiStatus.kt00004.success">
+                    <div class="row">
+                        <!-- 계좌 기본 정보 -->
+                        <div class="col-lg-6">
+                            <div x-show="kt00004_data.계좌정보" class="mb-4">
+                                <h6 class="mb-3">계좌 기본 정보</h6>
+                                <div class="info-grid">
+                                    <template x-for="(value, key) in kt00004_data.계좌정보" :key="key">
+                                        <div class="info-item">
+                                            <span class="info-label" x-text="key"></span>
+                                            <span class="info-value text-right" 
+                                                  :class="key.includes('손익') ? getProfitClass(cleanNumber(value)) : ''"
+                                                  x-text="key.includes('율') ? formatPercent(value) : formatCurrency(cleanNumber(value))"></span>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 종목별 현황 -->
+                        <div class="col-lg-6">
+                            <div x-show="Array.isArray(kt00004_data.종목별현황) && kt00004_data.종목별현황.length > 0">
+                                <h6 class="mb-3">종목별 평가현황</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>종목명</th>
+                                                <th class="text-right">수량</th>
+                                                <th class="text-right">평균단가</th>
+                                                <th class="text-right">현재가</th>
+                                                <th class="text-right">손익율</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template x-for="stock in kt00004_data.종목별현황" :key="stock.종목코드">
+                                                <tr>
+                                                    <td><span x-text="stock.종목명"></span></td>
+                                                    <td class="text-right"><span x-text="cleanNumber(stock.보유수량) + '주'"></span></td>
+                                                    <td class="text-right"><span x-text="formatPrice(cleanNumber(stock.평균단가))"></span></td>
+                                                    <td class="text-right"><span x-text="formatPrice(cleanNumber(stock.현재가))"></span></td>
+                                                    <td class="text-right">
+                                                        <span :class="getProfitClass(parseFloat(stock.손익율))"
+                                                              x-text="formatPercent(stock.손익율)"></span>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div x-show="apiStatus.kt00004.error" class="error-message">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <span x-text="apiStatus.kt00004.error"></span>
+                </div>
+
+                <div x-show="!apiStatus.kt00004.loading && !apiStatus.kt00004.error && (!kt00004_data.계좌정보 && (!Array.isArray(kt00004_data.종목별현황) || kt00004_data.종목별현황.length === 0))" 
+                     class="empty-state">
+                    <i class="bi bi-inbox display-6"></i>
+                    <p class="mt-2">계좌평가 데이터가 없습니다.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 전체 에러 메시지 -->
+    <div x-show="globalError" class="alert alert-danger">
+        <strong>전체 오류:</strong> <span x-text="globalError"></span>
+    </div>
 </div>
 {% raw %}
 <!--handlebar scripts-->
 {% endraw %}
 {% endblock %}
+
 {% block script %}
 {% raw %}
 <script>
 // Alpine 컴포넌트 팩토리 함수
-function createSettingsComponent() {
+function createAccountDetailComponent() {
     return {
         // === 상태 변수 ===
-        data: null,
-    
+        globalLoading: false,
+        globalError: null,
+        autoRefresh: false,
+        refreshInterval: null,
+        account : null, //계좌명
+        bank : null, //지점명
+        
+        // API 상태 관리
+        apiStatus: {
+            ka10085: { loading: false, success: false, error: null },
+            kt00003: { loading: false, success: false, error: null },
+            kt00004: { loading: false, success: false, error: null }
+        },
+        
+        // API 응답 데이터
+        ka10085_data: {}, // 계좌수익률
+        kt00003_data: {}, // 추정자산조회
+        kt00004_data: {}, // 계좌평가현황
+        
         // === 초기화 ===
         init() {
-            console.log('Initializing data_settings');
+            console.log('계좌 상세 정보 컴포넌트 초기화');
+            console.log('초기 globalLoading 상태:', this.globalLoading);
+            this.$nextTick(() => { this.fetchAllData(); });
+            window.addEventListener('beforeunload', () => { this.stopAutoRefresh(); });
         },
-	
+
+        // === API 호출 메서드 ===
+        async fetchAllData() {
+            console.log('모든 계좌 데이터 조회 시작');
+            this.globalLoading = true;
+            this.globalError = null;
+            try {
+                const promises = [
+                    this.fetchApiData('ka10085', { stex_tp: '0' }).catch(e => console.error('ka10085 오류:', e)),
+                    this.fetchApiData('kt00003', { qry_tp: '0' }).catch(e => console.error('kt00003 오류:', e)),
+                    this.fetchApiData('kt00004', { qry_tp: '0', dmst_stex_tp: 'KRX' }).catch(e => console.error('kt00004 오류:', e))
+                ];
+                await Promise.allSettled(promises);
+                console.log('모든 API 호출 완료');
+            } catch (error) {
+                console.error('전체 데이터 조회 오류:', error);
+                this.globalError = error.message;
+            } finally {
+                this.globalLoading = false;
+                this.$nextTick(() => { console.log('nextTick - globalLoading:', this.globalLoading); });
+            }
+        },
+
+        async fetchApiData(apiId, payload) {
+            console.log(`${apiId} API 호출 시작`);
+            this.apiStatus[apiId] = { loading: true, success: false, error: null };
+            try {
+                let response;
+                if (typeof callKiwoomApi === 'function') {
+                    response = await callKiwoomApi(apiId, payload);
+                } else {
+                    const fetchResponse = await fetch(`/api/v1/kiwoom/${apiId}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    response = await fetchResponse.json();
+                }
+                console.log(`${apiId} API 응답:`, response);
+                if (response.success && response.data) {
+                    this[`${apiId}_data`] = this.extractApiData(response.data, apiId);
+                    this.apiStatus[apiId] = { loading: false, success: true, error: null };
+                } else {
+                    throw new Error(response.error_message || `${apiId} API 호출 실패`);
+                }
+            } catch (error) {
+                console.error(`${apiId} API 호출 오류:`, error);
+                this.apiStatus[apiId] = { loading: false, success: false, error: error.message };
+                this[`${apiId}_data`] = {};
+            }
+        },
+
+        // API 응답에서 실제 데이터 추출
+        extractApiData(responseData, apiId) {
+            console.log(`${apiId} 원본 데이터:`, responseData);
+            
+            if (apiId === 'ka10085') {
+                // 계좌수익률은 배열 형태
+                return responseData.계좌수익률 || [];
+            } else if (apiId === 'kt00003') {
+                // 추정자산조회는 단순 객체
+                const filteredData = {};
+                for (const [key, value] of Object.entries(responseData)) {
+                    if (!['return_code', 'return_msg'].includes(key)) {
+                        filteredData[key] = value;
+                    }
+                }
+                return filteredData;
+            } else if (apiId === 'kt00004') {
+                // 계좌평가현황은 기본 정보 + 종목별 배열
+                const result = {
+                    계좌정보: {},
+                    종목별현황: responseData.종목별계좌평가현황 || []
+                };
+                this.account= responseData.계좌명;
+                this.bank = responseData.지점명;
+                
+                // 기본 계좌 정보 추출
+                for (const [key, value] of Object.entries(responseData)) {
+                    if (!['return_code', 'return_msg', '종목별계좌평가현황'].includes(key)) {
+                        if (!['계좌명', '지점명'].includes(key)) {
+                            result.계좌정보[key] = value;
+                        }
+                    }
+
+                }
+                
+                return result;
+            }
+            
+            return responseData;
+        },
+
+        // === 자동 새로고침 관리 ===
+        toggleAutoRefresh() { this.autoRefresh ? this.stopAutoRefresh() : this.startAutoRefresh(); },
+        startAutoRefresh() {
+            this.autoRefresh = true;
+            this.refreshInterval = setInterval(() => {
+                if (!this.globalLoading) this.fetchAllData();
+            }, 60000);
+            console.log('자동 새로고침 시작 (60초 간격)');
+        },
+        stopAutoRefresh() {
+            this.autoRefresh = false;
+            if (this.refreshInterval) { clearInterval(this.refreshInterval); this.refreshInterval = null; }
+            console.log('자동 새로고침 중지');
+        },
+        refreshAllData() { this.fetchAllData(); },
+
+        // 강제로 로딩 상태 중지
+        forceStopLoading() {
+            console.log('강제 로딩 중지 실행');
+            this.globalLoading = false;
+            this.$nextTick(() => { console.log('강제 중지 후 globalLoading:', this.globalLoading); });
+        },
+
+        // === 데이터 계산 메서드 ===
+        getTotalAsset() {
+            // kt00004에서 예탁자산평가액 또는 kt00003에서 추정예탁자산
+            if (this.kt00004_data.계좌정보) {
+                return this.cleanNumber(this.kt00004_data.계좌정보.예탁자산평가액) || 
+                       this.cleanNumber(this.kt00004_data.계좌정보.추정예탁자산);
+            }
+            return this.cleanNumber(this.kt00003_data.추정예탁자산) || 0;
+        },
+        
+        getTotalProfit() {
+            // kt00004에서 종목별 손익금액 합계 계산
+            if (this.kt00004_data.종목별현황 && Array.isArray(this.kt00004_data.종목별현황)) {
+                return this.kt00004_data.종목별현황.reduce((total, item) => {
+                    return total + this.cleanNumber(item.손익금액);
+                }, 0);
+            }
+            return 0;
+        },
+        
+        getTotalProfitRate() {
+            // 총 손익률 계산 (총손익 / 총매입금액 * 100)
+            const totalProfit = this.getTotalProfit();
+            const totalBuyAmount = this.getTotalBuyAmount();
+            if (totalBuyAmount === 0) return 0;
+            return (totalProfit / totalBuyAmount * 100);
+        },
+        
+        getTotalBuyAmount() {
+            // kt00004에서 총매입금액
+            if (this.kt00004_data.계좌정보) {
+                return this.cleanNumber(this.kt00004_data.계좌정보.총매입금액) || 0;
+            }
+            return 0;
+        },
+        
+        getAvailableAmount() {
+            // kt00004에서 예수금 또는 D+2추정예수금
+            if (this.kt00004_data.계좌정보) {
+                return this.cleanNumber(this.kt00004_data.계좌정보.예수금) || 
+                       this.cleanNumber(this.kt00004_data.계좌정보['D+2추정예수금']);
+            }
+            return 0;
+        },
+        
+        // 숫자 문자열을 실제 숫자로 변환 (키움API는 숫자를 0패딩된 문자열로 반환)
+        cleanNumber(value) {
+            if (!value && value !== 0) return 0;
+            if (typeof value === 'number') return value;
+            
+            // 문자열에서 숫자만 추출하고 앞의 0 제거
+            const cleanValue = String(value).replace(/[^0-9.-]/g, '');
+            const num = Number(cleanValue);
+            return isNaN(num) ? 0 : num;
+        },
+
+        // === 포매팅 메서드 ===
+        formatValue(value, key) {
+            if (!value && value !== 0) return '-';
+            const strValue = String(value);
+            const amountFields = ['자산', '금액', '원금', '평가', '손익', '수수료', '세금'];
+            const rateFields = ['수익률', '비율', '율', '%'];
+            const isAmount = amountFields.some(field => key.includes(field));
+            const isRate = rateFields.some(field => key.includes(field)) || strValue.includes('%');
+            if (isRate) return this.formatPercent(value);
+            if (isAmount) return this.formatCurrency(value);
+            return this.formatNumber(value);
+        },
+        formatCurrency(value) {
+            if (!value && value !== 0) return '-';
+            const num = Number(value);
+            if (isNaN(num)) return '-';
+            if (Math.abs(num) >= 100000000) return (num / 100000000).toFixed(1) + '억원';
+            if (Math.abs(num) >= 10000) return (num / 10000).toFixed(1) + '만원';
+            return num.toLocaleString() + '원';
+        },
+        formatPrice(value) {
+            if (!value && value !== 0) return '-';
+            const num = Number(value);
+            if (isNaN(num)) return '-';
+            return num.toLocaleString() + '원';
+        },
+        formatNumber(value) {
+            if (!value && value !== 0) return '-';
+            const num = Number(value);
+            return isNaN(num) ? value : num.toLocaleString();
+        },
+        formatPercent(value) {
+            if (!value && value !== 0) return '-';
+            const cleanValue = String(value).replace(/[^0-9.-]/g, '');
+            const num = Number(cleanValue);
+            if (isNaN(num)) return value;
+            return num.toFixed(2) + '%';
+        },
+        getProfitClass(value) {
+            if (!value && value !== 0) return 'profit-neutral';
+            const cleanValue = String(value).replace(/[^0-9.-]/g, '');
+            const num = Number(cleanValue);
+            if (isNaN(num)) return 'profit-neutral';
+            const originalStr = String(value);
+            if (originalStr.includes('+') || num > 0) return 'profit-positive';
+            if (originalStr.includes('-') || num < 0) return 'profit-negative';
+            return 'profit-neutral';
+        },
+        getStatusClass(apiId) {
+            const status = this.apiStatus[apiId];
+            if (status.loading) return 'status-loading';
+            if (status.success) return 'status-success';
+            return 'status-error';
+        }
     };
 }
 
 // Alpine.js 컴포넌트 등록
 document.addEventListener('alpine:init', () => {
-    Alpine.data('data_settings', createSettingsComponent);
+    Alpine.data('accountDetailComponent', createAccountDetailComponent);
 });
 </script>
 {% endraw %}

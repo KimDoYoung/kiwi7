@@ -3,6 +3,8 @@
     1. /api/v1/stock/info/{stk_cd} 통합 API를 사용하여 종목 상세 정보를 조회합니다.
     2. 모든 정보를 세로로 나열하여 한 눈에 볼 수 있도록 구성
     3. 유사한 정보끼리 그룹화하여 표시
+    TODO: 챠트를 넣자.
+    
 #}
 {% extends 'common/base.html' %}
 {% block style %}
@@ -150,6 +152,8 @@
             </div>
         </div>
         <div class="btn-group" role="group">
+            <button type="button" class="btn btn-sm btn-danger" @click="buy(stockData)" title="매수(buy)">買</button>
+            <button type="button" class="btn btn-sm btn-primary" @click="sell(stockData)" title="매도(sell)">賣</button>
             <button class="btn btn-outline-primary btn-sm" 
                     @click="fetchStockData()" 
                     :disabled="loading">
@@ -709,7 +713,33 @@ function createStockDetailComponent() {
             if (!stk_cd) return;
             const url = `https://finance.naver.com/item/main.naver?code=${stk_cd}`;
             window.open(url, '_blank');
-        }
+        },
+        buy(item) {
+            console.log('구매:', item);
+            const { 종목코드: stk_code, 종목명: stk_name, 매입가 } = item;
+            
+            showBuySellCanvas({
+                stk_code,
+                stk_name,
+                which: '매수',
+                qty: 1,
+                cost: 매입가 || 0
+            });
+        },
+
+        sell(item) {
+            console.log('판매:', item);
+            const { 종목코드: stk_code, 종목명: stk_name, 보유수량 } = item;
+            const qty = Number(보유수량) || 0;
+            
+            showBuySellCanvas({
+                stk_code,
+                stk_name,
+                which: '매도',
+                qty,
+                cost: 0
+            });
+        },
     };
 }
 
