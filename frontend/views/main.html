@@ -35,6 +35,10 @@
     justify-content: space-between;
     padding: 0.75rem;
 }
+/* 빈 상태 아이콘 */
+.empty-state-icon {
+    font-size: 3rem;
+}
 </style>
 {% endblock %}
 
@@ -265,7 +269,7 @@
 
                     <!-- 데이터 없음 -->
                     <div x-show="!loading_mystock && mystocks.length === 0" class="text-center py-4">
-                        <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
+                        <i class="bi bi-inbox text-muted empty-state-icon"></i>
                         <p class="text-muted mt-2">등록된 종목이 없습니다.</p>
                     </div>
 
