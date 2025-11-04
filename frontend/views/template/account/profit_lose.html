@@ -1,43 +1,190 @@
 {% extends 'common/base.html' %}
 {% block style %}
+<style>
+.profit-tabs {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 10px 10px 0 0;
+    padding: 0.5rem;
+}
+
+.profit-tabs .nav-link {
+    border: none;
+    border-radius: 8px;
+    margin: 0 2px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.profit-tabs .nav-link:hover {
+    background-color: rgba(13, 110, 253, 0.1);
+    color: #0d6efd;
+}
+
+.profit-tabs .nav-link.active {
+    background-color: #0d6efd;
+    color: white;
+    box-shadow: 0 2px 4px rgba(13, 110, 253, 0.3);
+}
+
+.tab-content {
+    background: white;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.page-title {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(40, 167, 69, 0.2);
+}
+
+.page-title i {
+    margin-right: 0.5rem;
+}
+</style>
 {% endblock %}
+
 {% block content %}
 <div class="container mt-4">
-    <h4 class="mb-3"><i class="bi bi-cash-stack me-2 text-success"></i>계좌 손익 분석</h4>
+    <!-- 페이지 제목 -->
+    <div class="page-title">
+        <h4 class="mb-0">
+            <i class="bi bi-cash-stack"></i>
+            계좌 손익 분석
+        </h4>
+    </div>
 
-    <ul class="nav nav-tabs" id="profitTabs" role="tablist">
+    <!-- 탭 네비게이션 -->
+    <ul class="nav nav-tabs profit-tabs" id="profitTabs" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="ka10074-tab" data-bs-toggle="tab" data-bs-target="#tab-ka10074" type="button" role="tab" aria-controls="tab-ka10074" aria-selected="true">일자별 실현손익</button>
+            <button aria-label="일자별 실현손익" 
+                    class="nav-link active" 
+                    id="ka10074-tab" 
+                    data-bs-toggle="tab" 
+                    data-bs-target="#tab-ka10074" 
+                    type="button" 
+                    role="tab" 
+                    aria-controls="tab-ka10074" 
+                    aria-selected="true">
+                일자별 실현손익
+            </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="ka01690-tab" data-bs-toggle="tab" data-bs-target="#tab-ka01690" type="button" role="tab" aria-controls="tab-ka01690" aria-selected="false">일별잔고수익률</button>
+            <button aria-label="일별잔고수익률" 
+                    class="nav-link" 
+                    id="ka01690-tab" 
+                    data-bs-toggle="tab" 
+                    data-bs-target="#tab-ka01690" 
+                    type="button" 
+                    role="tab" 
+                    aria-controls="tab-ka01690" 
+                    aria-selected="false">
+                일별잔고수익률
+            </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="ka10072-tab" data-bs-toggle="tab" data-bs-target="#tab-ka10085" type="button" role="tab" aria-controls="tab-ka10072" aria-selected="false">계좌수익율</button>
+            <button aria-label="계좌수익율" 
+                    class="nav-link" 
+                    id="ka10072-tab" 
+                    data-bs-toggle="tab" 
+                    data-bs-target="#tab-ka10085" 
+                    type="button" 
+                    role="tab" 
+                    aria-controls="tab-ka10085" 
+                    aria-selected="false">
+                계좌수익율
+            </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="kt00016-tab" data-bs-toggle="tab" data-bs-target="#tab-kt00016" type="button" role="tab" aria-controls="tab-kt00016" aria-selected="false">일별계좌수익률상세</button>
+            <button aria-label="일별계좌수익률상세" 
+                    class="nav-link" 
+                    id="kt00016-tab" 
+                    data-bs-toggle="tab" 
+                    data-bs-target="#tab-kt00016" 
+                    type="button" 
+                    role="tab" 
+                    aria-controls="tab-kt00016" 
+                    aria-selected="false">
+                일별계좌수익률상세
+            </button>
         </li>
     </ul>
 
-    <div class="tab-content border p-0 mt-2" id="profitTabsContent">
-    {% include 'common/kiwoom_api/ka10074.html' %} 
-    {% include 'common/kiwoom_api/ka10085.html' %}
-    {% include 'common/kiwoom_api/ka01690.html' %}
-    {% include 'common/kiwoom_api/kt00016.html' %}
+    <!-- 탭 컨텐츠 -->
+    <div class="tab-content p-3" id="profitTabsContent">
+        {% include 'common/kiwoom_api/ka10074.html' %} 
+        {% include 'common/kiwoom_api/ka10085.html' %}
+        {% include 'common/kiwoom_api/ka01690.html' %}
+        {% include 'common/kiwoom_api/kt00016.html' %}
     </div>
+</div>
 {% endblock %}
+
 {% block script %}
-<script id="profit-lose">
-    (function(){
+<script id="profit-lose-config">
+    // 날짜 데이터 전역 변수로 설정
+    (function() {
         const start_ymd = "{{ data.start_ymd }}";
         const end_ymd = "{{ data.end_ymd }}";
-        window.format_start_ymd = start_ymd ? start_ymd.slice(0,4) + '-' + start_ymd.slice(4,6) + '-' + start_ymd.slice(6,8) : null;
-        window.format_end_ymd = end_ymd ? end_ymd.slice(0,4) + '-' + end_ymd.slice(4,6) + '-' + end_ymd.slice(6,8) : null;
+        
+        // 날짜 포맷팅 함수
+        function formatDate(dateStr) {
+            if (!dateStr || dateStr.length !== 8) return null;
+            return dateStr.slice(0,4) + '-' + dateStr.slice(4,6) + '-' + dateStr.slice(6,8);
+        }
+        
+        // 전역 변수로 포맷된 날짜 설정
+        window.format_start_ymd = formatDate(start_ymd);
+        window.format_end_ymd = formatDate(end_ymd);
+        
+        console.log('손익 분석 페이지 초기화 완료:', {
+            start_ymd: window.format_start_ymd,
+            end_ymd: window.format_end_ymd
+        });
     })();
 </script>
+
+<!-- 컴포넌트 스크립트 로드 -->
 <script src="/public/js/kiwoom_api/ka10074.component.js"></script>
 <script src="/public/js/kiwoom_api/ka01690.component.js"></script>
 <script src="/public/js/kiwoom_api/ka10085.component.js"></script>
 <script src="/public/js/kiwoom_api/kt00016.component.js"></script>
+
+<script id="profit-lose-tabs">
+    // 탭 전환 이벤트 처리
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabTriggerList = [].slice.call(document.querySelectorAll('#profitTabs button[data-bs-toggle="tab"]'));
+        
+        tabTriggerList.forEach(function(tabTrigger) {
+            tabTrigger.addEventListener('shown.bs.tab', function(event) {
+                const activeTabId = event.target.getAttribute('data-bs-target');
+                console.log('활성 탭 변경:', activeTabId);
+                
+                // 탭 전환 시 필요한 추가 로직 수행
+                handleTabSwitch(activeTabId);
+            });
+        });
+        
+        function handleTabSwitch(tabId) {
+            // 각 탭별 특별한 처리가 필요한 경우 여기에 추가
+            switch(tabId) {
+                case '#tab-ka10074':
+                    console.log('일자별 실현손익 탭 활성화');
+                    break;
+                case '#tab-ka01690':
+                    console.log('일별잔고수익률 탭 활성화');
+                    break;
+                case '#tab-ka10085':
+                    console.log('계좌수익율 탭 활성화');
+                    break;
+                case '#tab-kt00016':
+                    console.log('일별계좌수익률상세 탭 활성화');
+                    break;
+            }
+        }
+    });
+</script>
 {% endblock %}

@@ -3,10 +3,10 @@
         <h5 class="mb-3"><i class="bi bi-bar-chart-line me-2"></i>일별계좌수익률상세현황</h5>
         <div class="row mb-2">
             <div class="col-auto">
-                <input type="date" class="form-control form-control-sm" x-model="fr_dt">
+                <input aria-label="시작일" type="date" class="form-control form-control-sm" x-model="fr_dt">
             </div>
             <div class="col-auto">
-                <input type="date" class="form-control form-control-sm" x-model="to_dt">
+                <input aria-label="종료일" type="date" class="form-control form-control-sm" x-model="to_dt">
             </div>
             <div class="col-auto">
                 <button class="btn btn-outline-primary btn-sm" @click="fetchData()" :disabled="loading">

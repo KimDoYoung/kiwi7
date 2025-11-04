@@ -140,7 +140,7 @@
     <div class="mt-4">
         <div class="mt-2 mb-2 d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center gap-3">
-                <select class="form-select form-select-sm w-auto" x-model="profitFilter">
+                <select aria-label="손익율 필터" class="form-select form-select-sm w-auto" x-model="profitFilter">
                     <option value="all">전체</option>
                     <option value="plus">+손익율</option>
                     <option value="minus">-손익율</option>
@@ -210,7 +210,7 @@
                 <tbody x-show="loading">
                     <tr>
                         <td :colspan="getTableColumns().length" class="text-center py-4">
-                            <i class="bi bi-arrow-clockwise" style="animation: spin 1s linear infinite;"></i> 데이터를 불러오는 중...
+                            <i class="bi bi-arrow-clockwise spin"></i> 데이터를 불러오는 중...
                         </td>
                     </tr>
                 </tbody>
