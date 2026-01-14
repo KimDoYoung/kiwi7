@@ -49,3 +49,8 @@
 ```shell
 python extract_kw_req_def.py.py c:\\tmp\\kwapi.xlsx > 1.txt
 ```
+## fedora에 설치
+
+1. .env.docker 에서 folder 경로를 수정
+2. sudo docker-compose up -d
+3. 로그보기 : sudo docker logs -f kiwi7-app
