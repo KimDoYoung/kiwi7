@@ -81,7 +81,7 @@ def add_static_files(app: FastAPI):
 async def startup_event():
     ''' Kiwi7 application  시작 '''
     logger.info('---------------------------------')
-    logger.info('Startup 프로세스 시작')
+    logger.info(f'Startup 프로세스 시작 : 버전 {config.VERSION}, 모드 {config.PROFILE_NAME}')
     logger.info('---------------------------------')
 
     db_path = config.DB_PATH 

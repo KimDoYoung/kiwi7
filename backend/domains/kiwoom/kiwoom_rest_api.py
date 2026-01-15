@@ -33,6 +33,10 @@ class KiwoomRestApi(StockApi):
         super().__init__(config.KIWOOM_ACCT_NO)
         self.token_manager = token_manager
     
+    @property
+    def base_url(self) -> str:
+        """키움증권 API 베이스 URL"""
+        return config.KIWOOM_BASE_URL
 
     def get_headers(self, data: KiwoomRequest, token:str) -> dict:
         """
