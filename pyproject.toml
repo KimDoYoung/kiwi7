@@ -20,4 +20,35 @@ dependencies = [
     "selenium>=4.34.2",
     "uvicorn>=0.35.0",
     "websockets>=15.0.1",
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-mock>=3.12.0",
+    "httpx>=0.27.0",
+]
+
+[tool.pytest.ini_options]
+# pytest 설정
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+addopts = [
+    "-v",                    # verbose 출력
+    "--strict-markers",      # 등록되지 않은 마커 사용 시 에러
+    "--tb=short",           # traceback 간결하게
+    "--cov=backend",        # 커버리지 측정 (pytest-cov 설치 시)
+    "--cov-report=term-missing",  # 누락된 라인 표시
+]
+markers = [
+    "unit: 단위 테스트",
+    "integration: 통합 테스트",
+    "api: API 엔드포인트 테스트",
+    "slow: 실행이 느린 테스트",
+]
+
+[dependency-groups]
+dev = [
+    "pytest-cov>=7.0.0",
 ]
