@@ -31,14 +31,15 @@ async def get_setting(setting_key: str):
 async def update_stk_info(force: bool = False):
     """stk_info 테이블 업데이트"""
     try:
+        logger.info(f"stk_info 테이블 업데이트 시작 (force={force})")
         # stk_info_fill은 비동기 함수이므로 await 사용
         await stk_info_fill(force=force)
         service = get_service("settings")
         last_fill_time = await service.get(SettingsKey.LAST_STK_INFO_FILL)
+        logger.info(f"stk_info 테이블 업데이트 완료: {last_fill_time}")
         return KiwoomApiHelper.create_success_response(data={"last_stk_info_fill": last_fill_time})
     except Exception as e:
-        logger.error(f"stk_info 테이블 업데이트 중 오류 발생: {str(e)}")
-        # api_helpers의 create_error_response 사용 (메시지만 전달)
+        logger.error(f"stk_info 테이블 업데이트 중 오류 발생: {str(e)}", exc_info=True)
         return KiwoomApiHelper.create_error_response(
             error_code="STK_INFO_UPDATE_ERROR",
             error_message=f"stk_info 테이블 업데이트 중 오류가 발생했습니다: {str(e)}"

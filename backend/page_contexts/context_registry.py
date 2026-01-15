@@ -1,8 +1,6 @@
-
 from backend.page_contexts.order_context import order_buy, order_sell
 from backend.page_contexts.account_context import account_detail, account_fill, account_list, account_profit_lose
-from backend.page_contexts.settings_context import settings
-from backend.page_contexts.stock_context import stock_detail, stock_find, stock_mystock
+from backend.page_contexts.settings_context import get_settings_edit_context
 
 PAGE_CONTEXT_PROVIDERS = {
     "account/list": account_list,
@@ -13,9 +11,5 @@ PAGE_CONTEXT_PROVIDERS = {
     "order/buy": order_buy,
     "order/sell": order_sell,
     
-    "settings/edit": settings,
-    
-    "stock/find": stock_find,
-    "stock/detail": stock_detail,
-    "stock/mystock": stock_mystock,
+    "settings/edit": get_settings_edit_context,
 }

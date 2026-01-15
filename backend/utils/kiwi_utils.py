@@ -1,22 +1,20 @@
-
-
-import datetime
+from datetime import datetime, timedelta
 import json
 from typing import Any, Dict
 
 
 def is_time_exceeded(time_str:str, time_:str) -> bool:
     ''' time_str을 datetime으로m  time_ : 30s, 10m, 10d 형식의 문자열, 초과시 true'''
-    datetime = datetime.datetime.strptime(time_str, '%Y-%m-%d %H:%M:%S')
+    dt = datetime.strptime(time_str, '%Y-%m-%d %H:%M:%S')
     if time_.endswith('s'):
-        delta = datetime.timedelta(seconds=int(time_[:-1]))
+        delta = timedelta(seconds=int(time_[:-1]))
     elif time_.endswith('m'):
-        delta = datetime.timedelta(minutes=int(time_[:-1]))
+        delta = timedelta(minutes=int(time_[:-1]))
     elif time_.endswith('d'):
-        delta = datetime.timedelta(days=int(time_[:-1]))
+        delta = timedelta(days=int(time_[:-1]))
     else:
         raise ValueError("Invalid time format")
-    return datetime + delta < datetime.datetime.now()
+    return dt + delta < datetime.now()
 
 def get_current_timestamp() -> str:
     """
@@ -29,7 +27,6 @@ def get_current_timestamp() -> str:
 
 def get_today() -> str:
     """오늘 날짜를 'YYYY-MM-DD' 형식으로 반환합니다."""
-    from datetime import datetime
     # 요일을 함께 표시하려면 strftime 포맷을 수정합니다.
     weekdays = ['월', '화', '수', '목', '금', '토', '일']
     today = datetime.now()
@@ -191,7 +188,7 @@ def to_str(obj: Any, ensure_ascii: bool=False) -> str:
     """
     try:
         def datetime_handler(obj):
-            if isinstance(obj, datetime.datetime):
+            if isinstance(obj, datetime):
                 return obj.isoformat()
             raise TypeError(f'Object of type {obj.__class__.__name__} is not JSON serializable')
         

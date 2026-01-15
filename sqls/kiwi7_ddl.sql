@@ -43,6 +43,16 @@ CREATE TABLE IF NOT EXISTS kdemon_state (
 );
 
 -- ---------------------------------------------------------------
+-- tokens: 증권사 API 토큰 관리
+-- ---------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS tokens (
+    broker_type TEXT PRIMARY KEY,           -- 'KIWOOM' | 'KIS' | 'LS'
+    access_token TEXT NOT NULL,             -- 액세스 토큰
+    expires_at TEXT NOT NULL,               -- 만료 시각 (ISO8601)
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+-- ---------------------------------------------------------------
 -- my_stock
 -- ---------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS my_stock (
