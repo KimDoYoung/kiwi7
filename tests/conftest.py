@@ -26,13 +26,29 @@ def app():
 @pytest.fixture
 def client(app):
     """TestClient를 반환하는 fixture"""
-    return TestClient(app)
+    with TestClient(app) as c:
+        yield c
 
 
-@pytest.fixture
-def test_db_path(tmp_path):
-    """테스트용 임시 DB 경로를 반환하는 fixture"""
-    return tmp_path / "test_kiwi7.db"
+@pytest.fixture(scope="session")
+def test_db(tmp_path_factory):
+    """세션 스코프의 테스트 DB fixture"""
+    from backend.core.kiwi7_db import create_kiwi7_db
+    
+    # 세션 전체에서 사용할 임시 디렉토리 생성
+    db_dir = tmp_path_factory.mktemp("data")
+    db_path = db_dir / "test_kiwi7.db"
+    
+    # DB 생성 및 테이블 스키마 적용
+    create_kiwi7_db(str(db_path))
+    
+    return str(db_path)
+
+
+@pytest.fixture(autouse=True)
+def mock_db_path(monkeypatch, test_db):
+    """모든 테스트에서 DB 경로를 테스트 DB로 설정"""
+    monkeypatch.setattr('backend.core.config.config.DB_PATH', test_db)
 
 
 @pytest.fixture

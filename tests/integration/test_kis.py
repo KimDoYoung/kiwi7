@@ -28,18 +28,17 @@ def mock_kis_approval_response():
 
 
 @pytest.fixture
-async def kis_token_manager(test_db_path):
+async def kis_token_manager():
     """테스트용 KIS 토큰 매니저"""
-    # DB 경로를 테스트용으로 설정
-    with patch('backend.core.config.config.DB_PATH', str(test_db_path)):
-        manager = KisTokenManager()
-        yield manager
-        # 테스트 후 정리
-        if manager.token:
-            try:
-                await manager._clear_token_from_db()
-            except:
-                pass
+    # mock_db_path fixture가 DB 경로를 자동으로 설정
+    manager = KisTokenManager()
+    yield manager
+    # 테스트 후 정리
+    if manager.token:
+        try:
+            await manager._clear_token_from_db()
+        except:
+            pass
 
 
 @pytest.mark.integration
@@ -212,7 +211,7 @@ async def test_discard_token_success(kis_token_manager, mock_kis_token_response)
 
 @pytest.mark.integration
 @pytest.mark.asyncio
-@pytest.mark.skip(reason="실제 KIS API 호출 필요 - 수동 테스트용")
+#@pytest.mark.skip(reason="실제 KIS API 호출 필요 - 수동 테스트용")
 async def test_real_kis_token_issue():
     """실제 KIS API 토큰 발급 테스트 (수동 실행)"""
     # 실제 환경 변수가 설정되어 있어야 함
