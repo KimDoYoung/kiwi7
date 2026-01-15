@@ -27,17 +27,10 @@ def test_config_kiwoom_settings():
 
 
 @pytest.mark.unit
-def test_config_kis_virtual_mode():
-    """한국투자증권 가상/실제 모드 테스트"""
-    import os
-    
-    # 가상 모드 테스트
-    os.environ['KIS_IS_VIRTUAL'] = 'true'
+def test_config_kis_urls():
+    """한국투자증권 URL 설정 테스트"""
     config = Config()
-    assert config.KIS_IS_VIRTUAL is True
-    assert 'vts' in config.KIS_BASE_URL.lower()
-    
-    # 실제 모드 테스트
-    os.environ['KIS_IS_VIRTUAL'] = 'false'
-    config = Config()
-    assert config.KIS_IS_VIRTUAL is False
+    assert hasattr(config, 'KIS_BASE_URL')
+    assert hasattr(config, 'KIS_WS_URL')
+    assert config.KIS_BASE_URL == 'https://openapi.koreainvestment.com:9443'
+    assert config.KIS_WS_URL == 'ws://ops.koreainvestment.com:21000'

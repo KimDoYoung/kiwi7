@@ -2,7 +2,7 @@
 LS증권 토큰 매니저
 OAuth2 토큰 발급, 갱신, 저장을 관리합니다.
 """
-from datetime import datetime
+from datetime import datetime, timedelta
 import aiohttp
 
 from backend.domains.base.base_token_manager import BaseTokenManager
@@ -30,11 +30,6 @@ class LsTokenManager(BaseTokenManager):
     @property
     def app_secret(self) -> str:
         return config.LS_SECRET_KEY
-
-    @property
-    def is_virtual(self) -> bool:
-        """모의투자 여부"""
-        return config.LS_IS_VIRTUAL
 
     async def issue_access_token(self) -> dict:
         """LS 토큰 발급"""
@@ -68,8 +63,7 @@ class LsTokenManager(BaseTokenManager):
 
                     # LS는 expires_in (초단위)로 제공
                     expires_in = resp_json.get("expires_in", 86400)
-                    expire_time = datetime.now()
-                    expire_time = expire_time.replace(second=expire_time.second + expires_in)
+                    expire_time = datetime.now() + timedelta(seconds=expires_in)
                     self.expires_dt = expire_time.strftime('%Y-%m-%d %H:%M:%S')
 
                     if not self.token:

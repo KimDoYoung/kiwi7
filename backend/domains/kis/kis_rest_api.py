@@ -4,7 +4,6 @@ KIS(한국투자증권) REST API 클라이언트
 from datetime import datetime
 from typing import Dict, Any
 import aiohttp
-import hashlib
 
 from backend.domains.stock_api import StockApi, BrokerType
 from backend.domains.kis.managers.kis_token_manager import KisTokenManager
@@ -35,10 +34,6 @@ class KisRestApi(StockApi):
     @property
     def base_url(self) -> str:
         return config.KIS_BASE_URL
-
-    @property
-    def is_virtual(self) -> bool:
-        return config.KIS_IS_VIRTUAL
 
     def get_headers(self, request: KisRequest, token: str, tr_id: str, hashkey: str = None) -> Dict[str, str]:
         """HTTP 헤더 생성"""
@@ -111,8 +106,8 @@ class KisRestApi(StockApi):
             # 토큰 획득
             token = await self.token_manager.get_token()
 
-            # TR ID (실전/모의 구분)
-            tr_id = get_tr_id(request.api_id, self.is_virtual)
+            # TR ID (실전 환경)
+            tr_id = get_tr_id(request.api_id, is_virtual=False)
 
             # 해시키 생성 (주문 API인 경우)
             hashkey = None

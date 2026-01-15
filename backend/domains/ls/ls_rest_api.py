@@ -2,7 +2,7 @@
 LS증권 REST API 클라이언트
 """
 from datetime import datetime
-from typing import Dict, Any
+from typing import Dict
 import aiohttp
 
 from backend.domains.stock_api import StockApi, BrokerType
@@ -32,10 +32,6 @@ class LsRestApi(StockApi):
     @property
     def base_url(self) -> str:
         return config.LS_BASE_URL
-
-    @property
-    def is_virtual(self) -> bool:
-        return config.LS_IS_VIRTUAL
 
     def get_headers(self, request: LsRequest, token: str, tr_cd: str) -> Dict[str, str]:
         """HTTP 헤더 생성"""

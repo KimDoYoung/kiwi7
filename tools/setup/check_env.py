@@ -63,7 +63,6 @@ def check_environment():
         'APP_KEY': config.KIS_APP_KEY,
         'SECRET_KEY': config.KIS_SECRET_KEY,
         'ACCT_NO': config.KIS_ACCT_NO,
-        'IS_VIRTUAL': config.KIS_IS_VIRTUAL,
         'BASE_URL': config.KIS_BASE_URL,
     })
     print()
@@ -74,7 +73,6 @@ def check_environment():
         'APP_KEY': config.LS_APP_KEY,
         'SECRET_KEY': config.LS_SECRET_KEY,
         'ACCT_NO': config.LS_ACCT_NO,
-        'IS_VIRTUAL': config.LS_IS_VIRTUAL,
         'BASE_URL': config.LS_BASE_URL,
     })
     print()

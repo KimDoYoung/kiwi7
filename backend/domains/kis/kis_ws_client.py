@@ -3,7 +3,6 @@ KIS(한국투자증권) WebSocket 클라이언트
 실시간 시세, 호가, 체결통보를 수신합니다.
 """
 import json
-import asyncio
 from typing import Callable, Dict, Optional
 import websockets
 
@@ -29,7 +28,7 @@ class KisWsClient:
     def __init__(self, token_manager: KisTokenManager = None):
         self.token_manager = token_manager
         self.uri = config.KIS_WS_URL
-        self.is_virtual = config.KIS_IS_VIRTUAL
+        # 실전 환경만 사용
 
         self.websocket = None
         self.connected = False

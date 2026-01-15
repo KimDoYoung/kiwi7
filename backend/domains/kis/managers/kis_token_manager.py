@@ -31,11 +31,6 @@ class KisTokenManager(BaseTokenManager):
     def app_secret(self) -> str:
         return config.KIS_SECRET_KEY
 
-    @property
-    def is_virtual(self) -> bool:
-        """모의투자 여부"""
-        return config.KIS_IS_VIRTUAL
-
     async def issue_access_token(self) -> dict:
         """KIS 토큰 발급"""
         url = f"{self.base_url}/oauth2/tokenP"
