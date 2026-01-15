@@ -148,8 +148,9 @@ class LsRestApi(StockApi):
             )
 
         # LS API 오류 확인
-        rsp_cd = response_data.get('rsp_cd')
-        if rsp_cd and rsp_cd != '0':
+        # rsp_cd가 '0' 또는 '00000'이면 성공, 그 외는 에러
+        rsp_cd = response_data.get('rsp_cd', '')
+        if rsp_cd and rsp_cd not in ('0', '00000'):
             rsp_msg = response_data.get('rsp_msg', '알 수 없는 오류')
             return LsApiHelper.create_error_response(
                 error_code=rsp_cd,
