@@ -12,6 +12,8 @@ from backend.core.jwtmiddleware import JWTAuthMiddleware
 from backend.api.v1.endpoints.settings_routes import router as settings_router
 from backend.api.v1.endpoints.home_routes import router as home_router
 from backend.api.v1.endpoints.kiwoom_routes import router as kiwoom_router
+from backend.api.v1.endpoints.kis_routes import router as kis_router
+from backend.api.v1.endpoints.ls_routes import router as ls_router
 from backend.api.v1.endpoints.kdemon_routes import router as kdemon_router
 from backend.api.v1.endpoints.scheduler_routes import router as scheduler_router
 from backend.api.v1.endpoints.stock_routes import router as stock_router
@@ -51,9 +53,13 @@ def add_middlewares(app: FastAPI):
 
 def add_routes(app: FastAPI):
     # API 라우터 포함
-    app.include_router(home_router) 
+    app.include_router(home_router)
     app.include_router(settings_router, prefix="/api/v1/settings", tags=["settings"])
+    # 증권사 API 라우터
     app.include_router(kiwoom_router, prefix="/api/v1/kiwoom", tags=["kiwoom"])
+    app.include_router(kis_router, prefix="/api/v1/kis", tags=["kis"])
+    app.include_router(ls_router, prefix="/api/v1/ls", tags=["ls"])
+    # 서비스 라우터
     app.include_router(kdemon_router, prefix="/api/v1/kdemon", tags=["kdemon"])
     app.include_router(stock_router, prefix="/api/v1/stock", tags=["stock"])
     app.include_router(mystock_router, prefix="/api/v1/mystock", tags=["mystock"])

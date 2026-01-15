@@ -4,9 +4,12 @@
 {% block content %}
 <div x-data="data_settings"  class="container mt-4">
     <h2>설정 편집</h2>
+    <p>ver: {{data.version}}</p>
     <div class="mt-3">
         <button type="button" class="btn btn-primary" @click="issue_new_token()">키움 토큰 재발급</button>
-        <div x-show="result" class="alert alert-info mt-3" x-text="result"></div>
+        <div x-show="result" class="alert alert-info mt-3" x-text="result">
+            키움 토큰을 재발급 받습니다.
+        </div>
     </div>
     <hr class="my-3">
     <div class="mt-3 stk_info_fill">

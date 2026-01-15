@@ -20,10 +20,11 @@ async def settings():
 
         context_data["last_stk_info_fill"] = last_fill_time
         context_data["settings_available"] = True
+        context_data["version"] = service.config.VERSION
         
     except Exception as e:
         logger.error(f"설정 정보 로딩 중 오류 발생: {e}")
         context_data["last_stk_info_fill"] = None
         context_data["settings_available"] = False
-    
+        context_data["version"] = None
     return context_data
