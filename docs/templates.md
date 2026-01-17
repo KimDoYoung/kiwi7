@@ -3,6 +3,7 @@
 ## html 템플릿
 
 1. x-data의 이름을 바꾼다.
+
 ```html
 {% extends 'common/base.html' %}
 {% block style %}

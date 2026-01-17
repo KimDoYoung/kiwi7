@@ -1,0 +1,769 @@
+# KIS REST API Response Definitions
+# Auto-generated from Excel file
+
+KIS_RESPONSE_DEF = {
+    'FHKST01010100': {
+        'output': {
+            'type': 'object',
+            'fields': [
+                {'key': 'iscd_stat_cls_code', 'name': '종목 상태 구분 코드', 'type': 'string', 'required': True, 'length': 3, 'description': '51 : 관리종목 52 : 투자위험 53 : 투자경고 54 : 투자주의 55 : 신용가능 57 : 증거금 100% 58 : 거래정지 59 : 단기과열종목'},
+                {'key': 'marg_rate', 'name': '증거금 비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''},
+                {'key': 'rprs_mrkt_kor_name', 'name': '대표 시장 한글 명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'new_hgpr_lwpr_cls_code', 'name': '신 고가 저가 구분 코드', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'bstp_kor_isnm', 'name': '업종 한글 종목명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'temp_stop_yn', 'name': '임시 정지 여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'oprc_rang_cont_yn', 'name': '시가 범위 연장 여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'clpr_rang_cont_yn', 'name': '종가 범위 연장 여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'crdt_able_yn', 'name': '신용 가능 여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'grmn_rate_cls_code', 'name': '보증금 비율 구분 코드', 'type': 'string', 'required': True, 'length': 3, 'description': ''},
+                {'key': 'elw_pblc_yn', 'name': 'ELW 발행 여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'stck_prpr', 'name': '주식 현재가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss', 'name': '전일 대비', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss_sign', 'name': '전일 대비 부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'prdy_ctrt', 'name': '전일 대비율', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'acml_tr_pbmn', 'name': '누적 거래 대금', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'acml_vol', 'name': '누적 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'prdy_vrss_vol_rate', 'name': '전일 대비 거래량 비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''},
+                {'key': 'stck_oprc', 'name': '주식 시가2', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stck_hgpr', 'name': '주식 최고가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stck_lwpr', 'name': '주식 최저가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stck_mxpr', 'name': '주식 상한가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stck_llam', 'name': '주식 하한가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stck_sdpr', 'name': '주식 기준가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'wghn_avrg_stck_prc', 'name': '가중 평균 주식 가격', 'type': 'string', 'required': True, 'length': 192, 'description': ''},
+                {'key': 'hts_frgn_ehrt', 'name': 'HTS 외국인 소진율', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'frgn_ntby_qty', 'name': '외국인 순매수 수량', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'pgtr_ntby_qty', 'name': '프로그램매매 순매수 수량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'pvt_scnd_dmrs_prc', 'name': '피벗 2차 디저항 가격', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'pvt_frst_dmrs_prc', 'name': '피벗 1차 디저항 가격', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'pvt_pont_val', 'name': '피벗 포인트 값', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'pvt_frst_dmsp_prc', 'name': '피벗 1차 디지지 가격', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'pvt_scnd_dmsp_prc', 'name': '피벗 2차 디지지 가격', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'dmrs_val', 'name': '디저항 값', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'dmsp_val', 'name': '디지지 값', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'cpfn', 'name': '자본금', 'type': 'string', 'required': True, 'length': 22, 'description': ''},
+                {'key': 'rstc_wdth_prc', 'name': '제한 폭 가격', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stck_fcam', 'name': '주식 액면가', 'type': 'string', 'required': True, 'length': 11, 'description': ''},
+                {'key': 'stck_sspr', 'name': '주식 대용가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'aspr_unit', 'name': '호가단위', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'hts_deal_qty_unit_val', 'name': 'HTS 매매 수량 단위 값', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'lstn_stcn', 'name': '상장 주수', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'hts_avls', 'name': 'HTS 시가총액', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'per', 'name': 'PER', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'pbr', 'name': 'PBR', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'stac_month', 'name': '결산 월', 'type': 'string', 'required': True, 'length': 2, 'description': ''},
+                {'key': 'vol_tnrt', 'name': '거래량 회전율', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'eps', 'name': 'EPS', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'bps', 'name': 'BPS', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'd250_hgpr', 'name': '250일 최고가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'd250_hgpr_date', 'name': '250일 최고가 일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'd250_hgpr_vrss_prpr_rate', 'name': '250일 최고가 대비 현재가 비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''},
+                {'key': 'd250_lwpr', 'name': '250일 최저가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'd250_lwpr_date', 'name': '250일 최저가 일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'd250_lwpr_vrss_prpr_rate', 'name': '250일 최저가 대비 현재가 비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''},
+                {'key': 'stck_dryy_hgpr', 'name': '주식 연중 최고가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'dryy_hgpr_vrss_prpr_rate', 'name': '연중 최고가 대비 현재가 비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''},
+                {'key': 'dryy_hgpr_date', 'name': '연중 최고가 일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'stck_dryy_lwpr', 'name': '주식 연중 최저가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'dryy_lwpr_vrss_prpr_rate', 'name': '연중 최저가 대비 현재가 비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''},
+                {'key': 'dryy_lwpr_date', 'name': '연중 최저가 일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'w52_hgpr', 'name': '52주일 최고가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'w52_hgpr_vrss_prpr_ctrt', 'name': '52주일 최고가 대비 현재가 대비', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'w52_hgpr_date', 'name': '52주일 최고가 일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'w52_lwpr', 'name': '52주일 최저가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'w52_lwpr_vrss_prpr_ctrt', 'name': '52주일 최저가 대비 현재가 대비', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'w52_lwpr_date', 'name': '52주일 최저가 일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'whol_loan_rmnd_rate', 'name': '전체 융자 잔고 비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''},
+                {'key': 'ssts_yn', 'name': '공매도가능여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'stck_shrn_iscd', 'name': '주식 단축 종목코드', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'fcam_cnnm', 'name': '액면가 통화명', 'type': 'string', 'required': True, 'length': 20, 'description': ''},
+                {'key': 'cpfn_cnnm', 'name': '자본금 통화명', 'type': 'string', 'required': True, 'length': 20, 'description': ''},
+                {'key': 'apprch_rate', 'name': '접근도', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'frgn_hldn_qty', 'name': '외국인 보유 수량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'vi_cls_code', 'name': 'VI적용구분코드', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'ovtm_vi_cls_code', 'name': '시간외단일가VI적용구분코드', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'last_ssts_cntg_qty', 'name': '최종 공매도 체결 수량', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'invt_caful_yn', 'name': '투자유의여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'mrkt_warn_cls_code', 'name': '시장경고코드', 'type': 'string', 'required': True, 'length': 2, 'description': ''},
+                {'key': 'short_over_yn', 'name': '단기과열여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'sltr_yn', 'name': '정리매매여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'mang_issu_cls_code', 'name': '관리종목여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''}
+            ]
+        }
+    },
+    'FHPST01010000': {
+        'output': {
+            'type': 'object',
+            'fields': [
+                {'key': 'rprs_mrkt_kor_name', 'name': '대표 시장 한글 명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'new_hgpr_lwpr_cls_code', 'name': '신 고가 저가 구분 코드', 'type': 'string', 'required': True, 'length': 10, 'description': '특정 경우에만 데이터 출력'},
+                {'key': 'mxpr_llam_cls_code', 'name': '상하한가 구분 코드', 'type': 'string', 'required': True, 'length': 10, 'description': '특정 경우에만 데이터 출력'},
+                {'key': 'crdt_able_yn', 'name': '신용 가능 여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'stck_mxpr', 'name': '주식 상한가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'elw_pblc_yn', 'name': 'ELW 발행 여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'prdy_clpr_vrss_oprc_rate', 'name': '전일 종가 대비 시가2 비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''},
+                {'key': 'crdt_rate', 'name': '신용 비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''},
+                {'key': 'marg_rate', 'name': '증거금 비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''},
+                {'key': 'lwpr_vrss_prpr', 'name': '최저가 대비 현재가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'lwpr_vrss_prpr_sign', 'name': '최저가 대비 현재가 부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'prdy_clpr_vrss_lwpr_rate', 'name': '전일 종가 대비 최저가 비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''},
+                {'key': 'stck_lwpr', 'name': '주식 최저가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'hgpr_vrss_prpr', 'name': '최고가 대비 현재가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'hgpr_vrss_prpr_sign', 'name': '최고가 대비 현재가 부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'prdy_clpr_vrss_hgpr_rate', 'name': '전일 종가 대비 최고가 비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''},
+                {'key': 'stck_hgpr', 'name': '주식 최고가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'oprc_vrss_prpr', 'name': '시가2 대비 현재가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'oprc_vrss_prpr_sign', 'name': '시가2 대비 현재가 부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'mang_issu_yn', 'name': '관리 종목 여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'divi_app_cls_code', 'name': '동시호가배분처리코드', 'type': 'string', 'required': True, 'length': 2, 'description': '11:매수상한배분 12:매수하한배분 13: 매도상한배분 14:매도하한배분'},
+                {'key': 'short_over_yn', 'name': '단기과열여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'mrkt_warn_cls_code', 'name': '시장경고코드', 'type': 'string', 'required': True, 'length': 2, 'description': '00: 없음 01: 투자주의 02:투자경고 03:투자위험'},
+                {'key': 'invt_caful_yn', 'name': '투자유의여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'stange_runup_yn', 'name': '이상급등여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'ssts_hot_yn', 'name': '공매도과열 여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'low_current_yn', 'name': '저유동성 종목 여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'vi_cls_code', 'name': 'VI적용구분코드', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'short_over_cls_code', 'name': '단기과열구분코드', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stck_llam', 'name': '주식 하한가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'new_lstn_cls_name', 'name': '신규 상장 구분 명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'vlnt_deal_cls_name', 'name': '임의 매매 구분 명', 'type': 'string', 'required': True, 'length': 16, 'description': ''},
+                {'key': 'flng_cls_name', 'name': '락 구분 이름', 'type': 'string', 'required': True, 'length': 40, 'description': '특정 경우에만 데이터 출력'},
+                {'key': 'revl_issu_reas_name', 'name': '재평가 종목 사유 명', 'type': 'string', 'required': True, 'length': 40, 'description': '특정 경우에만 데이터 출력'},
+                {'key': 'mrkt_warn_cls_name', 'name': '시장 경고 구분 명', 'type': 'string', 'required': True, 'length': 40, 'description': '특정 경우에만 데이터 출력 "투자환기" / "투자경고"'},
+                {'key': 'stck_sdpr', 'name': '주식 기준가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'bstp_cls_code', 'name': '업종 구분 코드', 'type': 'string', 'required': True, 'length': 4, 'description': ''},
+                {'key': 'stck_prdy_clpr', 'name': '주식 전일 종가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'insn_pbnt_yn', 'name': '불성실 공시 여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'fcam_mod_cls_name', 'name': '액면가 변경 구분 명', 'type': 'string', 'required': True, 'length': 10, 'description': '특정 경우에만 데이터 출력'},
+                {'key': 'stck_prpr', 'name': '주식 현재가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss', 'name': '전일 대비', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss_sign', 'name': '전일 대비 부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'prdy_ctrt', 'name': '전일 대비율', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'acml_tr_pbmn', 'name': '누적 거래 대금', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'acml_vol', 'name': '누적 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'prdy_vrss_vol_rate', 'name': '전일 대비 거래량 비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''},
+                {'key': 'bstp_kor_isnm', 'name': '업종 한글 종목명', 'type': 'string', 'required': True, 'length': 40, 'description': '※ 거래소 정보로 특정 종목은 업종구분이 없어 데이터 미회신'},
+                {'key': 'sltr_yn', 'name': '정리매매 여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'trht_yn', 'name': '거래정지 여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'oprc_rang_cont_yn', 'name': '시가 범위 연장 여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'vlnt_fin_cls_code', 'name': '임의 종료 구분 코드', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'stck_oprc', 'name': '주식 시가2', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vol', 'name': '전일 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''}
+            ]
+        }
+    },
+    'FHKST01010300': {
+        'output': {
+            'type': 'array',
+            'fields': [
+                {'key': 'stck_cntg_hour', 'name': '주식 체결 시간', 'type': 'string', 'required': True, 'length': 6, 'description': ''},
+                {'key': 'stck_prpr', 'name': '주식 현재가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss', 'name': '전일 대비', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss_sign', 'name': '전일 대비 부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'cntg_vol', 'name': '체결 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'tday_rltv', 'name': '당일 체결강도', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'prdy_ctrt', 'name': '전일 대비율', 'type': 'string', 'required': True, 'length': 82, 'description': ''}
+            ]
+        }
+    },
+    'FHKST01010400': {
+        'output': {
+            'type': 'array',
+            'fields': [
+                {'key': 'stck_bsop_date', 'name': '주식 영업 일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'stck_oprc', 'name': '주식 시가2', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stck_hgpr', 'name': '주식 최고가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stck_lwpr', 'name': '주식 최저가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stck_clpr', 'name': '주식 종가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'acml_vol', 'name': '누적 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'prdy_vrss_vol_rate', 'name': '전일 대비 거래량 비율', 'type': 'string', 'required': True, 'length': 84, 'description': '13(8.4)'},
+                {'key': 'prdy_vrss', 'name': '전일 대비', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss_sign', 'name': '전일 대비 부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'prdy_ctrt', 'name': '전일 대비율', 'type': 'string', 'required': True, 'length': 82, 'description': '11(8.2)'},
+                {'key': 'hts_frgn_ehrt', 'name': 'HTS 외국인 소진율', 'type': 'string', 'required': True, 'length': 82, 'description': '11(8.2)'},
+                {'key': 'frgn_ntby_qty', 'name': '외국인 순매수 수량', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'flng_cls_code', 'name': '락 구분 코드', 'type': 'string', 'required': True, 'length': 2, 'description': ''01 : 권리락  02 : 배당락  03 : 분배락  04 : 권배락  05 : 중간(분기)배당락  06 : 권리중간배당락  07 : 권리분기배당락''},
+                {'key': 'acml_prtt_rate', 'name': '누적 분할 비율', 'type': 'string', 'required': True, 'length': 84, 'description': '13(8.4)'}
+            ]
+        }
+    },
+    'FHKST01010900': {
+        'output': {
+            'type': 'array',
+            'fields': [
+                {'key': 'stck_bsop_date', 'name': '주식 영업 일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'stck_clpr', 'name': '주식 종가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss', 'name': '전일 대비', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss_sign', 'name': '전일 대비 부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'prsn_ntby_qty', 'name': '개인 순매수 수량', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'frgn_ntby_qty', 'name': '외국인 순매수 수량', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'orgn_ntby_qty', 'name': '기관계 순매수 수량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'prsn_ntby_tr_pbmn', 'name': '개인 순매수 거래 대금', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'frgn_ntby_tr_pbmn', 'name': '외국인 순매수 거래 대금', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'orgn_ntby_tr_pbmn', 'name': '기관계 순매수 거래 대금', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'prsn_shnu_vol', 'name': '개인 매수2 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'frgn_shnu_vol', 'name': '외국인 매수2 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'orgn_shnu_vol', 'name': '기관계 매수2 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'prsn_shnu_tr_pbmn', 'name': '개인 매수2 거래 대금', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'frgn_shnu_tr_pbmn', 'name': '외국인 매수2 거래 대금', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'orgn_shnu_tr_pbmn', 'name': '기관계 매수2 거래 대금', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'prsn_seln_vol', 'name': '개인 매도 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'frgn_seln_vol', 'name': '외국인 매도 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'orgn_seln_vol', 'name': '기관계 매도 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'prsn_seln_tr_pbmn', 'name': '개인 매도 거래 대금', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'frgn_seln_tr_pbmn', 'name': '외국인 매도 거래 대금', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'orgn_seln_tr_pbmn', 'name': '기관계 매도 거래 대금', 'type': 'string', 'required': True, 'length': 18, 'description': ''}
+            ]
+        }
+    },
+    'FHKST01010600': {
+        'output': {
+            'type': 'array',
+            'fields': [
+                {'key': 'seln_mbcr_no1', 'name': '매도 회원사 번호1', 'type': 'string', 'required': True, 'length': 5, 'description': ''},
+                {'key': 'seln_mbcr_no2', 'name': '매도 회원사 번호2', 'type': 'string', 'required': True, 'length': 5, 'description': ''},
+                {'key': 'seln_mbcr_no3', 'name': '매도 회원사 번호3', 'type': 'string', 'required': True, 'length': 5, 'description': ''},
+                {'key': 'seln_mbcr_no4', 'name': '매도 회원사 번호4', 'type': 'string', 'required': True, 'length': 5, 'description': ''},
+                {'key': 'seln_mbcr_no5', 'name': '매도 회원사 번호5', 'type': 'string', 'required': True, 'length': 5, 'description': ''},
+                {'key': 'seln_mbcr_name1', 'name': '매도 회원사 명1', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'seln_mbcr_name2', 'name': '매도 회원사 명2', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'seln_mbcr_name3', 'name': '매도 회원사 명3', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'seln_mbcr_name4', 'name': '매도 회원사 명4', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'seln_mbcr_name5', 'name': '매도 회원사 명5', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'total_seln_qty1', 'name': '총 매도 수량1', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'total_seln_qty2', 'name': '총 매도 수량2', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'total_seln_qty3', 'name': '총 매도 수량3', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'total_seln_qty4', 'name': '총 매도 수량4', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'total_seln_qty5', 'name': '총 매도 수량5', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'seln_mbcr_rlim1', 'name': '매도 회원사 비중1', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'seln_mbcr_rlim2', 'name': '매도 회원사 비중2', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'seln_mbcr_rlim3', 'name': '매도 회원사 비중3', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'seln_mbcr_rlim4', 'name': '매도 회원사 비중4', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'seln_mbcr_rlim5', 'name': '매도 회원사 비중5', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'seln_qty_icdc1', 'name': '매도 수량 증감1', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'seln_qty_icdc2', 'name': '매도 수량 증감2', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'seln_qty_icdc3', 'name': '매도 수량 증감3', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'seln_qty_icdc4', 'name': '매도 수량 증감4', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'seln_qty_icdc5', 'name': '매도 수량 증감5', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'shnu_mbcr_no1', 'name': '매수2 회원사 번호1', 'type': 'string', 'required': True, 'length': 5, 'description': ''},
+                {'key': 'shnu_mbcr_no2', 'name': '매수2 회원사 번호2', 'type': 'string', 'required': True, 'length': 5, 'description': ''},
+                {'key': 'shnu_mbcr_no3', 'name': '매수2 회원사 번호3', 'type': 'string', 'required': True, 'length': 5, 'description': ''},
+                {'key': 'shnu_mbcr_no4', 'name': '매수2 회원사 번호4', 'type': 'string', 'required': True, 'length': 5, 'description': ''},
+                {'key': 'shnu_mbcr_no5', 'name': '매수2 회원사 번호5', 'type': 'string', 'required': True, 'length': 5, 'description': ''},
+                {'key': 'shnu_mbcr_name1', 'name': '매수2 회원사 명1', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'shnu_mbcr_name2', 'name': '매수2 회원사 명2', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'shnu_mbcr_name3', 'name': '매수2 회원사 명3', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'shnu_mbcr_name4', 'name': '매수2 회원사 명4', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'shnu_mbcr_name5', 'name': '매수2 회원사 명5', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'total_shnu_qty1', 'name': '총 매수2 수량1', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'total_shnu_qty2', 'name': '총 매수2 수량2', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'total_shnu_qty3', 'name': '총 매수2 수량3', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'total_shnu_qty4', 'name': '총 매수2 수량4', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'total_shnu_qty5', 'name': '총 매수2 수량5', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'shnu_mbcr_rlim1', 'name': '매수2 회원사 비중1', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'shnu_mbcr_rlim2', 'name': '매수2 회원사 비중2', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'shnu_mbcr_rlim3', 'name': '매수2 회원사 비중3', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'shnu_mbcr_rlim4', 'name': '매수2 회원사 비중4', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'shnu_mbcr_rlim5', 'name': '매수2 회원사 비중5', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'shnu_qty_icdc1', 'name': '매수2 수량 증감1', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'shnu_qty_icdc2', 'name': '매수2 수량 증감2', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'shnu_qty_icdc3', 'name': '매수2 수량 증감3', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'shnu_qty_icdc4', 'name': '매수2 수량 증감4', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'shnu_qty_icdc5', 'name': '매수2 수량 증감5', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'glob_total_seln_qty', 'name': '외국계 총 매도 수량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'glob_seln_rlim', 'name': '외국계 매도 비중', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'glob_ntby_qty', 'name': '외국계 순매수 수량', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'glob_total_shnu_qty', 'name': '외국계 총 매수2 수량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'glob_shnu_rlim', 'name': '외국계 매수2 비중', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'seln_mbcr_glob_yn_1', 'name': '매도 회원사 외국계 여부1', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'seln_mbcr_glob_yn_2', 'name': '매도 회원사 외국계 여부2', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'seln_mbcr_glob_yn_3', 'name': '매도 회원사 외국계 여부3', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'seln_mbcr_glob_yn_4', 'name': '매도 회원사 외국계 여부4', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'seln_mbcr_glob_yn_5', 'name': '매도 회원사 외국계 여부5', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'shnu_mbcr_glob_yn_1', 'name': '매수2 회원사 외국계 여부1', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'shnu_mbcr_glob_yn_2', 'name': '매수2 회원사 외국계 여부2', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'shnu_mbcr_glob_yn_3', 'name': '매수2 회원사 외국계 여부3', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'shnu_mbcr_glob_yn_4', 'name': '매수2 회원사 외국계 여부4', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'shnu_mbcr_glob_yn_5', 'name': '매수2 회원사 외국계 여부5', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'glob_total_seln_qty_icdc', 'name': '외국계 총 매도 수량 증감', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'glob_total_shnu_qty_icdc', 'name': '외국계 총 매수2 수량 증감', 'type': 'string', 'required': True, 'length': 10, 'description': ''}
+            ]
+        }
+    },
+    'FHKST03010200': {
+        'output1': {
+            'type': 'object',
+            'fields': [
+                {'key': 'prdy_vrss', 'name': '전일 대비', 'type': 'string', 'required': True, 'length': 10, 'description': '전일 대비 변동 (+-변동차이)'},
+                {'key': 'prdy_vrss_sign', 'name': '전일 대비 부호', 'type': 'string', 'required': True, 'length': 1, 'description': '전일 대비 부호'},
+                {'key': 'prdy_ctrt', 'name': '전일 대비율', 'type': 'string', 'required': True, 'length': 10, 'description': '소수점 두자리까지 제공'},
+                {'key': 'stck_prdy_clpr', 'name': '전일대비 종가', 'type': 'string', 'required': True, 'length': 10, 'description': '전일대비 종가'},
+                {'key': 'acml_vol', 'name': '누적 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': '누적 거래량'},
+                {'key': 'acml_tr_pbmn', 'name': '누적 거래대금', 'type': 'string', 'required': True, 'length': 18, 'description': '누적 거래대금'},
+                {'key': 'hts_kor_isnm', 'name': '한글 종목명', 'type': 'string', 'required': True, 'length': 40, 'description': '한글 종목명 (HTS 기준)'},
+                {'key': 'stck_prpr', 'name': '주식 현재가', 'type': 'string', 'required': True, 'length': 10, 'description': '주식 현재가'}
+            ]
+        },
+        'output2': {
+            'type': 'array',
+            'fields': [
+                {'key': 'stck_bsop_date', 'name': '주식 영업일자', 'type': 'string', 'required': True, 'length': 8, 'description': '주식 영업일자'},
+                {'key': 'stck_cntg_hour', 'name': '주식 체결시간', 'type': 'string', 'required': True, 'length': 6, 'description': '주식 체결시간'},
+                {'key': 'stck_prpr', 'name': '주식 현재가', 'type': 'string', 'required': True, 'length': 10, 'description': '주식 현재가'},
+                {'key': 'stck_oprc', 'name': '주식 시가', 'type': 'string', 'required': True, 'length': 10, 'description': '주식 시가'},
+                {'key': 'stck_hgpr', 'name': '주식 최고가', 'type': 'string', 'required': True, 'length': 10, 'description': '주식 최고가'},
+                {'key': 'stck_lwpr', 'name': '주식 최저가', 'type': 'string', 'required': True, 'length': 10, 'description': '주식 최저가'},
+                {'key': 'cntg_vol', 'name': '체결 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'acml_tr_pbmn', 'name': '누적 거래대금', 'type': 'string', 'required': True, 'length': 18, 'description': ''}
+            ]
+        }
+    },
+    'FHKST03010230': {
+        'output1': {
+            'type': 'object',
+            'fields': [
+                {'key': 'prdy_vrss', 'name': '전일 대비', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss_sign', 'name': '전일 대비 부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'prdy_ctrt', 'name': '전일 대비율', 'type': 'string', 'required': True, 'length': 11, 'description': ''},
+                {'key': 'stck_prdy_clpr', 'name': '주식 전일 종가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'acml_vol', 'name': '누적 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'acml_tr_pbmn', 'name': '누적 거래 대금', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'hts_kor_isnm', 'name': 'HTS 한글 종목명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'stck_prpr', 'name': '주식 현재가', 'type': 'string', 'required': True, 'length': 10, 'description': ''}
+            ]
+        },
+        'output2': {
+            'type': 'array',
+            'fields': [
+                {'key': 'stck_bsop_date', 'name': '주식 영업 일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'stck_cntg_hour', 'name': '주식 체결 시간', 'type': 'string', 'required': True, 'length': 6, 'description': ''},
+                {'key': 'stck_prpr', 'name': '주식 현재가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stck_oprc', 'name': '주식 시가2', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stck_hgpr', 'name': '주식 최고가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stck_lwpr', 'name': '주식 최저가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'cntg_vol', 'name': '체결 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'acml_tr_pbmn', 'name': '누적 거래 대금', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'FID_COND_MRKT_DIV_CODE:J
+FID_INPUT_ISCD:005930
+FID_INPUT_DATE_1:20241108
+FID_INPUT_HOUR_1:140000
+FID_PW_DATA_INCU_YN:Y
+FID_FAKE_TICK_INCU_YN:N', 'name': 'FID_COND_MRKT_DIV_CODE:J
+FID_INPUT_ISCD:005930
+FID_INPUT_DATE_1:20241108
+FID_INPUT_HOUR_1:140000
+FID_PW_DATA_INCU_YN:Y
+FID_FAKE_TICK_INCU_YN:N', 'type': 'string', 'required': False, 'length': None, 'description': ''}
+            ]
+        }
+    },
+    'FHPST01060000': {
+        'output1': {
+            'type': 'object',
+            'fields': [
+                {'key': 'stck_prpr', 'name': '주식 현재가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss', 'name': '전일 대비', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss_sign', 'name': '전일 대비 부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'prdy_ctrt', 'name': '전일 대비율', 'type': 'string', 'required': True, 'length': 11, 'description': ''},
+                {'key': 'acml_vol', 'name': '누적 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'prdy_vol', 'name': '전일 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'rprs_mrkt_kor_name', 'name': '대표 시장 한글 명', 'type': 'string', 'required': True, 'length': 40, 'description': ''}
+            ]
+        },
+        'output2': {
+            'type': 'object',
+            'fields': [
+                {'key': 'stck_cntg_hour', 'name': '주식 체결 시간', 'type': 'string', 'required': True, 'length': 6, 'description': ''},
+                {'key': 'stck_pbpr', 'name': '주식 현재가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss', 'name': '전일 대비', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss_sign', 'name': '전일 대비 부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'prdy_ctrt', 'name': '전일 대비율', 'type': 'string', 'required': True, 'length': 11, 'description': ''},
+                {'key': 'askp', 'name': '매도호가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'bidp', 'name': '매수호가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'tday_rltv', 'name': '당일 체결강도', 'type': 'string', 'required': True, 'length': 14, 'description': ''},
+                {'key': 'acml_vol', 'name': '누적 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'cnqn', 'name': '체결량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': '"input": {
+            "fid_cond_mrkt_div_code": "J",
+            "fid_input_hour_1": "141200",
+            "fid_input_iscd": "000660"
+        }', 'name': '"input": {
+            "fid_cond_mrkt_div_code": "J",
+            "fid_input_hour_1": "141200",
+            "fid_input_iscd": "000660"
+        }', 'type': 'string', 'required': False, 'length': None, 'description': ''}
+            ]
+        }
+    },
+    'FHPST02320000': {
+        'output1': {
+            'type': 'object',
+            'fields': [
+                {'key': 'ovtm_untp_prpr', 'name': '시간외 단일가 현재가', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_prdy_vrss', 'name': '시간외 단일가 전일 대비', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_prdy_vrss_sign', 'name': '시간외 단일가 전일 대비 부호', 'type': 'string', 'required': False, 'length': 1, 'description': ''},
+                {'key': 'ovtm_untp_prdy_ctrt', 'name': '시간외 단일가 전일 대비율', 'type': 'string', 'required': False, 'length': 11, 'description': '11(8.2)'},
+                {'key': 'ovtm_untp_vol', 'name': '시간외 단일가 거래량', 'type': 'string', 'required': False, 'length': 18, 'description': ''},
+                {'key': 'ovtm_untp_tr_pbmn', 'name': '시간외 단일가 거래 대금', 'type': 'string', 'required': False, 'length': 18, 'description': ''},
+                {'key': 'ovtm_untp_mxpr', 'name': '시간외 단일가 상한가', 'type': 'string', 'required': False, 'length': 18, 'description': ''},
+                {'key': 'ovtm_untp_llam', 'name': '시간외 단일가 하한가', 'type': 'string', 'required': False, 'length': 18, 'description': ''},
+                {'key': 'ovtm_untp_oprc', 'name': '시간외 단일가 시가2', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_hgpr', 'name': '시간외 단일가 최고가', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_lwpr', 'name': '시간외 단일가 최저가', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_antc_cnpr', 'name': '시간외 단일가 예상 체결가', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_antc_cntg_vrss', 'name': '시간외 단일가 예상 체결 대비', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_antc_cntg_vrss_sign', 'name': '시간외 단일가 예상 체결 대비', 'type': 'string', 'required': False, 'length': 1, 'description': ''},
+                {'key': 'ovtm_untp_antc_cntg_ctrt', 'name': '시간외 단일가 예상 체결 대비율', 'type': 'string', 'required': False, 'length': 11, 'description': '11(8.2)'},
+                {'key': 'ovtm_untp_antc_vol', 'name': '시간외 단일가 예상 거래량', 'type': 'string', 'required': False, 'length': 18, 'description': ''}
+            ]
+        },
+        'output2': {
+            'type': 'array',
+            'fields': [
+                {'key': 'stck_bsop_date', 'name': '주식 영업 일자', 'type': 'string', 'required': False, 'length': 8, 'description': ''},
+                {'key': 'ovtm_untp_prpr', 'name': '시간외 단일가 현재가', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_prdy_vrss', 'name': '시간외 단일가 전일 대비', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_prdy_vrss_sign', 'name': '시간외 단일가 전일 대비 부호', 'type': 'string', 'required': False, 'length': 1, 'description': ''},
+                {'key': 'ovtm_untp_prdy_ctrt', 'name': '시간외 단일가 전일 대비율', 'type': 'string', 'required': False, 'length': 11, 'description': '11(8.2)'},
+                {'key': 'ovtm_untp_vol', 'name': '시간외 단일가 거래량', 'type': 'string', 'required': False, 'length': 18, 'description': ''},
+                {'key': 'stck_clpr', 'name': '주식 종가', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss', 'name': '전일 대비', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss_sign', 'name': '전일 대비 부호', 'type': 'string', 'required': False, 'length': 1, 'description': ''},
+                {'key': 'prdy_ctrt', 'name': '전일 대비율', 'type': 'string', 'required': False, 'length': 11, 'description': '11(8.2)'},
+                {'key': 'acml_vol', 'name': '누적 거래량', 'type': 'string', 'required': False, 'length': 18, 'description': ''},
+                {'key': 'ovtm_untp_tr_pbmn', 'name': '시간외 단일가 거래대금', 'type': 'string', 'required': False, 'length': 18, 'description': ''},
+                {'key': ''"input": {'
+                '"fid_cond_mrkt_div_code":"J"'
+                ','
+                '"fid_input_iscd":"000660"'
+            '}'', 'name': ''"input": {'
+                '"fid_cond_mrkt_div_code":"J"'
+                ','
+                '"fid_input_iscd":"000660"'
+            '}'', 'type': 'string', 'required': False, 'length': None, 'description': ''}
+            ]
+        }
+    },
+    'FHPST02310000': {
+        'output1': {
+            'type': 'object',
+            'fields': [
+                {'key': 'ovtm_untp_prpr', 'name': '시간외 단일가 현재가', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_prdy_vrss', 'name': '시간외 단일가 전일 대비', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_prdy_vrss_sign', 'name': '시간외 단일가 전일 대비 부호', 'type': 'string', 'required': False, 'length': 1, 'description': ''},
+                {'key': 'ovtm_untp_prdy_ctrt', 'name': '시간외 단일가 전일 대비율', 'type': 'string', 'required': False, 'length': 11, 'description': ''},
+                {'key': 'ovtm_untp_vol', 'name': '시간외 단일가 거래량', 'type': 'string', 'required': False, 'length': 18, 'description': ''},
+                {'key': 'ovtm_untp_tr_pbmn', 'name': '시간외 단일가 거래 대금', 'type': 'string', 'required': False, 'length': 18, 'description': ''},
+                {'key': 'ovtm_untp_mxpr', 'name': '시간외 단일가 상한가', 'type': 'string', 'required': False, 'length': 18, 'description': ''},
+                {'key': 'ovtm_untp_llam', 'name': '시간외 단일가 하한가', 'type': 'string', 'required': False, 'length': 18, 'description': ''},
+                {'key': 'ovtm_untp_oprc', 'name': '시간외 단일가 시가2', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_hgpr', 'name': '시간외 단일가 최고가', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_lwpr', 'name': '시간외 단일가 최저가', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_antc_cnpr', 'name': '시간외 단일가 예상 체결가', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_antc_cntg_vrss', 'name': '시간외 단일가 예상 체결 대비', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_antc_cntg_vrss_sign', 'name': '시간외 단일가 예상 체결 대비', 'type': 'string', 'required': False, 'length': 1, 'description': ''},
+                {'key': 'ovtm_untp_antc_cntg_ctrt', 'name': '시간외 단일가 예상 체결 대비율', 'type': 'string', 'required': False, 'length': 11, 'description': ''},
+                {'key': 'ovtm_untp_antc_vol', 'name': '시간외 단일가 예상 거래량', 'type': 'string', 'required': False, 'length': 18, 'description': ''},
+                {'key': 'uplm_sign', 'name': '상한 부호', 'type': 'string', 'required': False, 'length': 1, 'description': ''},
+                {'key': 'lslm_sign', 'name': '하한 부호', 'type': 'string', 'required': False, 'length': 1, 'description': ''}
+            ]
+        },
+        'output2': {
+            'type': 'array',
+            'fields': [
+                {'key': 'stck_cntg_hour', 'name': '주식 체결 시간', 'type': 'string', 'required': False, 'length': 6, 'description': ''},
+                {'key': 'stck_prpr', 'name': '주식 현재가', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss', 'name': '전일 대비', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss_sign', 'name': '전일 대비 부호', 'type': 'string', 'required': False, 'length': 1, 'description': ''},
+                {'key': 'prdy_ctrt', 'name': '전일 대비율', 'type': 'string', 'required': False, 'length': 11, 'description': ''},
+                {'key': 'askp', 'name': '매도호가', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'bidp', 'name': '매수호가', 'type': 'string', 'required': False, 'length': 10, 'description': ''},
+                {'key': 'acml_vol', 'name': '누적 거래량', 'type': 'string', 'required': False, 'length': 18, 'description': ''},
+                {'key': 'cntg_vol', 'name': '체결 거래량', 'type': 'string', 'required': False, 'length': 18, 'description': ''},
+                {'key': '"input": {
+            "fid_cond_mrkt_div_code": "J",
+            "fid_hour_CLS_CODE": "1",
+            "fid_input_iscd": "018000"
+        }', 'name': '"input": {
+            "fid_cond_mrkt_div_code": "J",
+            "fid_hour_CLS_CODE": "1",
+            "fid_input_iscd": "018000"
+        }', 'type': 'string', 'required': False, 'length': None, 'description': ''}
+            ]
+        }
+    },
+    'FHPST02300000': {
+        'output': {
+            'type': 'object',
+            'fields': [
+                {'key': 'bstp_kor_isnm', 'name': '업종 한글 종목명', 'type': 'string', 'required': True, 'length': 40, 'description': '※ 거래소 정보로 특정 종목은 업종구분이 없어 데이터 미회신'},
+                {'key': 'mang_issu_cls_name', 'name': '관리 종목 구분 명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'ovtm_untp_prpr', 'name': '시간외 단일가 현재가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_prdy_vrss', 'name': '시간외 단일가 전일 대비', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_prdy_vrss_sign', 'name': '시간외 단일가 전일 대비 부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'ovtm_untp_prdy_ctrt', 'name': '시간외 단일가 전일 대비율', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'ovtm_untp_vol', 'name': '시간외 단일가 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'ovtm_untp_tr_pbmn', 'name': '시간외 단일가 거래 대금', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'ovtm_untp_mxpr', 'name': '시간외 단일가 상한가', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'ovtm_untp_llam', 'name': '시간외 단일가 하한가', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'ovtm_untp_oprc', 'name': '시간외 단일가 시가2', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_hgpr', 'name': '시간외 단일가 최고가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_lwpr', 'name': '시간외 단일가 최저가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'marg_rate', 'name': '증거금 비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''},
+                {'key': 'ovtm_untp_antc_cnpr', 'name': '시간외 단일가 예상 체결가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_antc_cntg_vrss', 'name': '시간외 단일가 예상 체결 대비', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_antc_cntg_vrss_sign', 'name': '시간외 단일가 예상 체결 대비', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'ovtm_untp_antc_cntg_ctrt', 'name': '시간외 단일가 예상 체결 대비율', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'ovtm_untp_antc_cnqn', 'name': '시간외 단일가 예상 체결량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'crdt_able_yn', 'name': '신용 가능 여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'new_lstn_cls_name', 'name': '신규 상장 구분 명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'sltr_yn', 'name': '정리매매 여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'mang_issu_yn', 'name': '관리 종목 여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'mrkt_warn_cls_code', 'name': '시장 경고 구분 코드', 'type': 'string', 'required': True, 'length': 2, 'description': ''},
+                {'key': 'trht_yn', 'name': '거래정지 여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'vlnt_deal_cls_name', 'name': '임의 매매 구분 명', 'type': 'string', 'required': True, 'length': 16, 'description': ''},
+                {'key': 'ovtm_untp_sdpr', 'name': '시간외 단일가 기준가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'mrkt_warn_cls_name', 'name': '시장 경구 구분 명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'revl_issu_reas_name', 'name': '재평가 종목 사유 명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'insn_pbnt_yn', 'name': '불성실 공시 여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'flng_cls_name', 'name': '락 구분 이름', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'rprs_mrkt_kor_name', 'name': '대표 시장 한글 명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'ovtm_vi_cls_code', 'name': '시간외단일가VI적용구분코드', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'bidp', 'name': '매수호가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'askp', 'name': '매도호가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'fid_cond_mrkt_div_code:J
+fid_input_iscd:005930', 'name': 'fid_cond_mrkt_div_code:J
+fid_input_iscd:005930', 'type': 'string', 'required': False, 'length': None, 'description': ''}
+            ]
+        }
+    },
+    'FHPST02300400': {
+        'output1': {
+            'type': 'object',
+            'fields': [
+                {'key': 'ovtm_untp_last_hour', 'name': '시간외 단일가 최종 시간', 'type': 'string', 'required': True, 'length': 6, 'description': ''},
+                {'key': 'ovtm_untp_askp1', 'name': '시간외 단일가 매도호가1', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_askp2', 'name': '시간외 단일가 매도호가2', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_askp3', 'name': '시간외 단일가 매도호가3', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_askp4', 'name': '시간외 단일가 매도호가4', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_askp5', 'name': '시간외 단일가 매도호가5', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_askp6', 'name': '시간외 단일가 매도호가6', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_askp7', 'name': '시간외 단일가 매도호가7', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_askp8', 'name': '시간외 단일가 매도호가8', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_askp9', 'name': '시간외 단일가 매도호가9', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_askp10', 'name': '시간외 단일가 매도호가10', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_bidp1', 'name': '시간외 단일가 매수호가1', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_bidp2', 'name': '시간외 단일가 매수호가2', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_bidp3', 'name': '시간외 단일가 매수호가3', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_bidp4', 'name': '시간외 단일가 매수호가4', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_bidp5', 'name': '시간외 단일가 매수호가5', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_bidp6', 'name': '시간외 단일가 매수호가6', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_bidp7', 'name': '시간외 단일가 매수호가7', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_bidp8', 'name': '시간외 단일가 매수호가8', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_bidp9', 'name': '시간외 단일가 매수호가9', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_bidp10', 'name': '시간외 단일가 매수호가10', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_askp_icdc1', 'name': '시간외 단일가 매도호가 증감1', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_askp_icdc2', 'name': '시간외 단일가 매도호가 증감2', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_askp_icdc3', 'name': '시간외 단일가 매도호가 증감3', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_askp_icdc4', 'name': '시간외 단일가 매도호가 증감4', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_askp_icdc5', 'name': '시간외 단일가 매도호가 증감5', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_askp_icdc6', 'name': '시간외 단일가 매도호가 증감6', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_askp_icdc7', 'name': '시간외 단일가 매도호가 증감7', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_askp_icdc8', 'name': '시간외 단일가 매도호가 증감8', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_askp_icdc9', 'name': '시간외 단일가 매도호가 증감9', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_askp_icdc10', 'name': '시간외 단일가 매도호가 증감10', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_bidp_icdc1', 'name': '시간외 단일가 매수호가 증감1', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_bidp_icdc2', 'name': '시간외 단일가 매수호가 증감2', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_bidp_icdc3', 'name': '시간외 단일가 매수호가 증감3', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_bidp_icdc4', 'name': '시간외 단일가 매수호가 증감4', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_bidp_icdc5', 'name': '시간외 단일가 매수호가 증감5', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_bidp_icdc6', 'name': '시간외 단일가 매수호가 증감6', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_bidp_icdc7', 'name': '시간외 단일가 매수호가 증감7', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_bidp_icdc8', 'name': '시간외 단일가 매수호가 증감8', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_bidp_icdc9', 'name': '시간외 단일가 매수호가 증감9', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_bidp_icdc10', 'name': '시간외 단일가 매수호가 증감10', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_askp_rsqn1', 'name': '시간외 단일가 매도호가 잔량1', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_askp_rsqn2', 'name': '시간외 단일가 매도호가 잔량2', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_askp_rsqn3', 'name': '시간외 단일가 매도호가 잔량3', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_askp_rsqn4', 'name': '시간외 단일가 매도호가 잔량4', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_askp_rsqn5', 'name': '시간외 단일가 매도호가 잔량5', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_askp_rsqn6', 'name': '시간외 단일가 매도호가 잔량6', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_askp_rsqn7', 'name': '시간외 단일가 매도호가 잔량7', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_askp_rsqn8', 'name': '시간외 단일가 매도호가 잔량8', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_askp_rsqn9', 'name': '시간외 단일가 매도호가 잔량9', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_askp_rsqn10', 'name': '시간외 단일가 매도호가 잔량10', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_bidp_rsqn1', 'name': '시간외 단일가 매수호가 잔량1', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_bidp_rsqn2', 'name': '시간외 단일가 매수호가 잔량2', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_bidp_rsqn3', 'name': '시간외 단일가 매수호가 잔량3', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_bidp_rsqn4', 'name': '시간외 단일가 매수호가 잔량4', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_bidp_rsqn5', 'name': '시간외 단일가 매수호가 잔량5', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_bidp_rsqn6', 'name': '시간외 단일가 매수호가 잔량6', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_bidp_rsqn7', 'name': '시간외 단일가 매수호가 잔량7', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_bidp_rsqn8', 'name': '시간외 단일가 매수호가 잔량8', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_bidp_rsqn9', 'name': '시간외 단일가 매수호가 잔량9', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_bidp_rsqn10', 'name': '시간외 단일가 매수호가 잔량10', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_total_askp_rsqn', 'name': '시간외 단일가 총 매도호가 잔량', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_total_bidp_rsqn', 'name': '시간외 단일가 총 매수호가 잔량', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_untp_total_askp_rsqn_icdc', 'name': '시간외 단일가 총 매도호가 잔량', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_total_bidp_rsqn_icdc', 'name': '시간외 단일가 총 매수호가 잔량', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_untp_ntby_bidp_rsqn', 'name': '시간외 단일가 순매수 호가 잔량', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'total_askp_rsqn', 'name': '총 매도호가 잔량', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'total_bidp_rsqn', 'name': '총 매수호가 잔량', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'total_askp_rsqn_icdc', 'name': '총 매도호가 잔량 증감', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'total_bidp_rsqn_icdc', 'name': '총 매수호가 잔량 증감', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_total_askp_rsqn', 'name': '시간외 총 매도호가 잔량', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_total_bidp_rsqn', 'name': '시간외 총 매수호가 잔량', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'ovtm_total_askp_icdc', 'name': '시간외 총 매도호가 증감', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'ovtm_total_bidp_icdc', 'name': '시간외 총 매수호가 증감', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'fid_cond_mrkt_div_code:J
+fid_input_iscd:005930', 'name': 'fid_cond_mrkt_div_code:J
+fid_input_iscd:005930', 'type': 'string', 'required': False, 'length': None, 'description': ''}
+            ]
+        }
+    },
+    'FHKST117300C0': {
+        'output1': {
+            'type': 'array',
+            'fields': [
+                {'key': 'stck_shrn_iscd', 'name': '주식 단축 종목코드', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'hts_kor_isnm', 'name': 'HTS 한글 종목명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'stck_prpr', 'name': '주식 현재가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss', 'name': '전일 대비', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss_sign', 'name': '전일 대비 부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'prdy_ctrt', 'name': '전일 대비율', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'sdpr_vrss_prpr', 'name': '기준가 대비 현재가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'sdpr_vrss_prpr_rate', 'name': '기준가 대비 현재가 비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''},
+                {'key': 'cntg_vol', 'name': '체결 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'fid_cond_mrkt_div_code:J
+fid_cond_scr_div_code:11173
+fid_input_iscd:0001
+fid_blng_cls_code:0
+fid_rank_sort_cls_code:0', 'name': 'fid_cond_mrkt_div_code:J
+fid_cond_scr_div_code:11173
+fid_input_iscd:0001
+fid_blng_cls_code:0
+fid_rank_sort_cls_code:0', 'type': 'string', 'required': False, 'length': None, 'description': ''}
+            ]
+        }
+    },
+    'FHKST121600C0': {
+        'output1': {
+            'type': 'object',
+            'fields': [
+                {'key': 'stck_prpr', 'name': '주식 현재가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss', 'name': '전일 대비', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss_sign', 'name': '전일 대비 부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'prdy_ctrt', 'name': '전일 대비율', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'etf_cnfg_issu_avls', 'name': 'ETF구성종목시가총액', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'nav', 'name': 'NAV', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'nav_prdy_vrss_sign', 'name': 'NAV 전일 대비 부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'nav_prdy_vrss', 'name': 'NAV 전일 대비', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'nav_prdy_ctrt', 'name': 'NAV 전일 대비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''},
+                {'key': 'etf_ntas_ttam', 'name': 'ETF 순자산 총액', 'type': 'string', 'required': True, 'length': 22, 'description': ''},
+                {'key': 'prdy_clpr_nav', 'name': 'NAV전일종가', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'oprc_nav', 'name': 'NAV시가', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'hprc_nav', 'name': 'NAV고가', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'lprc_nav', 'name': 'NAV저가', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'etf_cu_unit_scrt_cnt', 'name': 'ETF CU 단위 증권 수', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'etf_cnfg_issu_cnt', 'name': 'ETF 구성 종목 수', 'type': 'string', 'required': True, 'length': 18, 'description': ''}
+            ]
+        },
+        'output2': {
+            'type': 'array',
+            'fields': [
+                {'key': 'stck_shrn_iscd', 'name': '주식 단축 종목코드', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'hts_kor_isnm', 'name': 'HTS 한글 종목명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'stck_prpr', 'name': '주식 현재가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss', 'name': '전일 대비', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss_sign', 'name': '전일 대비 부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'prdy_ctrt', 'name': '전일 대비율', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'acml_vol', 'name': '누적 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'acml_tr_pbmn', 'name': '누적 거래 대금', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'tday_rsfl_rate', 'name': '당일 등락 비율', 'type': 'string', 'required': True, 'length': 52, 'description': ''},
+                {'key': 'prdy_vrss_vol', 'name': '전일 대비 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'tr_pbmn_tnrt', 'name': '거래대금회전율', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'hts_avls', 'name': 'HTS 시가총액', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'etf_cnfg_issu_avls', 'name': 'ETF구성종목시가총액', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'etf_cnfg_issu_rlim', 'name': 'ETF구성종목비중', 'type': 'string', 'required': True, 'length': 72, 'description': ''},
+                {'key': 'etf_vltn_amt', 'name': 'ETF구성종목내평가금액', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'fid_cond_mrkt_div_code:J
+fid_input_iscd:069500
+fid_cond_scr_div_code:11216', 'name': 'fid_cond_mrkt_div_code:J
+fid_input_iscd:069500
+fid_cond_scr_div_code:11216', 'type': 'string', 'required': False, 'length': None, 'description': ''}
+            ]
+        }
+    },
+    'FHPST02440000': {
+        'output1': {
+            'type': 'object',
+            'fields': [
+                {'key': 'stck_prpr', 'name': '주식 현재가', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'prdy_vrss', 'name': '전일 대비', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'prdy_vrss_sign', 'name': '전일 대비 부호', 'type': 'string', 'required': True, 'length': 2, 'description': ''},
+                {'key': 'prdy_ctrt', 'name': '전일 대비율', 'type': 'string', 'required': True, 'length': 4, 'description': ''},
+                {'key': 'acml_vol', 'name': '누적 거래량', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'acml_tr_pbmn', 'name': '누적 거래 대금', 'type': 'string', 'required': True, 'length': 60, 'description': ''},
+                {'key': 'stck_prdy_clpr', 'name': '주식 전일 종가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stck_oprc', 'name': '주식 시가2', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stck_hgpr', 'name': '주식 최고가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stck_lwpr', 'name': '주식 최저가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stck_mxpr', 'name': '주식 상한가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stck_llam', 'name': '주식 하한가', 'type': 'string', 'required': True, 'length': 10, 'description': ''}
+            ]
+        },
+        'output2': {
+            'type': 'object',
+            'fields': [
+                {'key': 'nav', 'name': 'NAV', 'type': 'string', 'required': True, 'length': 11, 'description': ''},
+                {'key': 'nav_prdy_vrss_sign', 'name': 'NAV 전일 대비 부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'nav_prdy_vrss', 'name': 'NAV 전일 대비', 'type': 'string', 'required': True, 'length': 11, 'description': ''},
+                {'key': 'nav_prdy_ctrt', 'name': 'NAV 전일 대비율', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'prdy_clpr_nav', 'name': 'NAV전일종가', 'type': 'string', 'required': True, 'length': 11, 'description': ''},
+                {'key': 'oprc_nav', 'name': 'NAV시가', 'type': 'string', 'required': True, 'length': 11, 'description': ''},
+                {'key': 'hprc_nav', 'name': 'NAV고가', 'type': 'string', 'required': True, 'length': 11, 'description': ''},
+                {'key': 'lprc_nav', 'name': 'NAV저가', 'type': 'string', 'required': True, 'length': 11, 'description': ''}
+            ]
+        }
+    },
+    'FHPST02440200': {
+        'output': {
+            'type': 'array',
+            'fields': [
+                {'key': 'stck_bsop_date', 'name': '주식 영업 일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'stck_clpr', 'name': '주식 종가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss', 'name': '전일 대비', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss_sign', 'name': '전일 대비 부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'prdy_ctrt', 'name': '전일 대비율', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'acml_vol', 'name': '누적 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'cntg_vol', 'name': '체결 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'dprt', 'name': '괴리율', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'nav_vrss_prpr', 'name': 'NAV 대비 현재가', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'nav', 'name': 'NAV', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'nav_prdy_vrss_sign', 'name': 'NAV 전일 대비 부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'nav_prdy_vrss', 'name': 'NAV 전일 대비', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'nav_prdy_ctrt', 'name': 'NAV 전일 대비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''}
+            ]
+        }
+    },
+    'FHPST02440100': {
+        'output': {
+            'type': 'array',
+            'fields': [
+                {'key': 'bsop_hour', 'name': '영업 시간', 'type': 'string', 'required': True, 'length': 6, 'description': ''},
+                {'key': 'nav', 'name': 'NAV', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'nav_prdy_vrss_sign', 'name': 'NAV 전일 대비 부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'nav_prdy_vrss', 'name': 'NAV 전일 대비', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'nav_prdy_ctrt', 'name': 'NAV 전일 대비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''},
+                {'key': 'nav_vrss_prpr', 'name': 'NAV 대비 현재가', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'dprt', 'name': '괴리율', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'stck_prpr', 'name': '주식 현재가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss', 'name': '전일 대비', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss_sign', 'name': '전일 대비 부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'prdy_ctrt', 'name': '전일 대비율', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'acml_vol', 'name': '누적 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'cntg_vol', 'name': '체결 거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''}
+            ]
+        }
+    }
+}

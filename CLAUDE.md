@@ -19,7 +19,7 @@ Kiwi7 is a Korean stock trading web application that uses Kiwoom Securities' RES
 
 ```bash
 # Run with uvicorn directly (development)
-uvicorn backend.main:app --host 0.0.0.0 --port 8001 --reload
+uvicorn backend.main:app --host 0.0.0.0 --port 8002 --reload
 
 # Run with Docker Compose
 docker-compose up -d

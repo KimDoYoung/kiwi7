@@ -1,0 +1,578 @@
+# KIS REST API Request Definitions
+# Auto-generated from Excel file
+
+KIS_REQUEST_DEF = {
+    "FHKST01010100": {
+        "url": "/uapi/domestic-stock/v1/quotations/inquire-price",
+        "title": "주식현재가 시세",
+        "method": "GET",
+        "tr_id": "FHKST01010100",
+        "query": [
+            {
+                "key": "FID_COND_MRKT_DIV_CODE",
+                "name": "조건 시장 분류 코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "J:KRX, NX:NXT, UN:통합"
+            },
+            {
+                "key": "FID_INPUT_ISCD",
+                "name": "입력 종목코드",
+                "type": "string",
+                "required": True,
+                "length": 12,
+                "description": "종목코드 (ex 005930 삼성전자)  // ETN은 종목코드 6자리 앞에 Q 입력 필수"
+            }
+        ]
+    },
+    "FHPST01010000": {
+        "url": "/uapi/domestic-stock/v1/quotations/inquire-price-2",
+        "title": "주식현재가 시세2",
+        "method": "GET",
+        "tr_id": "FHPST01010000",
+        "query": [
+            {
+                "key": "FID_COND_MRKT_DIV_CODE",
+                "name": "FID 조건 시장 분류 코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "J:KRX, NX:NXT, UN:통합"
+            },
+            {
+                "key": "FID_INPUT_ISCD",
+                "name": "FID 입력 종목코드",
+                "type": "string",
+                "required": True,
+                "length": 12,
+                "description": "000660"
+            }
+        ]
+    },
+    "FHKST01010300": {
+        "url": "/uapi/domestic-stock/v1/quotations/inquire-ccnl",
+        "title": "주식현재가 체결",
+        "method": "GET",
+        "tr_id": "FHKST01010300",
+        "query": [
+            {
+                "key": "FID_COND_MRKT_DIV_CODE",
+                "name": "조건 시장 분류 코드",
+                "type": "string",
+                "required": True,
+                "length": 8,
+                "description": "J:KRX, NX:NXT, UN:통합"
+            },
+            {
+                "key": "FID_INPUT_ISCD",
+                "name": "입력 종목코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "종목코드 (ex 005930 삼성전자)"
+            }
+        ]
+    },
+    "FHKST01010400": {
+        "url": "/uapi/domestic-stock/v1/quotations/inquire-daily-price",
+        "title": "주식현재가 일자별",
+        "method": "GET",
+        "tr_id": "FHKST01010400",
+        "query": [
+            {
+                "key": "FID_COND_MRKT_DIV_CODE",
+                "name": "조건 시장 분류 코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "J:KRX, NX:NXT, UN:통합"
+            },
+            {
+                "key": "FID_INPUT_ISCD",
+                "name": "입력 종목코드",
+                "type": "string",
+                "required": True,
+                "length": 12,
+                "description": "종목코드 (ex 005930 삼성전자)"
+            },
+            {
+                "key": "FID_PERIOD_DIV_CODE",
+                "name": "기간 분류 코드",
+                "type": "string",
+                "required": True,
+                "length": 32,
+                "description": "'D : (일)최근 30거래일 \r W : (주)최근 30주 \r M : (월)최근 30개월'"
+            },
+            {
+                "key": "FID_ORG_ADJ_PRC",
+                "name": "수정주가 원주가 가격",
+                "type": "string",
+                "required": True,
+                "length": 10,
+                "description": "'0 : 수정주가미반영\r 1 : 수정주가반영\r * 수정주가는 액면분할/액면병합 등 권리 발생 시 과거 시세를 현재 주가에 맞게 보정한 가격'"
+            }
+        ]
+    },
+    "FHKST01010900": {
+        "url": "/uapi/domestic-stock/v1/quotations/inquire-investor",
+        "title": "주식현재가 투자자",
+        "method": "GET",
+        "tr_id": "FHKST01010900",
+        "query": [
+            {
+                "key": "FID_COND_MRKT_DIV_CODE",
+                "name": "조건 시장 분류 코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "J : KRX, NX : NXT, UN : 통합"
+            },
+            {
+                "key": "FID_INPUT_ISCD",
+                "name": "입력 종목코드",
+                "type": "string",
+                "required": True,
+                "length": 12,
+                "description": "종목코드 (ex 005930 삼성전자)"
+            }
+        ]
+    },
+    "FHKST01010600": {
+        "url": "/uapi/domestic-stock/v1/quotations/inquire-member",
+        "title": "주식현재가 회원사",
+        "method": "GET",
+        "tr_id": "FHKST01010600",
+        "query": [
+            {
+                "key": "FID_COND_MRKT_DIV_CODE",
+                "name": "FID 조건 시장 분류 코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "J:KRX, NX:NXT, UN:통합"
+            },
+            {
+                "key": "FID_INPUT_ISCD",
+                "name": "FID 입력 종목코드",
+                "type": "string",
+                "required": True,
+                "length": 12,
+                "description": "종목번호 (6자리)\r ETN의 경우, Q로 시작 (EX. Q500001)"
+            }
+        ]
+    },
+    "FHKST03010200": {
+        "url": "/uapi/domestic-stock/v1/quotations/inquire-time-itemchartprice",
+        "title": "주식당일분봉조회",
+        "method": "GET",
+        "tr_id": "FHKST03010200",
+        "query": [
+            {
+                "key": "FID_COND_MRKT_DIV_CODE",
+                "name": "조건 시장 분류 코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "J:KRX, NX:NXT, UN:통합"
+            },
+            {
+                "key": "FID_INPUT_ISCD",
+                "name": "입력 종목코드",
+                "type": "string",
+                "required": True,
+                "length": 12,
+                "description": "종목코드 (ex 005930 삼성전자)"
+            },
+            {
+                "key": "FID_INPUT_HOUR_1",
+                "name": "입력 시간1",
+                "type": "string",
+                "required": True,
+                "length": 10,
+                "description": "입력시간"
+            },
+            {
+                "key": "FID_PW_DATA_INCU_YN",
+                "name": "과거 데이터 포함 여부 ",
+                "type": "string",
+                "required": True,
+                "length": 2
+            },
+            {
+                "key": "FID_ETC_CLS_CODE",
+                "name": "기타 구분 코드",
+                "type": "string",
+                "required": True,
+                "length": 2
+            }
+        ]
+    },
+    "FHKST03010230": {
+        "url": "/uapi/domestic-stock/v1/quotations/inquire-time-dailychartprice",
+        "title": "주식일별분봉조회",
+        "method": "GET",
+        "tr_id": "FHKST03010230",
+        "query": [
+            {
+                "key": "FID_COND_MRKT_DIV_CODE",
+                "name": "조건 시장 분류 코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "J:KRX, NX:NXT, UN:통합"
+            },
+            {
+                "key": "FID_INPUT_ISCD",
+                "name": "입력 종목코드",
+                "type": "string",
+                "required": True,
+                "length": 12,
+                "description": "종목코드 (ex 005930 삼성전자)"
+            },
+            {
+                "key": "FID_INPUT_HOUR_1",
+                "name": "입력 시간1",
+                "type": "string",
+                "required": True,
+                "length": 10,
+                "description": "입력 시간(ex 13시 130000)"
+            },
+            {
+                "key": "FID_INPUT_DATE_1",
+                "name": "입력 날짜1",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "입력 날짜(20241023)"
+            },
+            {
+                "key": "FID_PW_DATA_INCU_YN",
+                "name": "과거 데이터 포함 여부 ",
+                "type": "string",
+                "required": True,
+                "length": 2
+            },
+            {
+                "key": "FID_FAKE_TICK_INCU_YN",
+                "name": "허봉 포함 여부",
+                "type": "string",
+                "required": False,
+                "length": 2,
+                "description": "공백 필수 입력"
+            }
+        ]
+    },
+    "FHPST01060000": {
+        "url": "/uapi/domestic-stock/v1/quotations/inquire-time-itemconclusion",
+        "title": "주식현재가 당일시간대별체결",
+        "method": "GET",
+        "tr_id": "FHPST01060000",
+        "query": [
+            {
+                "key": "FID_COND_MRKT_DIV_CODE",
+                "name": "조건 시장 분류 코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "J:KRX, NX:NXT, UN:통합"
+            },
+            {
+                "key": "FID_INPUT_ISCD",
+                "name": "입력 종목코드",
+                "type": "string",
+                "required": True,
+                "length": 12,
+                "description": "종목코드 (ex 005930 삼성전자)"
+            },
+            {
+                "key": "FID_INPUT_HOUR_1",
+                "name": "입력 시간1",
+                "type": "string",
+                "required": True,
+                "length": 10,
+                "description": "입력시간"
+            }
+        ]
+    },
+    "FHPST02320000": {
+        "url": "/uapi/domestic-stock/v1/quotations/inquire-daily-overtimeprice",
+        "title": "주식현재가 시간외일자별주가",
+        "method": "GET",
+        "tr_id": "FHPST02320000",
+        "query": [
+            {
+                "key": "FID_COND_MRKT_DIV_CODE",
+                "name": "FID 조건 시장 분류 코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "J : 주식, ETF, ETN"
+            },
+            {
+                "key": "FID_INPUT_ISCD",
+                "name": "FID 입력 종목코드",
+                "type": "string",
+                "required": True,
+                "length": 12,
+                "description": "종목번호 (6자리)\r ETN의 경우, Q로 시작 (EX. Q500001)"
+            }
+        ]
+    },
+    "FHPST02310000": {
+        "url": "/uapi/domestic-stock/v1/quotations/inquire-time-overtimeconclusion",
+        "title": "주식현재가 시간외시간별체결",
+        "method": "GET",
+        "tr_id": "FHPST02310000",
+        "query": [
+            {
+                "key": "FID_COND_MRKT_DIV_CODE",
+                "name": "조건 시장 분류 코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "J : 주식, ETF, ETN"
+            },
+            {
+                "key": "FID_INPUT_ISCD",
+                "name": "입력 종목코드",
+                "type": "string",
+                "required": True,
+                "length": 12,
+                "description": "종목번호 (6자리)\r ETN의 경우, Q로 시작 (EX. Q500001)"
+            },
+            {
+                "key": "FID_HOUR_CLS_CODE",
+                "name": "시간 구분 코드",
+                "type": "string",
+                "required": True,
+                "length": 5,
+                "description": "1 : 시간외 (Default)"
+            }
+        ]
+    },
+    "FHPST02300000": {
+        "url": "/uapi/domestic-stock/v1/quotations/inquire-overtime-price",
+        "title": "국내주식 시간외현재가",
+        "method": "GET",
+        "tr_id": "FHPST02300000",
+        "query": [
+            {
+                "key": "FID_COND_MRKT_DIV_CODE",
+                "name": "조건 시장 분류 코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "시장구분코드 (주식 J)"
+            },
+            {
+                "key": "FID_INPUT_ISCD",
+                "name": "입력 종목코드",
+                "type": "string",
+                "required": True,
+                "length": 12,
+                "description": "종목코드"
+            }
+        ]
+    },
+    "FHPST02300400": {
+        "url": "/uapi/domestic-stock/v1/quotations/inquire-overtime-asking-price",
+        "title": "국내주식 시간외호가",
+        "method": "GET",
+        "tr_id": "FHPST02300400",
+        "query": [
+            {
+                "key": "FID_INPUT_ISCD",
+                "name": "입력 종목코드",
+                "type": "string",
+                "required": True,
+                "length": 12,
+                "description": "종목코드"
+            },
+            {
+                "key": "FID_COND_MRKT_DIV_CODE",
+                "name": "조건 시장 분류 코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "시장구분코드 (주식 J)"
+            }
+        ]
+    },
+    "FHKST117300C0": {
+        "url": "/uapi/domestic-stock/v1/quotations/exp-closing-price",
+        "title": "국내주식 장마감 예상체결가",
+        "method": "GET",
+        "tr_id": "FHKST117300C0",
+        "query": [
+            {
+                "key": "FID_RANK_SORT_CLS_CODE",
+                "name": "순위 정렬 구분 코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "0:전체, 1:상한가마감예상, 2:하한가마감예상, 3:직전대비상승률상위 ,4:직전대비하락률상위"
+            },
+            {
+                "key": "FID_COND_MRKT_DIV_CODE",
+                "name": "조건 시장 분류 코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "시장구분코드 (주식 J)"
+            },
+            {
+                "key": "FID_COND_SCR_DIV_CODE",
+                "name": "조건 화면 분류 코드",
+                "type": "string",
+                "required": True,
+                "length": 5,
+                "description": "Unique key(11173)"
+            },
+            {
+                "key": "FID_INPUT_ISCD",
+                "name": "입력 종목코드",
+                "type": "string",
+                "required": True,
+                "length": 12,
+                "description": "0000:전체, 0001:거래소, 1001:코스닥, 2001:코스피200, 4001: KRX100"
+            },
+            {
+                "key": "FID_BLNG_CLS_CODE",
+                "name": "소속 구분 코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "0:전체, 1:종가범위연장"
+            }
+        ]
+    },
+    "FHKST121600C0": {
+        "url": "/uapi/etfetn/v1/quotations/inquire-component-stock-price",
+        "title": "ETF 구성종목시세",
+        "method": "GET",
+        "tr_id": "FHKST121600C0",
+        "query": [
+            {
+                "key": "FID_COND_MRKT_DIV_CODE",
+                "name": "조건시장분류코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "시장구분코드 (J)"
+            },
+            {
+                "key": "FID_INPUT_ISCD",
+                "name": "입력종목코드",
+                "type": "string",
+                "required": True,
+                "length": 12,
+                "description": "종목코드"
+            },
+            {
+                "key": "FID_COND_SCR_DIV_CODE",
+                "name": "조건화면분류코드",
+                "type": "string",
+                "required": True,
+                "length": 5,
+                "description": "Unique key( 11216 )"
+            }
+        ]
+    },
+    "FHPST02440000": {
+        "url": "/uapi/etfetn/v1/quotations/nav-comparison-trend",
+        "title": "NAV 비교추이(종목)",
+        "method": "GET",
+        "tr_id": "FHPST02440000",
+        "query": [
+            {
+                "key": "FID_COND_MRKT_DIV_CODE",
+                "name": "조건 시장 분류 코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "J"
+            },
+            {
+                "key": "FID_INPUT_ISCD",
+                "name": "입력 종목코드",
+                "type": "string",
+                "required": True,
+                "length": 12,
+                "description": "종목코드"
+            }
+        ]
+    },
+    "FHPST02440200": {
+        "url": "/uapi/etfetn/v1/quotations/nav-comparison-daily-trend",
+        "title": "NAV 비교추이(일)",
+        "method": "GET",
+        "tr_id": "FHPST02440200",
+        "query": [
+            {
+                "key": "fid_cond_mrkt_div_code",
+                "name": "FID 조건 시장 분류 코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "J 입력"
+            },
+            {
+                "key": "fid_input_iscd",
+                "name": "FID 입력 종목코드",
+                "type": "string",
+                "required": True,
+                "length": 12,
+                "description": "종목코드 (6자리)"
+            },
+            {
+                "key": "fid_input_date_1",
+                "name": "FID 입력 날짜1",
+                "type": "string",
+                "required": True,
+                "length": 10,
+                "description": "조회 시작일자 (ex. 20240101)"
+            },
+            {
+                "key": "fid_input_date_2",
+                "name": "FID 입력 날짜2",
+                "type": "string",
+                "required": True,
+                "length": 10,
+                "description": "조회 종료일자 (ex. 20240220)"
+            }
+        ]
+    },
+    "FHPST02440100": {
+        "url": "/uapi/etfetn/v1/quotations/nav-comparison-time-trend",
+        "title": "NAV 비교추이(분)",
+        "method": "GET",
+        "tr_id": "FHPST02440100",
+        "query": [
+            {
+                "key": "fid_hour_cls_code",
+                "name": "FID 시간 구분 코드",
+                "type": "string",
+                "required": True,
+                "length": 5,
+                "description": "1분 :60, 3분: 180 … 120분:7200"
+            },
+            {
+                "key": "fid_cond_mrkt_div_code",
+                "name": "FID 조건 시장 분류 코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "E - 고정값"
+            },
+            {
+                "key": "fid_input_iscd",
+                "name": "FID 입력 종목코드",
+                "type": "string",
+                "required": True,
+                "length": 12,
+                "description": "종목코드"
+            }
+        ]
+    }
+}

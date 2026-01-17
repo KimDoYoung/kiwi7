@@ -37,13 +37,13 @@
             "args": ["c:\\tmp\\kwapi.xlsx"]
         },
         {
-            "name": "kiwi7",
+            "name": "kiwi7-USER",
             "type": "debugpy",
             "request": "launch",
             "module": "uvicorn",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}",
-                "KIWI7_MODE": "local"
+                "KIWI7_MODE": "user"
             },
             "args": [
                 "backend.main:app",

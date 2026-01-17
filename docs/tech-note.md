@@ -4,13 +4,16 @@
 
 - 쿠키를 사용
 - 로그인시 login.js
+
   ```javascript
     const response = await fetch('/login', {
         method: 'POST',
         body: formData
     });
   ```
+
 - 로그인 서버측  home_routes.py
+
   ```python
     response.set_cookie(
         key=config.ACCESS_TOKEN_NAME,
@@ -21,7 +24,9 @@
         samesite="lax"  # CSRF 보호
     ) 
   ```
+
 - 로그아웃시 서버측에서 처리
+
   ```python
     response = RedirectResponse(url="/login", status_code=302)
     response.delete_cookie(
@@ -34,7 +39,7 @@
     return response  
   ```
 
-  ## 페이지 랜더링 
+  ## 페이지 랜더링
 
 1. client 에서 alpine.js 를 사용하고 있음.
 2. server에서 jinja2를 사용하고 있음
@@ -59,7 +64,8 @@ async def display_main(request: Request):
     return render_template("main.html", context)
 ```
 
-3. main.html
+1. main.html
+
 ```
 {% extends "common/base.html" %}
 
@@ -72,8 +78,10 @@ async def display_main(request: Request):
 {% endblock %}
 
 </html>
-```    
+```
+
 4. home_routes.py의 /page로 대부분의 html을 처리함.
+
 ```
 
 @router.get("/page", response_class=HTMLResponse, include_in_schema=False)
@@ -110,7 +118,8 @@ async def page(
 
 ### 보내기
 
-* body로 보낸다.
+- body로 보낸다.
+
 ```javascript
 // 키움 API 호출 예시 - 주식기본정보요청 (ka10001)
 async function callKiwoomApi() {
