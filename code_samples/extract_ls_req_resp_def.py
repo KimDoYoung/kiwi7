@@ -1,4 +1,10 @@
+#
+# LS OpenAPI TR Request/Response Definition Extractor
+# python code_samples/extract_ls_req_resp_def.py resp > ls_resp.txt
+#
 import json
+import re
+import sys
 import time
 
 import requests
@@ -50,11 +56,149 @@ api_list = [
 
 BASE_URL = "https://openapi.ls-sec.co.kr/api/apis/guide"
 # Keep only first 5 items from api_list
-api_list = api_list[:5]
-def fetch_data():
+#api_list = api_list[:5]
+
+def parse_definition(tr_code, tr_name, prop_data):
+    """
+    prop_data를 분석하여 Request/Response Definition을 구조화된 딕셔너리로 반환
+    구조: { 'blocks': { 'block_name': { 'type': 'single/array', 'fields': [] } } }
+    또는: { 'fields': [ ... ] } (Explicit Block이 없는 경우)
+    """
+    # 데이터 수집용 구조: { 'blocks': {}, 'fields': [] }
+    req_info = {'blocks': {}, 'fields': []}
+    res_info = {'blocks': {}, 'fields': []}
+
+    current_req_block = None
+    current_res_block = None
+    
+    for prop in prop_data:
+        body_type = prop.get('bodyType') # req_h, req_b, res_h, res_b
+        if body_type not in ['req_b', 'res_b']:
+            continue
+
+        raw_prop_cd = prop.get('propertyCd', '')
+        indent = raw_prop_cd.count('&nbsp;')
+        # 키 정제 &nbsp; 제거, 하이픈 제거
+        clean_key = raw_prop_cd.replace('&nbsp;', '').replace('-', '').strip()
+        
+        prop_type = prop.get('propertyType') 
+        prop_nm = prop.get('propertyNm')
+        prop_len = prop.get('propertyLength')
+        required = prop.get('requireYn') == 'Y'
+        desc = prop.get('description')
+
+        # Type Mapping
+        # A0001:String, A0003:Number/SingleBlock(Header), A0004:Float, A0005:ArrayBlock
+        f_type = 'string'
+        if prop_type == 'A0003': f_type = 'long'
+        elif prop_type == 'A0004': f_type = 'float'
+        
+        field_info = {
+            'key': clean_key,
+            'name': prop_nm,
+            'type': f_type,
+            'length': prop_len,
+        }
+        if desc:
+            field_info['desc'] = desc.replace('\n', ' ')
+        if required:
+            field_info['required'] = True
+            
+        # 블록 헤더 판별
+        is_block_header = False
+        if indent == 0:
+            if prop_type == 'A0005': # 명시적 Array Block
+                is_block_header = True
+            elif 'Block' in clean_key: # 이름에 Block 포함 (관례)
+                is_block_header = True
+            # A0003이면서 이름에 Block이 없고 Indent 0이면? 애매하지만 보통 Block아닌 필드로 처리
+        
+        # Target Selection
+        if body_type == 'req_b':
+            target_info = req_info
+            current_block_name = current_req_block
+        else:
+            target_info = res_info
+            current_block_name = current_res_block
+
+        if is_block_header:
+            # 블록 정의 추가
+            block_type = 'array' if prop_type == 'A0005' else 'single'
+            target_info['blocks'][clean_key] = {
+                'type': block_type,
+                'fields': []
+            }
+            # Context Switch
+            if body_type == 'req_b':
+                current_req_block = clean_key
+            else:
+                current_res_block = clean_key
+        else:
+            # 필드 추가
+            if indent == 0:
+                # Root Field -> fields 리스트에 추가 (블록 미지정)
+                target_info['fields'].append(field_info)
+                
+                # Context Reset
+                if body_type == 'req_b':
+                    current_req_block = None
+                else:
+                    current_res_block = None
+            else:
+                # Indented Field -> Current Block에 추가
+                if current_block_name and current_block_name in target_info['blocks']:
+                    target_info['blocks'][current_block_name]['fields'].append(field_info)
+                else:
+                    target_info['fields'].append(field_info)
+
+    # 최종 결과 반환 Helper (Hybrid Structure)
+    def build_final_def(info, tr_c, tr_n):
+        res = {
+            'tr_cd': tr_c,
+            'title': tr_n
+        }
+        if info['blocks']:
+            res['blocks'] = info['blocks']
+            if info['fields']:
+                res['fields'] = info['fields']
+        else:
+            res['fields'] = info['fields']
+        return res
+
+    req_def = build_final_def(req_info, tr_code, tr_name)
+    res_def = build_final_def(res_info, tr_code, tr_name)
+    
+    return req_def, res_def
+
+
+def fetch_data(output_mode):
+    # 메시지를 표준 오류(stderr)로 출력하여 리다이렉션 파일에 포함되지 않도록 함
+    sys.stderr.write(f"Collecting Data... Mode: {output_mode}\n")
+    
+    def compact_json(data):
+        """
+        JSON 덤프 후, 'key' 속성을 가진 객체들을 한 줄로 압축
+        """
+        json_str = json.dumps(data, indent=4, ensure_ascii=False)
+        
+        # 정규식 설명:
+        # \{\s*\n: 여는 중괄호와 줄바꿈
+        # \s*"key":: 공백 후 "key": (field 객체 식별)
+        # .*?: 내용 (greedy 하지 않게)
+        # \n\s*\}: 줄바꿈 후 닫는 중괄호
+        # re.DOTALL: .이 개행문자도 매치하도록 함
+        pattern = re.compile(r'\{\s*\n\s*"key":.*?\n\s*\}', re.DOTALL)
+        
+        def collapse(match):
+            # 매칭된 블록 내부의 줄바꿈과 연속된 공백을 단일 공백으로 치환
+            content = match.group(0)
+            return re.sub(r'\n\s*', ' ', content)
+            
+        return pattern.sub(collapse, json_str)
+    
     for group_id, api_id in api_list:
-        print(f"\n{'='*80}")
-        print(f"▶ Processing API_ID: {api_id} (Group: {group_id})")
+        # 진행상황은 stderr로 출력
+        sys.stderr.write(f"Processing {api_id}...\n")
         
         # 2. TR 가이드 정보 가져오기
         tr_url = f"{BASE_URL}/tr/{api_id}"
@@ -68,11 +212,6 @@ def fetch_data():
                 tr_name = tr_item.get("trName")
                 tr_code = tr_item.get("trCode")
                 
-                print(f"\n  [TR 정보]")
-                print(f"  - TR Name: {tr_name}")
-                print(f"  - TR Code: {tr_code}")
-                print(f"  - Internal ID: {tr_internal_id}")
-                
                 # 3. TR Property(속성) 정보 가져오기
                 if tr_internal_id:
                     prop_url = f"{BASE_URL}/tr/property/{tr_internal_id}"
@@ -80,16 +219,34 @@ def fetch_data():
                     prop_response.raise_for_status()
                     prop_data = prop_response.json()
                     
-                    print(f"  [Property 상세 데이터]")
-                    print(json.dumps(prop_data, indent=2, ensure_ascii=False))
+                    # 4. Definition 파싱 및 출력
+                    req_def, res_def = parse_definition(tr_code, tr_name, prop_data)
+                    
+                    # 들여쓰기 처리된 후 압축하여 출력
+                    if output_mode == 'req':
+                        print(f"'{tr_code}': " + compact_json(req_def) + ",")
+                    
+                    elif output_mode in ['res', 'resp']:
+                        print(f"'{tr_code}': " + compact_json(res_def) + ",")
                 
-                # 서버 부하 방지를 위한 미세 지연 (필요 시 조절)
+                # 서버 부하 방지를 위한 미세 지연
                 time.sleep(0.1)
 
         except requests.exceptions.RequestException as e:
-            print(f"  [Error] Failed to fetch data for api_id {api_id}: {e}")
+            sys.stderr.write(f"  [Error] Failed to fetch data for api_id {api_id}: {e}\n")
         except json.JSONDecodeError:
-            print(f"  [Error] Failed to decode JSON for api_id {api_id}")
+            sys.stderr.write(f"  [Error] Failed to decode JSON for api_id {api_id}\n")
 
 if __name__ == "__main__":
-    fetch_data()
+    # Windows에서 출력 리다이렉션(> 1.txt) 사용 시 한글 깨짐 방지
+    if sys.stdout.encoding != 'utf-8':
+        sys.stdout.reconfigure(encoding='utf-8')
+    
+    # 인자 검증 로직 강화
+    if len(sys.argv) != 2 or sys.argv[1].lower() not in ['req', 'res', 'resp']:
+        sys.stderr.write("Usage: python extract_ls_req_resp_def.py [req|res]\n")
+        sys.stderr.write("Error: Argument 'req' or 'res/resp' is required.\n")
+        sys.exit(1)
+        
+    mode = sys.argv[1].lower()
+    fetch_data(mode)

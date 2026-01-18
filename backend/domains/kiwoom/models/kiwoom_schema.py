@@ -1,16 +1,15 @@
-from pydantic import BaseModel
-from typing import Optional, Dict, Any, List
-from enum import Enum
 from datetime import datetime
+from enum import Enum
+from typing import Any, Dict, List, Optional
+
+from pydantic import BaseModel
 
 from backend.domains.kiwoom.models.kiwoom_request_definition import (
-    KIWOOM_REQUEST_DEF, 
+    KIWOOM_REQUEST_DEF,
     get_request_definition,
-    get_required_fields
+    get_required_fields,
 )
-from backend.domains.kiwoom.models.kiwoom_response_definition import (
-    KIWOOM_RESPONSE_DEF
-)
+from backend.domains.kiwoom.models.kiwoom_response_definition import KIWOOM_RESPONSE_DEF
 
 
 class ContYn(str, Enum):
@@ -390,6 +389,6 @@ class KiwoomApiHelper:
             
             return korea_data
             
-        except Exception as e:
+        except Exception:
             # 변환 중 오류 발생 시 원본 데이터 반환
             return response_data
