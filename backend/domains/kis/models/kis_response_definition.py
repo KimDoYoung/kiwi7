@@ -1,268 +1,30 @@
-"""
-KIS(한국투자증권) API 응답 정의
-각 API별 응답 필드 매핑을 정의합니다.
-"""
+"""Auto-generated definition file"""
+from typing import Any, Dict, List
 
-KIS_RESPONSE_DEF = {
-    # === 주식현재가 시세 ===
-    'FHKST01010100': [
-        {'key': 'iscd_stat_cls_code', 'name': '종목상태구분코드'},
-        {'key': 'marg_rate', 'name': '증거금율'},
-        {'key': 'rprs_mrkt_kor_name', 'name': '대표시장한글명'},
-        {'key': 'bstp_kor_isnm', 'name': '업종한글명'},
-        {'key': 'temp_stop_yn', 'name': '임시정지여부'},
-        {'key': 'oprc_rang_cont_yn', 'name': '시가범위연장여부'},
-        {'key': 'clpr_rang_cont_yn', 'name': '종가범위연장여부'},
-        {'key': 'crdt_able_yn', 'name': '신용가능여부'},
-        {'key': 'grmn_rate_cls_code', 'name': '보증금율구분코드'},
-        {'key': 'elw_pblc_yn', 'name': 'ELW발행여부'},
-        {'key': 'stck_prpr', 'name': '현재가'},
-        {'key': 'prdy_vrss', 'name': '전일대비'},
-        {'key': 'prdy_vrss_sign', 'name': '전일대비부호'},
-        {'key': 'prdy_ctrt', 'name': '전일대비율'},
-        {'key': 'acml_tr_pbmn', 'name': '누적거래대금'},
-        {'key': 'acml_vol', 'name': '누적거래량'},
-        {'key': 'prdy_vrss_vol_rate', 'name': '전일대비거래량비율'},
-        {'key': 'stck_oprc', 'name': '시가'},
-        {'key': 'stck_hgpr', 'name': '고가'},
-        {'key': 'stck_lwpr', 'name': '저가'},
-        {'key': 'stck_mxpr', 'name': '상한가'},
-        {'key': 'stck_llam', 'name': '하한가'},
-        {'key': 'stck_sdpr', 'name': '기준가'},
-        {'key': 'wghn_avrg_stck_prc', 'name': '가중평균주가'},
-        {'key': 'hts_frgn_ehrt', 'name': 'HTS외국인소진율'},
-        {'key': 'frgn_ntby_qty', 'name': '외국인순매수수량'},
-        {'key': 'pgtr_ntby_qty', 'name': '프로그램순매수'},
-        {'key': 'pvt_scnd_dmrs_prc', 'name': '피봇2차저항가격'},
-        {'key': 'pvt_frst_dmrs_prc', 'name': '피봇1차저항가격'},
-        {'key': 'pvt_pont_val', 'name': '피봇포인트값'},
-        {'key': 'pvt_frst_dmsp_prc', 'name': '피봇1차지지가격'},
-        {'key': 'pvt_scnd_dmsp_prc', 'name': '피봇2차지지가격'},
-        {'key': 'dmrs_val', 'name': '디마크저항값'},
-        {'key': 'dmsp_val', 'name': '디마크지지값'},
-        {'key': 'cpfn', 'name': '자본금'},
-        {'key': 'rstc_wdth_prc', 'name': '제한폭가격'},
-        {'key': 'stck_fcam', 'name': '주식액면가'},
-        {'key': 'stck_sspr', 'name': '주식대용가'},
-        {'key': 'aspr_unit', 'name': '호가단위'},
-        {'key': 'hts_deal_qty_unit_val', 'name': 'HTS매매수량단위값'},
-        {'key': 'lstn_stcn', 'name': '상장주수'},
-        {'key': 'hts_avls', 'name': 'HTS시가총액'},
-        {'key': 'per', 'name': 'PER'},
-        {'key': 'pbr', 'name': 'PBR'},
-        {'key': 'stac_month', 'name': '결산월'},
-        {'key': 'vol_tnrt', 'name': '거래량회전율'},
-        {'key': 'eps', 'name': 'EPS'},
-        {'key': 'bps', 'name': 'BPS'},
-        {'key': 'd250_hgpr', 'name': '250일최고가'},
-        {'key': 'd250_hgpr_date', 'name': '250일최고가일자'},
-        {'key': 'd250_hgpr_vrss_prpr_rate', 'name': '250일최고가대비현재가비율'},
-        {'key': 'd250_lwpr', 'name': '250일최저가'},
-        {'key': 'd250_lwpr_date', 'name': '250일최저가일자'},
-        {'key': 'd250_lwpr_vrss_prpr_rate', 'name': '250일최저가대비현재가비율'},
-        {'key': 'stck_dryy_hgpr', 'name': '연중최고가'},
-        {'key': 'dryy_hgpr_vrss_prpr_rate', 'name': '연중최고가대비현재가비율'},
-        {'key': 'dryy_hgpr_date', 'name': '연중최고가일자'},
-        {'key': 'stck_dryy_lwpr', 'name': '연중최저가'},
-        {'key': 'dryy_lwpr_vrss_prpr_rate', 'name': '연중최저가대비현재가비율'},
-        {'key': 'dryy_lwpr_date', 'name': '연중최저가일자'},
-        {'key': 'w52_hgpr', 'name': '52주최고가'},
-        {'key': 'w52_hgpr_vrss_prpr_ctrt', 'name': '52주최고가대비현재가대비'},
-        {'key': 'w52_hgpr_date', 'name': '52주최고가일자'},
-        {'key': 'w52_lwpr', 'name': '52주최저가'},
-        {'key': 'w52_lwpr_vrss_prpr_ctrt', 'name': '52주최저가대비현재가대비'},
-        {'key': 'w52_lwpr_date', 'name': '52주최저가일자'},
-        {'key': 'whol_loan_rmnd_rate', 'name': '전체융자잔고비율'},
-        {'key': 'ssts_yn', 'name': '공매도가능여부'},
-        {'key': 'stck_shrn_iscd', 'name': '주식단축종목코드'},
-    ],
+from .responses.market import MARKET_RESPONSES
+from .responses.trading import TRADING_RESPONSES
+from .responses.misc import MISC_RESPONSES
 
-    # === 주식현재가 호가/예상체결 ===
-    'FHKST01010200': [
-        {'key': 'askp1', 'name': '매도호가1'},
-        {'key': 'askp2', 'name': '매도호가2'},
-        {'key': 'askp3', 'name': '매도호가3'},
-        {'key': 'askp4', 'name': '매도호가4'},
-        {'key': 'askp5', 'name': '매도호가5'},
-        {'key': 'askp6', 'name': '매도호가6'},
-        {'key': 'askp7', 'name': '매도호가7'},
-        {'key': 'askp8', 'name': '매도호가8'},
-        {'key': 'askp9', 'name': '매도호가9'},
-        {'key': 'askp10', 'name': '매도호가10'},
-        {'key': 'bidp1', 'name': '매수호가1'},
-        {'key': 'bidp2', 'name': '매수호가2'},
-        {'key': 'bidp3', 'name': '매수호가3'},
-        {'key': 'bidp4', 'name': '매수호가4'},
-        {'key': 'bidp5', 'name': '매수호가5'},
-        {'key': 'bidp6', 'name': '매수호가6'},
-        {'key': 'bidp7', 'name': '매수호가7'},
-        {'key': 'bidp8', 'name': '매수호가8'},
-        {'key': 'bidp9', 'name': '매수호가9'},
-        {'key': 'bidp10', 'name': '매수호가10'},
-        {'key': 'askp_rsqn1', 'name': '매도호가잔량1'},
-        {'key': 'askp_rsqn2', 'name': '매도호가잔량2'},
-        {'key': 'askp_rsqn3', 'name': '매도호가잔량3'},
-        {'key': 'askp_rsqn4', 'name': '매도호가잔량4'},
-        {'key': 'askp_rsqn5', 'name': '매도호가잔량5'},
-        {'key': 'askp_rsqn6', 'name': '매도호가잔량6'},
-        {'key': 'askp_rsqn7', 'name': '매도호가잔량7'},
-        {'key': 'askp_rsqn8', 'name': '매도호가잔량8'},
-        {'key': 'askp_rsqn9', 'name': '매도호가잔량9'},
-        {'key': 'askp_rsqn10', 'name': '매도호가잔량10'},
-        {'key': 'bidp_rsqn1', 'name': '매수호가잔량1'},
-        {'key': 'bidp_rsqn2', 'name': '매수호가잔량2'},
-        {'key': 'bidp_rsqn3', 'name': '매수호가잔량3'},
-        {'key': 'bidp_rsqn4', 'name': '매수호가잔량4'},
-        {'key': 'bidp_rsqn5', 'name': '매수호가잔량5'},
-        {'key': 'bidp_rsqn6', 'name': '매수호가잔량6'},
-        {'key': 'bidp_rsqn7', 'name': '매수호가잔량7'},
-        {'key': 'bidp_rsqn8', 'name': '매수호가잔량8'},
-        {'key': 'bidp_rsqn9', 'name': '매수호가잔량9'},
-        {'key': 'bidp_rsqn10', 'name': '매수호가잔량10'},
-        {'key': 'total_askp_rsqn', 'name': '총매도호가잔량'},
-        {'key': 'total_bidp_rsqn', 'name': '총매수호가잔량'},
-        {'key': 'antc_cnpr', 'name': '예상체결가'},
-        {'key': 'antc_cntg_vrss', 'name': '예상체결대비'},
-        {'key': 'antc_cntg_vrss_sign', 'name': '예상체결대비부호'},
-        {'key': 'antc_cntg_prdy_ctrt', 'name': '예상체결전일대비율'},
-        {'key': 'antc_vol', 'name': '예상체결수량'},
-    ],
+KIS_RESPONSE_DEF = {}
+KIS_RESPONSE_DEF.update(MARKET_RESPONSES)
+KIS_RESPONSE_DEF.update(TRADING_RESPONSES)
+KIS_RESPONSE_DEF.update(MISC_RESPONSES)
 
-    # === 주식 잔고 조회 ===
-    'TTTC8434R': [
-        {'key': 'pdno', 'name': '종목코드'},
-        {'key': 'prdt_name', 'name': '종목명'},
-        {'key': 'trad_dvsn_name', 'name': '매매구분명'},
-        {'key': 'bfdy_buy_qty', 'name': '전일매수수량'},
-        {'key': 'bfdy_sll_qty', 'name': '전일매도수량'},
-        {'key': 'thdt_buyqty', 'name': '금일매수수량'},
-        {'key': 'thdt_sll_qty', 'name': '금일매도수량'},
-        {'key': 'hldg_qty', 'name': '보유수량'},
-        {'key': 'ord_psbl_qty', 'name': '주문가능수량'},
-        {'key': 'pchs_avg_pric', 'name': '매입평균가격'},
-        {'key': 'pchs_amt', 'name': '매입금액'},
-        {'key': 'prpr', 'name': '현재가'},
-        {'key': 'evlu_amt', 'name': '평가금액'},
-        {'key': 'evlu_pfls_amt', 'name': '평가손익금액'},
-        {'key': 'evlu_pfls_rt', 'name': '평가손익율'},
-        {'key': 'evlu_erng_rt', 'name': '평가수익율'},
-        {'key': 'loan_dt', 'name': '대출일자'},
-        {'key': 'loan_amt', 'name': '대출금액'},
-        {'key': 'stln_slng_chgs', 'name': '대주매각대금'},
-        {'key': 'expd_dt', 'name': '만기일자'},
-        {'key': 'fltt_rt', 'name': '등락율'},
-        {'key': 'bfdy_cprs_icdc', 'name': '전일대비증감'},
-        {'key': 'item_mgna_rt_name', 'name': '종목증거금율명'},
-        {'key': 'grta_rt_name', 'name': '보증금율명'},
-        {'key': 'sbst_pric', 'name': '대용가격'},
-        {'key': 'stck_loan_unpr', 'name': '주식대출단가'},
-        # output2 필드 추가
-        {'key': 'dnca_tot_amt', 'name': '예수금총금액'},
-        {'key': 'nxdy_excc_amt', 'name': '익일정산금액'},
-        {'key': 'prvs_rcdl_excc_amt', 'name': '가수도정산금액'},
-        {'key': 'cma_evlu_amt', 'name': 'CMA평가금액'},
-        {'key': 'bfdy_buy_amt', 'name': '전일매수금액'},
-        {'key': 'thdt_buy_amt', 'name': '금일매수금액'},
-        {'key': 'nxdy_auto_rdpt_amt', 'name': '익일자동상환금액'},
-        {'key': 'bfdy_sll_amt', 'name': '전일매도금액'},
-        {'key': 'thdt_sll_amt', 'name': '금일매도금액'},
-        {'key': 'd2_auto_rdpt_amt', 'name': 'D+2자동상환금액'},
-        {'key': 'bfdy_tlex_amt', 'name': '전일제비용금액'},
-        {'key': 'thdt_tlex_amt', 'name': '금일제비용금액'},
-        {'key': 'tot_loan_amt', 'name': '총대출금액'},
-        {'key': 'scts_evlu_amt', 'name': '유가평가금액'},
-        {'key': 'tot_evlu_amt', 'name': '총평가금액'},
-        {'key': 'nass_amt', 'name': '순자산금액'},
-        {'key': 'fncg_gld_auto_rdpt_yn', 'name': '융자금자동상환여부'},
-        {'key': 'pchs_amt_smtl_amt', 'name': '매입금액합계'},
-        {'key': 'evlu_amt_smtl_amt', 'name': '평가금액합계'},
-        {'key': 'evlu_pfls_smtl_amt', 'name': '평가손익합계'},
-        {'key': 'tot_stln_slng_chgs', 'name': '총대주매각대금'},
-        {'key': 'bfdy_tot_asst_evlu_amt', 'name': '전일총자산평가금액'},
-        {'key': 'asst_icdc_amt', 'name': '자산증감액'},
-        {'key': 'asst_icdc_erng_rt', 'name': '자산증감수익율'},
-    ],
-
-    # === 주식 매수/매도 주문 응답 ===
-    'TTTC0802U': [
-        {'key': 'KRX_FWDG_ORD_ORGNO', 'name': '한국거래소전송주문조직번호'},
-        {'key': 'ODNO', 'name': '주문번호'},
-        {'key': 'ORD_TMD', 'name': '주문시각'},
-    ],
-    'TTTC0801U': [
-        {'key': 'KRX_FWDG_ORD_ORGNO', 'name': '한국거래소전송주문조직번호'},
-        {'key': 'ODNO', 'name': '주문번호'},
-        {'key': 'ORD_TMD', 'name': '주문시각'},
-    ],
-
-    # === 주문 정정/취소 응답 ===
-    'TTTC0803U': [
-        {'key': 'KRX_FWDG_ORD_ORGNO', 'name': '한국거래소전송주문조직번호'},
-        {'key': 'ODNO', 'name': '주문번호'},
-        {'key': 'ORD_TMD', 'name': '주문시각'},
-    ],
-    'TTTC0804U': [
-        {'key': 'KRX_FWDG_ORD_ORGNO', 'name': '한국거래소전송주문조직번호'},
-        {'key': 'ODNO', 'name': '주문번호'},
-        {'key': 'ORD_TMD', 'name': '주문시각'},
-    ],
-
-    # === 매수가능조회 ===
-    'TTTC8908R': [
-        {'key': 'ord_psbl_cash', 'name': '주문가능현금'},
-        {'key': 'ord_psbl_sbst', 'name': '주문가능대용'},
-        {'key': 'ruse_psbl_amt', 'name': '재사용가능금액'},
-        {'key': 'fund_rpch_chgs', 'name': '펀드환매대금'},
-        {'key': 'psbl_qty_calc_unpr', 'name': '가능수량계산단가'},
-        {'key': 'nrcvb_buy_amt', 'name': '미수없는매수금액'},
-        {'key': 'nrcvb_buy_qty', 'name': '미수없는매수수량'},
-        {'key': 'max_buy_amt', 'name': '최대매수금액'},
-        {'key': 'max_buy_qty', 'name': '최대매수수량'},
-        {'key': 'cma_evlu_amt', 'name': 'CMA평가금액'},
-        {'key': 'ovrs_re_use_amt_wcrc', 'name': '해외재사용금액원화'},
-        {'key': 'ord_psbl_frcr_amt_wcrc', 'name': '주문가능외화금액원화'},
-    ],
-
-    # === 주문체결조회 ===
-    'TTTC8001R': [
-        {'key': 'ord_dt', 'name': '주문일자'},
-        {'key': 'ord_gno_brno', 'name': '주문채번지점번호'},
-        {'key': 'odno', 'name': '주문번호'},
-        {'key': 'orgn_odno', 'name': '원주문번호'},
-        {'key': 'ord_dvsn_name', 'name': '주문구분명'},
-        {'key': 'sll_buy_dvsn_cd', 'name': '매도매수구분코드'},
-        {'key': 'sll_buy_dvsn_cd_name', 'name': '매도매수구분코드명'},
-        {'key': 'pdno', 'name': '종목코드'},
-        {'key': 'prdt_name', 'name': '종목명'},
-        {'key': 'ord_qty', 'name': '주문수량'},
-        {'key': 'ord_unpr', 'name': '주문단가'},
-        {'key': 'ord_tmd', 'name': '주문시각'},
-        {'key': 'tot_ccld_qty', 'name': '총체결수량'},
-        {'key': 'avg_prvs', 'name': '평균가'},
-        {'key': 'cncl_yn', 'name': '취소여부'},
-        {'key': 'tot_ccld_amt', 'name': '총체결금액'},
-        {'key': 'loan_dt', 'name': '대출일자'},
-        {'key': 'ord_dvsn_cd', 'name': '주문구분코드'},
-        {'key': 'cncl_cfrm_qty', 'name': '취소확인수량'},
-        {'key': 'rmn_qty', 'name': '잔량'},
-        {'key': 'rjct_qty', 'name': '거부수량'},
-        {'key': 'ccld_cndt_name', 'name': '체결조건명'},
-        {'key': 'infm_tmd', 'name': '통보시각'},
-        {'key': 'ctac_tlno', 'name': '연락전화번호'},
-        {'key': 'prdt_type_cd', 'name': '상품유형코드'},
-    ],
-}
-
+def get_response_definition(api_id: str) -> Dict[str, Any]:
+    return KIS_RESPONSE_DEF.get(api_id)
 
 def get_response_fields(api_id: str) -> list:
-    """API ID로 응답 필드 정의 조회"""
-    return KIS_RESPONSE_DEF.get(api_id, [])
-
+    resp = get_response_definition(api_id)
+    if resp and 'output' in resp and 'fields' in resp['output']:
+        return resp['output']['fields']
+    # Fallback for flat structure?
+    if resp and 'fields' in resp: 
+        return resp['fields']
+    return []
 
 def get_field_name(api_id: str, key: str) -> str:
-    """필드 키의 한글 이름 반환"""
-    fields = KIS_RESPONSE_DEF.get(api_id, [])
+    fields = get_response_fields(api_id)
     for field in fields:
-        if field['key'] == key:
-            return field['name']
+        if field.get('key') == key:
+            return field.get('name', key)
     return key
