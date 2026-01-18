@@ -2,9 +2,9 @@
 from typing import Any, Dict, List
 
 from .requests.market import MARKET_REQUESTS
-from .requests.trading import TRADING_REQUESTS
 from .requests.market_etf import MARKET_ETF_REQUESTS
 from .requests.market_realtime import MARKET_REALTIME_REQUESTS
+from .requests.trading import TRADING_REQUESTS
 
 KIS_REQUEST_DEF = {}
 KIS_REQUEST_DEF.update(MARKET_REQUESTS)

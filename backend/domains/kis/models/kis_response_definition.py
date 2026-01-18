@@ -1,9 +1,9 @@
 """Auto-generated definition file"""
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 from .responses.market import MARKET_RESPONSES
-from .responses.trading import TRADING_RESPONSES
 from .responses.misc import MISC_RESPONSES
+from .responses.trading import TRADING_RESPONSES
 
 KIS_RESPONSE_DEF = {}
 KIS_RESPONSE_DEF.update(MARKET_RESPONSES)
