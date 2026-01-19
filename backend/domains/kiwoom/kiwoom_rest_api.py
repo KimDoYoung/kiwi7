@@ -30,7 +30,8 @@ class KiwoomRestApi(StockApi):
     
     def __init__(self, token_manager: KiwoomTokenManager):
         """키움 API 클래스 초기화"""
-        super().__init__(config.KIWOOM_ACCT_NO)
+        from backend.domains.stock_api import BrokerType
+        super().__init__(config.KIWOOM_ACCT_NO, broker_type=BrokerType.KIWOOM)
         self.token_manager = token_manager
     
     @property

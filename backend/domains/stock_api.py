@@ -35,8 +35,7 @@ class StockApi(ABC):
         pass
 
     @property
-    @abstractmethod
     def base_url(self) -> str:
         """증권사 API 베이스 URL"""
-        pass
+        raise NotImplementedError("Subclass must implement base_url property")
 
