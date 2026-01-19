@@ -6,17 +6,21 @@ from typing import Any, Dict, List
 
 from .requests.account import ACCOUNT_REQUESTS
 from .requests.auth import AUTH_REQUESTS
-from .requests.market import MARKET_REQUESTS
+from .requests.market_original import MARKET_REQUESTS
 from .requests.market_elw import MARKET_ELW_REQUESTS
 from .requests.market_etf import MARKET_ETF_REQUESTS
-from .requests.market_future import MARKET_FUTURE_REQUESTS
-from .requests.market_overseas import MARKET_OVERSEAS_REQUESTS
+from .requests.market_future_original import MARKET_FUTURE_REQUESTS
+from .requests.market_overseas_futures import MARKET_OVERSEAS_FUTURES_REQUESTS
+from .requests.market_overseas_stocks import MARKET_OVERSEAS_STOCKS_REQUESTS
+from .requests.market_overseas_realtime import MARKET_OVERSEAS_REALTIME_REQUESTS
 
 LS_REQUEST_DEF = {}
 LS_REQUEST_DEF.update(AUTH_REQUESTS)
 LS_REQUEST_DEF.update(ACCOUNT_REQUESTS)
 LS_REQUEST_DEF.update(MARKET_REQUESTS)
-LS_REQUEST_DEF.update(MARKET_OVERSEAS_REQUESTS)
+LS_REQUEST_DEF.update(MARKET_OVERSEAS_FUTURES_REQUESTS)
+LS_REQUEST_DEF.update(MARKET_OVERSEAS_STOCKS_REQUESTS)
+LS_REQUEST_DEF.update(MARKET_OVERSEAS_REALTIME_REQUESTS)
 LS_REQUEST_DEF.update(MARKET_FUTURE_REQUESTS)
 LS_REQUEST_DEF.update(MARKET_ELW_REQUESTS)
 LS_REQUEST_DEF.update(MARKET_ETF_REQUESTS)
