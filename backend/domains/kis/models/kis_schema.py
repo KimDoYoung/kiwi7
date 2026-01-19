@@ -131,7 +131,18 @@ class KisApiHelper:
     @staticmethod
     def to_korea_data(response_data: Dict[str, Any], api_id: str) -> Dict[str, Any]:
         """영문 필드명을 한글로 변환"""
-        response_fields = KIS_RESPONSE_DEF.get(api_id, [])
+        response_def = KIS_RESPONSE_DEF.get(api_id, {})
+        if not response_def:
+            return response_data
+
+        # 응답 정의 구조: {'output': {'fields': [...]}}
+        response_fields = []
+        if isinstance(response_def, dict):
+            if 'output' in response_def and isinstance(response_def['output'], dict):
+                response_fields = response_def['output'].get('fields', [])
+            elif 'fields' in response_def:
+                response_fields = response_def.get('fields', [])
+
         if not response_fields:
             return response_data
 

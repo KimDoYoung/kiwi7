@@ -1,6 +1,10 @@
 """
 KIS 주식 잔고 조회 테스트
 """
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import asyncio
 from pprint import pprint
 from backend.domains.kis.kis_rest_api import KisRestApi
