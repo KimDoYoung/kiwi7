@@ -1,7 +1,7 @@
 # KIS REST API Request Definitions
 # Auto-generated from Excel file
 
-KIS_REQUEST_DEF = {
+KIS_REQUEST_DEF_7 = {
     "(매도) TTTC0011U (매수) TTTC0012U": {
         "url": "/uapi/domestic-stock/v1/trading/order-cash",
         "title": "주식주문(현금)",

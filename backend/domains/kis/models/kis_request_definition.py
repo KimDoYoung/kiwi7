@@ -1,16 +1,22 @@
 """Auto-generated definition file"""
 from typing import Any, Dict, List
 
-from .requests.market import MARKET_REQUESTS
-from .requests.market_etf import MARKET_ETF_REQUESTS
-from .requests.market_realtime import MARKET_REALTIME_REQUESTS
-from .requests.trading import TRADING_REQUESTS
+from .requests.kis_req_1 import KIS_REQUEST_DEF_1
+from .requests.kis_req_2 import KIS_REQUEST_DEF_2
+from .requests.kis_req_3 import KIS_REQUEST_DEF_3
+from .requests.kis_req_4 import KIS_REQUEST_DEF_4
+from .requests.kis_req_5 import KIS_REQUEST_DEF_5
+from .requests.kis_req_6 import KIS_REQUEST_DEF_6
+from .requests.kis_req_7 import KIS_REQUEST_DEF_7
 
 KIS_REQUEST_DEF = {}
-KIS_REQUEST_DEF.update(MARKET_REQUESTS)
-KIS_REQUEST_DEF.update(TRADING_REQUESTS)
-KIS_REQUEST_DEF.update(MARKET_ETF_REQUESTS)
-KIS_REQUEST_DEF.update(MARKET_REALTIME_REQUESTS)
+KIS_REQUEST_DEF.update(KIS_REQUEST_DEF_1)
+KIS_REQUEST_DEF.update(KIS_REQUEST_DEF_2)
+KIS_REQUEST_DEF.update(KIS_REQUEST_DEF_3)
+KIS_REQUEST_DEF.update(KIS_REQUEST_DEF_4)
+KIS_REQUEST_DEF.update(KIS_REQUEST_DEF_5)
+KIS_REQUEST_DEF.update(KIS_REQUEST_DEF_6)
+KIS_REQUEST_DEF.update(KIS_REQUEST_DEF_7)
 
 def get_request_definition(api_id: str) -> Dict[str, Any]:
     return KIS_REQUEST_DEF.get(api_id)

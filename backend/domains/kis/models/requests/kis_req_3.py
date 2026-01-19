@@ -1,7 +1,7 @@
 # KIS REST API Request Definitions
 # Auto-generated from Excel file
 
-KIS_REQUEST_DEF = {
+KIS_REQUEST_DEF_3 = {
     "HHKST03900300": {
         "url": "/uapi/domestic-stock/v1/quotations/psearch-title",
         "title": "종목조건검색 목록조회",

@@ -1,0 +1,612 @@
+# KIS REST API Response Definitions
+# Auto-generated from Excel file
+
+KIS_RESPONSE_DEF_6 = {
+    # === 상품기본조회 ===
+    'CTPF1604R': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output': {
+            'type': 'object',
+            'fields': [
+                {'key': 'pdno', 'name': '상품번호', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'prdt_type_cd', 'name': '상품유형코드', 'type': 'string', 'required': True, 'length': 3, 'description': ''},
+                {'key': 'prdt_name', 'name': '상품명', 'type': 'string', 'required': True, 'length': 60, 'description': ''},
+                {'key': 'prdt_name120', 'name': '상품명120', 'type': 'string', 'required': True, 'length': 120, 'description': ''},
+                {'key': 'prdt_abrv_name', 'name': '상품약어명', 'type': 'string', 'required': True, 'length': 60, 'description': ''},
+                {'key': 'prdt_eng_name', 'name': '상품영문명', 'type': 'string', 'required': True, 'length': 60, 'description': ''},
+                {'key': 'prdt_eng_name120', 'name': '상품영문명120', 'type': 'string', 'required': True, 'length': 120, 'description': ''},
+                {'key': 'prdt_eng_abrv_name', 'name': '상품영문약어명', 'type': 'string', 'required': True, 'length': 60, 'description': ''},
+                {'key': 'std_pdno', 'name': '표준상품번호', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'shtn_pdno', 'name': '단축상품번호', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'prdt_sale_stat_cd', 'name': '상품판매상태코드', 'type': 'string', 'required': True, 'length': 2, 'description': ''},
+                {'key': 'prdt_risk_grad_cd', 'name': '상품위험등급코드', 'type': 'string', 'required': True, 'length': 2, 'description': ''},
+                {'key': 'prdt_clsf_cd', 'name': '상품분류코드', 'type': 'string', 'required': True, 'length': 6, 'description': ''},
+                {'key': 'prdt_clsf_name', 'name': '상품분류명', 'type': 'string', 'required': True, 'length': 60, 'description': ''},
+                {'key': 'sale_strt_dt', 'name': '판매시작일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'sale_end_dt', 'name': '판매종료일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'wrap_asst_type_cd', 'name': '랩어카운트자산유형코드', 'type': 'string', 'required': True, 'length': 2, 'description': ''},
+                {'key': 'ivst_prdt_type_cd', 'name': '투자상품유형코드', 'type': 'string', 'required': True, 'length': 4, 'description': ''},
+                {'key': 'ivst_prdt_type_cd_name', 'name': '투자상품유형코드명', 'type': 'string', 'required': True, 'length': 60, 'description': ''},
+                {'key': 'frst_erlm_dt', 'name': '최초등록일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''}
+            ]
+        }
+    },
+    # === 주식기본조회 ===
+    'CTPF1002R': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output': {
+            'type': 'object',
+            'fields': [
+                {'key': 'pdno', 'name': '상품번호', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'prdt_type_cd', 'name': '상품유형코드', 'type': 'string', 'required': True, 'length': 3, 'description': ''},
+                {'key': 'mket_id_cd', 'name': '시장ID코드', 'type': 'string', 'required': True, 'length': 3, 'description': 'AGR.농축산물파생 BON.채권파생 CMD.일반상품시장 CUR.통화파생 ENG.에너지파생 EQU.주식파생 ETF.ETF파생 IRT.금리파생 KNX.코넥스 KSQ.코스닥 MTL.금속파생 SPI.주가지수파생 STK.유가증권'},
+                {'key': 'scty_grp_id_cd', 'name': '증권그룹ID코드', 'type': 'string', 'required': True, 'length': 2, 'description': 'BC.수익증권 DR.주식예탁증서 EF.ETF EN.ETN EW.ELW FE.해외ETF FO.선물옵션 FS.외국주권 FU.선물 FX.플렉스 선물 GD.금현물 IC.투자계약증권 IF.사회간접자본투융자회사 KN.코넥스주권 MF.투자회사 OP.옵션 RT.부동산투자회사 SC.선박투자회사 SR.신주인수권증서 ST.주권 SW.신주인수권증권 TC.신탁수익증권'},
+                {'key': 'excg_dvsn_cd', 'name': '거래소구분코드', 'type': 'string', 'required': True, 'length': 2, 'description': '01.한국증권 02.증권거래소 03.코스닥 04.K-OTC 05.선물거래소 06.CME 07.EUREX 21.금현물 50.미국주간 51.홍콩 52.상해B 53.심천 54.홍콩거래소 55.미국 56.일본 57.상해A 58.심천A 59.베트남 61.장전시간외시장 64.경쟁대량매매 65.경매매시장 81.시간외단일가시장'},
+                {'key': 'setl_mmdd', 'name': '결산월일', 'type': 'string', 'required': True, 'length': 4, 'description': ''},
+                {'key': 'lstg_stqt', 'name': '상장주수', 'type': 'string', 'required': True, 'length': 19, 'description': ''},
+                {'key': 'lstg_cptl_amt', 'name': '상장자본금액', 'type': 'string', 'required': True, 'length': 19, 'description': ''},
+                {'key': 'cpta', 'name': '자본금', 'type': 'string', 'required': True, 'length': 19, 'description': ''},
+                {'key': 'papr', 'name': '액면가', 'type': 'string', 'required': True, 'length': 19, 'description': ''},
+                {'key': 'issu_pric', 'name': '발행가격', 'type': 'string', 'required': True, 'length': 19, 'description': ''},
+                {'key': 'kospi200_item_yn', 'name': '코스피200종목여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'scts_mket_lstg_dt', 'name': '유가증권시장상장일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'scts_mket_lstg_abol_dt', 'name': '유가증권시장상장폐지일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'kosdaq_mket_lstg_dt', 'name': '코스닥시장상장일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'kosdaq_mket_lstg_abol_dt', 'name': '코스닥시장상장폐지일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'frbd_mket_lstg_dt', 'name': '프리보드시장상장일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'frbd_mket_lstg_abol_dt', 'name': '프리보드시장상장폐지일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'reits_kind_cd', 'name': '리츠종류코드', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'etf_dvsn_cd', 'name': 'ETF구분코드', 'type': 'string', 'required': True, 'length': 2, 'description': ''},
+                {'key': 'oilf_fund_yn', 'name': '유전펀드여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'idx_bztp_lcls_cd', 'name': '지수업종대분류코드', 'type': 'string', 'required': True, 'length': 3, 'description': ''},
+                {'key': 'idx_bztp_mcls_cd', 'name': '지수업종중분류코드', 'type': 'string', 'required': True, 'length': 3, 'description': ''},
+                {'key': 'idx_bztp_scls_cd', 'name': '지수업종소분류코드', 'type': 'string', 'required': True, 'length': 3, 'description': ''},
+                {'key': 'stck_kind_cd', 'name': '주식종류코드', 'type': 'string', 'required': True, 'length': 3, 'description': '000.해당사항없음 101.보통주 201.우선주 202.2우선주 203.3우선주 204.4우선주 205.5우선주 206.6우선주 207.7우선주 208.8우선주 209.9우선주 210.10우선주 211.11우선주 212.12우선주 213.13우선주 214.14우선주 215.15우선주 216.16우선주 217.17우선주 218.18우선주 219.19우선주 220.20우선주 301.후배주 401.혼합주'},
+                {'key': 'mfnd_opng_dt', 'name': '뮤추얼펀드개시일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'mfnd_end_dt', 'name': '뮤추얼펀드종료일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'dpsi_erlm_cncl_dt', 'name': '예탁등록취소일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'etf_cu_qty', 'name': 'ETFCU수량', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdt_name', 'name': '상품명', 'type': 'string', 'required': True, 'length': 60, 'description': ''},
+                {'key': 'prdt_name120', 'name': '상품명120', 'type': 'string', 'required': True, 'length': 120, 'description': ''},
+                {'key': 'prdt_abrv_name', 'name': '상품약어명', 'type': 'string', 'required': True, 'length': 60, 'description': ''},
+                {'key': 'std_pdno', 'name': '표준상품번호', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'prdt_eng_name', 'name': '상품영문명', 'type': 'string', 'required': True, 'length': 60, 'description': ''},
+                {'key': 'prdt_eng_name120', 'name': '상품영문명120', 'type': 'string', 'required': True, 'length': 120, 'description': ''},
+                {'key': 'prdt_eng_abrv_name', 'name': '상품영문약어명', 'type': 'string', 'required': True, 'length': 60, 'description': ''},
+                {'key': 'dpsi_aptm_erlm_yn', 'name': '예탁지정등록여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'etf_txtn_type_cd', 'name': 'ETF과세유형코드', 'type': 'string', 'required': True, 'length': 2, 'description': ''},
+                {'key': 'etf_type_cd', 'name': 'ETF유형코드', 'type': 'string', 'required': True, 'length': 2, 'description': ''},
+                {'key': 'lstg_abol_dt', 'name': '상장폐지일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'nwst_odst_dvsn_cd', 'name': '신주구주구분코드', 'type': 'string', 'required': True, 'length': 2, 'description': ''},
+                {'key': 'sbst_pric', 'name': '대용가격', 'type': 'string', 'required': True, 'length': 19, 'description': ''},
+                {'key': 'thco_sbst_pric', 'name': '당사대용가격', 'type': 'string', 'required': True, 'length': 19, 'description': ''},
+                {'key': 'thco_sbst_pric_chng_dt', 'name': '당사대용가격변경일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'tr_stop_yn', 'name': '거래정지여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'admn_item_yn', 'name': '관리종목여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'thdt_clpr', 'name': '당일종가', 'type': 'string', 'required': True, 'length': 19, 'description': ''},
+                {'key': 'bfdy_clpr', 'name': '전일종가', 'type': 'string', 'required': True, 'length': 19, 'description': ''},
+                {'key': 'clpr_chng_dt', 'name': '종가변경일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'std_idst_clsf_cd', 'name': '표준산업분류코드', 'type': 'string', 'required': True, 'length': 6, 'description': ''},
+                {'key': 'std_idst_clsf_cd_name', 'name': '표준산업분류코드명', 'type': 'string', 'required': True, 'length': 130, 'description': '표준산업소분류코드 000000	해당사항없음                                      010101	작물 재배업                                       010102	축산업                                            010103	작물재배 및 축산 복합농업                         010104	작물재배 및 축산 관련 서비스업                    010105	수렵 및 관련 서비스업                             010201	임업                                              010301	어로 어업                                         010302	양식어업 및 어업관련 서비스업                     020501	석탄 광업                                         020502	원유 및 천연가스 채굴업                           020601	철 광업                                           020602	비철금속 광업                                     020701	토사석 광업                                       020702	기타 비금속광물 광업                              020801	광업 지원 서비스업                                031001	도축, 육류 가공 및 저장 처리업                    031002	수산물 가공 및 저장 처리업                        031003	과실, 채소 가공 및 저장 처리업                    031004	동물성 및 식물성 유지 제조업                      031005	낙농제품 및 식용빙과류 제조업                     031006	곡물가공품, 전분 및 전분제품 제조업               031007	기타 식품 제조업                                  031008	동물용 사료 및 조제식품 제조업                    031101	알콜음료 제조업                                   031102	비알콜음료 및 얼음 제조업                         031201	담배 제조업                                       031301	방적 및 가공사 제조업                             031302	직물직조 및 직물제품 제조업                       031303	편조원단 및 편조제품 제조업                       031304	섬유제품 염색, 정리 및 마무리 가공업              031309	기타 섬유제품 제조업                              031401	봉제의복 제조업                                   031402	모피가공 및 모피제품 제조업                       031403	편조의복 제조업                                   031404	의복 액세서리 제조업                              031501	가죽, 가방 및 유사제품 제조업                     031502	신발 및 신발부분품 제조업                         031601	제재 및 목재 가공업                               031602	나무제품 제조업                                   031603	코르크 및 조물 제품 제조업                        031701	펄프, 종이 및 판지 제조업                         031702	골판지, 종이 상자 및 종이용기 제조업              031709	기타 종이 및 판지 제품 제조업                     031801	인쇄 및 인쇄관련 산업                             031802	기록매체 복제업                                   031901	코크스 및 연탄 제조업                             031902	석유 정제품 제조업                                032001	기초화학물질 제조업                               032002	비료 및 질소화합물 제조업                         032003	합성고무 및 플라스틱 물질 제조업                  032004	기타 화학제품 제조업                              032005	화학섬유 제조업                                   032101	기초 의약물질 및 생물학적 제제 제조업             032102	의약품 제조업                                     032103	의료용품 및 기타 의약관련제품 제조업              032201	고무제품 제조업                                   032202	플라스틱제품 제조업                               032301	유리 및 유리제품 제조업                           032302	도자기 및 기타 요업제품 제조업                    032303	시멘트, 석회, 플라스터 및 그 제품 제조업          032309	기타 비금속 광물제품 제조업                       032401	1차 철강 제조업                                   032402	1차 비철금속 제조업                               032403	금속 주조업                                       032501	구조용 금속제품, 탱크 및 증기발생기 제조업        032502	무기 및 총포탄 제조업                             032509	기타 금속가공제품 제조업                          032601	반도체 제조업                                     032602	전자부품 제조업                                   032603	컴퓨터 및 주변장치 제조업                         032604	통신 및 방송 장비 제조업                          032605	영상 및 음향기기 제조업                           032606	마그네틱 및 광학 매체 제조업                      032701	의료용 기기 제조업                                032702	측정, 시험, 항해, 제어 및 기타 정밀기기 제조업; ? 032703	안경, 사진장비 및 기타 광학기기 제조업            032704	시계 및 시계부품 제조업                           032801	전동기, 발전기 및 전기 변환 · 공급 · 제어 장치  032802	일차전지 및 축전지 제조업                         032803	절연선 및 케이블 제조업                           032804	전구 및 조명장치 제조업                           032805	가정용 기기 제조업                                032809	기타 전기장비 제조업                              032901	일반 목적용 기계 제조업                           032902	특수 목적용 기계 제조업                           033001	자동차용 엔진 및 자동차 제조업                    033002	자동차 차체 및 트레일러 제조업                    033003	자동차 부품 제조업                                033101	선박 및 보트 건조업                               033102	철도장비 제조업                                   033103	항공기,우주선 및 부품 제조업                      033109	그외 기타 운송장비 제조업                         033201	가구 제조업                                       033301	귀금속 및 장신용품 제조업                         033302	악기 제조업                                       033303	운동 및 경기용구 제조업                           033304	인형,장난감 및 오락용품 제조업                    033309	그외 기타 제품 제조업                             043501	전기업                                            043502	가스 제조 및 배관공급업                           043503	증기, 냉온수 및 공기조절 공급업                   043601	수도사업                                          053701	하수, 폐수 및 분뇨 처리업                         053801	폐기물 수집운반업                                 053802	폐기물 처리업                                     053803	금속 및 비금속 원료 재생업                        053901	환경 정화 및 복원업                               064101	건물 건설업                                       064102	토목 건설업                                       064201	기반조성 및 시설물 축조관련 전문공사업            064202	건물설비 설치 공사업                              064203	전기 및 통신 공사업                               064204	실내건축 및 건축 마무리 공사업                    064205	건설장비 운영업                                   074501	자동차 판매업                                     074502	자동차 부품 및 내장품 판매업                      074503	모터사이클 및 부품 판매업                         074601	상품 중개업                                       074602	산업용 농축산물 및 산동물 도매업                  074603	음·식료품 및 담배 도매업                         074604	가정용품 도매업                                   074605	기계장비 및 관련 물품 도매업                      074606	건축자재, 철물 및 난방장치 도매업                 074607	기타 전문 도매업                                  074608	상품 종합 도매업                                  074701	종합 소매업                                       074702	음·식료품 및 담배 소매업                         074703	정보통신장비 소매업                               074704	섬유, 의복, 신발 및 가죽제품 소매업               074705	기타 가정용품 소매업                              074706	문화, 오락 및 여가 용품 소매업                    074707	연료 소매업                                       074708	기타 상품 전문 소매업                             074709	무점포 소매업                                     084901	철도운송업                                        084902	육상 여객 운송업                                  084903	도로 화물 운송업                                  084904	소화물 전문 운송업                                084905	파이프라인 운송업                                 085001	해상 운송업                                       085002	내륙 수상 및 항만내 운송업                        085101	정기 항공 운송업                                  085102	부정기 항공 운송업                                085201	보관 및 창고업                                    085209	기타 운송관련 서비스업                            095501	숙박시설 운영업                                   095509	기타 숙박업                                       095601	음식점업                                          095602	주점 및 비알콜음료점업                            105801	서적, 잡지 및 기타 인쇄물 출판업                  105802	소프트웨어 개발 및 공급업                         105901	영화, 비디오물, 방송프로그램 제작 및 배급업       105902	오디오물 출판 및 원판 녹음업                      106001	라디오 방송업                                     106002	텔레비전 방송업                                   106101	우편업                                            106102	전기통신업                                        106201	컴퓨터 프로그래밍, 시스템 통합 및 관리업          106301	자료처리, 호스팅, 포털 및 기타 인터넷 정보매개서? 106309	기타 정보 서비스업                                116401	은행 및 저축기관                                  116402	투자기관                                          116409	기타 금융업                                       116501	보험업                                            116502	재 보험업                                         116503	연금 및 공제업                                    116601	금융지원 서비스업                                 116602	보험 및 연금관련 서비스업                         126801	부동산 임대 및 공급업                             126802	부동산 관련 서비스업                              126901	운송장비 임대업                                   126902	개인 및 가정용품 임대업                           126903	산업용 기계 및 장비 임대업                        126904	무형재산권 임대업                                 137001	자연과학 및 공학 연구개발업                       137002	인문 및 사회과학 연구개발업                       137101	법무관련 서비스업                                 137102	회계 및 세무관련 서비스업                         137103	광고업                                            137104	시장조사 및 여론조사업                            137105	회사본부, 지주회사 및 경영컨설팅 서비스업         137201	건축기술, 엔지니어링 및 관련기술 서비스업         137209	기타 과학기술 서비스업                            137301	수의업                                            137302	전문디자인업                                      137303	사진 촬영 및 처리업                               137309	그외 기타 전문, 과학 및 기술 서비스업             147401	사업시설 유지관리 서비스업                        147402	건물·산업설비 청소 및 방제 서비스업              147403	조경 관리 및 유지 서비스업                        147501	인력공급 및 고용알선업                            147502	여행사 및 기타 여행보조 서비스업                  147503	경비, 경호 및 탐정업                              147509	기타 사업지원 서비스업                            158401	입법 및 일반 정부 행정                            158402	사회 및 산업정책 행정                             158403	외무 및 국방 행정                                 158404	사법 및 공공질서 행정                             158405	사회보장 행정                                     168501	초등 교육기관                                     168502	중등 교육기관                                     168503	고등 교육기관                                     168504	특수학교, 외국인학교 및 대안학교                  168505	일반 교습 학원                                    168506	기타 교육기관                                     168507	교육지원 서비스업                                 178601	병원                                              178602	의원                                              178603	공중 보건 의료업                                  178609	기타 보건업                                       178701	거주 복지시설 운영업                              178702	비거주 복지시설 운영업                            189001	창작 및 예술관련 서비스업                         189002	도서관, 사적지 및 유사 여가관련 서비스업          189101	스포츠 서비스업                                   189102	유원지 및 기타 오락관련 서비스업                  199401	산업 및 전문가 단체                               199402	노동조합                                          199409	기타 협회 및 단체                                 199501	기계 및 장비 수리업                               199502	자동차 및 모터사이클 수리업                       199503	개인 및 가정용품 수리업                           199601	미용, 욕탕 및 유사 서비스업                       199609	그외 기타 개인 서비스업                           209701	가구내 고용활동                                   209801	자가 소비를 위한 가사 생산 활동                   209802	자가 소비를 위한 가사 서비스 활동                 219901	국제 및 외국기관'},
+                {'key': 'idx_bztp_lcls_cd_name', 'name': '지수업종대분류코드명', 'type': 'string', 'required': True, 'length': 60, 'description': '표준산업대분류코드 00	해당사항없음                                                             01	농업, 임업 및 어업                                                       02	광업                                                                     03	제조업                                                                   04	전기, 가스, 증기 및 수도사업                                             05	하수-폐기물 처리, 원료재생 및환경복원업                                  06	건설업                                                                   07	도매 및 소매업                                                           08	운수업                                                                   09	숙박 및 음식점업                                                         10	출판, 영상, 방송통신 및 정보서비스업                                     11	금융 및 보험업                                                           12	부동산업 및 임대업                                                       13	전문, 과학 및 기술 서비스업                                              14	사업시설관리 및 사업지원서비스업                                         15	공공행정, 국방 및 사회보장 행정                                          16	교육 서비스업                                                            17	보건업 및 사회복지 서비스업                                              18	예술, 스포츠 및 여가관련 서비스업                                        19	협회 및 단체, 수리 및 기타 개인 서비스업                                 20	가구내 고용활동 및 달리 분류되지 않은 자가소비생산활동                   21	국제 및 외국기관'},
+                {'key': 'idx_bztp_mcls_cd_name', 'name': '지수업종중분류코드명', 'type': 'string', 'required': True, 'length': 60, 'description': '표준산업중분류코드                                                    0000	해당사항없음                                                             0101	농업                                                                     0102	임업                                                                     0103	어업                                                                     0205	석탄, 원유 및 천연가스 광업                                              0206	금속 광업                                                                0207	비금속광물 광업; 연료용 제외                                             0208	광업 지원 서비스업                                                       0310	식료품 제조업                                                            0311	음료 제조업                                                              0312	담배 제조업                                                              0313	섬유제품 제조업; 의복제외                                                0314	의복, 의복액세서리 및 모피제품제조업                                     0315	가죽, 가방 및 신발 제조업                                                0316	목재 및 나무제품 제조업;가구제외                                         0317	펄프, 종이 및 종이제품 제조업                                            0318	인쇄 및 기록매체 복제업                                                  0319	코크스, 연탄 및 석유정제품 제조업                                        0320	화학물질 및 화학제품 제조업;의약품 제외                                  0321	의료용 물질 및 의약품 제조업                                             0322	고무제품 및 플라스틱제품 제조업                                          0323	비금속 광물제품 제조업                                                   0324	1차 금속 제조업                                                          0325	금속가공제품 제조업;기계 및가구 제외                                     0326	전자부품, 컴퓨터, 영상, 음향 및 통신장비 제조업                          0327	의료, 정밀, 광학기기 및 시계 제조업                                      0328	전기장비 제조업                                                          0329	기타 기계 및 장비 제조업                                                 0330	자동차 및 트레일러 제조업                                                0331	기타 운송장비 제조업                                                     0332	가구 제조업                                                              0333	기타 제품 제조업                                                         0435	전기, 가스, 증기 및 공기조절 공급업                                      0436	수도사업                                                                 0537	하수, 폐수 및 분뇨 처리업                                                0538	폐기물 수집운반, 처리 및 원료재생업                                      0539	환경 정화 및 복원업                                                      0641	종합 건설업                                                              0642	전문직별 공사업                                                          0745	자동차 및 부품 판매업                                                    0746	도매 및 상품중개업                                                       0747	소매업; 자동차 제외                                                      0849	육상운송 및 파이프라인 운송업                                            0850	수상 운송업                                                              0851	항공 운송업                                                              0852	창고 및 운송관련 서비스업                                                0955	숙박업                                                                   0956	음식점 및 주점업                                                         1058	출판업                                                                   1059	영상·오디오 기록물 제작 및 배급업                                       1060	방송업                                                                   1061	통신업                                                                   1062	컴퓨터 프로그래밍, 시스템 통합및 관리업                                  1063	정보서비스업                                                             1164	금융업                                                                   1165	보험 및 연금업                                                           1166	금융 및 보험 관련 서비스업                                               1268	부동산업                                                                 1269	임대업;부동산 제외                                                       1370	연구개발업                                                               1371	전문서비스업                                                             1372	건축기술, 엔지니어링 및 기타과학기술 서비스업                            1373	기타 전문, 과학 및 기술 서비스업                                         1474	사업시설 관리 및 조경 서비스업                                           1475	사업지원 서비스업                                                        1584	공공행정, 국방 및 사회보장 행정                                          1685	교육 서비스업                                                            1786	보건업                                                                   1787	사회복지 서비스업                                                        1890	창작, 예술 및 여가관련 서비스업                                          1891	스포츠 및 오락관련 서비스업                                              1994	협회 및 단체                                                             1995	수리업                                                                   1996	기타 개인 서비스업                                                       2097	가구내 고용활동                                                          2098	달리 분류되지 않은 자가소비를 위한가구의 재화 및 서비스 생산활동         2199	국제 및 외국기관'},
+                {'key': 'idx_bztp_scls_cd_name', 'name': '지수업종소분류코드명', 'type': 'string', 'required': True, 'length': 60, 'description': '표준산업소분류코드 참조'},
+                {'key': 'ocr_no', 'name': 'OCR번호', 'type': 'string', 'required': True, 'length': 4, 'description': ''},
+                {'key': 'crfd_item_yn', 'name': '크라우드펀딩종목여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'elec_scty_yn', 'name': '전자증권여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'issu_istt_cd', 'name': '발행기관코드', 'type': 'string', 'required': True, 'length': 5, 'description': ''},
+                {'key': 'etf_chas_erng_rt_dbnb', 'name': 'ETF추적수익율배수', 'type': 'string', 'required': True, 'length': 19, 'description': ''},
+                {'key': 'etf_etn_ivst_heed_item_yn', 'name': 'ETFETN투자유의종목여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'stln_int_rt_dvsn_cd', 'name': '대주이자율구분코드', 'type': 'string', 'required': True, 'length': 2, 'description': ''},
+                {'key': 'frnr_psnl_lmt_rt', 'name': '외국인개인한도비율', 'type': 'string', 'required': True, 'length': 24, 'description': ''},
+                {'key': 'lstg_rqsr_issu_istt_cd', 'name': '상장신청인발행기관코드', 'type': 'string', 'required': True, 'length': 5, 'description': ''},
+                {'key': 'lstg_rqsr_item_cd', 'name': '상장신청인종목코드', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'trst_istt_issu_istt_cd', 'name': '신탁기관발행기관코드', 'type': 'string', 'required': True, 'length': 5, 'description': ''},
+                {'key': 'cptt_trad_tr_psbl_yn', 'name': 'NXT거래종목여부', 'type': 'string', 'required': True, 'length': 1, 'description': 'NXT 거래가능한 종목은 Y, 그 외 종목은 N'},
+                {'key': 'nxt_tr_stop_yn', 'name': 'NXT거래정지여부', 'type': 'string', 'required': True, 'length': 1, 'description': 'NXT 거래종목 중 거래정지가 된 종목은 Y, 그 외 모든 종목은 N'}
+            ]
+        }
+    },
+    # === 국내주식 대차대조표 ===
+    'FHKST66430100': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output': {
+            'type': 'array',
+            'fields': [
+                {'key': 'stac_yymm', 'name': '결산년월', 'type': 'string', 'required': True, 'length': 6, 'description': ''},
+                {'key': 'cras', 'name': '유동자산', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'fxas', 'name': '고정자산', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'total_aset', 'name': '자산총계', 'type': 'string', 'required': True, 'length': 102, 'description': ''},
+                {'key': 'flow_lblt', 'name': '유동부채', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'fix_lblt', 'name': '고정부채', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'total_lblt', 'name': '부채총계', 'type': 'string', 'required': True, 'length': 102, 'description': ''},
+                {'key': 'cpfn', 'name': '자본금', 'type': 'string', 'required': True, 'length': 22, 'description': ''},
+                {'key': 'cfp_surp', 'name': '자본잉여금', 'type': 'string', 'required': True, 'length': 182, 'description': '출력되지 않는 데이터(99.99 로 표시)'},
+                {'key': 'prfi_surp', 'name': '이익잉여금', 'type': 'string', 'required': True, 'length': 182, 'description': '출력되지 않는 데이터(99.99 로 표시)'},
+                {'key': 'total_cptl', 'name': '자본총계', 'type': 'string', 'required': True, 'length': 102, 'description': ''}
+            ]
+        }
+    },
+    # === 국내주식 손익계산서 ===
+    'FHKST66430200': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output': {
+            'type': 'array',
+            'fields': [
+                {'key': 'stac_yymm', 'name': '결산년월', 'type': 'string', 'required': True, 'length': 6, 'description': ''},
+                {'key': 'sale_account', 'name': '매출액', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'sale_cost', 'name': '매출원가', 'type': 'string', 'required': True, 'length': 182, 'description': ''},
+                {'key': 'sale_totl_prfi', 'name': '매출총이익', 'type': 'string', 'required': True, 'length': 182, 'description': ''},
+                {'key': 'depr_cost', 'name': '감가상각비', 'type': 'string', 'required': True, 'length': 182, 'description': '출력되지 않는 데이터(99.99 로 표시)'},
+                {'key': 'sell_mang', 'name': '판매및관리비', 'type': 'string', 'required': True, 'length': 182, 'description': '출력되지 않는 데이터(99.99 로 표시)'},
+                {'key': 'bsop_prti', 'name': '영업이익', 'type': 'string', 'required': True, 'length': 182, 'description': ''},
+                {'key': 'bsop_non_ernn', 'name': '영업외수익', 'type': 'string', 'required': True, 'length': 182, 'description': '출력되지 않는 데이터(99.99 로 표시)'},
+                {'key': 'bsop_non_expn', 'name': '영업외비용', 'type': 'string', 'required': True, 'length': 182, 'description': '출력되지 않는 데이터(99.99 로 표시)'},
+                {'key': 'op_prfi', 'name': '경상이익', 'type': 'string', 'required': True, 'length': 182, 'description': ''},
+                {'key': 'spec_prfi', 'name': '특별이익', 'type': 'string', 'required': True, 'length': 182, 'description': ''},
+                {'key': 'spec_loss', 'name': '특별손실', 'type': 'string', 'required': True, 'length': 182, 'description': ''},
+                {'key': 'thtr_ntin', 'name': '당기순이익', 'type': 'string', 'required': True, 'length': 102, 'description': ''}
+            ]
+        }
+    },
+    # === 국내주식 재무비율 ===
+    'FHKST66430300': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output': {
+            'type': 'array',
+            'fields': [
+                {'key': 'stac_yymm', 'name': '결산년월', 'type': 'string', 'required': True, 'length': 6, 'description': ''},
+                {'key': 'grs', 'name': '매출액증가율', 'type': 'string', 'required': True, 'length': 124, 'description': ''},
+                {'key': 'bsop_prfi_inrt', 'name': '영업이익증가율', 'type': 'string', 'required': True, 'length': 124, 'description': '적자지속, 흑자전환, 적자전환인 경우 0으로 표시'},
+                {'key': 'ntin_inrt', 'name': '순이익증가율', 'type': 'string', 'required': True, 'length': 124, 'description': ''},
+                {'key': 'roe_val', 'name': 'ROE값', 'type': 'string', 'required': True, 'length': 132, 'description': ''},
+                {'key': 'eps', 'name': 'EPS', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'sps', 'name': '주당매출액', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'bps', 'name': 'BPS', 'type': 'string', 'required': True, 'length': 112, 'description': ''},
+                {'key': 'rsrv_rate', 'name': '유보비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''},
+                {'key': 'lblt_rate', 'name': '부채비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''}
+            ]
+        }
+    },
+    # === 국내주식 수익성비율 ===
+    'FHKST66430400': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output': {
+            'type': 'array',
+            'fields': [
+                {'key': 'stac_yymm', 'name': '결산년월', 'type': 'string', 'required': True, 'length': 6, 'description': ''},
+                {'key': 'cptl_ntin_rate', 'name': '총자본순이익율', 'type': 'string', 'required': True, 'length': 92, 'description': ''},
+                {'key': 'self_cptl_ntin_inrt', 'name': '자기자본순이익율', 'type': 'string', 'required': True, 'length': 92, 'description': ''},
+                {'key': 'sale_ntin_rate', 'name': '매출액순이익율', 'type': 'string', 'required': True, 'length': 92, 'description': ''},
+                {'key': 'sale_totl_rate', 'name': '매출액총이익율', 'type': 'string', 'required': True, 'length': 92, 'description': ''}
+            ]
+        }
+    },
+    # === 국내주식 기타주요비율 ===
+    'FHKST66430500': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output': {
+            'type': 'array',
+            'fields': [
+                {'key': 'stac_yymm', 'name': '결산년월', 'type': 'string', 'required': True, 'length': 6, 'description': ''},
+                {'key': 'payout_rate', 'name': '배당성향', 'type': 'string', 'required': True, 'length': 92, 'description': '비정상 출력되는 데이터로 무시'},
+                {'key': 'eva', 'name': 'EVA', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'ebitda', 'name': 'EBITDA', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'ev_ebitda', 'name': 'EV_EBITDA', 'type': 'string', 'required': True, 'length': 82, 'description': ''}
+            ]
+        }
+    },
+    # === 국내주식 안정성비율 ===
+    'FHKST66430600': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output': {
+            'type': 'array',
+            'fields': [
+                {'key': 'stac_yymm', 'name': '결산년월', 'type': 'string', 'required': True, 'length': 6, 'description': ''},
+                {'key': 'lblt_rate', 'name': '부채비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''},
+                {'key': 'bram_depn', 'name': '차입금의존도', 'type': 'string', 'required': True, 'length': 92, 'description': ''},
+                {'key': 'crnt_rate', 'name': '유동비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''},
+                {'key': 'quck_rate', 'name': '당좌비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''}
+            ]
+        }
+    },
+    # === 국내주식 성장성비율 ===
+    'FHKST66430800': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output': {
+            'type': 'array',
+            'fields': [
+                {'key': 'stac_yymm', 'name': '결산년월', 'type': 'string', 'required': True, 'length': 6, 'description': ''},
+                {'key': 'grs', 'name': '매출액증가율', 'type': 'string', 'required': True, 'length': 124, 'description': ''},
+                {'key': 'bsop_prfi_inrt', 'name': '영업이익증가율', 'type': 'string', 'required': True, 'length': 124, 'description': ''},
+                {'key': 'equt_inrt', 'name': '자기자본증가율', 'type': 'string', 'required': True, 'length': 92, 'description': ''},
+                {'key': 'totl_aset_inrt', 'name': '총자산증가율', 'type': 'string', 'required': True, 'length': 92, 'description': ''}
+            ]
+        }
+    },
+    # === 국내주식 당사 신용가능종목 ===
+    'FHPST04770000': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output': {
+            'type': 'array',
+            'fields': [
+                {'key': 'stck_shrn_iscd', 'name': '주식단축종목코드', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'hts_kor_isnm', 'name': 'HTS한글종목명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'crdt_rate', 'name': '신용비율', 'type': 'string', 'required': True, 'length': 84, 'description': ''}
+            ]
+        }
+    },
+    # === 예탁원정보(배당일정) ===
+    'HHKDB669102C0': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output1': {
+            'type': 'array',
+            'fields': [
+                {'key': 'record_date', 'name': '기준일', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'sht_cd', 'name': '종목코드', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'isin_name', 'name': '종목명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'divi_kind', 'name': '배당종류', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'face_val', 'name': '액면가', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'per_sto_divi_amt', 'name': '현금배당금', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'divi_rate', 'name': '현금배당률(%)', 'type': 'string', 'required': True, 'length': 62, 'description': ''},
+                {'key': 'stk_divi_rate', 'name': '주식배당률(%)', 'type': 'string', 'required': True, 'length': 152, 'description': ''},
+                {'key': 'divi_pay_dt', 'name': '배당금지급일', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stk_div_pay_dt', 'name': '주식배당지급일', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'odd_pay_dt', 'name': '단주대금지급일', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stk_kind', 'name': '주식종류', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'high_divi_gb', 'name': '고배당종목여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''}
+            ]
+        }
+    },
+    # === 예탁원정보(주식매수청구일정) ===
+    'HHKDB669103C0': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output1': {
+            'type': 'array',
+            'fields': [
+                {'key': 'record_date', 'name': '기준일', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'sht_cd', 'name': '종목코드', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'isin_name', 'name': '종목명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'stk_kind', 'name': '주식종류', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'opp_opi_rcpt_term', 'name': '반대의사접수시한', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'buy_req_rcpt_term', 'name': '매수청구접수시한', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'buy_req_price', 'name': '매수청구가격', 'type': 'string', 'required': True, 'length': 62, 'description': ''},
+                {'key': 'buy_amt_pay_dt', 'name': '매수대금지급일', 'type': 'string', 'required': True, 'length': 62, 'description': ''},
+                {'key': 'get_meet_dt', 'name': '주총일', 'type': 'string', 'required': True, 'length': 10, 'description': ''}
+            ]
+        }
+    },
+    # === 예탁원정보(액면교체일정) ===
+    'HHKDB669105C0': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output1': {
+            'type': 'array',
+            'fields': [
+                {'key': 'record_date', 'name': '기준일', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'sht_cd', 'name': '종목코드', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'isin_name', 'name': '종목명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'inter_bf_face_amt', 'name': '변경전액면가', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'inter_af_face_amt', 'name': '변경후액면가', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'td_stop_dt', 'name': '매매거래정지기간', 'type': 'string', 'required': True, 'length': 23, 'description': ''},
+                {'key': 'list_dt', 'name': '상장/등록일', 'type': 'string', 'required': True, 'length': 10, 'description': ''}
+            ]
+        }
+    },
+    # === 예탁원정보(자본감소일정) ===
+    'HHKDB669106C0': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output1': {
+            'type': 'array',
+            'fields': [
+                {'key': 'record_date', 'name': '기준일', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'sht_cd', 'name': '종목코드', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'isin_name', 'name': '종목명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'stk_kind', 'name': '주식종류', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'reduce_cap_type', 'name': '감자구분', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'reduce_cap_rate', 'name': '감자배정율', 'type': 'string', 'required': True, 'length': 142, 'description': ''},
+                {'key': 'comp_way', 'name': '계산방법', 'type': 'string', 'required': True, 'length': 6, 'description': ''},
+                {'key': 'td_stop_dt', 'name': '매매거래정지기간', 'type': 'string', 'required': True, 'length': 23, 'description': ''},
+                {'key': 'list_dt', 'name': '상장/등록일', 'type': 'string', 'required': True, 'length': 10, 'description': ''}
+            ]
+        }
+    },
+    # === 예탁원정보(상장정보일정) ===
+    'HHKDB669107C0': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output1': {
+            'type': 'array',
+            'fields': [
+                {'key': 'list_dt', 'name': '상장/등록일', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'sht_cd', 'name': '종목코드', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'isin_name', 'name': '종목명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'stk_kind', 'name': '주식종류', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'issue_type', 'name': '사유', 'type': 'string', 'required': True, 'length': 21, 'description': ''},
+                {'key': 'issue_stk_qty', 'name': '상장주식수', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'tot_issue_stk_qty', 'name': '총발행주식수', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'issue_price', 'name': '발행가', 'type': 'string', 'required': True, 'length': 9, 'description': ''}
+            ]
+        }
+    },
+    # === 예탁원정보(공모주청약일정) ===
+    'HHKDB669108C0': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output1': {
+            'type': 'array',
+            'fields': [
+                {'key': 'record_date', 'name': '기준일', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'sht_cd', 'name': '종목코드', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'isin_name', 'name': '종목명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'fix_subscr_pri', 'name': '공모가', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'face_value', 'name': '액면가', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'subscr_dt', 'name': '청약기간', 'type': 'string', 'required': True, 'length': 23, 'description': ''},
+                {'key': 'pay_dt', 'name': '납입일', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'refund_dt', 'name': '환불일', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'list_dt', 'name': '상장/등록일', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'lead_mgr', 'name': '주간사', 'type': 'string', 'required': True, 'length': 41, 'description': ''},
+                {'key': 'pub_bf_cap', 'name': '공모전자본금', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'pub_af_cap', 'name': '공모후자본금', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'assign_stk_qty', 'name': '당사배정물량', 'type': 'string', 'required': True, 'length': 12, 'description': ''}
+            ]
+        }
+    },
+    # === 예탁원정보(실권주일정) ===
+    'HHKDB669109C0': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output1': {
+            'type': 'array',
+            'fields': [
+                {'key': 'record_date', 'name': '기준일', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'sht_cd', 'name': '종목코드', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'isin_name', 'name': '종목명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'subscr_dt', 'name': '청약일', 'type': 'string', 'required': True, 'length': 23, 'description': ''},
+                {'key': 'subscr_price', 'name': '공모가', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'subscr_stk_qty', 'name': '공모주식수', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'refund_dt', 'name': '환불일', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'list_dt', 'name': '상장/등록일', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'lead_mgr', 'name': '주간사', 'type': 'string', 'required': True, 'length': 25, 'description': ''}
+            ]
+        }
+    },
+    # === 예탁원정보(의무예치일정) ===
+    'HHKDB669110C0': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output1': {
+            'type': 'array',
+            'fields': [
+                {'key': 'sht_cd', 'name': '종목코드', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'isin_name', 'name': '종목명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'stk_qty', 'name': '주식수', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'depo_date', 'name': '예치일', 'type': 'string', 'required': True, 'length': 23, 'description': ''},
+                {'key': 'depo_reason', 'name': '사유', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'tot_issue_qty_per_rate', 'name': '총발행주식수대비비율(%)', 'type': 'string', 'required': True, 'length': 52, 'description': ''}
+            ]
+        }
+    },
+    # === 예탁원정보(유상증자일정) ===
+    'HHKDB669100C0': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output': {
+            'type': 'array',
+            'fields': [
+                {'key': 'record_date', 'name': '기준일', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'sht_cd', 'name': '종목코드', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'isin_name', 'name': '종목명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'tot_issue_stk_qty', 'name': '발행주식', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'issue_stk_qty', 'name': '발행할주식', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'fix_rate', 'name': '확정배정율', 'type': 'string', 'required': True, 'length': 152, 'description': ''},
+                {'key': 'disc_rate', 'name': '할인율', 'type': 'string', 'required': True, 'length': 52, 'description': ''},
+                {'key': 'fix_price', 'name': '발행예정가', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'right_dt', 'name': '권리락일', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'sub_term_ft', 'name': '청약기간', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'sub_term', 'name': '청약기간', 'type': 'string', 'required': True, 'length': 23, 'description': ''},
+                {'key': 'list_date', 'name': '상장/등록일', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stk_kind', 'name': '주식종류', 'type': 'string', 'required': True, 'length': 2, 'description': ''}
+            ]
+        }
+    },
+    # === 예탁원정보(무상증자일정) ===
+    'HHKDB669101C0': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output1': {
+            'type': 'array',
+            'fields': [
+                {'key': 'record_date', 'name': '기준일', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'sht_cd', 'name': '종목코드', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'isin_name', 'name': '종목명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'fix_rate', 'name': '확정배정율', 'type': 'string', 'required': True, 'length': 152, 'description': ''},
+                {'key': 'odd_rec_price', 'name': '단주기준가', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'right_dt', 'name': '권리락일', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'odd_pay_dt', 'name': '단주대금지급일', 'type': 'string', 'required': True, 'length': 23, 'description': ''},
+                {'key': 'list_date', 'name': '상장/등록일', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'tot_issue_stk_qty', 'name': '발행주식', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'issue_stk_qty', 'name': '발행할주식', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'stk_kind', 'name': '주식종류', 'type': 'string', 'required': True, 'length': 2, 'description': ''}
+            ]
+        }
+    },
+    # === 예탁원정보(주주총회일정) ===
+    'HHKDB669111C0': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output1': {
+            'type': 'array',
+            'fields': [
+                {'key': 'record_date', 'name': '기준일', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'sht_cd', 'name': '종목코드', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'isin_name', 'name': '종목명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'gen_meet_dt', 'name': '주총일자', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'gen_meet_type', 'name': '주총사유', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'agenda', 'name': '주총의안', 'type': 'string', 'required': True, 'length': 71, 'description': ''},
+                {'key': 'vote_tot_qty', 'name': '의결권주식총수', 'type': 'string', 'required': True, 'length': 12, 'description': ''}
+            ]
+        }
+    },
+    # === 국내주식 종목추정실적 ===
+    'HHKST668300C0': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output1': {
+            'type': 'object',
+            'fields': [
+                {'key': 'sht_cd', 'name': 'ELW단축종목코드', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'item_kor_nm', 'name': 'HTS한글종목명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'name1', 'name': 'ELW현재가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'name2', 'name': '전일대비', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'estdate', 'name': '전일대비부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'rcmd_name', 'name': '전일대비율', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'capital', 'name': '누적거래량', 'type': 'string', 'required': True, 'length': 18, 'description': ''},
+                {'key': 'forn_item_lmtrt', 'name': '행사가', 'type': 'string', 'required': True, 'length': 112, 'description': ''}
+            ]
+        },
+        'output2': {
+            'type': 'array',
+            'fields': [
+                {'key': 'data1', 'name': 'DATA1', 'type': 'string', 'required': True, 'length': 15, 'description': '결산연월(outblock4) 참조'},
+                {'key': 'data2', 'name': 'DATA2', 'type': 'string', 'required': True, 'length': 15, 'description': '결산연월(outblock4) 참조'},
+                {'key': 'data3', 'name': 'DATA3', 'type': 'string', 'required': True, 'length': 15, 'description': '결산연월(outblock4) 참조'},
+                {'key': 'data4', 'name': 'DATA4', 'type': 'string', 'required': True, 'length': 15, 'description': '결산연월(outblock4) 참조'},
+                {'key': 'data5', 'name': 'DATA5', 'type': 'string', 'required': True, 'length': 15, 'description': '결산연월(outblock4) 참조'}
+            ]
+        },
+        'output3': {
+            'type': 'array',
+            'fields': [
+                {'key': 'data1', 'name': 'DATA1', 'type': 'string', 'required': True, 'length': 15, 'description': '결산연월(outblock4) 참조'},
+                {'key': 'data2', 'name': 'DATA2', 'type': 'string', 'required': True, 'length': 15, 'description': '결산연월(outblock4) 참조'},
+                {'key': 'data3', 'name': 'DATA3', 'type': 'string', 'required': True, 'length': 15, 'description': '결산연월(outblock4) 참조'},
+                {'key': 'data4', 'name': 'DATA4', 'type': 'string', 'required': True, 'length': 15, 'description': '결산연월(outblock4) 참조'},
+                {'key': 'data5', 'name': 'DATA5', 'type': 'string', 'required': True, 'length': 15, 'description': '결산연월(outblock4) 참조'}
+            ]
+        },
+        'output4': {
+            'type': 'array',
+            'fields': [
+                {'key': 'dt', 'name': '결산년월', 'type': 'string', 'required': True, 'length': 8, 'description': 'DATA1 ~5 결산월 정보'}
+            ]
+        }
+    },
+    # === 당사 대주가능 종목 ===
+    'CTSC2702R': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output1': {
+            'type': 'array',
+            'fields': [
+                {'key': 'pdno', 'name': '상품번호', 'type': 'string', 'required': True, 'length': 12, 'description': ''},
+                {'key': 'prdt_name', 'name': '상품명', 'type': 'string', 'required': True, 'length': 60, 'description': ''},
+                {'key': 'papr', 'name': '액면가', 'type': 'string', 'required': True, 'length': 19, 'description': ''},
+                {'key': 'bfdy_clpr', 'name': '전일종가', 'type': 'string', 'required': True, 'length': 19, 'description': '전일종가'},
+                {'key': 'sbst_prvs', 'name': '대용가', 'type': 'string', 'required': True, 'length': 19, 'description': ''},
+                {'key': 'tr_stop_dvsn_name', 'name': '거래정지구분명', 'type': 'string', 'required': True, 'length': 60, 'description': ''},
+                {'key': 'psbl_yn_name', 'name': '가능여부명', 'type': 'string', 'required': True, 'length': 60, 'description': ''},
+                {'key': 'lmt_qty1', 'name': '한도수량1', 'type': 'string', 'required': True, 'length': 19, 'description': ''},
+                {'key': 'use_qty1', 'name': '사용수량1', 'type': 'string', 'required': True, 'length': 19, 'description': ''},
+                {'key': 'trad_psbl_qty2', 'name': '매매가능수량2', 'type': 'string', 'required': True, 'length': 19, 'description': '가능수량'},
+                {'key': 'rght_type_cd', 'name': '권리유형코드', 'type': 'string', 'required': True, 'length': 2, 'description': ''},
+                {'key': 'bass_dt', 'name': '기준일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'psbl_yn', 'name': '가능여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''}
+            ]
+        },
+        'output2': {
+            'type': 'object',
+            'fields': [
+                {'key': 'tot_stup_lmt_qty', 'name': '총설정한도수량', 'type': 'string', 'required': True, 'length': 19, 'description': ''},
+                {'key': 'brch_lmt_qty', 'name': '지점한도수량', 'type': 'string', 'required': True, 'length': 19, 'description': ''},
+                {'key': 'rqst_psbl_qty', 'name': '신청가능수량', 'type': 'string', 'required': True, 'length': 19, 'description': ''}
+            ]
+        }
+    },
+    # === 국내주식 종목투자의견 ===
+    'FHKST663300C0': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output': {
+            'type': 'array',
+            'fields': [
+                {'key': 'stck_bsop_date', 'name': '주식영업일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'invt_opnn', 'name': '투자의견', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'invt_opnn_cls_code', 'name': '투자의견구분코드', 'type': 'string', 'required': True, 'length': 2, 'description': ''},
+                {'key': 'rgbf_invt_opnn', 'name': '직전투자의견', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'rgbf_invt_opnn_cls_code', 'name': '직전투자의견구분코드', 'type': 'string', 'required': True, 'length': 2, 'description': ''},
+                {'key': 'mbcr_name', 'name': '회원사명', 'type': 'string', 'required': True, 'length': 50, 'description': ''},
+                {'key': 'hts_goal_prc', 'name': 'HTS목표가격', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stck_prdy_clpr', 'name': '주식전일종가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stck_nday_esdg', 'name': '주식N일괴리도', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'nday_dprt', 'name': 'N일괴리율', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'stft_esdg', 'name': '주식선물괴리도', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'dprt', 'name': '괴리율', 'type': 'string', 'required': True, 'length': 82, 'description': ''}
+            ]
+        }
+    },
+    # === 국내주식 증권사별 투자의견 ===
+    'FHKST663400C0': {
+        'rt_cd': {'name': '성공실패여부', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+        'msg_cd': {'name': '응답코드', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+        'msg1': {'name': '응답메세지', 'type': 'string', 'required': True, 'length': 80, 'description': ''},
+        'output': {
+            'type': 'array',
+            'fields': [
+                {'key': 'stck_bsop_date', 'name': '주식영업일자', 'type': 'string', 'required': True, 'length': 8, 'description': ''},
+                {'key': 'stck_shrn_iscd', 'name': '주식단축종목코드', 'type': 'string', 'required': True, 'length': 9, 'description': ''},
+                {'key': 'hts_kor_isnm', 'name': 'HTS한글종목명', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'invt_opnn', 'name': '투자의견', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'invt_opnn_cls_code', 'name': '투자의견구분코드', 'type': 'string', 'required': True, 'length': 2, 'description': ''},
+                {'key': 'rgbf_invt_opnn', 'name': '직전투자의견', 'type': 'string', 'required': True, 'length': 40, 'description': ''},
+                {'key': 'rgbf_invt_opnn_cls_code', 'name': '직전투자의견구분코드', 'type': 'string', 'required': True, 'length': 2, 'description': ''},
+                {'key': 'mbcr_name', 'name': '회원사명', 'type': 'string', 'required': True, 'length': 50, 'description': ''},
+                {'key': 'stck_prpr', 'name': '주식현재가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss', 'name': '전일대비', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'prdy_vrss_sign', 'name': '전일대비부호', 'type': 'string', 'required': True, 'length': 1, 'description': ''},
+                {'key': 'prdy_ctrt', 'name': '전일대비율', 'type': 'string', 'required': True, 'length': 82, 'description': ''},
+                {'key': 'hts_goal_prc', 'name': 'HTS목표가격', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stck_prdy_clpr', 'name': '주식전일종가', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'stft_esdg', 'name': '주식선물괴리도', 'type': 'string', 'required': True, 'length': 10, 'description': ''},
+                {'key': 'dprt', 'name': '괴리율', 'type': 'string', 'required': True, 'length': 82, 'description': ''}
+            ]
+        }
+    }
+}

@@ -1,7 +1,7 @@
 # KIS REST API Request Definitions
 # Auto-generated from Excel file
 
-KIS_REQUEST_DEF = {
+KIS_REQUEST_DEF_2 = {
     "FHPST01710000": {
         "url": "/uapi/domestic-stock/v1/quotations/volume-rank",
         "title": "거래량순위",

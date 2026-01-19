@@ -1,7 +1,7 @@
 # KIS REST API Request Definitions
 # Auto-generated from Excel file
 
-KIS_REQUEST_DEF = {
+KIS_REQUEST_DEF_1 = {
     "FHKST01010100": {
         "url": "/uapi/domestic-stock/v1/quotations/inquire-price",
         "title": "주식현재가 시세",

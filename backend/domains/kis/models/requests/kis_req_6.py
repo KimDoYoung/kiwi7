@@ -1,7 +1,7 @@
 # KIS REST API Request Definitions
 # Auto-generated from Excel file
 
-KIS_REQUEST_DEF = {
+KIS_REQUEST_DEF_6 = {
     "CTPF1604R": {
         "url": "/uapi/domestic-stock/v1/quotations/search-info",
         "title": "상품기본조회",

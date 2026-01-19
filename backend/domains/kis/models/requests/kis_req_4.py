@@ -1,7 +1,7 @@
 # KIS REST API Request Definitions
 # Auto-generated from Excel file
 
-KIS_REQUEST_DEF = {
+KIS_REQUEST_DEF_4 = {
     "H0STCNT0": {
         "url": "/tryitout/H0STCNT0",
         "title": "국내주식 실시간체결가 (KRX)",
