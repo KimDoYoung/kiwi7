@@ -15,28 +15,6 @@
             "env": {"PYTHONPATH": "${workspaceFolder}"}
         },
         {
-            "name": "ExResponse",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal",
-            "cwd" : "${fileDirname}",
-            "justMyCode": false,
-            "env": {"PYTHONPATH": "${workspaceFolder}"},
-            "args": ["c:\\tmp\\kwapi.xlsx"]
-        },        
-        {
-            "name": "ExRequest",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal",
-            "cwd" : "${fileDirname}",
-            "justMyCode": false,
-            "env": {"PYTHONPATH": "${workspaceFolder}"},
-            "args": ["c:\\tmp\\kwapi.xlsx"]
-        },
-        {
             "name": "kiwi7-USER",
             "type": "debugpy",
             "request": "launch",
@@ -54,6 +32,25 @@
             "jinja": true,
             "justMyCode": true,
             "console": "integratedTerminal"
-        }
+        },
+{
+            "name": "kiwi7-fedora",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}",
+                "KIWI7_MODE": "fedora"
+            },
+            "args": [
+                "backend.main:app",
+                "--reload",
+                "--port",
+                "8002" // 원하는 포트 번호로 변경
+            ],
+            "jinja": true,
+            "justMyCode": true,
+            "console": "integratedTerminal"
+        }        
     ]
 }

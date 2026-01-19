@@ -1,11 +1,85 @@
+# Auto-generated
+from typing import Any, Dict, List
 
 ACCOUNT_REQUESTS = {
-    'CSPAQ00600': {'tr_cd': 'CSPAQ00600', 'title': '계좌별신용한도조회', 'blocks': {'CSPAQ00600InBlock1': {'type': 'single', 'fields': [{'key': 'LoanDtlClssCode', 'name': '대출상세분류코드', 'type': 'string', 'length': 2, 'desc': '01@유통융자, 03@자기융자, 05@유통대주, 07@자기대주', 'required': True}, {'key': 'IsuNo', 'name': '종목번호', 'type': 'string', 'length': 12, 'required': True}, {'key': 'OrdPrc', 'name': '주문가', 'type': 'float', 'length': 13.2, 'required': True}, {'key': 'CommdaCode', 'name': '통신매체코드', 'type': 'string', 'length': 2, 'desc': '41@xingAPI', 'required': True}]}}},
-    'CSPAQ12200': {'tr_cd': 'CSPAQ12200', 'title': '현물계좌예수금 주문가능금액 총평가 조회', 'blocks': {'CSPAQ12200InBlock1': {'type': 'single', 'fields': [{'key': 'BalCreTp', 'name': '잔고생성구분', 'type': 'string', 'length': 1, 'desc': '0', 'required': True}]}}},
-    'CSPAQ12300': {'tr_cd': 'CSPAQ12300', 'title': 'BEP단가조회', 'blocks': {'CSPAQ12300InBlock1': {'type': 'single', 'fields': [{'key': 'BalCreTp', 'name': '잔고생성구분', 'type': 'string', 'length': 1, 'desc': '0:전체 1:현물 9:선물대용', 'required': True}, {'key': 'CmsnAppTpCode', 'name': '수수료적용구분', 'type': 'string', 'length': 1, 'desc': '0:평가시 수수료 미적용 1:평가시 수수료 적용', 'required': True}, {'key': 'D2balBaseQryTp', 'name': 'D2잔고기준조회구분', 'type': 'string', 'length': 1, 'desc': '0:전부조회 1:D2잔고 0이상만 조회', 'required': True}, {'key': 'UprcTpCode', 'name': '단가구분', 'type': 'string', 'length': 1, 'desc': '0:평균단가 1:BEP단가', 'required': True}]}}},
-    'CSPAQ13700': {'tr_cd': 'CSPAQ13700', 'title': '현물계좌 주문체결내역 조회(API)', 'blocks': {'CSPAQ13700InBlock1': {'type': 'single', 'fields': [{'key': 'OrdMktCode', 'name': '주문시장코드', 'type': 'string', 'length': 2, 'desc': '00.전체<br/>10.거래소<br/>20.코스닥<br/>30.프리보드', 'required': True}, {'key': 'BnsTpCode', 'name': '매매구분', 'type': 'string', 'length': 1, 'desc': '0@전체<br/>1@매도<br/>2@매수', 'required': True}, {'key': 'IsuNo', 'name': '종목번호', 'type': 'string', 'length': 12, 'desc': '주식 : A+종목코드<br/>ELW : J+종목코드', 'required': True}, {'key': 'ExecYn', 'name': '체결여부', 'type': 'string', 'length': 1, 'desc': '0.전체<br/>1.체결<br/>3.미체결', 'required': True}, {'key': 'OrdDt', 'name': '주문일', 'type': 'string', 'length': 8, 'required': True}, {'key': 'SrtOrdNo2', 'name': '시작주문번호2', 'type': 'float', 'length': 10, 'desc': '역순구분이 순 : 000000000<br/>역순구분이 역순 : 999999999', 'required': True}, {'key': 'BkseqTpCode', 'name': '역순구분', 'type': 'string', 'length': 1, 'desc': '0.역순<br/>1.정순', 'required': True}, {'key': 'OrdPtnCode', 'name': '주문유형코드', 'type': 'string', 'length': 2, 'desc': '00.전체<br/>98.매도전체<br/>99.매수전체<br/>01.현금매도<br/>02.현금매수<br/>05.저축매도<br/>06.저축매수<br/>09.상품매도<br/>10.상품매수<br/>03.융자매도<br/>04.융자매수<br/>07.대주매도<br/>08.대주매수<br/>11.선물대용매도<br/>13.현금매도(프)<br/>14.현금매수(프)<br/>17.대출<br/>18.대출상환', 'required': True}]}}},
-    'CSPAQ22200': {'tr_cd': 'CSPAQ22200', 'title': '현물계좌예수금 주문가능금액 총평가2', 'blocks': {'CSPAQ22200InBlock1': {'type': 'single', 'fields': [{'key': 'BalCreTp', 'name': '잔고생성구분', 'type': 'string', 'length': 1, 'desc': '0', 'required': True}]}}},
-    'CSPAT00601': {'tr_cd': 'CSPAT00601', 'title': '현물주문', 'blocks': {'CSPAT00601InBlock1': {'type': 'single', 'fields': [{'key': 'IsuNo', 'name': '종목번호', 'type': 'string', 'length': 12, 'desc': '주식/ETF : 종목코드 or A+종목코드(모의투자는 A+종목코드)<br/>ELW : J+종목코드<br/>ETN : Q+종목코드', 'required': True}, {'key': 'OrdQty', 'name': '주문수량', 'type': 'float', 'length': 16, 'required': True}, {'key': 'OrdPrc', 'name': '주문가', 'type': 'float', 'length': 13.2, 'required': True}, {'key': 'BnsTpCode', 'name': '매매구분', 'type': 'string', 'length': 1, 'desc': '1:매도, 2:매수', 'required': True}, {'key': 'OrdprcPtnCode', 'name': '호가유형코드', 'type': 'string', 'length': 2, 'desc': '00@지정가               <br/>03@시장가               <br/>05@조건부지정가         <br/>06@최유리지정가         <br/>07@최우선지정가        <br/>12@중간가 <br/>61@장개시전시간외종가  <br/>81@시간외종가          <br/>82@시간외단일가        ', 'required': True}, {'key': 'MgntrnCode', 'name': '신용거래코드', 'type': 'string', 'length': 3, 'desc': '000:보통<br/>003:유통/자기융자신규<br/>005:유통대주신규<br/>007:자기대주신규<br/>101:유통융자상환<br/>103:자기융자상환<br/>105:유통대주상환<br/>107:자기대주상환<br/>180:예탁담보대출상환(신용)', 'required': True}, {'key': 'LoanDt', 'name': '대출일', 'type': 'string', 'length': 8, 'required': True}, {'key': 'OrdCndiTpCode', 'name': '주문조건구분', 'type': 'string', 'length': 1, 'desc': '0:없음,1:IOC,2:FOK', 'required': True}, {'key': 'MbrNo', 'name': '회원사번호', 'type': 'string', 'length': 3, 'desc': 'KRX: KRX<br/>NXT: NXT<br/>공백을 포함한 그외 입력값은 KRX로 처리', 'required': True}]}}},
-    'CSPAT00701': {'tr_cd': 'CSPAT00701', 'title': '현물정정주문', 'blocks': {'CSPAT00701InBlock1': {'type': 'single', 'fields': [{'key': 'OrgOrdNo', 'name': '원주문번호', 'type': 'float', 'length': 10, 'required': True}, {'key': 'IsuNo', 'name': '종목번호', 'type': 'string', 'length': 12, 'desc': '주식 : 종목코드 or A+종목코드(모의투자는 A+종목코드)<br/>ELW : J+종목코드<br/>ETN : Q+종목코드', 'required': True}, {'key': 'OrdQty', 'name': '주문수량', 'type': 'float', 'length': 16, 'required': True}, {'key': 'OrdprcPtnCode', 'name': '호가유형코드', 'type': 'string', 'length': 2, 'desc': '00@지정가               <br/>03@시장가               <br/>05@조건부지정가         <br/>06@최유리지정가         <br/>07@최우선지정가         <br/>61@장개시전시간외종가  <br/>81@시간외종가          <br/>82@시간외단일가           ', 'required': True}, {'key': 'OrdCndiTpCode', 'name': '주문조건구분', 'type': 'string', 'length': 1, 'desc': '0:없음, 1:IOC, 2:FOK', 'required': True}, {'key': 'OrdPrc', 'name': '주문가', 'type': 'float', 'length': 13.2, 'required': True}]}}},
-    'CSPAT00801': {'tr_cd': 'CSPAT00801', 'title': '현물취소주문', 'blocks': {'CSPAT00801InBlock1': {'type': 'single', 'fields': [{'key': 'OrgOrdNo', 'name': '원주문번호', 'type': 'float', 'length': 10, 'required': True}, {'key': 'IsuNo', 'name': '종목번호', 'type': 'string', 'length': 12, 'desc': '주식 : 종목코드 or A+종목코드(모의투자는 A+종목코드)<br/>ELW : J+종목코드<br/>ETN : Q+종목코드', 'required': True}, {'key': 'OrdQty', 'name': '주문수량', 'type': 'float', 'length': 16, 'required': True}]}}},
+    'CSPAQ00600': {
+        'tr_cd': 'CSPAQ00600',
+        'title': '계좌별신용한도조회',
+        'blocks': {
+            'CSPAQ00600InBlock1': {
+                'fields': [{'key': 'LoanDtlClssCode', 'name': '대출상세분류코드', 'type': 'string', 'length': 2, 'desc': '01@유통융자, 03@자기융자, 05@유통대주, 07@자기대주', 'required': True}, {'key': 'IsuNo', 'name': '종목번호', 'type': 'string', 'length': 12, 'required': True}, {'key': 'OrdPrc', 'name': '주문가', 'type': 'float', 'length': 13.2, 'required': True}, {'key': 'CommdaCode', 'name': '통신매체코드', 'type': 'string', 'length': 2, 'desc': '41@xingAPI', 'required': True}],
+                'type': 'single'
+            }
+        }
+    },
+    'CSPAQ12200': {
+        'tr_cd': 'CSPAQ12200',
+        'title': '현물계좌예수금 주문가능금액 총평가 조회',
+        'blocks': {
+            'CSPAQ12200InBlock1': {
+                'fields': [{'key': 'BalCreTp', 'name': '잔고생성구분', 'type': 'string', 'length': 1, 'desc': '0', 'required': True}],
+                'type': 'single'
+            }
+        }
+    },
+    'CSPAQ12300': {
+        'tr_cd': 'CSPAQ12300',
+        'title': 'BEP단가조회',
+        'blocks': {
+            'CSPAQ12300InBlock1': {
+                'fields': [{'key': 'BalCreTp', 'name': '잔고생성구분', 'type': 'string', 'length': 1, 'desc': '0:전체 1:현물 9:선물대용', 'required': True}, {'key': 'CmsnAppTpCode', 'name': '수수료적용구분', 'type': 'string', 'length': 1, 'desc': '0:평가시 수수료 미적용 1:평가시 수수료 적용', 'required': True}, {'key': 'D2balBaseQryTp', 'name': 'D2잔고기준조회구분', 'type': 'string', 'length': 1, 'desc': '0:전부조회 1:D2잔고 0이상만 조회', 'required': True}, {'key': 'UprcTpCode', 'name': '단가구분', 'type': 'string', 'length': 1, 'desc': '0:평균단가 1:BEP단가', 'required': True}],
+                'type': 'single'
+            }
+        }
+    },
+    'CSPAQ13700': {
+        'tr_cd': 'CSPAQ13700',
+        'title': '현물계좌 주문체결내역 조회(API)',
+        'blocks': {
+            'CSPAQ13700InBlock1': {
+                'fields': [{'key': 'OrdMktCode', 'name': '주문시장코드', 'type': 'string', 'length': 2, 'desc': '00.전체<br/>10.거래소<br/>20.코스닥<br/>30.프리보드', 'required': True}, {'key': 'BnsTpCode', 'name': '매매구분', 'type': 'string', 'length': 1, 'desc': '0@전체<br/>1@매도<br/>2@매수', 'required': True}, {'key': 'IsuNo', 'name': '종목번호', 'type': 'string', 'length': 12, 'desc': '주식 : A+종목코드<br/>ELW : J+종목코드', 'required': True}, {'key': 'ExecYn', 'name': '체결여부', 'type': 'string', 'length': 1, 'desc': '0.전체<br/>1.체결<br/>3.미체결', 'required': True}, {'key': 'OrdDt', 'name': '주문일', 'type': 'string', 'length': 8, 'required': True}, {'key': 'SrtOrdNo2', 'name': '시작주문번호2', 'type': 'float', 'length': 10, 'desc': '역순구분이 순 : 000000000<br/>역순구분이 역순 : 999999999', 'required': True}, {'key': 'BkseqTpCode', 'name': '역순구분', 'type': 'string', 'length': 1, 'desc': '0.역순<br/>1.정순', 'required': True}, {'key': 'OrdPtnCode', 'name': '주문유형코드', 'type': 'string', 'length': 2, 'desc': '00.전체<br/>98.매도전체<br/>99.매수전체<br/>01.현금매도<br/>02.현금매수<br/>05.저축매도<br/>06.저축매수<br/>09.상품매도<br/>10.상품매수<br/>03.융자매도<br/>04.융자매수<br/>07.대주매도<br/>08.대주매수<br/>11.선물대용매도<br/>13.현금매도(프)<br/>14.현금매수(프)<br/>17.대출<br/>18.대출상환', 'required': True}],
+                'type': 'single'
+            }
+        }
+    },
+    'CSPAQ22200': {
+        'tr_cd': 'CSPAQ22200',
+        'title': '현물계좌예수금 주문가능금액 총평가2',
+        'blocks': {
+            'CSPAQ22200InBlock1': {
+                'fields': [{'key': 'BalCreTp', 'name': '잔고생성구분', 'type': 'string', 'length': 1, 'desc': '0', 'required': True}],
+                'type': 'single'
+            }
+        }
+    },
+    'CSPAT00601': {
+        'tr_cd': 'CSPAT00601',
+        'title': '현물주문',
+        'blocks': {
+            'CSPAT00601InBlock1': {
+                'fields': [{'key': 'IsuNo', 'name': '종목번호', 'type': 'string', 'length': 12, 'desc': '주식/ETF : 종목코드 or A+종목코드(모의투자는 A+종목코드)<br/>ELW : J+종목코드<br/>ETN : Q+종목코드', 'required': True}, {'key': 'OrdQty', 'name': '주문수량', 'type': 'float', 'length': 16, 'required': True}, {'key': 'OrdPrc', 'name': '주문가', 'type': 'float', 'length': 13.2, 'required': True}, {'key': 'BnsTpCode', 'name': '매매구분', 'type': 'string', 'length': 1, 'desc': '1:매도, 2:매수', 'required': True}, {'key': 'OrdprcPtnCode', 'name': '호가유형코드', 'type': 'string', 'length': 2, 'desc': '00@지정가               <br/>03@시장가               <br/>05@조건부지정가         <br/>06@최유리지정가         <br/>07@최우선지정가        <br/>12@중간가 <br/>61@장개시전시간외종가  <br/>81@시간외종가          <br/>82@시간외단일가        ', 'required': True}, {'key': 'MgntrnCode', 'name': '신용거래코드', 'type': 'string', 'length': 3, 'desc': '000:보통<br/>003:유통/자기융자신규<br/>005:유통대주신규<br/>007:자기대주신규<br/>101:유통융자상환<br/>103:자기융자상환<br/>105:유통대주상환<br/>107:자기대주상환<br/>180:예탁담보대출상환(신용)', 'required': True}, {'key': 'LoanDt', 'name': '대출일', 'type': 'string', 'length': 8, 'required': True}, {'key': 'OrdCndiTpCode', 'name': '주문조건구분', 'type': 'string', 'length': 1, 'desc': '0:없음,1:IOC,2:FOK', 'required': True}, {'key': 'MbrNo', 'name': '회원사번호', 'type': 'string', 'length': 3, 'desc': 'KRX: KRX<br/>NXT: NXT<br/>공백을 포함한 그외 입력값은 KRX로 처리', 'required': True}],
+                'type': 'single'
+            }
+        }
+    },
+    'CSPAT00701': {
+        'tr_cd': 'CSPAT00701',
+        'title': '현물정정주문',
+        'blocks': {
+            'CSPAT00701InBlock1': {
+                'fields': [{'key': 'OrgOrdNo', 'name': '원주문번호', 'type': 'float', 'length': 10, 'required': True}, {'key': 'IsuNo', 'name': '종목번호', 'type': 'string', 'length': 12, 'desc': '주식 : 종목코드 or A+종목코드(모의투자는 A+종목코드)<br/>ELW : J+종목코드<br/>ETN : Q+종목코드', 'required': True}, {'key': 'OrdQty', 'name': '주문수량', 'type': 'float', 'length': 16, 'required': True}, {'key': 'OrdprcPtnCode', 'name': '호가유형코드', 'type': 'string', 'length': 2, 'desc': '00@지정가               <br/>03@시장가               <br/>05@조건부지정가         <br/>06@최유리지정가         <br/>07@최우선지정가         <br/>61@장개시전시간외종가  <br/>81@시간외종가          <br/>82@시간외단일가           ', 'required': True}, {'key': 'OrdCndiTpCode', 'name': '주문조건구분', 'type': 'string', 'length': 1, 'desc': '0:없음, 1:IOC, 2:FOK', 'required': True}, {'key': 'OrdPrc', 'name': '주문가', 'type': 'float', 'length': 13.2, 'required': True}],
+                'type': 'single'
+            }
+        }
+    },
+    'CSPAT00801': {
+        'tr_cd': 'CSPAT00801',
+        'title': '현물취소주문',
+        'blocks': {
+            'CSPAT00801InBlock1': {
+                'fields': [{'key': 'OrgOrdNo', 'name': '원주문번호', 'type': 'float', 'length': 10, 'required': True}, {'key': 'IsuNo', 'name': '종목번호', 'type': 'string', 'length': 12, 'desc': '주식 : 종목코드 or A+종목코드(모의투자는 A+종목코드)<br/>ELW : J+종목코드<br/>ETN : Q+종목코드', 'required': True}, {'key': 'OrdQty', 'name': '주문수량', 'type': 'float', 'length': 16, 'required': True}],
+                'type': 'single'
+            }
+        }
+    }
 }

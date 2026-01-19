@@ -22,15 +22,51 @@ try:
 except ImportError:
     MARKET_ETF_REQUESTS = {}
 
+# 선물/옵션 관련 (기존 market_future.py를 분할)
 try:
-    from .market_future import MARKET_FUTURE_REQUESTS
+    from .market_derivatives_query import MARKET_DERIVATIVES_QUERY_REQUESTS
 except ImportError:
-    MARKET_FUTURE_REQUESTS = {}
+    MARKET_DERIVATIVES_QUERY_REQUESTS = {}
 
 try:
-    from .market_overseas import MARKET_OVERSEAS_REQUESTS
+    from .market_derivatives_account import MARKET_DERIVATIVES_ACCOUNT_REQUESTS
 except ImportError:
-    MARKET_OVERSEAS_REQUESTS = {}
+    MARKET_DERIVATIVES_ACCOUNT_REQUESTS = {}
+
+try:
+    from .market_derivatives_realtime import MARKET_DERIVATIVES_REALTIME_REQUESTS
+except ImportError:
+    MARKET_DERIVATIVES_REALTIME_REQUESTS = {}
+
+# 기존 market_future.py의 백업 호환성 유지
+MARKET_FUTURE_REQUESTS = {
+    **MARKET_DERIVATIVES_QUERY_REQUESTS,
+    **MARKET_DERIVATIVES_ACCOUNT_REQUESTS,
+    **MARKET_DERIVATIVES_REALTIME_REQUESTS,
+}
+
+# 해외 관련 (기존 market_overseas.py를 분할)
+try:
+    from .market_overseas_futures import MARKET_OVERSEAS_FUTURES_REQUESTS
+except ImportError:
+    MARKET_OVERSEAS_FUTURES_REQUESTS = {}
+
+try:
+    from .market_overseas_stocks import MARKET_OVERSEAS_STOCKS_REQUESTS
+except ImportError:
+    MARKET_OVERSEAS_STOCKS_REQUESTS = {}
+
+try:
+    from .market_overseas_realtime import MARKET_OVERSEAS_REALTIME_REQUESTS
+except ImportError:
+    MARKET_OVERSEAS_REALTIME_REQUESTS = {}
+
+# 기존 market_overseas.py의 백업 호환성 유지
+MARKET_OVERSEAS_REQUESTS = {
+    **MARKET_OVERSEAS_FUTURES_REQUESTS,
+    **MARKET_OVERSEAS_STOCKS_REQUESTS,
+    **MARKET_OVERSEAS_REALTIME_REQUESTS,
+}
 
 # 전체 통합 딕셔너리
 ALL_MARKET_REQUESTS = {
@@ -61,7 +97,15 @@ __all__ = [
     'MARKET_OTHER_REQUESTS',
     'MARKET_ELW_REQUESTS',
     'MARKET_ETF_REQUESTS',
-    'MARKET_FUTURE_REQUESTS',
-    'MARKET_OVERSEAS_REQUESTS',
+    # 선물/옵션 분할 파일들
+    'MARKET_DERIVATIVES_QUERY_REQUESTS',
+    'MARKET_DERIVATIVES_ACCOUNT_REQUESTS',
+    'MARKET_DERIVATIVES_REALTIME_REQUESTS',
+    'MARKET_FUTURE_REQUESTS',  # 백업 호환성
+    # 해외 분할 파일들
+    'MARKET_OVERSEAS_FUTURES_REQUESTS',
+    'MARKET_OVERSEAS_STOCKS_REQUESTS',
+    'MARKET_OVERSEAS_REALTIME_REQUESTS',
+    'MARKET_OVERSEAS_REQUESTS',  # 백업 호환성
     'ALL_MARKET_REQUESTS',
 ]

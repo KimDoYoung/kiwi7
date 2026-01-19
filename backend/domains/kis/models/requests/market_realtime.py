@@ -1,813 +1,1223 @@
 # Auto-generated
-MARKET_REALTIME_REQUESTS = {'H0EWANC0': {'body': [{'description': 'H0EWANC0',
-                        'key': 'tr_id',
-                        'length': 2,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': 'ELW 종목코드(ex. 57LA24)',
-                        'key': 'tr_key',
-                        'length': 12,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 36,
-                          'name': '웹소켓 접속키',
-                          'required': True,
-                          'type': 'string'},
-                         {'description': '1: 등록, 2:해제',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '등록/해제',
-                          'required': True,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': 'ELW 실시간예상체결',
-              'tr_id': 'H0EWANC0',
-              'url': '/tryitout/H0EWANC0'},
- 'H0EWASP0': {'body': [{'description': 'H0EWASP0',
-                        'key': 'tr_id',
-                        'length': 2,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': 'ELW 종목코드(ex. 57LA24)',
-                        'key': 'tr_key',
-                        'length': 12,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 36,
-                          'name': '웹소켓 접속키',
-                          'required': True,
-                          'type': 'string'},
-                         {'description': '1: 등록, 2:해제',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '등록/해제',
-                          'required': True,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': 'ELW 실시간호가',
-              'tr_id': 'H0EWASP0',
-              'url': '/tryitout/H0EWASP0'},
- 'H0EWCNT0': {'body': [{'description': 'H0EWCNT0',
-                        'key': 'tr_id',
-                        'length': 2,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': 'ELW 종목코드(ex. 57LA24)',
-                        'key': 'tr_key',
-                        'length': 12,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 36,
-                          'name': '웹소켓 접속키',
-                          'required': True,
-                          'type': 'string'},
-                         {'description': '1: 등록, 2:해제',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '등록/해제',
-                          'required': True,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': 'ELW 실시간체결가',
-              'tr_id': 'H0EWCNT0',
-              'url': '/tryitout/H0EWCNT0'},
- 'H0NXANC0': {'body': [{'description': 'H0NXANC0 : 국내주식 실시간예상체결 (NXT)',
-                        'key': 'tr_id',
-                        'length': 2,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목코드 (ex 005930 삼성전자)',
-                        'key': 'tr_key',
-                        'length': 12,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 286,
-                          'name': '웹소켓 접속키',
-                          'required': False,
-                          'type': 'string'},
-                         {'description': '1 : 등록\r 2 : 해제',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '거래타입',
-                          'required': False,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 실시간예상체결 (NXT)',
-              'tr_id': 'H0NXANC0',
-              'url': '/tryitout/H0NXANC0'},
- 'H0NXASP0': {'body': [{'description': 'H0NXASP0 : 실시간 주식 호가 (NXT)',
-                        'key': 'tr_id',
-                        'length': 2,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목코드 (ex 005930 삼성전자)',
-                        'key': 'tr_key',
-                        'length': 12,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 286,
-                          'name': '웹소켓 접속키',
-                          'required': False,
-                          'type': 'string'},
-                         {'description': "'1 : 등록\r 2 : 해제'",
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '거래타입',
-                          'required': False,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 실시간호가 (NXT)',
-              'tr_id': 'H0NXASP0',
-              'url': '/tryitout/H0NXASP0'},
- 'H0NXCNT0': {'body': [{'description': 'H0NXCNT0 : 주식종목체결 (NXT)',
-                        'key': 'tr_id',
-                        'length': 2,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목코드 (ex 005930 삼성전자)',
-                        'key': 'tr_key',
-                        'length': 12,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 286,
-                          'name': '웹소켓 접속키',
-                          'required': False,
-                          'type': 'string'},
-                         {'description': "'1 : 등록\r 2 : 해제'",
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '거래타입',
-                          'required': False,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 실시간체결가 (NXT)',
-              'tr_id': 'H0NXCNT0',
-              'url': '/tryitout/H0NXCNT0'},
- 'H0NXMBC0': {'body': [{'description': 'H0NXMBC0 : 국내주식 주식종목회원사 (NXT)',
-                        'key': 'tr_id',
-                        'length': 2,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목코드 (ex 005930 삼성전자)',
-                        'key': 'tr_key',
-                        'length': 12,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 286,
-                          'name': '웹소켓 접속키',
-                          'required': False,
-                          'type': 'string'},
-                         {'description': "'1 : 등록\r 2 : 해제'",
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '거래타입',
-                          'required': False,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 실시간회원사 (NXT)',
-              'tr_id': 'H0NXMBC0',
-              'url': '/tryitout/H0NXMBC0'},
- 'H0NXMKO0': {'body': [{'description': 'H0NXMKO0 : 국내주식 장운영정보 (NXT)',
-                        'key': 'tr_id',
-                        'length': 2,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목코드 (ex 005930 삼성전자)',
-                        'key': 'tr_key',
-                        'length': 12,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 286,
-                          'name': '웹소켓 접속키',
-                          'required': True,
-                          'type': 'string'},
-                         {'description': '1 : 등록\r 2 : 해제',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '거래타입',
-                          'required': True,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 장운영정보 (NXT)',
-              'tr_id': 'H0NXMKO0',
-              'url': '/tryitout/H0NXMKO0'},
- 'H0NXPGM0': {'body': [{'description': 'H0NXPGM0 : 실시간 주식프로그램매매 (NXT)',
-                        'key': 'tr_id',
-                        'length': 2,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목코드 (ex 005930 삼성전자)',
-                        'key': 'tr_key',
-                        'length': 12,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 286,
-                          'name': '웹소켓 접속키',
-                          'required': False,
-                          'type': 'string'},
-                         {'description': "'1 : 등록\r 2 : 해제'",
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '거래타입',
-                          'required': False,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 실시간프로그램매매 (NXT)',
-              'tr_id': 'H0NXPGM0',
-              'url': '/tryitout/H0NXPGM0'},
- 'H0STANC0': {'body': [{'description': 'H0STANC0',
-                        'key': 'tr_id',
-                        'length': 2,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목코드 (ex 005930 삼성전자)',
-                        'key': 'tr_key',
-                        'length': 12,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 36,
-                          'name': '웹소켓 접속키',
-                          'required': True,
-                          'type': 'string'},
-                         {'description': '1: 등록, 2:해제',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '등록/해제',
-                          'required': True,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 실시간예상체결 (KRX)',
-              'tr_id': 'H0STANC0',
-              'url': '/tryitout/H0STANC0'},
- 'H0STASP0': {'body': [{'description': '[실전/모의투자]\r H0STASP0 : 주식호가',
-                        'key': 'tr_id',
-                        'length': 1,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목번호 (6자리)\r ETN의 경우, Q로 시작 (EX. Q500001)',
-                        'key': 'tr_key',
-                        'length': 1,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 286,
-                          'name': '웹소켓 접속키',
-                          'required': True,
-                          'type': 'string'},
-                         {'description': '1 : 등록\r 2 : 해제',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '거래타입',
-                          'required': True,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 실시간호가 (KRX)',
-              'tr_id': 'H0STASP0',
-              'url': '/tryitout/H0STASP0'},
- 'H0STCNI0': {'body': [{'description': "'[실전/모의투자]\r H0STCNI0 : 국내주식 실시간체결통보\r H0STCNI9 : 모의투자 실시간 체결통보",
-                        'key': 'tr_id',
-                        'length': 2,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': 'HTS ID',
-                        'key': 'tr_key',
-                        'length': 12,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 286,
-                          'name': '웹소켓 접속키',
-                          'required': False,
-                          'type': 'string'},
-                         {'description': '1: 등록 2 : 해제',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '거래타입',
-                          'required': False,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 실시간체결통보',
-              'tr_id': 'H0STCNI0',
-              'url': '/tryitout/H0STCNI0'},
- 'H0STCNT0': {'body': [{'description': '[실전/모의투자]\r H0STCNT0 : 실시간 주식 체결가',
-                        'key': 'tr_id',
-                        'length': 1,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목번호 (6자리)\r ETN의 경우, Q로 시작 (EX. Q500001)',
-                        'key': 'tr_key',
-                        'length': 1,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 286,
-                          'name': '웹소켓 접속키',
-                          'required': True,
-                          'type': 'string'},
-                         {'description': '1 : 등록\r 2 : 해제',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '거래타입',
-                          'required': True,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 실시간체결가 (KRX)',
-              'tr_id': 'H0STCNT0',
-              'url': '/tryitout/H0STCNT0'},
- 'H0STMBC0': {'body': [{'description': 'H0STMBC0',
-                        'key': 'tr_id',
-                        'length': 7,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목코드',
-                        'key': 'tr_key',
-                        'length': 6,
-                        'name': '종목코드',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 36,
-                          'name': '웹소켓 접속키',
-                          'required': True,
-                          'type': 'string'},
-                         {'description': '"1: 등록, 2:해제"',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '등록/해제',
-                          'required': True,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 실시간회원사 (KRX)',
-              'tr_id': 'H0STMBC0',
-              'url': '/tryitout/H0STMBC0'},
- 'H0STMKO0': {'body': [{'description': 'H0STMKO0',
-                        'key': 'tr_id',
-                        'length': 7,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목코드',
-                        'key': 'tr_key',
-                        'length': 6,
-                        'name': '종목코드',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 36,
-                          'name': '웹소켓 접속키',
-                          'required': True,
-                          'type': 'string'},
-                         {'description': '"1: 등록, 2:해제"',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '등록/해제',
-                          'required': True,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 장운영정보 (KRX)',
-              'tr_id': 'H0STMKO0',
-              'url': '/tryitout/H0STMKO0'},
- 'H0STNAV0': {'body': [{'description': 'H0STNAV0',
-                        'key': 'tr_id',
-                        'length': 2,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목코드 (ex. 005930 삼성전자)',
-                        'key': 'tr_key',
-                        'length': 12,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 36,
-                          'name': '웹소켓 접속키',
-                          'required': True,
-                          'type': 'string'},
-                         {'description': '1: 등록, 2:해제',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '등록/해제',
-                          'required': True,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내ETF NAV추이',
-              'tr_id': 'H0STNAV0',
-              'url': '/tryitout/H0STNAV0'},
- 'H0STOAA0': {'body': [{'description': 'H0STOAA0',
-                        'key': 'tr_id',
-                        'length': 2,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목코드 (ex 005930 삼성전자)',
-                        'key': 'tr_key',
-                        'length': 12,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 36,
-                          'name': '웹소켓 접속키',
-                          'required': True,
-                          'type': 'string'},
-                         {'description': '1: 등록, 2:해제',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '등록/해제',
-                          'required': True,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 시간외 실시간호가 (KRX)',
-              'tr_id': 'H0STOAA0',
-              'url': '/tryitout/H0STOAA0'},
- 'H0STOAC0': {'body': [{'description': 'H0STOAC0',
-                        'key': 'tr_id',
-                        'length': 2,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목코드 (ex 005930 삼성전자)',
-                        'key': 'tr_key',
-                        'length': 12,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 36,
-                          'name': '웹소켓 접속키',
-                          'required': True,
-                          'type': 'string'},
-                         {'description': '1: 등록, 2:해제',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '등록/해제',
-                          'required': True,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 시간외 실시간예상체결 (KRX)',
-              'tr_id': 'H0STOAC0',
-              'url': '/tryitout/H0STOAC0'},
- 'H0STOUP0': {'body': [{'description': 'H0STOUP0',
-                        'key': 'tr_id',
-                        'length': 2,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목코드 (ex 005930 삼성전자)',
-                        'key': 'tr_key',
-                        'length': 12,
-                        'name': '구분값\t',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 36,
-                          'name': '웹소켓 접속키',
-                          'required': True,
-                          'type': 'string'},
-                         {'description': '1: 등록, 2:해제',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '등록/해제',
-                          'required': True,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 시간외 실시간체결가 (KRX)',
-              'tr_id': 'H0STOUP0',
-              'url': '/tryitout/H0STOUP0'},
- 'H0STPGM0': {'body': [{'description': 'H0STPGM0',
-                        'key': 'tr_id',
-                        'length': 7,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목코드',
-                        'key': 'tr_key',
-                        'length': 6,
-                        'name': '종목코드',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 36,
-                          'name': '웹소켓 접속키',
-                          'required': True,
-                          'type': 'string'},
-                         {'description': '"1: 등록, 2:해제"',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '등록/해제',
-                          'required': True,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 실시간프로그램매매 (KRX)',
-              'tr_id': 'H0STPGM0',
-              'url': '/tryitout/H0STPGM0'},
- 'H0UNANC0': {'body': [{'description': '[실전투자]\r H0UNANC0 : 국내주식 실시간예상체결 (통합)',
-                        'key': 'tr_id',
-                        'length': 2,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목코드 (ex 005930 삼성전자)',
-                        'key': 'tr_key',
-                        'length': 12,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 286,
-                          'name': '웹소켓 접속키',
-                          'required': True,
-                          'type': 'string'},
-                         {'description': '1 : 등록\r 2 : 해제',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '거래타입',
-                          'required': True,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 실시간예상체결 (통합)',
-              'tr_id': 'H0UNANC0',
-              'url': '/tryitout/H0UNANC0'},
- 'H0UNASP0': {'body': [{'description': 'H0UNASP0 : 실시간 주식 체결가 통합',
-                        'key': 'tr_id',
-                        'length': 2,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목코드 (ex 005930 삼성전자)',
-                        'key': 'tr_key',
-                        'length': 12,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 286,
-                          'name': '웹소켓 접속키',
-                          'required': False,
-                          'type': 'string'},
-                         {'description': "'1 : 등록\r 2 : 해제'",
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '거래타입',
-                          'required': False,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 실시간호가 (통합)',
-              'tr_id': 'H0UNASP0',
-              'url': '/tryitout/H0UNASP0'},
- 'H0UNCNT0': {'body': [{'description': 'H0UNCNT0 : 실시간 주식 체결가 통합',
-                        'key': 'tr_id',
-                        'length': 2,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목코드 (ex 005930 삼성전자)',
-                        'key': 'tr_key',
-                        'length': 12,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 286,
-                          'name': '웹소켓 접속키',
-                          'required': False,
-                          'type': 'string'},
-                         {'description': '1 : 등록 2 : 해제',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '거래타입',
-                          'required': False,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 실시간체결가 (통합)',
-              'tr_id': 'H0UNCNT0',
-              'url': '/tryitout/H0UNCNT0'},
- 'H0UNMBC0': {'body': [{'description': 'H0UNMBC0 : 국내주식 주식종목회원사 (통합)',
-                        'key': 'tr_id',
-                        'length': 2,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목코드 (ex 005930 삼성전자)',
-                        'key': 'tr_key',
-                        'length': 12,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 286,
-                          'name': '웹소켓 접속키',
-                          'required': False,
-                          'type': 'string'},
-                         {'description': "'1 : 등록\r 2 : 해제'",
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '거래타입',
-                          'required': False,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 실시간회원사 (통합)',
-              'tr_id': 'H0UNMBC0',
-              'url': '/tryitout/H0UNMBC0'},
- 'H0UNMKO0': {'body': [{'description': 'H0UNMKO0 : 국내주식 장운영정보 (통합)',
-                        'key': 'tr_id',
-                        'length': 2,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목코드 (ex 005930 삼성전자)',
-                        'key': 'tr_key',
-                        'length': 12,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 286,
-                          'name': '웹소켓 접속키',
-                          'required': False,
-                          'type': 'string'},
-                         {'description': '1 : 등록\r 2 : 해제',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '거래타입',
-                          'required': False,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 장운영정보 (통합)',
-              'tr_id': 'H0UNMKO0',
-              'url': '/tryitout/H0UNMKO0'},
- 'H0UNPGM0': {'body': [{'description': 'H0UNPGM0 : 실시간 주식종목프로그램매매 통합',
-                        'key': 'tr_id',
-                        'length': 2,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '종목코드 (ex 005930 삼성전자)',
-                        'key': 'tr_key',
-                        'length': 12,
-                        'name': '구분값',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 286,
-                          'name': '웹소켓 접속키',
-                          'required': False,
-                          'type': 'string'},
-                         {'description': "'1 : 등록\r 2 : 해제'",
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '거래타입',
-                          'required': False,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내주식 실시간프로그램매매 (통합)',
-              'tr_id': 'H0UNPGM0',
-              'url': '/tryitout/H0UNPGM0'},
- 'H0UPANC0': {'body': [{'description': 'H0UPANC0',
-                        'key': 'tr_id',
-                        'length': 7,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '업종구분코드',
-                        'key': 'tr_key',
-                        'length': 6,
-                        'name': '종목코드',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 36,
-                          'name': '웹소켓 접속키',
-                          'required': True,
-                          'type': 'string'},
-                         {'description': '"1: 등록, 2:해제"',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '등록/해제',
-                          'required': True,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내지수 실시간예상체결',
-              'tr_id': 'H0UPANC0',
-              'url': '/tryitout/H0UPANC0'},
- 'H0UPCNT0': {'body': [{'description': 'H0UPCNT0',
-                        'key': 'tr_id',
-                        'length': 7,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '업종구분코드',
-                        'key': 'tr_key',
-                        'length': 6,
-                        'name': '종목코드',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 36,
-                          'name': '웹소켓 접속키',
-                          'required': True,
-                          'type': 'string'},
-                         {'description': '"1: 등록, 2:해제"',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '등록/해제',
-                          'required': True,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내지수 실시간체결',
-              'tr_id': 'H0UPCNT0',
-              'url': '/tryitout/H0UPCNT0'},
- 'H0UPPGM0': {'body': [{'description': 'H0UPPGM0',
-                        'key': 'tr_id',
-                        'length': 7,
-                        'name': '거래ID',
-                        'required': True,
-                        'type': 'string'},
-                       {'description': '업종구분코드',
-                        'key': 'tr_key',
-                        'length': 6,
-                        'name': '종목코드',
-                        'required': True,
-                        'type': 'string'}],
-              'header': [{'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
-                          'key': 'approval_key',
-                          'length': 36,
-                          'name': '웹소켓 접속키',
-                          'required': True,
-                          'type': 'string'},
-                         {'description': '"1: 등록, 2:해제"',
-                          'key': 'tr_type',
-                          'length': 1,
-                          'name': '등록/해제',
-                          'required': True,
-                          'type': 'string'}],
-              'method': 'POST',
-              'title': '국내지수 실시간프로그램매매',
-              'tr_id': 'H0UPPGM0',
-              'url': '/tryitout/H0UPPGM0'}}
+from typing import Any, Dict, List
+
+MARKET_REALTIME_REQUESTS = {
+    'H0EWANC0': {
+        'method': 'POST',
+        'title': 'ELW 실시간예상체결',
+        'tr_id': 'H0EWANC0',
+        'url': '/tryitout/H0EWANC0',
+        'body': [
+            {
+                'description': 'H0EWANC0',
+                'key': 'tr_id',
+                'length': 2,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': 'ELW 종목코드(ex. 57LA24)',
+                'key': 'tr_key',
+                'length': 12,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 36,
+                'name': '웹소켓 접속키',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '1: 등록, 2:해제',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '등록/해제',
+                'required': True,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0EWASP0': {
+        'method': 'POST',
+        'title': 'ELW 실시간호가',
+        'tr_id': 'H0EWASP0',
+        'url': '/tryitout/H0EWASP0',
+        'body': [
+            {
+                'description': 'H0EWASP0',
+                'key': 'tr_id',
+                'length': 2,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': 'ELW 종목코드(ex. 57LA24)',
+                'key': 'tr_key',
+                'length': 12,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 36,
+                'name': '웹소켓 접속키',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '1: 등록, 2:해제',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '등록/해제',
+                'required': True,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0EWCNT0': {
+        'method': 'POST',
+        'title': 'ELW 실시간체결가',
+        'tr_id': 'H0EWCNT0',
+        'url': '/tryitout/H0EWCNT0',
+        'body': [
+            {
+                'description': 'H0EWCNT0',
+                'key': 'tr_id',
+                'length': 2,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': 'ELW 종목코드(ex. 57LA24)',
+                'key': 'tr_key',
+                'length': 12,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 36,
+                'name': '웹소켓 접속키',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '1: 등록, 2:해제',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '등록/해제',
+                'required': True,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0NXANC0': {
+        'method': 'POST',
+        'title': '국내주식 실시간예상체결 (NXT)',
+        'tr_id': 'H0NXANC0',
+        'url': '/tryitout/H0NXANC0',
+        'body': [
+            {
+                'description': 'H0NXANC0 : 국내주식 실시간예상체결 (NXT)',
+                'key': 'tr_id',
+                'length': 2,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목코드 (ex 005930 삼성전자)',
+                'key': 'tr_key',
+                'length': 12,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 286,
+                'name': '웹소켓 접속키',
+                'required': False,
+                'type': 'string'
+            },
+            {
+                'description': '1 : 등록 2 : 해제',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '거래타입',
+                'required': False,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0NXASP0': {
+        'method': 'POST',
+        'title': '국내주식 실시간호가 (NXT)',
+        'tr_id': 'H0NXASP0',
+        'url': '/tryitout/H0NXASP0',
+        'body': [
+            {
+                'description': 'H0NXASP0 : 실시간 주식 호가 (NXT)',
+                'key': 'tr_id',
+                'length': 2,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목코드 (ex 005930 삼성전자)',
+                'key': 'tr_key',
+                'length': 12,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 286,
+                'name': '웹소켓 접속키',
+                'required': False,
+                'type': 'string'
+            },
+            {
+                'description': '\'1 : 등록 2 : 해제\'',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '거래타입',
+                'required': False,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0NXCNT0': {
+        'method': 'POST',
+        'title': '국내주식 실시간체결가 (NXT)',
+        'tr_id': 'H0NXCNT0',
+        'url': '/tryitout/H0NXCNT0',
+        'body': [
+            {
+                'description': 'H0NXCNT0 : 주식종목체결 (NXT)',
+                'key': 'tr_id',
+                'length': 2,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목코드 (ex 005930 삼성전자)',
+                'key': 'tr_key',
+                'length': 12,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 286,
+                'name': '웹소켓 접속키',
+                'required': False,
+                'type': 'string'
+            },
+            {
+                'description': '\'1 : 등록 2 : 해제\'',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '거래타입',
+                'required': False,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0NXMBC0': {
+        'method': 'POST',
+        'title': '국내주식 실시간회원사 (NXT)',
+        'tr_id': 'H0NXMBC0',
+        'url': '/tryitout/H0NXMBC0',
+        'body': [
+            {
+                'description': 'H0NXMBC0 : 국내주식 주식종목회원사 (NXT)',
+                'key': 'tr_id',
+                'length': 2,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목코드 (ex 005930 삼성전자)',
+                'key': 'tr_key',
+                'length': 12,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 286,
+                'name': '웹소켓 접속키',
+                'required': False,
+                'type': 'string'
+            },
+            {
+                'description': '\'1 : 등록 2 : 해제\'',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '거래타입',
+                'required': False,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0NXMKO0': {
+        'method': 'POST',
+        'title': '국내주식 장운영정보 (NXT)',
+        'tr_id': 'H0NXMKO0',
+        'url': '/tryitout/H0NXMKO0',
+        'body': [
+            {
+                'description': 'H0NXMKO0 : 국내주식 장운영정보 (NXT)',
+                'key': 'tr_id',
+                'length': 2,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목코드 (ex 005930 삼성전자)',
+                'key': 'tr_key',
+                'length': 12,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 286,
+                'name': '웹소켓 접속키',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '1 : 등록 2 : 해제',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '거래타입',
+                'required': True,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0NXPGM0': {
+        'method': 'POST',
+        'title': '국내주식 실시간프로그램매매 (NXT)',
+        'tr_id': 'H0NXPGM0',
+        'url': '/tryitout/H0NXPGM0',
+        'body': [
+            {
+                'description': 'H0NXPGM0 : 실시간 주식프로그램매매 (NXT)',
+                'key': 'tr_id',
+                'length': 2,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목코드 (ex 005930 삼성전자)',
+                'key': 'tr_key',
+                'length': 12,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 286,
+                'name': '웹소켓 접속키',
+                'required': False,
+                'type': 'string'
+            },
+            {
+                'description': '\'1 : 등록 2 : 해제\'',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '거래타입',
+                'required': False,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0STANC0': {
+        'method': 'POST',
+        'title': '국내주식 실시간예상체결 (KRX)',
+        'tr_id': 'H0STANC0',
+        'url': '/tryitout/H0STANC0',
+        'body': [
+            {
+                'description': 'H0STANC0',
+                'key': 'tr_id',
+                'length': 2,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목코드 (ex 005930 삼성전자)',
+                'key': 'tr_key',
+                'length': 12,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 36,
+                'name': '웹소켓 접속키',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '1: 등록, 2:해제',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '등록/해제',
+                'required': True,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0STASP0': {
+        'method': 'POST',
+        'title': '국내주식 실시간호가 (KRX)',
+        'tr_id': 'H0STASP0',
+        'url': '/tryitout/H0STASP0',
+        'body': [
+            {
+                'description': '[실전/모의투자] H0STASP0 : 주식호가',
+                'key': 'tr_id',
+                'length': 1,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목번호 (6자리) ETN의 경우, Q로 시작 (EX. Q500001)',
+                'key': 'tr_key',
+                'length': 1,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 286,
+                'name': '웹소켓 접속키',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '1 : 등록 2 : 해제',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '거래타입',
+                'required': True,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0STCNI0': {
+        'method': 'POST',
+        'title': '국내주식 실시간체결통보',
+        'tr_id': 'H0STCNI0',
+        'url': '/tryitout/H0STCNI0',
+        'body': [
+            {
+                'description': '\'[실전/모의투자] H0STCNI0 : 국내주식 실시간체결통보 H0STCNI9 : 모의투자 실시간 체결통보',
+                'key': 'tr_id',
+                'length': 2,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': 'HTS ID',
+                'key': 'tr_key',
+                'length': 12,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 286,
+                'name': '웹소켓 접속키',
+                'required': False,
+                'type': 'string'
+            },
+            {
+                'description': '1: 등록 2 : 해제',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '거래타입',
+                'required': False,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0STCNT0': {
+        'method': 'POST',
+        'title': '국내주식 실시간체결가 (KRX)',
+        'tr_id': 'H0STCNT0',
+        'url': '/tryitout/H0STCNT0',
+        'body': [
+            {
+                'description': '[실전/모의투자] H0STCNT0 : 실시간 주식 체결가',
+                'key': 'tr_id',
+                'length': 1,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목번호 (6자리) ETN의 경우, Q로 시작 (EX. Q500001)',
+                'key': 'tr_key',
+                'length': 1,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 286,
+                'name': '웹소켓 접속키',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '1 : 등록 2 : 해제',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '거래타입',
+                'required': True,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0STMBC0': {
+        'method': 'POST',
+        'title': '국내주식 실시간회원사 (KRX)',
+        'tr_id': 'H0STMBC0',
+        'url': '/tryitout/H0STMBC0',
+        'body': [
+            {
+                'description': 'H0STMBC0',
+                'key': 'tr_id',
+                'length': 7,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목코드',
+                'key': 'tr_key',
+                'length': 6,
+                'name': '종목코드',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 36,
+                'name': '웹소켓 접속키',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '"1: 등록, 2:해제"',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '등록/해제',
+                'required': True,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0STMKO0': {
+        'method': 'POST',
+        'title': '국내주식 장운영정보 (KRX)',
+        'tr_id': 'H0STMKO0',
+        'url': '/tryitout/H0STMKO0',
+        'body': [
+            {
+                'description': 'H0STMKO0',
+                'key': 'tr_id',
+                'length': 7,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목코드',
+                'key': 'tr_key',
+                'length': 6,
+                'name': '종목코드',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 36,
+                'name': '웹소켓 접속키',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '"1: 등록, 2:해제"',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '등록/해제',
+                'required': True,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0STNAV0': {
+        'method': 'POST',
+        'title': '국내ETF NAV추이',
+        'tr_id': 'H0STNAV0',
+        'url': '/tryitout/H0STNAV0',
+        'body': [
+            {
+                'description': 'H0STNAV0',
+                'key': 'tr_id',
+                'length': 2,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목코드 (ex. 005930 삼성전자)',
+                'key': 'tr_key',
+                'length': 12,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 36,
+                'name': '웹소켓 접속키',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '1: 등록, 2:해제',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '등록/해제',
+                'required': True,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0STOAA0': {
+        'method': 'POST',
+        'title': '국내주식 시간외 실시간호가 (KRX)',
+        'tr_id': 'H0STOAA0',
+        'url': '/tryitout/H0STOAA0',
+        'body': [
+            {
+                'description': 'H0STOAA0',
+                'key': 'tr_id',
+                'length': 2,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목코드 (ex 005930 삼성전자)',
+                'key': 'tr_key',
+                'length': 12,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 36,
+                'name': '웹소켓 접속키',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '1: 등록, 2:해제',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '등록/해제',
+                'required': True,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0STOAC0': {
+        'method': 'POST',
+        'title': '국내주식 시간외 실시간예상체결 (KRX)',
+        'tr_id': 'H0STOAC0',
+        'url': '/tryitout/H0STOAC0',
+        'body': [
+            {
+                'description': 'H0STOAC0',
+                'key': 'tr_id',
+                'length': 2,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목코드 (ex 005930 삼성전자)',
+                'key': 'tr_key',
+                'length': 12,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 36,
+                'name': '웹소켓 접속키',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '1: 등록, 2:해제',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '등록/해제',
+                'required': True,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0STOUP0': {
+        'method': 'POST',
+        'title': '국내주식 시간외 실시간체결가 (KRX)',
+        'tr_id': 'H0STOUP0',
+        'url': '/tryitout/H0STOUP0',
+        'body': [
+            {
+                'description': 'H0STOUP0',
+                'key': 'tr_id',
+                'length': 2,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목코드 (ex 005930 삼성전자)',
+                'key': 'tr_key',
+                'length': 12,
+                'name': '구분값	',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 36,
+                'name': '웹소켓 접속키',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '1: 등록, 2:해제',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '등록/해제',
+                'required': True,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0STPGM0': {
+        'method': 'POST',
+        'title': '국내주식 실시간프로그램매매 (KRX)',
+        'tr_id': 'H0STPGM0',
+        'url': '/tryitout/H0STPGM0',
+        'body': [
+            {
+                'description': 'H0STPGM0',
+                'key': 'tr_id',
+                'length': 7,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목코드',
+                'key': 'tr_key',
+                'length': 6,
+                'name': '종목코드',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 36,
+                'name': '웹소켓 접속키',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '"1: 등록, 2:해제"',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '등록/해제',
+                'required': True,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0UNANC0': {
+        'method': 'POST',
+        'title': '국내주식 실시간예상체결 (통합)',
+        'tr_id': 'H0UNANC0',
+        'url': '/tryitout/H0UNANC0',
+        'body': [
+            {
+                'description': '[실전투자] H0UNANC0 : 국내주식 실시간예상체결 (통합)',
+                'key': 'tr_id',
+                'length': 2,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목코드 (ex 005930 삼성전자)',
+                'key': 'tr_key',
+                'length': 12,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 286,
+                'name': '웹소켓 접속키',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '1 : 등록 2 : 해제',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '거래타입',
+                'required': True,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0UNASP0': {
+        'method': 'POST',
+        'title': '국내주식 실시간호가 (통합)',
+        'tr_id': 'H0UNASP0',
+        'url': '/tryitout/H0UNASP0',
+        'body': [
+            {
+                'description': 'H0UNASP0 : 실시간 주식 체결가 통합',
+                'key': 'tr_id',
+                'length': 2,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목코드 (ex 005930 삼성전자)',
+                'key': 'tr_key',
+                'length': 12,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 286,
+                'name': '웹소켓 접속키',
+                'required': False,
+                'type': 'string'
+            },
+            {
+                'description': '\'1 : 등록 2 : 해제\'',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '거래타입',
+                'required': False,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0UNCNT0': {
+        'method': 'POST',
+        'title': '국내주식 실시간체결가 (통합)',
+        'tr_id': 'H0UNCNT0',
+        'url': '/tryitout/H0UNCNT0',
+        'body': [
+            {
+                'description': 'H0UNCNT0 : 실시간 주식 체결가 통합',
+                'key': 'tr_id',
+                'length': 2,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목코드 (ex 005930 삼성전자)',
+                'key': 'tr_key',
+                'length': 12,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 286,
+                'name': '웹소켓 접속키',
+                'required': False,
+                'type': 'string'
+            },
+            {
+                'description': '1 : 등록 2 : 해제',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '거래타입',
+                'required': False,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0UNMBC0': {
+        'method': 'POST',
+        'title': '국내주식 실시간회원사 (통합)',
+        'tr_id': 'H0UNMBC0',
+        'url': '/tryitout/H0UNMBC0',
+        'body': [
+            {
+                'description': 'H0UNMBC0 : 국내주식 주식종목회원사 (통합)',
+                'key': 'tr_id',
+                'length': 2,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목코드 (ex 005930 삼성전자)',
+                'key': 'tr_key',
+                'length': 12,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 286,
+                'name': '웹소켓 접속키',
+                'required': False,
+                'type': 'string'
+            },
+            {
+                'description': '\'1 : 등록 2 : 해제\'',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '거래타입',
+                'required': False,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0UNMKO0': {
+        'method': 'POST',
+        'title': '국내주식 장운영정보 (통합)',
+        'tr_id': 'H0UNMKO0',
+        'url': '/tryitout/H0UNMKO0',
+        'body': [
+            {
+                'description': 'H0UNMKO0 : 국내주식 장운영정보 (통합)',
+                'key': 'tr_id',
+                'length': 2,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목코드 (ex 005930 삼성전자)',
+                'key': 'tr_key',
+                'length': 12,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 286,
+                'name': '웹소켓 접속키',
+                'required': False,
+                'type': 'string'
+            },
+            {
+                'description': '1 : 등록 2 : 해제',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '거래타입',
+                'required': False,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0UNPGM0': {
+        'method': 'POST',
+        'title': '국내주식 실시간프로그램매매 (통합)',
+        'tr_id': 'H0UNPGM0',
+        'url': '/tryitout/H0UNPGM0',
+        'body': [
+            {
+                'description': 'H0UNPGM0 : 실시간 주식종목프로그램매매 통합',
+                'key': 'tr_id',
+                'length': 2,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '종목코드 (ex 005930 삼성전자)',
+                'key': 'tr_key',
+                'length': 12,
+                'name': '구분값',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 286,
+                'name': '웹소켓 접속키',
+                'required': False,
+                'type': 'string'
+            },
+            {
+                'description': '\'1 : 등록 2 : 해제\'',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '거래타입',
+                'required': False,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0UPANC0': {
+        'method': 'POST',
+        'title': '국내지수 실시간예상체결',
+        'tr_id': 'H0UPANC0',
+        'url': '/tryitout/H0UPANC0',
+        'body': [
+            {
+                'description': 'H0UPANC0',
+                'key': 'tr_id',
+                'length': 7,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '업종구분코드',
+                'key': 'tr_key',
+                'length': 6,
+                'name': '종목코드',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 36,
+                'name': '웹소켓 접속키',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '"1: 등록, 2:해제"',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '등록/해제',
+                'required': True,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0UPCNT0': {
+        'method': 'POST',
+        'title': '국내지수 실시간체결',
+        'tr_id': 'H0UPCNT0',
+        'url': '/tryitout/H0UPCNT0',
+        'body': [
+            {
+                'description': 'H0UPCNT0',
+                'key': 'tr_id',
+                'length': 7,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '업종구분코드',
+                'key': 'tr_key',
+                'length': 6,
+                'name': '종목코드',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 36,
+                'name': '웹소켓 접속키',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '"1: 등록, 2:해제"',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '등록/해제',
+                'required': True,
+                'type': 'string'
+            }
+        ]
+    },
+    'H0UPPGM0': {
+        'method': 'POST',
+        'title': '국내지수 실시간프로그램매매',
+        'tr_id': 'H0UPPGM0',
+        'url': '/tryitout/H0UPPGM0',
+        'body': [
+            {
+                'description': 'H0UPPGM0',
+                'key': 'tr_id',
+                'length': 7,
+                'name': '거래ID',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '업종구분코드',
+                'key': 'tr_key',
+                'length': 6,
+                'name': '종목코드',
+                'required': True,
+                'type': 'string'
+            }
+        ],
+        'header': [
+            {
+                'description': '실시간 (웹소켓) 접속키 발급 API(/oauth2/Approval)를 사용하여 발급받은 웹소켓 접속키',
+                'key': 'approval_key',
+                'length': 36,
+                'name': '웹소켓 접속키',
+                'required': True,
+                'type': 'string'
+            },
+            {
+                'description': '"1: 등록, 2:해제"',
+                'key': 'tr_type',
+                'length': 1,
+                'name': '등록/해제',
+                'required': True,
+                'type': 'string'
+            }
+        ]
+    }
+}
