@@ -4,6 +4,26 @@
 
 - 프로젝트에 사용한 프롬프트를 모아둔다.
 
+## kis resp의 수정
+
+- tools/kis_request_definition.py을 수정한다.
+- 주어진 xls에서 1번째 sheet에서 작업할 대상 tr_cd 목록을 구한다.
+- 두번째 sheet부터 `Response Body` 를 읽어서 json 데이터를 만든다.
+- json data
+  ```json
+     'FHPST02440000': {
+        'rt_cd' : { }
+        'output1': {
+            'fields': [{'description': '', 'key': 'stck_prpr', 'length': 8, 'name': '주식 현재가', 'required': True, 'type': 'string'}, {'description': '', 'key': 'prdy_vrss', 'length': 8, 'name': '전일 대비', 'required': True, 'type': 'string'}, {'description': '', 'key': 'prdy_vrss_sign', 'length': 2, 'name': '전일 대비 부호', 'required': True, 'type': 'string'}, {'description': '', 'key': 'prdy_ctrt', 'length': 4, 'name': '전일 대비율', 'required': True, 'type': 'string'}, {'description': '', 'key': 'acml_vol', 'length': 12, 'name': '누적 거래량', 'required': True, 'type': 'string'}, {'description': '', 'key': 'acml_tr_pbmn', 'length': 60, 'name': '누적 거래 대금', 'required': True, 'type': 'string'}, {'description': '', 'key': 'stck_prdy_clpr', 'length': 10, 'name': '주식 전일 종가', 'required': True, 'type': 'string'}, {'description': '', 'key': 'stck_oprc', 'length': 10, 'name': '주식 시가2', 'required': True, 'type': 'string'}, {'description': '', 'key': 'stck_hgpr', 'length': 10, 'name': '주식 최고가', 'required': True, 'type': 'string'}, {'description': '', 'key': 'stck_lwpr', 'length': 10, 'name': '주식 최저가', 'required': True, 'type': 'string'}, {'description': '', 'key': 'stck_mxpr', 'length': 10, 'name': '주식 상한가', 'required': True, 'type': 'string'}, {'description': '', 'key': 'stck_llam', 'length': 10, 'name': '주식 하한가', 'required': True, 'type': 'string'}],
+            'type': 'object'
+        },
+        'output2': {
+            'fields': [{'description': '', 'key': 'nav', 'length': 11, 'name': 'NAV', 'required': True, 'type': 'string'}, {'description': '', 'key': 'nav_prdy_vrss_sign', 'length': 1, 'name': 'NAV 전일 대비 부호', 'required': True, 'type': 'string'}, {'description': '', 'key': 'nav_prdy_vrss', 'length': 11, 'name': 'NAV 전일 대비', 'required': True, 'type': 'string'}, {'description': '', 'key': 'nav_prdy_ctrt', 'length': 8, 'name': 'NAV 전일 대비율', 'required': True, 'type': 'string'}, {'description': '', 'key': 'prdy_clpr_nav', 'length': 11, 'name': 'NAV전일종가', 'required': True, 'type': 'string'}, {'description': '', 'key': 'oprc_nav', 'length': 11, 'name': 'NAV시가', 'required': True, 'type': 'string'}, {'description': '', 'key': 'hprc_nav', 'length': 11, 'name': 'NAV고가', 'required': True, 'type': 'string'}, {'description': '', 'key': 'lprc_nav', 'length': 11, 'name': 'NAV저가', 'required': True, 'type': 'string'}],
+            'type': 'object'
+        }
+    },
+  ```
+
 ## kis req/response defintion
 
 - kis 에서 받은 excel파일들을 소스로해서 @kis_request_definition.py와 @kis_response_definition.py를 만들때 사용

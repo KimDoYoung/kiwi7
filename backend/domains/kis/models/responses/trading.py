@@ -1,5 +1,4 @@
 # Auto-generated
-from typing import Any, Dict, List
 
 TRADING_RESPONSES = {
     'CTCA0903R': {
@@ -9,7 +8,7 @@ TRADING_RESPONSES = {
     },
     'CTPF1002R': {
         'output': {
-            'fields': [{'description': "''},", 'key': 'pdno', 'length': 12, 'name': '상품번호', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'prdt_type_cd', 'length': 3, 'name': '상품유형코드', 'required': True, 'type': 'string'}, {'description': '', 'key': 'mket_id_cd', 'length': 3, 'name': '시장ID코드', 'required': True, 'type': 'string'}, {'description': '', 'key': 'scty_grp_id_cd', 'length': 2, 'name': '증권그룹ID코드', 'required': True, 'type': 'string'}, {'description': '', 'key': 'excg_dvsn_cd', 'length': 2, 'name': '거래소구분코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'setl_mmdd', 'length': 4, 'name': '결산월일', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'lstg_stqt', 'length': 19, 'name': '상장주수', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'lstg_cptl_amt', 'length': 19, 'name': '상장자본금액', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'cpta', 'length': 19, 'name': '자본금', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'papr', 'length': 19, 'name': '액면가', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'issu_pric', 'length': 19, 'name': '발행가격', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'kospi200_item_yn', 'length': 1, 'name': '코스피200종목여부', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'scts_mket_lstg_dt', 'length': 8, 'name': '유가증권시장상장일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'scts_mket_lstg_abol_dt', 'length': 8, 'name': '유가증권시장상장폐지일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'kosdaq_mket_lstg_dt', 'length': 8, 'name': '코스닥시장상장일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'kosdaq_mket_lstg_abol_dt', 'length': 8, 'name': '코스닥시장상장폐지일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'frbd_mket_lstg_dt', 'length': 8, 'name': '프리보드시장상장일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'frbd_mket_lstg_abol_dt', 'length': 8, 'name': '프리보드시장상장폐지일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'reits_kind_cd', 'length': 1, 'name': '리츠종류코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'etf_dvsn_cd', 'length': 2, 'name': 'ETF구분코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'oilf_fund_yn', 'length': 1, 'name': '유전펀드여부', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'idx_bztp_lcls_cd', 'length': 3, 'name': '지수업종대분류코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'idx_bztp_mcls_cd', 'length': 3, 'name': '지수업종중분류코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'idx_bztp_scls_cd', 'length': 3, 'name': '지수업종소분류코드', 'required': True, 'type': 'string'}, {'description': '', 'key': 'stck_kind_cd', 'length': 3, 'name': '주식종류코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'mfnd_opng_dt', 'length': 8, 'name': '뮤추얼펀드개시일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'mfnd_end_dt', 'length': 8, 'name': '뮤추얼펀드종료일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'dpsi_erlm_cncl_dt', 'length': 8, 'name': '예탁등록취소일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'etf_cu_qty', 'length': 10, 'name': 'ETFCU수량', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'prdt_name', 'length': 60, 'name': '상품명', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'prdt_name120', 'length': 120, 'name': '상품명120', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'prdt_abrv_name', 'length': 60, 'name': '상품약어명', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'std_pdno', 'length': 12, 'name': '표준상품번호', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'prdt_eng_name', 'length': 60, 'name': '상품영문명', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'prdt_eng_name120', 'length': 120, 'name': '상품영문명120', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'prdt_eng_abrv_name', 'length': 60, 'name': '상품영문약어명', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'dpsi_aptm_erlm_yn', 'length': 1, 'name': '예탁지정등록여부', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'etf_txtn_type_cd', 'length': 2, 'name': 'ETF과세유형코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'etf_type_cd', 'length': 2, 'name': 'ETF유형코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'lstg_abol_dt', 'length': 8, 'name': '상장폐지일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'nwst_odst_dvsn_cd', 'length': 2, 'name': '신주구주구분코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'sbst_pric', 'length': 19, 'name': '대용가격', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'thco_sbst_pric', 'length': 19, 'name': '당사대용가격', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'thco_sbst_pric_chng_dt', 'length': 8, 'name': '당사대용가격변경일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'tr_stop_yn', 'length': 1, 'name': '거래정지여부', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'admn_item_yn', 'length': 1, 'name': '관리종목여부', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'thdt_clpr', 'length': 19, 'name': '당일종가', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'bfdy_clpr', 'length': 19, 'name': '전일종가', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'clpr_chng_dt', 'length': 8, 'name': '종가변경일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'std_idst_clsf_cd', 'length': 6, 'name': '표준산업분류코드', 'required': True, 'type': 'string'}, {'description': '', 'key': 'std_idst_clsf_cd_name', 'length': 130, 'name': '표준산업분류코드명', 'required': True, 'type': 'string'}, {'description': '', 'key': 'idx_bztp_lcls_cd_name', 'length': 60, 'name': '지수업종대분류코드명', 'required': True, 'type': 'string'}, {'description': '', 'key': 'idx_bztp_mcls_cd_name', 'length': 60, 'name': '지수업종중분류코드명', 'required': True, 'type': 'string'}, {'description': "'표준산업소분류코드 참조'},", 'key': 'idx_bztp_scls_cd_name', 'length': 60, 'name': '지수업종소분류코드명', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'ocr_no', 'length': 4, 'name': 'OCR번호', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'crfd_item_yn', 'length': 1, 'name': '크라우드펀딩종목여부', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'elec_scty_yn', 'length': 1, 'name': '전자증권여부', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'issu_istt_cd', 'length': 5, 'name': '발행기관코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'etf_chas_erng_rt_dbnb', 'length': 19, 'name': 'ETF추적수익율배수', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'etf_etn_ivst_heed_item_yn', 'length': 1, 'name': 'ETFETN투자유의종목여부', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'stln_int_rt_dvsn_cd', 'length': 2, 'name': '대주이자율구분코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'frnr_psnl_lmt_rt', 'length': 24, 'name': '외국인개인한도비율', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'lstg_rqsr_issu_istt_cd', 'length': 5, 'name': '상장신청인발행기관코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'lstg_rqsr_item_cd', 'length': 12, 'name': '상장신청인종목코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'trst_istt_issu_istt_cd', 'length': 5, 'name': '신탁기관발행기관코드', 'required': True, 'type': 'string'}, {'description': "'NXT 거래가능한 종목은 Y, 그 외 종목은 N'},", 'key': 'cptt_trad_tr_psbl_yn', 'length': 1, 'name': 'NXT 거래종목여부', 'required': True, 'type': 'string'}, {'description': "'NXT 거래종목 중 거래정지가 된 종목은 Y, 그 외 모든 종목은 N'}", 'key': 'nxt_tr_stop_yn', 'length': 1, 'name': 'NXT 거래정지여부', 'required': True, 'type': 'string'}]
+            'fields': [ {'description': "''},", 'key': 'pdno', 'length': 12, 'name': '상품번호', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'prdt_type_cd', 'length': 3, 'name': '상품유형코드', 'required': True, 'type': 'string'}, {'description': '', 'key': 'mket_id_cd', 'length': 3, 'name': '시장ID코드', 'required': True, 'type': 'string'}, {'description': '', 'key': 'scty_grp_id_cd', 'length': 2, 'name': '증권그룹ID코드', 'required': True, 'type': 'string'}, {'description': '', 'key': 'excg_dvsn_cd', 'length': 2, 'name': '거래소구분코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'setl_mmdd', 'length': 4, 'name': '결산월일', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'lstg_stqt', 'length': 19, 'name': '상장주수', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'lstg_cptl_amt', 'length': 19, 'name': '상장자본금액', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'cpta', 'length': 19, 'name': '자본금', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'papr', 'length': 19, 'name': '액면가', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'issu_pric', 'length': 19, 'name': '발행가격', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'kospi200_item_yn', 'length': 1, 'name': '코스피200종목여부', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'scts_mket_lstg_dt', 'length': 8, 'name': '유가증권시장상장일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'scts_mket_lstg_abol_dt', 'length': 8, 'name': '유가증권시장상장폐지일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'kosdaq_mket_lstg_dt', 'length': 8, 'name': '코스닥시장상장일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'kosdaq_mket_lstg_abol_dt', 'length': 8, 'name': '코스닥시장상장폐지일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'frbd_mket_lstg_dt', 'length': 8, 'name': '프리보드시장상장일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'frbd_mket_lstg_abol_dt', 'length': 8, 'name': '프리보드시장상장폐지일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'reits_kind_cd', 'length': 1, 'name': '리츠종류코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'etf_dvsn_cd', 'length': 2, 'name': 'ETF구분코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'oilf_fund_yn', 'length': 1, 'name': '유전펀드여부', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'idx_bztp_lcls_cd', 'length': 3, 'name': '지수업종대분류코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'idx_bztp_mcls_cd', 'length': 3, 'name': '지수업종중분류코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'idx_bztp_scls_cd', 'length': 3, 'name': '지수업종소분류코드', 'required': True, 'type': 'string'}, {'description': '', 'key': 'stck_kind_cd', 'length': 3, 'name': '주식종류코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'mfnd_opng_dt', 'length': 8, 'name': '뮤추얼펀드개시일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'mfnd_end_dt', 'length': 8, 'name': '뮤추얼펀드종료일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'dpsi_erlm_cncl_dt', 'length': 8, 'name': '예탁등록취소일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'etf_cu_qty', 'length': 10, 'name': 'ETFCU수량', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'prdt_name', 'length': 60, 'name': '상품명', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'prdt_name120', 'length': 120, 'name': '상품명120', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'prdt_abrv_name', 'length': 60, 'name': '상품약어명', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'std_pdno', 'length': 12, 'name': '표준상품번호', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'prdt_eng_name', 'length': 60, 'name': '상품영문명', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'prdt_eng_name120', 'length': 120, 'name': '상품영문명120', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'prdt_eng_abrv_name', 'length': 60, 'name': '상품영문약어명', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'dpsi_aptm_erlm_yn', 'length': 1, 'name': '예탁지정등록여부', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'etf_txtn_type_cd', 'length': 2, 'name': 'ETF과세유형코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'etf_type_cd', 'length': 2, 'name': 'ETF유형코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'lstg_abol_dt', 'length': 8, 'name': '상장폐지일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'nwst_odst_dvsn_cd', 'length': 2, 'name': '신주구주구분코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'sbst_pric', 'length': 19, 'name': '대용가격', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'thco_sbst_pric', 'length': 19, 'name': '당사대용가격', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'thco_sbst_pric_chng_dt', 'length': 8, 'name': '당사대용가격변경일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'tr_stop_yn', 'length': 1, 'name': '거래정지여부', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'admn_item_yn', 'length': 1, 'name': '관리종목여부', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'thdt_clpr', 'length': 19, 'name': '당일종가', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'bfdy_clpr', 'length': 19, 'name': '전일종가', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'clpr_chng_dt', 'length': 8, 'name': '종가변경일자', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'std_idst_clsf_cd', 'length': 6, 'name': '표준산업분류코드', 'required': True, 'type': 'string'}, {'description': '', 'key': 'std_idst_clsf_cd_name', 'length': 130, 'name': '표준산업분류코드명', 'required': True, 'type': 'string'}, {'description': '', 'key': 'idx_bztp_lcls_cd_name', 'length': 60, 'name': '지수업종대분류코드명', 'required': True, 'type': 'string'}, {'description': '', 'key': 'idx_bztp_mcls_cd_name', 'length': 60, 'name': '지수업종중분류코드명', 'required': True, 'type': 'string'}, {'description': "'표준산업소분류코드 참조'},", 'key': 'idx_bztp_scls_cd_name', 'length': 60, 'name': '지수업종소분류코드명', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'ocr_no', 'length': 4, 'name': 'OCR번호', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'crfd_item_yn', 'length': 1, 'name': '크라우드펀딩종목여부', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'elec_scty_yn', 'length': 1, 'name': '전자증권여부', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'issu_istt_cd', 'length': 5, 'name': '발행기관코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'etf_chas_erng_rt_dbnb', 'length': 19, 'name': 'ETF추적수익율배수', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'etf_etn_ivst_heed_item_yn', 'length': 1, 'name': 'ETFETN투자유의종목여부', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'stln_int_rt_dvsn_cd', 'length': 2, 'name': '대주이자율구분코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'frnr_psnl_lmt_rt', 'length': 24, 'name': '외국인개인한도비율', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'lstg_rqsr_issu_istt_cd', 'length': 5, 'name': '상장신청인발행기관코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'lstg_rqsr_item_cd', 'length': 12, 'name': '상장신청인종목코드', 'required': True, 'type': 'string'}, {'description': "''},", 'key': 'trst_istt_issu_istt_cd', 'length': 5, 'name': '신탁기관발행기관코드', 'required': True, 'type': 'string'}, {'description': "'NXT 거래가능한 종목은 Y, 그 외 종목은 N'},", 'key': 'cptt_trad_tr_psbl_yn', 'length': 1, 'name': 'NXT 거래종목여부', 'required': True, 'type': 'string'}, {'description': "'NXT 거래종목 중 거래정지가 된 종목은 Y, 그 외 모든 종목은 N'}", 'key': 'nxt_tr_stop_yn', 'length': 1, 'name': 'NXT 거래정지여부', 'required': True, 'type': 'string'}]
         }
     },
     'CTPF1604R': {
@@ -82,9 +81,142 @@ TRADING_RESPONSES = {
             'fields': []
         }
     },
-    'TTTC8434R': {
-        'output': {
-            'fields': []
+    "TTTC8434R": {
+        "output": {
+            "fields": [
+                {
+                    "key": "pdno",
+                    "name": "종목코드",
+                    "type": "string",
+                    "length": 12,
+                    "required": True,
+                    "description": "상품번호"
+                },
+                {
+                    "key": "prdt_name",
+                    "name": "종목명",
+                    "type": "string",
+                    "length": 60,
+                    "required": True,
+                    "description": "상품명"
+                },
+                {
+                    "key": "trad_dvsn_name",
+                    "name": "거래구분명",
+                    "type": "string",
+                    "length": 20,
+                    "required": True,
+                    "description": "거래구분명"
+                },
+                {
+                    "key": "hldg_qty",
+                    "name": "보유수량",
+                    "type": "number",
+                    "length": 10,
+                    "required": True,
+                    "description": "보유수량"
+                },
+                {
+                    "key": "pchs_avg_pric",
+                    "name": "매입평균가격",
+                    "type": "number",
+                    "length": 19,
+                    "required": True,
+                    "description": "매입평균가격"
+                },
+                {
+                    "key": "prpr",
+                    "name": "현재가",
+                    "type": "number",
+                    "length": 19,
+                    "required": True,
+                    "description": "현재가"
+                },
+                {
+                    "key": "evlu_amt",
+                    "name": "평가금액",
+                    "type": "number",
+                    "length": 19,
+                    "required": True,
+                    "description": "평가금액"
+                },
+                {
+                    "key": "evlu_pfls_amt",
+                    "name": "평가손익금액",
+                    "type": "number",
+                    "length": 19,
+                    "required": True,
+                    "description": "평가손익금액"
+                },
+                {
+                    "key": "evlu_pfls_rt",
+                    "name": "평가손익율",
+                    "type": "number",
+                    "length": 10,
+                    "required": True,
+                    "description": "평가손익율(%)"
+                },
+                {
+                    "key": "ord_psbl_qty",
+                    "name": "주문가능수량",
+                    "type": "number",
+                    "length": 10,
+                    "required": True,
+                    "description": "주문가능수량"
+                },
+                {
+                    "key": "loan_amt",
+                    "name": "대출금액",
+                    "type": "number",
+                    "length": 19,
+                    "required": True,
+                    "description": "대출금액"
+                },
+                {
+                    "key": "loan_dt",
+                    "name": "대출일자",
+                    "type": "string",
+                    "length": 8,
+                    "required": True,
+                    "description": "대출일자(YYYYMMDD)"
+                }
+            ]
+        },
+        "output2": {
+            "fields": [
+                {
+                    "key": "dnca_tota",
+                    "name": "예수금총금액",
+                    "type": "number",
+                    "length": 19,
+                    "required": True,
+                    "description": "예수금총금액"
+                },
+                {
+                    "key": "tot_evlu_amt",
+                    "name": "총평가금액",
+                    "type": "number",
+                    "length": 19,
+                    "required": True,
+                    "description": "총평가금액"
+                },
+                {
+                    "key": "tot_pfls_amt",
+                    "name": "평가손익합계",
+                    "type": "number",
+                    "length": 19,
+                    "required": True,
+                    "description": "평가손익합계"
+                },
+                {
+                    "key": "nass_amt",
+                    "name": "순자산금액",
+                    "type": "number",
+                    "length": 19,
+                    "required": True,
+                    "description": "순자산금액"
+                }
+            ]
         }
     },
     'TTTC8494R': {

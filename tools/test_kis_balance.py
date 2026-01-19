@@ -86,7 +86,7 @@ async def test_balance():
         response = await api.send_request(request)
         
         print("\n✅ API 호출 성공!")
-        
+
         # KisResponse 객체를 dict로 변환
         if hasattr(response, 'model_dump'):
             response_dict = response.model_dump()
@@ -94,43 +94,12 @@ async def test_balance():
             response_dict = response.dict()
         else:
             response_dict = response
-        
-        # data 부분만 한글로 변환
-        print("\n=== 응답 결과 (한글) ===")
-        if response_dict.get('data'):
-            korean_data = KisApiHelper.to_korea_data(response_dict['data'], 'TTTC8434R')
-            response_dict['data'] = korean_data
-        
-        pprint(response_dict)
-        
-        # 잔고 정보 출력
-        data = response_dict.get('data', {})
-        if 'output1' in data:
-            print("\n=== 보유 종목 ===")
-            output1 = data['output1']
-            if isinstance(output1, list) and len(output1) > 0:
-                for idx, stock in enumerate(output1, 1):
-                    print(f"\n{idx}. {stock.get('종목명', 'N/A')}")
-                    print(f"   종목코드: {stock.get('종목코드', 'N/A')}")
-                    print(f"   보유수량: {stock.get('보유수량', '0')}")
-                    print(f"   매입평균가격: {stock.get('매입평균가격', '0')}")
-                    print(f"   현재가: {stock.get('현재가', '0')}")
-                    print(f"   평가손익금액: {stock.get('평가손익금액', '0')}")
-                    print(f"   평가손익율: {stock.get('평가손익율', '0')}%")
-            else:
-                print("보유 종목이 없습니다.")
-        
-        if 'output2' in data:
-            print("\n=== 계좌 요약 ===")
-            output2 = data['output2']
-            if isinstance(output2, list) and len(output2) > 0:
-                summary = output2[0]
-                print(f"예수금총금액: {summary.get('예수금총금액', '0')}원")
-                print(f"총평가금액: {summary.get('총평가금액', '0')}원")
-                print(f"평가손익합계: {summary.get('평가손익합계', '0')}원")
-                print(f"순자산금액: {summary.get('순자산금액', '0')}원")
-            else:
-                print("계좌 요약 정보가 없습니다.")
+
+        # 한글로 변환
+        response_dict_korean = KisApiHelper.to_korea_data(response_dict, 'TTTC8434R')
+
+        print("\n=== 응답 결과 (한글 변환) ===")
+        pprint(response_dict_korean)
             
     except Exception as e:
         print(f"\n❌ API 호출 실패: {e}")
