@@ -33,7 +33,7 @@
             "justMyCode": true,
             "console": "integratedTerminal"
         },
-{
+        {
             "name": "kiwi7-fedora",
             "type": "debugpy",
             "request": "launch",
