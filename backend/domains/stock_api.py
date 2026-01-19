@@ -34,8 +34,12 @@ class StockApi(ABC):
         """API 요청 전송 - 각 증권사별 구현 필요"""
         pass
 
+    def get_base_url(self) -> str:
+        """증권사 API 베이스 URL"""
+        raise NotImplementedError("Subclass must implement get_base_url method")
+
     @property
     def base_url(self) -> str:
-        """증권사 API 베이스 URL"""
-        raise NotImplementedError("Subclass must implement base_url property")
+        """증권사 API 베이스 URL (property 래퍼)"""
+        return self.get_base_url()
 

@@ -29,9 +29,12 @@ class LsRestApi(StockApi):
         )
         self.token_manager = token_manager
 
+    def get_base_url(self) -> str:
+        return config.LS_BASE_URL
+
     @property
     def base_url(self) -> str:
-        return config.LS_BASE_URL
+        return self.get_base_url()
 
     def get_headers(self, request: LsRequest, token: str, tr_cd: str) -> Dict[str, str]:
         """HTTP 헤더 생성"""

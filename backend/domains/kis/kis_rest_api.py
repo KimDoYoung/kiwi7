@@ -31,9 +31,12 @@ class KisRestApi(StockApi):
         self.token_manager = token_manager
         self.acct_prdt_cd = config.KIS_ACCT_PRDT_CD
 
+    def get_base_url(self) -> str:
+        return config.KIS_BASE_URL
+
     @property
     def base_url(self) -> str:
-        return config.KIS_BASE_URL
+        return self.get_base_url()
 
     def get_headers(self, request: KisRequest, token: str, tr_id: str, hashkey: str = None) -> Dict[str, str]:
         """HTTP 헤더 생성"""
