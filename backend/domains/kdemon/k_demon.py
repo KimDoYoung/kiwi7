@@ -6,6 +6,7 @@ from typing import List, Optional
 
 from backend.core.logger import get_logger
 from backend.domains.kiwoom.kiwoom_rest_api import KiwoomRestApi
+from backend.domains.kiwoom.managers.kiwoom_token_manager import KiwoomTokenManager
 
 logger = get_logger(__name__)
 
@@ -42,7 +43,8 @@ class KDemon:
         self._rules: List[Rule] = []
         self._conn = sqlite3.connect(self.db_path, check_same_thread=False)
         self._conn.row_factory = sqlite3.Row
-        self._api = KiwoomRestApi()
+        self.token_manager = KiwoomTokenManager()
+        self._api = KiwoomRestApi(self.token_manager)
 
     # ---------- singleton ----------
     @classmethod
