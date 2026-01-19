@@ -11,27 +11,6 @@ from .market_foreign_institutional import MARKET_FOREIGN_INSTITUTIONAL_REQUESTS
 from .market_chart import MARKET_CHART_REQUESTS
 from .market_other import MARKET_OTHER_REQUESTS
 
-# 기존 분할 파일들도 포함
-try:
-    from .market_elw import MARKET_ELW_REQUESTS
-except ImportError:
-    MARKET_ELW_REQUESTS = {}
-
-try:
-    from .market_etf import MARKET_ETF_REQUESTS
-except ImportError:
-    MARKET_ETF_REQUESTS = {}
-
-try:
-    from .market_future import MARKET_FUTURE_REQUESTS
-except ImportError:
-    MARKET_FUTURE_REQUESTS = {}
-
-try:
-    from .market_overseas import MARKET_OVERSEAS_REQUESTS
-except ImportError:
-    MARKET_OVERSEAS_REQUESTS = {}
-
 # 전체 통합 딕셔너리
 ALL_MARKET_REQUESTS = {
     **MARKET_ACCOUNT_REQUESTS,
@@ -43,10 +22,6 @@ ALL_MARKET_REQUESTS = {
     **MARKET_FOREIGN_INSTITUTIONAL_REQUESTS,
     **MARKET_CHART_REQUESTS,
     **MARKET_OTHER_REQUESTS,
-    **MARKET_ELW_REQUESTS,
-    **MARKET_ETF_REQUESTS,
-    **MARKET_FUTURE_REQUESTS,
-    **MARKET_OVERSEAS_REQUESTS,
 }
 
 __all__ = [
@@ -59,9 +34,5 @@ __all__ = [
     'MARKET_FOREIGN_INSTITUTIONAL_REQUESTS',
     'MARKET_CHART_REQUESTS',
     'MARKET_OTHER_REQUESTS',
-    'MARKET_ELW_REQUESTS',
-    'MARKET_ETF_REQUESTS',
-    'MARKET_FUTURE_REQUESTS',
-    'MARKET_OVERSEAS_REQUESTS',
     'ALL_MARKET_REQUESTS',
 ]
