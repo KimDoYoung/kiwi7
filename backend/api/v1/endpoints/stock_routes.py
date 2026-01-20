@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 from backend.core.exceptions import KiwoomApiException
 from backend.core.logger import get_logger
-from backend.domains.kiwoom.kiwoom_service import get_kiwoom_api
-from backend.domains.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomRequest, KiwoomResponse
+from backend.domains.stkcompanys.kiwoom.kiwoom_service import get_kiwoom_api
+from backend.domains.stkcompanys.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomRequest, KiwoomResponse
 from backend.domains.services import get_service
 from backend.utils.kiwi_utils import merge_dicts
 from backend.utils.naver_utils import get_summary_from_naver

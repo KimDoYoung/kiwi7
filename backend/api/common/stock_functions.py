@@ -1,8 +1,8 @@
 
 import json
 from backend.api.common.validators import validate_market_type
-from backend.domains.kiwoom.kiwoom_service import get_kiwoom_api
-from backend.domains.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomRequest
+from backend.domains.stkcompanys.kiwoom.kiwoom_service import get_kiwoom_api
+from backend.domains.stkcompanys.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomRequest
 from backend.domains.services.dependency import get_service
 from backend.domains.services.settings_keys import SettingsKey
 from backend.domains.models.stk_info_model import StkInfoBulkCreate, StkInfoCreate

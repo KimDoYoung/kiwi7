@@ -12,8 +12,8 @@
 작성일: 2025-07-23
 버전: 1.0
 """
-from backend.domains.kiwoom.kiwoom_rest_api import KiwoomRestApi
-from backend.domains.kiwoom.managers.kiwoom_token_manager import KiwoomTokenManager  
+from backend.domains.stkcompanys.kiwoom.kiwoom_rest_api import KiwoomRestApi
+from backend.domains.stkcompanys.kiwoom.managers.kiwoom_token_manager import KiwoomTokenManager  
 
 kiwoom_api_instance: KiwoomRestApi | None = None
 token_manager_instance: KiwoomTokenManager | None = None

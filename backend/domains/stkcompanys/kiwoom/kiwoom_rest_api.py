@@ -12,9 +12,9 @@
 from datetime import datetime
 import json
 import aiohttp
-from backend.domains.kiwoom.managers.kiwoom_token_manager import KiwoomTokenManager
-from backend.domains.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomRequest
-from backend.domains.kiwoom.models.kiwoom_schema import KiwoomResponse
+from backend.domains.stkcompanys.kiwoom.managers.kiwoom_token_manager import KiwoomTokenManager
+from backend.domains.stkcompanys.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomRequest
+from backend.domains.stkcompanys.kiwoom.models.kiwoom_schema import KiwoomResponse
 from backend.domains.stock_api import StockApi
 from backend.core.config import config
 

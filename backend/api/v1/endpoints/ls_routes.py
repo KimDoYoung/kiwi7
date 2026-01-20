@@ -5,8 +5,8 @@ from fastapi import APIRouter
 
 from backend.core.exceptions import LsApiException
 from backend.core.logger import get_logger
-from backend.domains.ls.ls_service import get_ls_api, get_ls_token_manager
-from backend.domains.ls.models.ls_schema import LsApiHelper, LsRequest, LsResponse
+from backend.domains.stkcompanys.ls.ls_service import get_ls_api, get_ls_token_manager
+from backend.domains.stkcompanys.ls.models.ls_schema import LsApiHelper, LsRequest, LsResponse
 
 router = APIRouter()
 logger = get_logger(__name__)

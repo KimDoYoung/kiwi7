@@ -6,7 +6,7 @@ import json
 from typing import Callable, Dict
 import websockets
 
-from backend.domains.ls.managers.ls_token_manager import LsTokenManager
+from backend.domains.stkcompanys.ls.managers.ls_token_manager import LsTokenManager
 from backend.core.config import config
 from backend.core.exceptions import LsApiException
 from backend.core.logger import get_logger

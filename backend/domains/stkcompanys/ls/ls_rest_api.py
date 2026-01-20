@@ -10,9 +10,9 @@ import aiohttp
 from backend.core.config import config
 from backend.core.exceptions import LsApiException
 from backend.core.logger import get_logger
-from backend.domains.ls.managers.ls_token_manager import LsTokenManager
-from backend.domains.ls.models.ls_request_definition import get_request_definition, get_tr_cd
-from backend.domains.ls.models.ls_schema import LsApiHelper, LsRequest, LsResponse
+from backend.domains.stkcompanys.ls.managers.ls_token_manager import LsTokenManager
+from backend.domains.stkcompanys.ls.models.ls_request_definition import get_request_definition, get_tr_cd
+from backend.domains.stkcompanys.ls.models.ls_schema import LsApiHelper, LsRequest, LsResponse
 from backend.domains.stock_api import BrokerType, StockApi
 
 logger = get_logger(__name__)

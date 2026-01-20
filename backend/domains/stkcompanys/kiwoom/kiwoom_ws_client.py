@@ -2,7 +2,7 @@ import websockets
 import json
 from typing import Callable
 
-from backend.domains.kiwoom.managers.kiwoom_token_manager import KiwoomTokenManager
+from backend.domains.stkcompanys.kiwoom.managers.kiwoom_token_manager import KiwoomTokenManager
 
 from backend.core.logger import get_logger
 logger = get_logger(__name__)

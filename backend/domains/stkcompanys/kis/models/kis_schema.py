@@ -1,5 +1,5 @@
 """
-LS증권 스키마 정의
+KIS(한국투자증권) 스키마 정의
 API 요청/응답 모델 및 유틸리티 클래스를 정의합니다.
 """
 
@@ -7,16 +7,16 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from backend.domains.base.base_schema import BaseRequest, BaseResponse, ContYn
-from backend.domains.ls.models.ls_request_definition import (
-  LS_REQUEST_DEF,
+from backend.domains.stkcompanys.kis.models.kis_request_definition import (
+  KIS_REQUEST_DEF,
   get_request_definition,
   get_required_fields,
 )
-from backend.domains.ls.models.ls_response_definition import LS_RESPONSE_DEF
+from backend.domains.stkcompanys.kis.models.kis_response_definition import KIS_RESPONSE_DEF
 
 
-class LsRequest(BaseRequest):
-  """LS API 요청 모델"""
+class KisRequest(BaseRequest):
+  """KIS API 요청 모델"""
 
   def validate_payload(self) -> List[str]:
     """payload의 유효성을 검증"""
@@ -35,17 +35,21 @@ class LsRequest(BaseRequest):
       if field not in self.payload:
         errors.append(f'필수 필드 누락: {field}')
 
+    # 연속조회 검증
+    if self.cont_yn == ContYn.Y and not self.next_key:
+      errors.append('연속조회 시 next_key가 필요합니다')
+
     return errors
 
 
-class LsResponse(BaseResponse):
-  """LS API 응답 모델"""
+class KisResponse(BaseResponse):
+  """KIS API 응답 모델"""
 
   pass
 
 
-class LsApiHelper:
-  """LS API 유틸리티 클래스"""
+class KisApiHelper:
+  """KIS API 유틸리티 클래스"""
 
   @staticmethod
   def get_request_info(api_id: str) -> Optional[Dict[str, str]]:
@@ -58,17 +62,18 @@ class LsApiHelper:
       'api_id': api_id,
       'url': api_def.get('url', ''),
       'title': api_def.get('title', ''),
-      'method': api_def.get('method', 'POST'),
-      'tr_cd': api_def.get('tr_cd', api_id),
+      'method': api_def.get('method', 'GET'),
+      'tr_id': api_def.get('tr_id', api_id),
+      'hashkey_required': str(api_def.get('hashkey_required', False)),
     }
 
   @staticmethod
-  def validate_api_request(request: LsRequest) -> bool:
+  def validate_api_request(request: KisRequest) -> bool:
     """API 요청 유효성 검증"""
     if request.api_id.startswith('kiwi7_'):
       return True
 
-    if request.api_id not in LS_REQUEST_DEF:
+    if request.api_id not in KIS_REQUEST_DEF:
       return False
 
     validation_errors = request.validate_payload()
@@ -83,27 +88,18 @@ class LsApiHelper:
     headers: Dict[str, str] = None,
     api_info: Dict[str, str] = None,
     request_time: datetime = None,
-  ) -> LsResponse:
+  ) -> KisResponse:
     """성공 응답 생성"""
     cont_yn = ContYn.N
     next_key = None
 
-    # LS 연속조회 처리
-    if data:
-      # t1102OutBlock 등의 형태에서 연속조회 키 추출
-      if data.get('tr_cont') == 'Y':
+    if headers:
+      # KIS 연속조회 헤더 처리
+      if headers.get('tr_cont') == 'M' or headers.get('tr_cont') == 'F':
         cont_yn = ContYn.Y
-      for key in data:
-        if key.endswith('OutBlock') and isinstance(data[key], dict):
-          cts = (
-            data[key].get('cts_expcode') or data[key].get('cts_ordno') or data[key].get('cts_time')
-          )
-          if cts:
-            next_key = cts
-            cont_yn = ContYn.Y
-            break
+      next_key = headers.get('ctx_area_fk100') or headers.get('ctx_area_nk100')
 
-    return LsResponse(
+    return KisResponse(
       data=data,
       headers=headers,
       api_info=api_info,
@@ -121,9 +117,9 @@ class LsApiHelper:
     error_message: str,
     api_info: Dict[str, str] = None,
     request_time: datetime = None,
-  ) -> LsResponse:
+  ) -> KisResponse:
     """에러 응답 생성"""
-    return LsResponse(
+    return KisResponse(
       data=None,
       api_info=api_info,
       status_code=int(error_code) if error_code.isdigit() else 500,
@@ -137,20 +133,24 @@ class LsApiHelper:
   @staticmethod
   def to_korea_data(response_data: Dict[str, Any], api_id: str) -> Dict[str, Any]:
     """영문 필드명을 한글로 변환"""
-    response_def = LS_RESPONSE_DEF.get(api_id, {})
+    response_def = KIS_RESPONSE_DEF.get(api_id, {})
     if not response_def:
       return response_data
 
-    # 모든 block의 fields를 통합하여 key_to_name_map 생성
+    # 모든 output의 fields를 통합하여 key_to_name_map 생성
     key_to_name_map = {}
 
-    # response_def에서 blocks 구조 파싱
-    blocks = response_def.get('blocks', {})
-    for block_name, block_value in blocks.items():
-      if isinstance(block_value, dict) and 'fields' in block_value:
-        for field in block_value['fields']:
-          if 'key' in field and 'name' in field:
-            key_to_name_map[field['key']] = field['name']
+    # response_def의 각 키를 순회하며 fields 수집
+    for key, value in response_def.items():
+      if isinstance(value, dict):
+        # 일반 필드 (rt_cd, msg_cd, msg1 등)
+        if 'name' in value:
+          key_to_name_map[key] = value['name']
+        # output, output1, output2 등
+        elif 'fields' in value and isinstance(value['fields'], list):
+          for field in value['fields']:
+            if 'key' in field and 'name' in field:
+              key_to_name_map[field['key']] = field['name']
 
     if not key_to_name_map:
       return response_data
@@ -177,6 +177,28 @@ class LsApiHelper:
     return response_data
 
   @staticmethod
-  def has_more_data(response: LsResponse) -> bool:
+  def has_more_data(response: KisResponse) -> bool:
     """연속조회 가능 여부 확인"""
     return response.cont_yn == ContYn.Y and bool(response.next_key)
+
+  @staticmethod
+  def create_continuation_request(
+    original_request: KisRequest, response: KisResponse
+  ) -> Optional[KisRequest]:
+    """연속조회 요청 생성"""
+    if not KisApiHelper.has_more_data(response):
+      return None
+
+    continuation_payload = original_request.payload.copy()
+
+    # KIS 연속조회 키 설정
+    if response.headers:
+      continuation_payload['CTX_AREA_FK100'] = response.headers.get('ctx_area_fk100', '')
+      continuation_payload['CTX_AREA_NK100'] = response.headers.get('ctx_area_nk100', '')
+
+    return KisRequest(
+      api_id=original_request.api_id,
+      cont_yn=ContYn.Y,
+      next_key=response.next_key,
+      payload=continuation_payload,
+    )

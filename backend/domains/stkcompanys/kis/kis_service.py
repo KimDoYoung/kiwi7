@@ -4,8 +4,8 @@ API 인스턴스 및 토큰 매니저의 싱글톤 관리
 """
 from typing import Optional
 
-from backend.domains.kis.kis_rest_api import KisRestApi
-from backend.domains.kis.managers.kis_token_manager import KisTokenManager
+from backend.domains.stkcompanys.kis.kis_rest_api import KisRestApi
+from backend.domains.stkcompanys.kis.managers.kis_token_manager import KisTokenManager
 
 # 싱글톤 인스턴스
 kis_api_instance: Optional[KisRestApi] = None

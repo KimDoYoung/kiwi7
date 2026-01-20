@@ -4,7 +4,7 @@
 from fastapi import APIRouter
 
 from backend.core.logger import get_logger
-from backend.domains.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomRequest, KiwoomResponse
+from backend.domains.stkcompanys.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomRequest, KiwoomResponse
 from backend.domains.models.stk_diary_model import StkDiaryFilter
 from backend.domains.services.dependency import get_service
 

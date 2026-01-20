@@ -5,8 +5,8 @@ from fastapi import APIRouter
 from backend.core.exceptions import KiwoomApiException
 from backend.core.logger import get_logger
 
-from backend.domains.kiwoom.kiwoom_service import get_kiwoom_api, get_token_manager
-from backend.domains.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomRequest, KiwoomResponse
+from backend.domains.stkcompanys.kiwoom.kiwoom_service import get_kiwoom_api, get_token_manager
+from backend.domains.stkcompanys.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomRequest, KiwoomResponse
 from backend.domains.market.open_time_checker import OpenTimeChecker
 from backend.utils.naver_utils import get_jisu_from_naver
 from backend.core.config import config

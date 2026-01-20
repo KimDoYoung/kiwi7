@@ -6,9 +6,9 @@ from typing import Dict, Any
 import aiohttp
 
 from backend.domains.stock_api import StockApi, BrokerType
-from backend.domains.kis.managers.kis_token_manager import KisTokenManager
-from backend.domains.kis.models.kis_schema import KisRequest, KisResponse, KisApiHelper
-from backend.domains.kis.models.kis_request_definition import (
+from backend.domains.stkcompanys.kis.managers.kis_token_manager import KisTokenManager
+from backend.domains.stkcompanys.kis.models.kis_schema import KisRequest, KisResponse, KisApiHelper
+from backend.domains.stkcompanys.kis.models.kis_request_definition import (
     get_request_definition,
     get_tr_id,
     is_hashkey_required,

@@ -6,7 +6,7 @@ import json
 from typing import Callable, Dict, Optional
 import websockets
 
-from backend.domains.kis.managers.kis_token_manager import KisTokenManager
+from backend.domains.stkcompanys.kis.managers.kis_token_manager import KisTokenManager
 from backend.core.config import config
 from backend.core.exceptions import KisApiException
 from backend.core.logger import get_logger

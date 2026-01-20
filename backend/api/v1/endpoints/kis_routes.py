@@ -5,8 +5,8 @@ from fastapi import APIRouter
 
 from backend.core.exceptions import KisApiException
 from backend.core.logger import get_logger
-from backend.domains.kis.kis_service import get_kis_api, get_kis_token_manager
-from backend.domains.kis.models.kis_schema import KisApiHelper, KisRequest, KisResponse
+from backend.domains.stkcompanys.kis.kis_service import get_kis_api, get_kis_token_manager
+from backend.domains.stkcompanys.kis.models.kis_schema import KisApiHelper, KisRequest, KisResponse
 
 router = APIRouter()
 logger = get_logger(__name__)

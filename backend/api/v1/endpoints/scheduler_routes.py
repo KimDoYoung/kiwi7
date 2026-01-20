@@ -22,7 +22,7 @@ from backend.domains.models.scheduler_model import (
     SchedulerLockCreate
 )
 from backend.domains.services.scheduler_service import SchedulerService
-from backend.domains.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomResponse
+from backend.domains.stkcompanys.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomResponse
 
 logger = get_logger(__name__)
 router = APIRouter()

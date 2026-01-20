@@ -5,8 +5,8 @@ from datetime import datetime, timedelta
 from typing import List, Optional
 
 from backend.core.logger import get_logger
-from backend.domains.kiwoom.kiwoom_rest_api import KiwoomRestApi
-from backend.domains.kiwoom.managers.kiwoom_token_manager import KiwoomTokenManager
+from backend.domains.stkcompanys.kiwoom.kiwoom_rest_api import KiwoomRestApi
+from backend.domains.stkcompanys.kiwoom.managers.kiwoom_token_manager import KiwoomTokenManager
 
 logger = get_logger(__name__)
 

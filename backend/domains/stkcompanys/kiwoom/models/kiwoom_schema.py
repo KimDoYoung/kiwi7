@@ -4,12 +4,12 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel
 
-from backend.domains.kiwoom.models.kiwoom_request_definition import (
+from backend.domains.stkcompanys.kiwoom.models.kiwoom_request_definition import (
     KIWOOM_REQUEST_DEF,
     get_request_definition,
     get_required_fields,
 )
-from backend.domains.kiwoom.models.kiwoom_response_definition import KIWOOM_RESPONSE_DEF
+from backend.domains.stkcompanys.kiwoom.models.kiwoom_response_definition import KIWOOM_RESPONSE_DEF
 
 
 class ContYn(str, Enum):

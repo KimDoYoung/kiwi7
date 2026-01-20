@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from typing import List
 
 from backend.core.logger import get_logger
-from backend.domains.kiwoom.models.kiwoom_schema import KiwoomApiHelper
+from backend.domains.stkcompanys.kiwoom.models.kiwoom_schema import KiwoomApiHelper
 from backend.domains.services.dependency import get_service
 from backend.domains.models.settings_model import SettingInfo
 from backend.api.common.stock_functions import stk_info_fill
