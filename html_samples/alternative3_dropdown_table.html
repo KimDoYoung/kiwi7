@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alternative 3: Dropdown + Table</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.0/dist/cdn.min.js"></script>
+    <style>
+        body {
+            background: #1a1d23;
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 0;
+        }
+
+        .terminal-header {
+            background: #252930;
+            border-bottom: 2px solid #00ff41;
+            padding: 0.75rem 1.5rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .account-selector {
+            background: #2d3139;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .account-selector:focus {
+            background: #353a44;
+            border-color: #00ff41;
+            box-shadow: 0 0 0 0.2rem rgba(0, 255, 65, 0.25);
+            color: #00ff41;
+        }
+
+        .stat-box {
+            background: #252930;
+            border: 1px solid #3a3f4b;
+            padding: 1rem;
+            border-radius: 4px;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        .table-terminal {
+            background: #252930;
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .table-terminal thead {
+            background: #2d3139;
+            border-bottom: 2px solid #00ff41;
+        }
+
+        .table-terminal th {
+            color: #00ff41;
+            font-weight: bold;
+            border: none;
+            padding: 0.75rem;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        .table-terminal td {
+            border-color: #3a3f4b;
+            padding: 0.75rem;
+            vertical-align: middle;
+        }
+
+        .table-terminal tbody tr {
+            transition: background 0.1s;
+        }
+
+        .table-terminal tbody tr:hover {
+            background: #2d3139;
+        }
+
+        .price-up {
+            color: #ff4444;
+            font-weight: bold;
+        }
+
+        .price-down {
+            color: #4444ff;
+            font-weight: bold;
+        }
+
+        .price-even {
+            color: #888;
+        }
+
+        .btn-terminal {
+            background: #252930;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .btn-terminal:hover {
+            background: #00ff41;
+            color: #1a1d23;
+        }
+
+        .btn-buy {
+            border-color: #ff4444;
+            color: #ff4444;
+        }
+
+        .btn-buy:hover {
+            background: #ff4444;
+            color: white;
+        }
+
+        .btn-sell {
+            border-color: #4444ff;
+            color: #4444ff;
+        }
+
+        .btn-sell:hover {
+            background: #4444ff;
+            color: white;
+        }
+
+        .ticker {
+            background: #1a1d23;
+            border-bottom: 1px solid #3a3f4b;
+            padding: 0.5rem 1.5rem;
+            overflow: hidden;
+        }
+
+        .ticker-content {
+            display: flex;
+            gap: 2rem;
+            animation: scroll 30s linear infinite;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-item {
+            white-space: nowrap;
+            font-size: 0.85rem;
+        }
+
+        .account-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .badge-kiwoom { background: #28a745; color: white; }
+        .badge-kis { background: #007bff; color: white; }
+        .badge-ls { background: #fd7e14; color: white; }
+
+        .quick-action-bar {
+            background: #252930;
+            border: 1px solid #3a3f4b;
+            border-radius: 4px;
+            padding: 1rem;
+        }
+
+        .blinking {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body x-data="traderApp">
+
+    <!-- Terminal Header -->
+    <div class="terminal-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <span class="text-success">[STOCK-TRADER-PRO]</span>
+                <span class="ms-3" x-text="'>> ' + getCurrentTime()"></span>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <span class="blinking text-danger">● LIVE</span>
+                <button class="btn btn-terminal btn-sm" @click="refreshData()">
+                    REFRESH
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Market Ticker -->
+    <div class="ticker">
+        <div class="ticker-content">
+            <span class="ticker-item">KOSPI: 2,650.23 <span class="price-up">▲ 12.45 (+0.47%)</span></span>
+            <span class="ticker-item">KOSDAQ: 870.15 <span class="price-down">▼ 5.23 (-0.60%)</span></span>
+            <span class="ticker-item">USD/KRW: 1,320.50 <span class="price-up">▲ 3.20</span></span>
+            <span class="ticker-item">GOLD: $2,045.30 <span class="price-up">▲ 8.50</span></span>
+            <!-- Duplicate for seamless loop -->
+            <span class="ticker-item">KOSPI: 2,650.23 <span class="price-up">▲ 12.45 (+0.47%)</span></span>
+            <span class="ticker-item">KOSDAQ: 870.15 <span class="price-down">▼ 5.23 (-0.60%)</span></span>
+            <span class="ticker-item">USD/KRW: 1,320.50 <span class="price-up">▲ 3.20</span></span>
+            <span class="ticker-item">GOLD: $2,045.30 <span class="price-up">▲ 8.50</span></span>
+        </div>
+    </div>
+
+    <div class="container-fluid py-4">
+        
+        <!-- Account Selector & Quick Stats -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="mb-3">
+                    <label class="stat-label mb-2">SELECT ACCOUNT</label>
+                    <select class="form-select account-selector" x-model="selectedAccountId">
+                        <option value="all">ALL ACCOUNTS</option>
+                        <option value="kiwoom">KIWOOM SECURITIES</option>
+                        <option value="kis">KOREA INVESTMENT</option>
+                        <option value="ls">LS SECURITIES</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stat-box">
+                    <div class="stat-label">TOTAL ASSETS</div>
+                    <div class="stat-value text-success" x-text="formatCurrency(totalAssets)"></div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stat-box">
+                    <div class="stat-label">DAILY P/L</div>
+                    <div class="stat-value" :class="totalDailyPL > 0 ? 'price-up' : 'price-down'"
+                         x-text="formatCurrency(totalDailyPL, true)"></div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stat-box">
+                    <div class="stat-label">RETURN RATE</div>
+                    <div class="stat-value price-up">+12.5%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-action-bar mb-4">
+            <div class="row g-2">
+                <div class="col-auto">
+                    <button class="btn btn-buy btn-sm" @click="quickOrder('buy')">
+                        <i class="bi bi-cart-plus me-1"></i> BUY
+                    </button>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-sell btn-sm" @click="quickOrder('sell')">
+                        <i class="bi bi-cart-dash me-1"></i> SELL
+                    </button>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-terminal btn-sm">
+                        <i class="bi bi-search me-1"></i> SEARCH
+                    </button>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-terminal btn-sm">
+                        <i class="bi bi-star me-1"></i> WATCHLIST
+                    </button>
+                </div>
+                <div class="col-auto ms-auto">
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-terminal" :class="{ 'active': viewMode === 'table' }"
+                                @click="viewMode = 'table'">TABLE</button>
+                        <button class="btn btn-terminal" :class="{ 'active': viewMode === 'chart' }"
+                                @click="viewMode = 'chart'">CHART</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Holdings Table -->
+        <template x-if="selectedAccountId === 'all'">
+            <div>
+                <div class="mb-3">
+                    <span class="text-success">===</span>
+                    <span class="ms-2">ALL ACCOUNTS CONSOLIDATED VIEW</span>
+                    <span class="ms-2 text-success">===</span>
+                </div>
+
+                <table class="table table-terminal table-hover">
+                    <thead>
+                        <tr>
+                            <th>ACCOUNT</th>
+                            <th>STOCK</th>
+                            <th class="text-end">QTY</th>
+                            <th class="text-end">AVG</th>
+                            <th class="text-end">CUR</th>
+                            <th class="text-end">VALUE</th>
+                            <th class="text-end">P/L</th>
+                            <th class="text-end">RATE</th>
+                            <th class="text-center">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template x-for="(account, id) in accounts" :key="id">
+                            <template x-for="stock in account.holdings" :key="id + '-' + stock.code">
+                                <tr>
+                                    <td>
+                                        <span class="account-badge" :class="'badge-' + id" x-text="id.toUpperCase()"></span>
+                                    </td>
+                                    <td>
+                                        <div class="fw-bold" x-text="stock.name"></div>
+                                        <div class="small text-muted" x-text="stock.code"></div>
+                                    </td>
+                                    <td class="text-end" x-text="formatNumber(stock.qty)"></td>
+                                    <td class="text-end" x-text="formatNumber(stock.avg)"></td>
+                                    <td class="text-end" x-text="formatNumber(stock.cur)"></td>
+                                    <td class="text-end fw-bold" x-text="formatNumber(stock.cur * stock.qty)"></td>
+                                    <td class="text-end" :class="getChangeClass(stock.cur - stock.avg)"
+                                        x-text="formatNumber((stock.cur - stock.avg) * stock.qty, true)"></td>
+                                    <td class="text-end fw-bold" :class="getChangeClass(stock.cur - stock.avg)"
+                                        x-text="formatRate(stock.avg, stock.cur)"></td>
+                                    <td class="text-center">
+                                        <button class="btn btn-terminal btn-sm" @click="openStockDetail(stock)">
+                                            DETAIL
+                                        </button>
+                                    </td>
+                                </tr>
+                            </template>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+
+        <!-- Single Account View -->
+        <template x-if="selectedAccountId !== 'all' && selectedAccount">
+            <div>
+                <div class="mb-3">
+                    <span class="text-success">===</span>
+                    <span class="ms-2" x-text="selectedAccount.name.toUpperCase()"></span>
+                    <span class="ms-3">BALANCE: <span x-text="formatCurrency(selectedAccount.balance)"></span></span>
+                    <span class="ms-3">P/L: <span :class="getChangeClass(selectedAccount.dailyPL)"
+                          x-text="formatCurrency(selectedAccount.dailyPL, true)"></span></span>
+                    <span class="ms-2 text-success">===</span>
+                </div>
+
+                <table class="table table-terminal table-hover">
+                    <thead>
+                        <tr>
+                            <th>STOCK</th>
+                            <th class="text-end">QTY</th>
+                            <th class="text-end">AVG PRICE</th>
+                            <th class="text-end">CUR PRICE</th>
+                            <th class="text-end">VALUATION</th>
+                            <th class="text-end">P/L (KRW)</th>
+                            <th class="text-end">RATE</th>
+                            <th class="text-center">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template x-for="stock in selectedAccount.holdings" :key="stock.code">
+                            <tr>
+                                <td>
+                                    <div class="fw-bold" x-text="stock.name"></div>
+                                    <div class="small text-muted" x-text="stock.code"></div>
+                                </td>
+                                <td class="text-end" x-text="formatNumber(stock.qty)"></td>
+                                <td class="text-end" x-text="formatNumber(stock.avg)"></td>
+                                <td class="text-end fw-bold" x-text="formatNumber(stock.cur)"></td>
+                                <td class="text-end fw-bold" x-text="formatNumber(stock.cur * stock.qty)"></td>
+                                <td class="text-end" :class="getChangeClass((stock.cur - stock.avg) * stock.qty)"
+                                    x-text="formatNumber((stock.cur - stock.avg) * stock.qty, true)"></td>
+                                <td class="text-end fw-bold" :class="getChangeClass(stock.cur - stock.avg)"
+                                    x-text="formatRate(stock.avg, stock.cur)"></td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-buy btn-sm" @click="quickOrder('buy', stock)">BUY</button>
+                                        <button class="btn btn-sell btn-sm" @click="quickOrder('sell', stock)">SELL</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                    <tfoot>
+                        <tr class="table-dark">
+                            <td colspan="4" class="fw-bold">TOTAL</td>
+                            <td class="text-end fw-bold" x-text="formatNumber(calculateTotalValue())"></td>
+                            <td class="text-end fw-bold" :class="getChangeClass(calculateTotalPL())"
+                                x-text="formatNumber(calculateTotalPL(), true)"></td>
+                            <td class="text-end fw-bold" :class="getChangeClass(calculateTotalPL())"
+                                x-text="calculateTotalRate()"></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </template>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('traderApp', () => ({
+                selectedAccountId: 'all',
+                viewMode: 'table',
+                accounts: {
+                    kiwoom: {
+                        name: 'Kiwoom Securities',
+                        balance: 15400000,
+                        dailyPL: 320000,
+                        holdings: [
+                            { name: 'Samsung Elec', code: '005930', qty: 100, avg: 72000, cur: 74500 },
+                            { name: 'SK Hynix', code: '000660', qty: 50, avg: 130000, cur: 132000 },
+                            { name: 'Naver', code: '035420', qty: 20, avg: 210000, cur: 205000 }
+                        ]
+                    },
+                    kis: {
+                        name: 'Korea Investment',
+                        balance: 22000000,
+                        dailyPL: 1200000,
+                        holdings: [
+                            { name: 'Hyundai Motor', code: '005380', qty: 40, avg: 190000, cur: 250000 },
+                            { name: 'Kia', code: '000270', qty: 60, avg: 85000, cur: 110000 },
+                            { name: 'Kakao', code: '035720', qty: 100, avg: 55000, cur: 52000 }
+                        ]
+                    },
+                    ls: {
+                        name: 'LS Securities',
+                        balance: 8500000,
+                        dailyPL: -150000,
+                        holdings: [
+                            { name: 'Posco Holdings', code: '005490', qty: 15, avg: 450000, cur: 440000 },
+                            { name: 'LG Energy', code: '373220', qty: 10, avg: 400000, cur: 410000 }
+                        ]
+                    }
+                },
+
+                get selectedAccount() {
+                    return this.accounts[this.selectedAccountId];
+                },
+
+                get totalAssets() {
+                    return Object.values(this.accounts).reduce((sum, acc) => sum + acc.balance, 0);
+                },
+
+                get totalDailyPL() {
+                    return Object.values(this.accounts).reduce((sum, acc) => sum + acc.dailyPL, 0);
+                },
+
+                formatNumber(num, showSign = false) {
+                    const formatted = new Intl.NumberFormat('ko-KR').format(Math.abs(num));
+                    if (showSign && num !== 0) {
+                        return (num > 0 ? '+' : '-') + formatted;
+                    }
+                    return formatted;
+                },
+
+                formatCurrency(num, showSign = false) {
+                    return this.formatNumber(num, showSign) + ' KRW';
+                },
+
+                formatRate(avg, cur) {
+                    const rate = ((cur - avg) / avg * 100).toFixed(2);
+                    return (rate > 0 ? '+' : '') + rate + '%';
+                },
+
+                getChangeClass(val) {
+                    return val > 0 ? 'price-up' : val < 0 ? 'price-down' : 'price-even';
+                },
+
+                calculateTotalValue() {
+                    if (!this.selectedAccount) return 0;
+                    return this.selectedAccount.holdings.reduce((sum, s) => sum + (s.cur * s.qty), 0);
+                },
+
+                calculateTotalPL() {
+                    if (!this.selectedAccount) return 0;
+                    return this.selectedAccount.holdings.reduce((sum, s) => sum + ((s.cur - s.avg) * s.qty), 0);
+                },
+
+                calculateTotalRate() {
+                    if (!this.selectedAccount) return '0%';
+                    const totalInvest = this.selectedAccount.holdings.reduce((sum, s) => sum + (s.avg * s.qty), 0);
+                    const totalCurrent = this.calculateTotalValue();
+                    const rate = ((totalCurrent - totalInvest) / totalInvest * 100).toFixed(2);
+                    return (rate > 0 ? '+' : '') + rate + '%';
+                },
+
+                getCurrentTime() {
+                    return new Date().toLocaleString('ko-KR', { hour12: false });
+                },
+
+                quickOrder(type, stock = null) {
+                    if (stock) {
+                        alert(`${type.toUpperCase()} ORDER: ${stock.name} (${stock.code})`);
+                    } else {
+                        alert(`Open ${type.toUpperCase()} order form`);
+                    }
+                },
+
+                openStockDetail(stock) {
+                    alert(`Open detail for: ${stock.name} (${stock.code})`);
+                },
+
+                refreshData() {
+                    alert('Refreshing market data...');
+                }
+            }));
+        });
+    </script>
+</body>
+</html>

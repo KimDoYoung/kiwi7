@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alternative 1: Top Nav + Card Grid</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.0/dist/cdn.min.js"></script>
+    <style>
+        :root {
+            --broker-kiwoom: #28a745;
+            --broker-kis: #007bff;
+            --broker-ls: #fd7e14;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .navbar {
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .account-card {
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            height: 100%;
+            background: white;
+        }
+
+        .account-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .account-card-header {
+            padding: 1.5rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .account-card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-30px, -30px); }
+        }
+
+        .card-kiwoom .account-card-header { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); }
+        .card-kis .account-card-header { background: linear-gradient(135deg, #007bff 0%, #6610f2 100%); }
+        .card-ls .account-card-header { background: linear-gradient(135deg, #fd7e14 0%, #ffc107 100%); }
+
+        .stat-big {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-custom {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .modal-content {
+            border: none;
+            border-radius: 16px;
+        }
+
+        .holdings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .stock-mini-card {
+            padding: 1rem;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            transition: all 0.2s;
+        }
+
+        .stock-mini-card:hover {
+            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+            transform: translateX(5px);
+        }
+
+        .text-profit { color: #dc3545; }
+        .text-loss { color: #0d6efd; }
+
+        .overview-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .quick-stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+    </style>
+</head>
+<body x-data="modernStockApp">
+
+    <!-- Top Navigation -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="bi bi-graph-up-arrow me-2"></i>
+                Stock Manager Pro
+            </a>
+            
+            <div class="d-flex align-items-center gap-3">
+                <div class="d-none d-md-flex align-items-center gap-2">
+                    <span class="badge bg-success">KOSPI</span>
+                    <span class="text-muted small">2,650.23 ▲12.45</span>
+                </div>
+                
+                <button class="btn btn-outline-primary btn-sm" @click="refreshAll()">
+                    <i class="bi bi-arrow-clockwise me-1"></i>
+                    <span class="d-none d-md-inline">새로고침</span>
+                </button>
+                
+                <div class="dropdown">
+                    <button class="btn btn-link text-dark" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle h4 mb-0"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#">설정</a></li>
+                        <li><a class="dropdown-item" href="#">로그아웃</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        
+        <!-- Dashboard Overview -->
+        <div class="overview-card mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">
+                    <i class="bi bi-speedometer2 me-2"></i>
+                    통합 대시보드
+                </h2>
+                <span class="text-muted" x-text="new Date().toLocaleDateString('ko-KR')"></span>
+            </div>
+
+            <div class="quick-stats mb-4">
+                <div class="quick-stat-item">
+                    <div class="stat-label mb-2">총 자산</div>
+                    <div class="stat-big" x-text="formatCurrency(totalAssets)"></div>
+                </div>
+                <div class="quick-stat-item">
+                    <div class="stat-label mb-2">당일 손익</div>
+                    <div class="stat-big" :class="getPLColor(totalDailyPL)" 
+                         x-text="formatCurrency(totalDailyPL, true)"></div>
+                </div>
+                <div class="quick-stat-item">
+                    <div class="stat-label mb-2">총 수익률</div>
+                    <div class="stat-big text-profit">+12.5%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accounts Cards Grid -->
+        <h4 class="text-white mb-3">
+            <i class="bi bi-wallet2 me-2"></i>
+            계좌 현황
+        </h4>
+        
+        <div class="row g-4 mb-4">
+            <!-- Kiwoom Card -->
+            <div class="col-lg-4 col-md-6">
+                <div class="account-card card-kiwoom" @click="openAccountDetail('kiwoom')">
+                    <div class="account-card-header">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h5 class="mb-1">
+                                    <i class="bi bi-bank me-2"></i>
+                                    키움증권
+                                </h5>
+                                <small class="opacity-75">Kiwoom Securities</small>
+                            </div>
+                            <span class="badge badge-custom bg-white text-success">ACTIVE</span>
+                        </div>
+                        <div class="stat-big mb-2" x-text="formatCurrency(accounts.kiwoom.balance)"></div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="stat-label">평가금액</span>
+                            <span :class="getPLColor(accounts.kiwoom.dailyPL)" 
+                                  x-text="formatCurrency(accounts.kiwoom.dailyPL, true)"></span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-muted small">보유 종목</span>
+                            <span class="badge bg-success" x-text="accounts.kiwoom.holdings.length"></span>
+                        </div>
+                        <div class="holdings-preview">
+                            <template x-for="stock in accounts.kiwoom.holdings.slice(0, 3)" :key="stock.code">
+                                <div class="d-flex justify-content-between py-2 border-bottom">
+                                    <span class="small" x-text="stock.name"></span>
+                                    <span class="small fw-bold" :class="getPLColor(stock.cur - stock.avg)"
+                                          x-text="formatRate(stock.avg, stock.cur)"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KIS Card -->
+            <div class="col-lg-4 col-md-6">
+                <div class="account-card card-kis" @click="openAccountDetail('kis')">
+                    <div class="account-card-header">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h5 class="mb-1">
+                                    <i class="bi bi-graph-up-arrow me-2"></i>
+                                    한국투자증권
+                                </h5>
+                                <small class="opacity-75">Korea Investment</small>
+                            </div>
+                            <span class="badge badge-custom bg-white text-primary">ACTIVE</span>
+                        </div>
+                        <div class="stat-big mb-2" x-text="formatCurrency(accounts.kis.balance)"></div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="stat-label">평가금액</span>
+                            <span :class="getPLColor(accounts.kis.dailyPL)" 
+                                  x-text="formatCurrency(accounts.kis.dailyPL, true)"></span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-muted small">보유 종목</span>
+                            <span class="badge bg-primary" x-text="accounts.kis.holdings.length"></span>
+                        </div>
+                        <div class="holdings-preview">
+                            <template x-for="stock in accounts.kis.holdings.slice(0, 3)" :key="stock.code">
+                                <div class="d-flex justify-content-between py-2 border-bottom">
+                                    <span class="small" x-text="stock.name"></span>
+                                    <span class="small fw-bold" :class="getPLColor(stock.cur - stock.avg)"
+                                          x-text="formatRate(stock.avg, stock.cur)"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LS Card -->
+            <div class="col-lg-4 col-md-6">
+                <div class="account-card card-ls" @click="openAccountDetail('ls')">
+                    <div class="account-card-header">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h5 class="mb-1">
+                                    <i class="bi bi-buildings me-2"></i>
+                                    LS증권
+                                </h5>
+                                <small class="opacity-75">LS Securities</small>
+                            </div>
+                            <span class="badge badge-custom bg-white text-warning">ACTIVE</span>
+                        </div>
+                        <div class="stat-big mb-2" x-text="formatCurrency(accounts.ls.balance)"></div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="stat-label">평가금액</span>
+                            <span :class="getPLColor(accounts.ls.dailyPL)" 
+                                  x-text="formatCurrency(accounts.ls.dailyPL, true)"></span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-muted small">보유 종목</span>
+                            <span class="badge bg-warning" x-text="accounts.ls.holdings.length"></span>
+                        </div>
+                        <div class="holdings-preview">
+                            <template x-for="stock in accounts.ls.holdings.slice(0, 3)" :key="stock.code">
+                                <div class="d-flex justify-content-between py-2 border-bottom">
+                                    <span class="small" x-text="stock.name"></span>
+                                    <span class="small fw-bold" :class="getPLColor(stock.cur - stock.avg)"
+                                          x-text="formatRate(stock.avg, stock.cur)"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="overview-card">
+            <h5 class="mb-3">
+                <i class="bi bi-lightning me-2"></i>
+                빠른 작업
+            </h5>
+            <div class="d-flex gap-2 flex-wrap">
+                <button class="btn btn-danger" @click="openOrderModal('buy')">
+                    <i class="bi bi-cart-plus me-1"></i> 매수
+                </button>
+                <button class="btn btn-primary" @click="openOrderModal('sell')">
+                    <i class="bi bi-cart-dash me-1"></i> 매도
+                </button>
+                <button class="btn btn-outline-secondary">
+                    <i class="bi bi-search me-1"></i> 종목 찾기
+                </button>
+                <button class="btn btn-outline-secondary">
+                    <i class="bi bi-heart me-1"></i> 관심 종목
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Account Detail Modal -->
+    <div class="modal fade" id="accountDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header" :class="'bg-' + getAccountColor(selectedAccount)">
+                    <h5 class="modal-title text-white" x-text="getAccountName(selectedAccount)"></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" x-show="selectedAccount">
+                    <div class="holdings-grid">
+                        <template x-for="stock in getAccountHoldings(selectedAccount)" :key="stock.code">
+                            <div class="stock-mini-card">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <div class="fw-bold" x-text="stock.name"></div>
+                                        <div class="small text-muted" x-text="stock.code"></div>
+                                    </div>
+                                    <span class="badge" :class="'bg-' + getAccountColor(selectedAccount)"
+                                          x-text="stock.qty + '주'"></span>
+                                </div>
+                                <div class="d-flex justify-content-between mt-3">
+                                    <div>
+                                        <div class="small text-muted">매입가</div>
+                                        <div class="fw-bold" x-text="formatCurrency(stock.avg)"></div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="small text-muted">현재가</div>
+                                        <div class="fw-bold" x-text="formatCurrency(stock.cur)"></div>
+                                    </div>
+                                </div>
+                                <div class="mt-2 pt-2 border-top">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="small text-muted">평가손익</span>
+                                        <span class="fw-bold" :class="getPLColor(stock.cur - stock.avg)"
+                                              x-text="formatRate(stock.avg, stock.cur)"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('modernStockApp', () => ({
+                selectedAccount: null,
+                accounts: {
+                    kiwoom: {
+                        name: '키움증권',
+                        balance: 15400000,
+                        dailyPL: 320000,
+                        holdings: [
+                            { name: '삼성전자', code: '005930', qty: 100, avg: 72000, cur: 74500 },
+                            { name: 'SK하이닉스', code: '000660', qty: 50, avg: 130000, cur: 132000 },
+                            { name: '네이버', code: '035420', qty: 20, avg: 210000, cur: 205000 }
+                        ]
+                    },
+                    kis: {
+                        name: '한국투자증권',
+                        balance: 22000000,
+                        dailyPL: 1200000,
+                        holdings: [
+                            { name: '현대차', code: '005380', qty: 40, avg: 190000, cur: 250000 },
+                            { name: '기아', code: '000270', qty: 60, avg: 85000, cur: 110000 },
+                            { name: '카카오', code: '035720', qty: 100, avg: 55000, cur: 52000 }
+                        ]
+                    },
+                    ls: {
+                        name: 'LS증권',
+                        balance: 8500000,
+                        dailyPL: -150000,
+                        holdings: [
+                            { name: '포스코홀딩스', code: '005490', qty: 15, avg: 450000, cur: 440000 },
+                            { name: 'LG에너지', code: '373220', qty: 10, avg: 400000, cur: 410000 }
+                        ]
+                    }
+                },
+
+                get totalAssets() {
+                    return Object.values(this.accounts).reduce((sum, acc) => sum + acc.balance, 0);
+                },
+
+                get totalDailyPL() {
+                    return Object.values(this.accounts).reduce((sum, acc) => sum + acc.dailyPL, 0);
+                },
+
+                formatCurrency(num, showSign = false) {
+                    const formatted = new Intl.NumberFormat('ko-KR').format(Math.abs(num));
+                    if (showSign && num !== 0) {
+                        return (num > 0 ? '+' : '-') + formatted + '원';
+                    }
+                    return formatted + '원';
+                },
+
+                formatRate(avg, cur) {
+                    const rate = ((cur - avg) / avg * 100).toFixed(2);
+                    return (rate > 0 ? '+' : '') + rate + '%';
+                },
+
+                getPLColor(val) {
+                    return val > 0 ? 'text-profit' : val < 0 ? 'text-loss' : 'text-muted';
+                },
+
+                getAccountColor(accountId) {
+                    const colors = { kiwoom: 'success', kis: 'primary', ls: 'warning' };
+                    return colors[accountId] || 'secondary';
+                },
+
+                getAccountName(accountId) {
+                    return this.accounts[accountId]?.name || '';
+                },
+
+                getAccountHoldings(accountId) {
+                    return this.accounts[accountId]?.holdings || [];
+                },
+
+                openAccountDetail(accountId) {
+                    this.selectedAccount = accountId;
+                    new bootstrap.Modal(document.getElementById('accountDetailModal')).show();
+                },
+
+                openOrderModal(type) {
+                    alert(`${type.toUpperCase()} 주문창 열기 (구현 예정)`);
+                },
+
+                refreshAll() {
+                    alert('전체 새로고침 (API 호출)');
+                }
+            }));
+        });
+    </script>
+</body>
+</html>

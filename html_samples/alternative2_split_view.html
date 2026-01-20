@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alternative 2: Split View</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.0/dist/cdn.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100vh;
+            background: #f5f5f5;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .split-container {
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .top-bar {
+            height: 60px;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+
+        .content-area {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .left-panel {
+            width: 380px;
+            background: white;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .right-panel {
+            flex: 1;
+            background: #f8f9fa;
+            overflow-y: auto;
+        }
+
+        .account-list-item {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .account-list-item:hover {
+            background: #f8f9fa;
+        }
+
+        .account-list-item.active {
+            background: linear-gradient(90deg, #e7f3ff 0%, #f8f9fa 100%);
+            border-left: 4px solid #007bff;
+        }
+
+        .account-list-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(180deg, #007bff 0%, #0056b3 100%);
+        }
+
+        .broker-indicator {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-right: 1rem;
+        }
+
+        .broker-kiwoom { background: linear-gradient(135deg, #28a745, #20c997); }
+        .broker-kis { background: linear-gradient(135deg, #007bff, #6610f2); }
+        .broker-ls { background: linear-gradient(135deg, #fd7e14, #ffc107); }
+
+        .detail-header {
+            background: white;
+            padding: 2rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .detail-body {
+            padding: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .stock-row {
+            padding: 1rem;
+            border-radius: 8px;
+            background: white;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s;
+            border: 1px solid #e9ecef;
+        }
+
+        .stock-row:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transform: translateX(4px);
+        }
+
+        .text-profit { color: #dc3545; }
+        .text-loss { color: #0d6efd; }
+
+        .summary-panel {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .summary-item {
+            text-align: center;
+        }
+
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .summary-label {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+            .content-area {
+                flex-direction: column;
+            }
+            
+            .left-panel {
+                width: 100%;
+                height: 50%;
+            }
+
+            .right-panel {
+                height: 50%;
+            }
+        }
+    </style>
+</head>
+<body x-data="splitViewApp">
+
+    <div class="split-container">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <h5 class="mb-0 fw-bold me-auto">
+                <i class="bi bi-briefcase me-2"></i>
+                Multi-Account Manager
+            </h5>
+            <div class="d-flex align-items-center gap-3">
+                <span class="badge bg-success">KOSPI 2,650</span>
+                <span class="badge bg-info">KOSDAQ 870</span>
+                <button class="btn btn-sm btn-outline-primary" @click="refreshData()">
+                    <i class="bi bi-arrow-clockwise"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <!-- Left Panel: Account List -->
+            <div class="left-panel">
+                <!-- Summary Section -->
+                <div class="summary-panel">
+                    <div class="row">
+                        <div class="col-6 summary-item">
+                            <div class="summary-label">총 자산</div>
+                            <div class="summary-value" x-text="formatCurrency(totalAssets)"></div>
+                        </div>
+                        <div class="col-6 summary-item">
+                            <div class="summary-label">당일 손익</div>
+                            <div class="summary-value" x-text="formatCurrency(totalDailyPL, true)"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account List -->
+                <div class="flex-grow-1 overflow-auto">
+                    <template x-for="(account, id) in accounts" :key="id">
+                        <div class="account-list-item" 
+                             :class="{ 'active': selectedAccountId === id }"
+                             @click="selectAccount(id)">
+                            <div class="d-flex align-items-center">
+                                <div class="broker-indicator" :class="'broker-' + id">
+                                    <i class="bi" :class="getAccountIcon(id)"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="fw-bold mb-1" x-text="account.name"></div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <div class="small text-muted">평가금액</div>
+                                            <div class="fw-bold" x-text="formatCurrency(account.balance)"></div>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="small text-muted">손익</div>
+                                            <div class="fw-bold" :class="getPLColor(account.dailyPL)"
+                                                 x-text="formatCurrency(account.dailyPL, true)"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-2 d-flex gap-2">
+                                <span class="badge bg-light text-dark">
+                                    <i class="bi bi-building me-1"></i>
+                                    <span x-text="account.holdings.length + '종목'"></span>
+                                </span>
+                                <span class="badge" :class="'bg-' + getAccountBadgeColor(id)">
+                                    수익률 <span x-text="calculateTotalReturn(account)"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Right Panel: Account Detail -->
+            <div class="right-panel">
+                <template x-if="selectedAccount">
+                    <div>
+                        <!-- Detail Header -->
+                        <div class="detail-header">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h3 class="mb-2" x-text="selectedAccount.name"></h3>
+                                    <p class="text-muted mb-0">
+                                        <i class="bi bi-clock me-1"></i>
+                                        마지막 업데이트: <span x-text="getCurrentTime()"></span>
+                                    </p>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-danger" @click="openOrderModal('buy')">
+                                        <i class="bi bi-cart-plus me-1"></i> 매수
+                                    </button>
+                                    <button class="btn btn-primary" @click="openOrderModal('sell')">
+                                        <i class="bi bi-cart-dash me-1"></i> 매도
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mt-3">
+                                <div class="col-md-3">
+                                    <div class="stat-card">
+                                        <div class="small text-muted mb-1">예수금</div>
+                                        <div class="h5 mb-0">5,000,000원</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="stat-card">
+                                        <div class="small text-muted mb-1">평가금액</div>
+                                        <div class="h5 mb-0" x-text="formatCurrency(selectedAccount.balance)"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="stat-card">
+                                        <div class="small text-muted mb-1">총자산</div>
+                                        <div class="h5 mb-0" x-text="formatCurrency(selectedAccount.balance + 5000000)"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="stat-card">
+                                        <div class="small text-muted mb-1">수익률</div>
+                                        <div class="h5 mb-0 text-profit" x-text="calculateTotalReturn(selectedAccount)"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Holdings List -->
+                        <div class="detail-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-list-ul me-2"></i>
+                                    보유 종목
+                                </h5>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-secondary active">
+                                        <i class="bi bi-grid-3x3-gap"></i>
+                                    </button>
+                                    <button class="btn btn-outline-secondary">
+                                        <i class="bi bi-list-ul"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <template x-for="stock in selectedAccount.holdings" :key="stock.code">
+                                <div class="stock-row">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div>
+                                            <div class="h6 mb-1" x-text="stock.name"></div>
+                                            <div class="small text-muted" x-text="stock.code"></div>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="fw-bold" x-text="formatCurrency(stock.cur)"></div>
+                                            <div class="small" :class="getPLColor(stock.cur - stock.avg)"
+                                                 x-text="formatRate(stock.avg, stock.cur)"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row g-2 mt-2">
+                                        <div class="col-3">
+                                            <div class="small text-muted">보유수량</div>
+                                            <div class="fw-bold" x-text="stock.qty + '주'"></div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="small text-muted">매입가</div>
+                                            <div x-text="formatCurrency(stock.avg)"></div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="small text-muted">평가금액</div>
+                                            <div x-text="formatCurrency(stock.cur * stock.qty)"></div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="small text-muted">평가손익</div>
+                                            <div :class="getPLColor((stock.cur - stock.avg) * stock.qty)"
+                                                 x-text="formatCurrency((stock.cur - stock.avg) * stock.qty, true)"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Empty State -->
+                <template x-if="!selectedAccount">
+                    <div class="d-flex align-items-center justify-content-center h-100">
+                        <div class="text-center text-muted">
+                            <i class="bi bi-arrow-left display-1 mb-3"></i>
+                            <h5>계좌를 선택해주세요</h5>
+                            <p>왼쪽 목록에서 계좌를 선택하면 상세 정보가 표시됩니다</p>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('splitViewApp', () => ({
+                selectedAccountId: 'kiwoom',
+                accounts: {
+                    kiwoom: {
+                        name: '키움증권',
+                        balance: 15400000,
+                        dailyPL: 320000,
+                        holdings: [
+                            { name: '삼성전자', code: '005930', qty: 100, avg: 72000, cur: 74500 },
+                            { name: 'SK하이닉스', code: '000660', qty: 50, avg: 130000, cur: 132000 },
+                            { name: '네이버', code: '035420', qty: 20, avg: 210000, cur: 205000 }
+                        ]
+                    },
+                    kis: {
+                        name: '한국투자증권',
+                        balance: 22000000,
+                        dailyPL: 1200000,
+                        holdings: [
+                            { name: '현대차', code: '005380', qty: 40, avg: 190000, cur: 250000 },
+                            { name: '기아', code: '000270', qty: 60, avg: 85000, cur: 110000 },
+                            { name: '카카오', code: '035720', qty: 100, avg: 55000, cur: 52000 }
+                        ]
+                    },
+                    ls: {
+                        name: 'LS증권',
+                        balance: 8500000,
+                        dailyPL: -150000,
+                        holdings: [
+                            { name: '포스코홀딩스', code: '005490', qty: 15, avg: 450000, cur: 440000 },
+                            { name: 'LG에너지', code: '373220', qty: 10, avg: 400000, cur: 410000 }
+                        ]
+                    }
+                },
+
+                get selectedAccount() {
+                    return this.accounts[this.selectedAccountId];
+                },
+
+                get totalAssets() {
+                    return Object.values(this.accounts).reduce((sum, acc) => sum + acc.balance, 0);
+                },
+
+                get totalDailyPL() {
+                    return Object.values(this.accounts).reduce((sum, acc) => sum + acc.dailyPL, 0);
+                },
+
+                selectAccount(id) {
+                    this.selectedAccountId = id;
+                },
+
+                formatCurrency(num, showSign = false) {
+                    const formatted = new Intl.NumberFormat('ko-KR').format(Math.abs(num));
+                    if (showSign && num !== 0) {
+                        return (num > 0 ? '+' : '-') + formatted + '원';
+                    }
+                    return formatted + '원';
+                },
+
+                formatRate(avg, cur) {
+                    const rate = ((cur - avg) / avg * 100).toFixed(2);
+                    return (rate > 0 ? '+' : '') + rate + '%';
+                },
+
+                getPLColor(val) {
+                    return val > 0 ? 'text-profit' : val < 0 ? 'text-loss' : 'text-muted';
+                },
+
+                getAccountIcon(id) {
+                    const icons = { kiwoom: 'bi-bank', kis: 'bi-graph-up-arrow', ls: 'bi-buildings' };
+                    return icons[id];
+                },
+
+                getAccountBadgeColor(id) {
+                    const colors = { kiwoom: 'success', kis: 'primary', ls: 'warning' };
+                    return colors[id];
+                },
+
+                calculateTotalReturn(account) {
+                    let totalInvest = 0, totalCurrent = 0;
+                    account.holdings.forEach(s => {
+                        totalInvest += s.avg * s.qty;
+                        totalCurrent += s.cur * s.qty;
+                    });
+                    const rate = ((totalCurrent - totalInvest) / totalInvest * 100).toFixed(2);
+                    return (rate > 0 ? '+' : '') + rate + '%';
+                },
+
+                getCurrentTime() {
+                    return new Date().toLocaleTimeString('ko-KR');
+                },
+
+                openOrderModal(type) {
+                    alert(`${type.toUpperCase()} 주문창 (구현 예정)`);
+                },
+
+                refreshData() {
+                    alert('데이터 새로고침 (API 호출)');
+                }
+            }));
+        });
+    </script>
+</body>
+</html>
