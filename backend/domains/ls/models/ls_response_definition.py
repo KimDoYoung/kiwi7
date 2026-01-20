@@ -21,19 +21,32 @@ LS_RESPONSE_DEF.update(MARKET_ELW_RESPONSES)
 LS_RESPONSE_DEF.update(MARKET_ETF_RESPONSES)
 
 
+def get_response_definition(api_id: str) -> dict:
+  """API 응답 정의 조회"""
+  return LS_RESPONSE_DEF.get(api_id, {})
+
+
 def get_response_fields(api_id: str) -> list:
-    """API ID로 응답 필드 정의(목록) 조회"""
-    resp_def = LS_RESPONSE_DEF.get(api_id)
-    if resp_def and isinstance(resp_def, dict):
-        return resp_def.get('fields', [])
+  """API의 모든 block 필드를 통합하여 반환"""
+  resp_def = get_response_definition(api_id)
+  if not resp_def:
     return []
+
+  fields = []
+  # blocks 구조에서 모든 필드 수집
+  blocks = resp_def.get('blocks', {})
+  for block_name, block_value in blocks.items():
+    if isinstance(block_value, dict) and 'fields' in block_value:
+      fields.extend(block_value['fields'])
+
+  return fields
 
 
 def get_field_name(api_id: str, key: str) -> str:
-    """필드 키의 한글 이름 반환"""
-    fields = get_response_fields(api_id)
-    
-    for field in fields:
-        if isinstance(field, dict) and field.get('key') == key:
-            return field.get('name', key)
-    return key
+  """필드 키의 한글 이름 반환"""
+  fields = get_response_fields(api_id)
+
+  for field in fields:
+    if isinstance(field, dict) and field.get('key') == key:
+      return field.get('name', key)
+  return key
