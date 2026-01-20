@@ -1,11 +1,11 @@
-# kiwi7-키움 Restful API를 이용한 주식매매
+# kiwi7-키움,KIS,LS 증권 Restful API를 이용한 주식매매
 
 ## 개요
 
-- 키움증권의 Restful API를 이용해서 주식매매
+- 원래 kiwi7은 키움증권의 계좌1개만을 대상으로 하려고 했는데. 이제 KIS(한국투자증권)과 LS증권의 계좌도 포함해서 나의 전체 증권계좌(현재3개)를 한 눈에 관리하고자 한다.
 - Web app으로 docker에 배포해서 local pc에서 사용하는 것을 메인으로 한다.
 - python으로 개발 backend와 frontend로 나누어서 개발.
-- 기본 PORT 는 8001로 한다.
+- 기본 PORT 는 8002로 한다.
 
 ## 기술스택
 
