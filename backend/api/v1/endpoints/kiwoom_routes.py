@@ -1,15 +1,20 @@
 # APIRouter 인스턴스 생성
 from datetime import datetime
 from zoneinfo import ZoneInfo
+
 from fastapi import APIRouter
+
+from backend.core.config import config
 from backend.core.exceptions import KiwoomApiException
 from backend.core.logger import get_logger
-
-from backend.domains.stkcompanys.kiwoom.kiwoom_service import get_kiwoom_api, get_token_manager
-from backend.domains.stkcompanys.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomRequest, KiwoomResponse
 from backend.domains.market.open_time_checker import OpenTimeChecker
+from backend.domains.stkcompanys.kiwoom.kiwoom_service import get_kiwoom_api, get_token_manager
+from backend.domains.stkcompanys.kiwoom.models.kiwoom_schema import (
+    KiwoomApiHelper,
+    KiwoomRequest,
+    KiwoomResponse,
+)
 from backend.utils.naver_utils import get_jisu_from_naver
-from backend.core.config import config
 
 router = APIRouter()
 logger = get_logger(__name__)
@@ -59,7 +64,7 @@ async def issue_new_token():
             return KiwoomApiHelper.create_error_response(error_code="999", error_message="Kiwoom API 클래스를 생성하는데 실패했습니다")
 
         await token_manager.discard_token()
-        response = await token_manager.issue_access_token()
+        await token_manager.issue_access_token()
         return KiwoomApiHelper.create_success_response(
             data={"message": "새로운 토큰이 발급되었습니다."},
             api_info={"api_id": "issue_new_token"}

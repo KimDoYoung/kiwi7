@@ -6,6 +6,7 @@ from datetime import datetime
 import aiohttp
 
 from backend.domains.base.base_token_manager import BaseTokenManager
+from backend.domains.stock_api import BrokerType
 from backend.core.config import config
 from backend.core.exceptions import KisAuthException
 from backend.core.logger import get_logger
@@ -17,7 +18,7 @@ class KisTokenManager(BaseTokenManager):
     """한국투자증권 토큰 매니저"""
 
     def __init__(self):
-        super().__init__(broker_name="kis")
+        super().__init__(broker_type=BrokerType.KIS)
 
     @property
     def base_url(self) -> str:

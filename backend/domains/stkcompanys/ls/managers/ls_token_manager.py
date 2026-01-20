@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 import aiohttp
 
 from backend.domains.base.base_token_manager import BaseTokenManager
+from backend.domains.stock_api import BrokerType
 from backend.core.config import config
 from backend.core.exceptions import LsAuthException
 from backend.core.logger import get_logger
@@ -17,7 +18,7 @@ class LsTokenManager(BaseTokenManager):
     """LS증권 토큰 매니저"""
 
     def __init__(self):
-        super().__init__(broker_name="ls")
+        super().__init__(broker_type=BrokerType.LS)
 
     @property
     def base_url(self) -> str:

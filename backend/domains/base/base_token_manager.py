@@ -7,6 +7,7 @@ from typing import Optional
 
 from backend.domains.services.dependency import get_service
 from backend.core.logger import get_logger
+from backend.domains.stock_api import BrokerType
 
 logger = get_logger(__name__)
 
@@ -14,9 +15,14 @@ logger = get_logger(__name__)
 class BaseTokenManager(ABC):
     """토큰 관리 공통 추상 클래스"""
 
-    def __init__(self, broker_name: str):
-        self.broker_name = broker_name
-        self.settings_service = get_service("settings")
+    def __init__(self, broker_type: BrokerType):
+        """
+        Args:
+            broker_type: BrokerType enum (KIWOOM, KIS, LS)
+        """
+        self.broker_type = broker_type
+        self.broker_name = broker_type.value  # "kiwoom", "kis", "ls"
+        self.tokens_service = get_service('tokens')
 
         self.token_type: Optional[str] = None
         self.token: Optional[str] = None
@@ -40,11 +46,6 @@ class BaseTokenManager(ABC):
         """시크릿 키"""
         pass
 
-    @property
-    def token_key_prefix(self) -> str:
-        """설정 저장용 키 프리픽스 (예: KIWOOM_, KIS_, LS_)"""
-        return f"{self.broker_name.upper()}_"
-
     async def get_token(self) -> str:
         """유효한 토큰 반환"""
         await self.refresh_token()
@@ -57,18 +58,18 @@ class BaseTokenManager(ABC):
                 await self._load_token_from_db()
 
             if not self.token or not self.expires_dt:
-                logger.info(f"[{self.broker_name}] 저장된 토큰이 없어 새로 발급받습니다.")
+                logger.info(f'[{self.broker_name}] 저장된 토큰이 없어 새로 발급받습니다.')
                 await self.issue_access_token()
                 return True
 
             if self._is_token_expire_soon():
-                logger.info(f"[{self.broker_name}] 토큰 만료 임박, 재발급합니다.")
+                logger.info(f'[{self.broker_name}] 토큰 만료 임박, 재발급합니다.')
                 await self.issue_access_token()
 
             return True
         except Exception as e:
-            logger.error(f"[{self.broker_name}] 토큰 갱신 오류: {e}")
-            raise self._create_auth_exception(f"토큰 갱신 실패: {e}")
+            logger.error(f'[{self.broker_name}] 토큰 갱신 오류: {e}')
+            raise self._create_auth_exception(f'토큰 갱신 실패: {e}')
 
     @abstractmethod
     async def issue_access_token(self) -> dict:
@@ -91,36 +92,34 @@ class BaseTokenManager(ABC):
         pass
 
     async def _load_token_from_db(self):
-        """DB에서 토큰 로드"""
-        token_key = f"{self.token_key_prefix}ACCESS_TOKEN"
-        expires_key = f"{self.token_key_prefix}ACCESS_TOKEN_EXPIRED_TIME"
+        """DB에서 토큰 로드 (tokens 테이블 사용)"""
+        token_record = await self.tokens_service.get_by_broker(
+            self.broker_type.name
+        )
 
-        self.token = await self.settings_service.get(token_key)
-        self.expires_dt = await self.settings_service.get(expires_key)
-
-        if self.token:
-            logger.info(f"[{self.broker_name}] 토큰 로드 완료: {self.token[:10]}...")
+        if token_record:
+            self.token = token_record.access_token
+            self.expires_dt = token_record.expires_at
+            logger.info(f'[{self.broker_name}] 토큰 로드 완료: {self.token[:10]}...')
+        else:
+            self.token = None
+            self.expires_dt = None
 
     async def _save_token_to_db(self):
-        """DB에 토큰 저장"""
-        token_key = f"{self.token_key_prefix}ACCESS_TOKEN"
-        expires_key = f"{self.token_key_prefix}ACCESS_TOKEN_EXPIRED_TIME"
-
-        await self.settings_service.set(token_key, self.token)
-        await self.settings_service.set(expires_key, self.expires_dt)
-
-        logger.info(f"[{self.broker_name}] 토큰 저장 완료")
+        """DB에 토큰 저장 (tokens 테이블 사용)"""
+        await self.tokens_service.upsert(
+            broker_type=self.broker_type.name,
+            access_token=self.token,
+            expires_at=self.expires_dt
+        )
+        logger.info(f'[{self.broker_name}] 토큰 저장 완료')
 
     async def _clear_token_from_db(self):
-        """DB에서 토큰 삭제"""
-        token_key = f"{self.token_key_prefix}ACCESS_TOKEN"
-        expires_key = f"{self.token_key_prefix}ACCESS_TOKEN_EXPIRED_TIME"
-
-        await self.settings_service.delete(token_key)
-        await self.settings_service.delete(expires_key)
+        """DB에서 토큰 삭제 (tokens 테이블 사용)"""
+        await self.tokens_service.delete_by_broker(self.broker_type.name)
 
         self.token = None
         self.expires_dt = None
         self.token_type = None
 
-        logger.info(f"[{self.broker_name}] 토큰 삭제 완료")
+        logger.info(f'[{self.broker_name}] 토큰 삭제 완료')

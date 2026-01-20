@@ -12,6 +12,7 @@ from backend.domains.services.stk_cache_service import StkCacheService
 from backend.domains.services.stk_diary_service import StkDiaryService
 from backend.domains.services.stk_info_service import StkInfoService
 from backend.domains.services.stk_trade_history_service import StkTradeHistoryService
+from backend.domains.services.tokens_service import TokensService
 
 
 _services = {}
@@ -39,7 +40,8 @@ def get_service(name: str):
         'stk_cache' : StkCacheService,
         'stk_diary' : StkDiaryService,
         'stk_info' : StkInfoService,
-        'stk_trade_history' : StkTradeHistoryService
+        'stk_trade_history' : StkTradeHistoryService,
+        'tokens': TokensService
     }
     
     if name not in service_classes:
