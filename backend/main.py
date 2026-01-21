@@ -11,14 +11,15 @@ from backend.core.config import config
 from backend.core.jwtmiddleware import JWTAuthMiddleware
 from backend.api.v1.endpoints.settings_routes import router as settings_router
 from backend.api.v1.endpoints.home_routes import router as home_router
-from backend.api.v1.endpoints.kiwoom_routes import router as kiwoom_router
-from backend.api.v1.endpoints.kis_routes import router as kis_router
-from backend.api.v1.endpoints.ls_routes import router as ls_router
+from backend.api.v1.endpoints.stkcompany.kiwoom_routes import router as kiwoom_router
+from backend.api.v1.endpoints.stkcompany.kis_routes import router as kis_router
+from backend.api.v1.endpoints.stkcompany.ls_routes import router as ls_router
 from backend.api.v1.endpoints.kdemon_routes import router as kdemon_router
 from backend.api.v1.endpoints.scheduler_routes import router as scheduler_router
 from backend.api.v1.endpoints.stock_routes import router as stock_router
 from backend.api.v1.endpoints.mystock_routes import router as mystock_router
 from backend.api.v1.endpoints.diary_routes import router as diary_router
+from backend.api.v1.endpoints.accounts_routes import router as accounts_router
 
 from backend.core.exception_handler import add_exception_handlers
 from backend.domains.kscheduler.k_scheduler import KScheduler
@@ -60,6 +61,7 @@ def add_routes(app: FastAPI):
     app.include_router(kis_router, prefix="/api/v1/kis", tags=["kis"])
     app.include_router(ls_router, prefix="/api/v1/ls", tags=["ls"])
     # 서비스 라우터
+    app.include_router(accounts_router, prefix="/api/v1/accounts", tags=["accounts"])
     app.include_router(kdemon_router, prefix="/api/v1/kdemon", tags=["kdemon"])
     app.include_router(stock_router, prefix="/api/v1/stock", tags=["stock"])
     app.include_router(mystock_router, prefix="/api/v1/mystock", tags=["mystock"])

@@ -166,7 +166,140 @@
             </div>
         </div>
     </div>
+    <!--계좌 요약 정보 카드-->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-wallet2 me-2"></i>계좌 요약
+                    </h5>
+                    <div class="d-flex align-items-center gap-3">
+                        <!-- 자동 새로고침 스위치 -->
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="autoRefreshAccountSwitch"
+                                x-model="autoRefresh_account" @change="toggleAutoRefresh_account()">
+                            <label class="form-check-label" for="autoRefreshAccountSwitch">
+                                자동
+                            </label>
+                        </div>
 
+                        <!-- 새로고침 버튼 -->
+                        <button @click="refreshAccount()" class="btn btn-outline-info btn-sm">
+                            <i class="bi bi-arrow-clockwise" :style="loading_account ? 'animation: spin 1s linear infinite;' : ''"></i>
+                            새로고침
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- 로딩 상태 -->
+                    <div x-show="loading_account" class="text-center py-4">
+                        <div class="spinner-border text-info" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2 text-muted">계좌 정보를 불러오는 중...</p>
+                    </div>
+
+                    <!-- 계좌 정보 표시 -->
+                    <div x-show="!loading_account && account_summary.summary">
+                        <!-- 전체 요약 -->
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <div class="border rounded p-3">
+                                    <h6 class="text-muted fw-bold mb-2">전체자산</h6>
+                                    <div class="fs-4 fw-bold text-primary" x-text="formatCurrency(account_summary.summary?.['전체자산'] || 0)"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="border rounded p-3">
+                                    <h6 class="text-muted fw-bold mb-2">전체매입금액</h6>
+                                    <div class="fs-4 fw-bold text-secondary" x-text="formatCurrency(account_summary.summary?.['전체매입금액'] || 0)"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="border rounded p-3">
+                                    <h6 class="text-muted fw-bold mb-2">전체평가손익</h6>
+                                    <div class="fs-4 fw-bold" :class="(account_summary.summary?.['전체평가손익'] || 0) >= 0 ? 'text-danger' : 'text-primary'"
+                                         x-text="formatCurrency(account_summary.summary?.['전체평가손익'] || 0)"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="border rounded p-3">
+                                    <h6 class="text-muted fw-bold mb-2">전체수익률</h6>
+                                    <div class="fs-4 fw-bold" :class="account_summary.summary?.['전체수익률']?.includes('-') ? 'text-primary' : 'text-danger'"
+                                         x-text="account_summary.summary?.['전체수익률'] || '-'"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 증권사별 계좌 정보 -->
+                        <div class="row g-3">
+                            <template x-for="(account, key) in account_summary.accounts" :key="key">
+                                <div class="col-md-4">
+                                    <div class="card h-100">
+                                        <div class="card-header" :class="'bg-' + getBrokerBgClass(account['증권사'])">
+                                            <h6 class="mb-0 text-white fw-bold">
+                                                <i :class="'bi ' + getBrokerIcon(account['증권사'])" class="me-2"></i>
+                                                <span x-text="account['증권사명']"></span>
+                                            </h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-3">
+                                                <small class="text-muted">계좌번호</small>
+                                                <div class="small fw-bold font-monospace" x-text="account['계좌번호']"></div>
+                                            </div>
+                                            <div class="border-top pt-3">
+                                                <div class="row g-2">
+                                                    <div class="col-6">
+                                                        <small class="text-muted d-block">총자산</small>
+                                                        <div class="small fw-bold" x-text="formatCurrency(account['총자산'] || 0)"></div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <small class="text-muted d-block">매입금액</small>
+                                                        <div class="small fw-bold" x-text="formatCurrency(account['매입금액'] || 0)"></div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <small class="text-muted d-block">평가손익</small>
+                                                        <div class="small fw-bold" :class="(account['평가손익'] || 0) >= 0 ? 'text-danger' : 'text-primary'"
+                                                             x-text="formatCurrency(account['평가손익'] || 0)"></div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <small class="text-muted d-block">수익률</small>
+                                                        <div class="small fw-bold" :class="account['수익률']?.includes('-') ? 'text-primary' : 'text-danger'"
+                                                             x-text="account['수익률'] || '-'"></div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <small class="text-muted d-block">주문가능금액</small>
+                                                        <div class="small fw-bold text-info" x-text="formatCurrency(account['주문가능금액'] || 0)"></div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <small class="text-muted d-block">보유종목수</small>
+                                                        <div class="small fw-bold" x-text="(account['보유종목수'] || 0) + '개'"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- 데이터 없음 -->
+                    <div x-show="!loading_account && !account_summary.summary" class="text-center py-4">
+                        <i class="bi bi-inbox text-muted empty-state-icon"></i>
+                        <p class="text-muted mt-2">계좌 정보를 불러올 수 없습니다.</p>
+                    </div>
+
+                    <!-- 오류 메시지 -->
+                    <div x-show="error_account" class="alert alert-danger mt-3">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <span x-text="error_account"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- My Stock 정보 카드 -->
     <div class="row mb-4">
         <div class="col-12">
@@ -306,12 +439,21 @@
       autoRefreshInterval_mystock: null,
       refreshIntervalSeconds_mystock: 30,
 
+      // 계좌 요약 관련 변수들
+      account_summary: {},
+      loading_account: false,
+      error_account: null,
+      autoRefresh_account: false,
+      autoRefreshInterval_account: null,
+      refreshIntervalSeconds_account: 30,
+
         async init() {
-        // 두 API를 동시에 비동기로 호출
+        // 세 API를 동시에 비동기로 호출
         try {
             await Promise.all([
                 this.refreshJisu(),
-                this.refreshMyStock()
+                this.refreshMyStock(),
+                this.refreshAccount()
             ]);
             console.log('모든 초기 데이터 로드 완료');
         } catch (error) {
@@ -592,12 +734,101 @@
                 this.mystocks = this.mystocks.filter(stock => stock.종목코드 !== stockCode);
                 console.log(`My Stock에서 ${stockCode} - ${stockName} 제거 완료`);
                 this.refreshMyStock(); // 목록 새로고침
-                
+
             } else {
                 console.error('My Stock에서 제거 실패:', data.error_message);
                 showAlert('My Stock에서 제거하는데 실패했습니다: ' + (data.error_message || '알 수 없는 오류'), 'error');
             }
-        })  
+        })
+      },
+
+      // 계좌 요약 새로고침
+      async refreshAccount() {
+        this.loading_account = true;
+        this.error_account = null;
+
+        try {
+          const response = await fetch('/api/v1/accounts/summary');
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          console.info('계좌 요약 데이터:', data);
+
+          this.account_summary = data;
+        } catch (error) {
+          console.error('계좌 정보 조회 실패:', error);
+          this.error_account = error.message || '계좌 정보를 불러오는데 실패했습니다.';
+          this.account_summary = {};
+        } finally {
+          this.loading_account = false;
+        }
+      },
+
+      // 계좌 자동 새로고침 토글
+      toggleAutoRefresh_account() {
+        if (this.autoRefresh_account) {
+          this.startAutoRefresh_account();
+          console.log('계좌 자동 새로고침 시작 (30초 간격)');
+        } else {
+          this.stopAutoRefresh_account();
+          console.log('계좌 자동 새로고침 중지');
+        }
+      },
+
+      // 계좌 자동 새로고침 시작
+      startAutoRefresh_account() {
+        this.stopAutoRefresh_account();
+
+        this.autoRefreshInterval_account = setInterval(async () => {
+          if (this.autoRefresh_account && !this.loading_account) {
+            console.log('계좌 자동 새로고침 실행...');
+            await this.refreshAccount();
+          }
+        }, this.refreshIntervalSeconds_account * 1000);
+      },
+
+      // 계좌 자동 새로고침 중지
+      stopAutoRefresh_account() {
+        if (this.autoRefreshInterval_account) {
+          clearInterval(this.autoRefreshInterval_account);
+          this.autoRefreshInterval_account = null;
+        }
+      },
+
+      // 통화 포맷 (콤마 추가)
+      formatCurrency(value) {
+        if (!value) return '0';
+        const numValue = parseInt(value) || 0;
+        return numValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      },
+
+      // 증권사별 배경 색상 클래스
+      getBrokerBgClass(broker) {
+        switch(broker?.toLowerCase()) {
+          case 'kiwoom':
+            return 'primary';
+          case 'kis':
+            return 'success';
+          case 'ls':
+            return 'warning';
+          default:
+            return 'secondary';
+        }
+      },
+
+      // 증권사별 아이콘
+      getBrokerIcon(broker) {
+        switch(broker?.toLowerCase()) {
+          case 'kiwoom':
+            return 'bi-building';
+          case 'kis':
+            return 'bi-bank';
+          case 'ls':
+            return 'bi-shop';
+          default:
+            return 'bi-wallet2';
+        }
       }
     };
   }
