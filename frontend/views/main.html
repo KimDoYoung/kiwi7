@@ -69,12 +69,14 @@
                         <div class="form-control">
                             <label class="label cursor-pointer gap-2">
                                 <span class="label-text">자동</span>
-                                <input type="checkbox" class="toggle toggle-sm toggle-primary"
-                                    x-model="autoRefresh_jisu" @change="toggleAutoRefresh_jisu()" />
+                                <input type="checkbox" class="toggle toggle-sm toggle-primary" <input type="checkbox"
+                                    class="toggle toggle-sm toggle-primary" x-model="autoRefresh_jisu"
+                                    @change="toggleAutoRefresh_jisu()" :disabled="market_name === '장마감'" />
                             </label>
                         </div>
                         <!-- 새로고침 버튼 -->
-                        <button @click="refreshJisu()" class="btn btn-sm btn-ghost btn-circle text-primary">
+                        <button @click="refreshJisu()" class="btn btn-sm btn-ghost btn-circle text-primary"
+                            :disabled="market_name === '장마감'">
                             <i class="bi bi-arrow-clockwise text-lg" :class="{'animate-spin': loading_jisu}"></i>
                         </button>
                     </div>
@@ -145,127 +147,142 @@
                         <i class="bi bi-wallet2 text-info"></i> 계좌 요약
                     </h2>
                     <div class="flex items-center gap-3">
+                        <!-- 보기/숨기기 체크박스 -->
+                        <div class="form-control" data-tip="요약정보 보기/숨기기">
+                            <label class="label cursor-pointer gap-2">
+                                <span class="label-text">요약</span>
+                                <input type="checkbox" class="toggle toggle-sm toggle-info"
+                                    x-model="accountSummaryVisible" />
+                            </label>
+                        </div>
                         <div class="form-control">
                             <label class="label cursor-pointer gap-2">
                                 <span class="label-text">자동</span>
                                 <input type="checkbox" class="toggle toggle-sm toggle-info"
-                                    x-model="autoRefresh_account" @change="toggleAutoRefresh_account()" />
+                                    x-model="autoRefresh_account" @change="toggleAutoRefresh_account()"
+                                    :disabled="market_name === '장마감'" />
                             </label>
                         </div>
-                        <button @click="refreshAccount()" class="btn btn-sm btn-ghost btn-circle text-info">
+                        <button @click="refreshAccount()" class="btn btn-sm btn-ghost btn-circle text-info"
+                            :disabled="market_name === '장마감'">
                             <i class="bi bi-arrow-clockwise text-lg" :class="{'animate-spin': loading_account}"></i>
                         </button>
                     </div>
                 </div>
 
-                <!-- 로딩 상태 -->
-                <div x-show="loading_account" class="flex flex-col items-center justify-center py-8">
-                    <span class="loading loading-spinner loading-lg text-info"></span>
-                    <p class="mt-2 text-base-content/60">계좌 정보를 불러오는 중...</p>
-                </div>
-
-                <div x-show="!loading_account && account_summary.summary">
-                    <!-- 전체 요약 (상단 큰 통계) -->
-                    <!-- 전체 요약 (상단 큰 통계) -->
-                    <div class="border border-base-300 bg-base-100 rounded-box p-4 mb-6 relative">
-                        <div class="absolute -top-3 left-4 bg-base-100 px-2 text-sm font-bold text-base-content/60">
-                            <i class="bi bi-piggy-bank me-1"></i>전체 자산 현황
-                        </div>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
-                            <div class="stat bg-base-200 rounded-box p-4">
-                                <div class="stat-title text-xs">전체자산</div>
-                                <div class="stat-value text-lg text-primary"
-                                    x-text="formatCurrency(account_summary.summary?.['전체자산'] || 0)"></div>
-                            </div>
-                            <div class="stat bg-base-200 rounded-box p-4">
-                                <div class="stat-title text-xs">전체매입금액</div>
-                                <div class="stat-value text-lg text-secondary"
-                                    x-text="formatCurrency(account_summary.summary?.['전체매입금액'] || 0)"></div>
-                            </div>
-                            <div class="stat bg-base-200 rounded-box p-4">
-                                <div class="stat-title text-xs">전체평가손익</div>
-                                <div class="stat-value text-lg"
-                                    :class="(account_summary.summary?.['전체평가손익'] || 0) >= 0 ? 'text-red-600' : 'text-blue-600'"
-                                    x-text="formatCurrency(account_summary.summary?.['전체평가손익'] || 0)"></div>
-                            </div>
-                            <div class="stat bg-base-200 rounded-box p-4">
-                                <div class="stat-title text-xs">전체수익률</div>
-                                <div class="stat-value text-lg"
-                                    :class="account_summary.summary?.['전체수익률']?.includes('-') ? 'text-blue-600' : 'text-red-600'"
-                                    x-text="account_summary.summary?.['전체수익률'] || '-'"></div>
-                            </div>
-                        </div>
+                <!-- 접기/펼치기 영역 -->
+                <div x-show="accountSummaryVisible" x-transition>
+                    <!-- 로딩 상태 -->
+                    <div x-show="loading_account" class="flex flex-col items-center justify-center py-8">
+                        <span class="loading loading-spinner loading-lg text-info"></span>
+                        <p class="mt-2 text-base-content/60">계좌 정보를 불러오는 중...</p>
                     </div>
 
-                    <!-- 증권사별 계좌 리스트 -->
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                        <template x-for="(account, key) in account_summary.accounts" :key="key">
-                            <div
-                                class="card bg-base-100 shadow border border-base-200 group hover:border-primary/50 transition-colors">
-                                <div class="card-body p-4">
-                                    <!-- 계좌 헤더: 증권사명 + 계좌번호 -->
-                                    <div class="flex justify-between items-center border-b border-base-200 pb-3 mb-3">
-                                        <div class="flex items-center gap-2">
-                                            <span class="badge badge-lg gap-2 font-bold py-3"
-                                                :class="'badge-' + getBrokerBgClass(account['증권사']) + ' text-' + getBrokerBgClass(account['증권사']) + '-content'">
-                                                <i :class="'bi ' + getBrokerIcon(account['증권사'])"></i>
-                                                <span x-text="account['증권사명']"></span>
-                                            </span>
-                                            <span class="text-base-content/60 font-mono tracking-wider text-sm"
-                                                x-text="'(' + account['계좌번호'] + ')'"></span>
-                                        </div>
-                                    </div>
+                    <div x-show="!loading_account && account_summary.summary">
+                        <!-- 전체 요약 (상단 큰 통계) -->
+                        <!-- 전체 요약 (상단 큰 통계) -->
+                        <div class="border border-base-300 bg-base-100 rounded-box p-4 mb-6 relative">
+                            <div class="absolute -top-3 left-4 bg-base-100 px-2 text-sm font-bold text-base-content/60">
+                                <i class="bi bi-piggy-bank me-1"></i>전체 자산 현황
+                            </div>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
+                                <div class="stat bg-base-200 rounded-box p-4">
+                                    <div class="stat-title text-xs">전체자산</div>
+                                    <div class="stat-value text-lg text-primary"
+                                        x-text="formatCurrency(account_summary.summary?.['전체자산'] || 0)"></div>
+                                </div>
+                                <div class="stat bg-base-200 rounded-box p-4">
+                                    <div class="stat-title text-xs">전체매입금액</div>
+                                    <div class="stat-value text-lg text-secondary"
+                                        x-text="formatCurrency(account_summary.summary?.['전체매입금액'] || 0)"></div>
+                                </div>
+                                <div class="stat bg-base-200 rounded-box p-4">
+                                    <div class="stat-title text-xs">전체평가손익</div>
+                                    <div class="stat-value text-lg"
+                                        :class="(account_summary.summary?.['전체평가손익'] || 0) >= 0 ? 'text-red-600' : 'text-blue-600'"
+                                        x-text="formatCurrency(account_summary.summary?.['전체평가손익'] || 0)"></div>
+                                </div>
+                                <div class="stat bg-base-200 rounded-box p-4">
+                                    <div class="stat-title text-xs">전체수익률</div>
+                                    <div class="stat-value text-lg"
+                                        :class="account_summary.summary?.['전체수익률']?.includes('-') ? 'text-blue-600' : 'text-red-600'"
+                                        x-text="account_summary.summary?.['전체수익률'] || '-'"></div>
+                                </div>
+                            </div>
+                        </div>
 
-                                    <!-- 계좌 상세 정보 -->
-                                    <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                                        <div class="flex justify-between">
-                                            <span class="text-base-content/60">종목수</span>
-                                            <span class="font-bold text-base-content"
-                                                x-text="(account['보유종목수'] || 0) + '개'"></span>
+                        <!-- 증권사별 계좌 리스트 -->
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                            <template x-for="(account, key) in account_summary.accounts" :key="key">
+                                <div
+                                    class="card bg-base-100 shadow border border-base-200 group hover:border-primary/50 transition-colors">
+                                    <div class="card-body p-4">
+                                        <!-- 계좌 헤더: 증권사명 + 계좌번호 -->
+                                        <div
+                                            class="flex justify-between items-center border-b border-base-200 pb-3 mb-3">
+                                            <div class="flex items-center gap-2">
+                                                <span class="badge badge-lg gap-2 font-bold py-3"
+                                                    :class="'badge-' + getBrokerBgClass(account['증권사']) + ' text-' + getBrokerBgClass(account['증권사']) + '-content'">
+                                                    <i :class="'bi ' + getBrokerIcon(account['증권사'])"></i>
+                                                    <span x-text="account['증권사명']"></span>
+                                                </span>
+                                                <span class="text-base-content/60 font-mono tracking-wider text-sm"
+                                                    x-text="'(' + account['계좌번호'] + ')'"></span>
+                                            </div>
                                         </div>
-                                        <div class="flex justify-between">
-                                            <span class="text-base-content/60">수익률</span>
-                                            <span class="font-bold"
-                                                :class="account['수익률']?.includes('-') ? 'text-blue-600' : 'text-red-600'"
-                                                x-text="account['수익률'] || '-'"></span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span class="text-base-content/60">총자산</span>
-                                            <span class="font-bold" x-text="formatCurrency(account['총자산'] || 0)"></span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span class="text-base-content/60">매입금액</span>
-                                            <span class="font-bold"
-                                                x-text="formatCurrency(account['매입금액'] || 0)"></span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span class="text-base-content/60">평가손익</span>
-                                            <span class="font-bold"
-                                                :class="(account['평가손익'] || 0) >= 0 ? 'text-red-600' : 'text-blue-600'"
-                                                x-text="formatCurrency(account['평가손익'] || 0)"></span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span class="text-base-content/60">주문가능</span>
-                                            <span class="font-bold text-info"
-                                                x-text="formatCurrency(account['주문가능금액'] || 0)"></span>
+
+                                        <!-- 계좌 상세 정보 -->
+                                        <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                                            <div class="flex justify-between">
+                                                <span class="text-base-content/60">종목수</span>
+                                                <span class="font-bold text-base-content"
+                                                    x-text="(account['보유종목수'] || 0) + '개'"></span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-base-content/60">수익률</span>
+                                                <span class="font-bold"
+                                                    :class="account['수익률']?.includes('-') ? 'text-blue-600' : 'text-red-600'"
+                                                    x-text="account['수익률'] || '-'"></span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-base-content/60">총자산</span>
+                                                <span class="font-bold"
+                                                    x-text="formatCurrency(account['총자산'] || 0)"></span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-base-content/60">매입금액</span>
+                                                <span class="font-bold"
+                                                    x-text="formatCurrency(account['매입금액'] || 0)"></span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-base-content/60">평가손익</span>
+                                                <span class="font-bold"
+                                                    :class="(account['평가손익'] || 0) >= 0 ? 'text-red-600' : 'text-blue-600'"
+                                                    x-text="formatCurrency(account['평가손익'] || 0)"></span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-base-content/60">주문가능</span>
+                                                <span class="font-bold text-info"
+                                                    x-text="formatCurrency(account['주문가능금액'] || 0)"></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </template>
+                            </template>
+                        </div>
                     </div>
-                </div>
 
-                <!-- 데이터 없음 -->
-                <div x-show="!loading_account && !account_summary.summary" class="text-center py-10">
-                    <i class="bi bi-inbox text-base-content/30 empty-state-icon"></i>
-                    <p class="text-base-content/60 mt-2">계좌 정보를 불러올 수 없습니다.</p>
-                </div>
+                    <!-- 데이터 없음 -->
+                    <div x-show="!loading_account && !account_summary.summary" class="text-center py-10">
+                        <i class="bi bi-inbox text-base-content/30 empty-state-icon"></i>
+                        <p class="text-base-content/60 mt-2">계좌 정보를 불러올 수 없습니다.</p>
+                    </div>
 
-                <!-- 오류 메시지 -->
-                <div x-show="error_account" class="alert alert-error mt-4 text-sm py-2">
-                    <i class="bi bi-exclamation-triangle"></i>
-                    <span x-text="error_account"></span>
+                    <!-- 오류 메시지 -->
+                    <div x-show="error_account" class="alert alert-error mt-4 text-sm py-2">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <span x-text="error_account"></span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -283,10 +300,12 @@
                             <label class="label cursor-pointer gap-2">
                                 <span class="label-text">자동</span>
                                 <input type="checkbox" class="toggle toggle-sm toggle-success"
-                                    x-model="autoRefresh_mystock" @change="toggleAutoRefresh_mystock()" />
+                                    x-model="autoRefresh_mystock" @change="toggleAutoRefresh_mystock()"
+                                    :disabled="market_name === '장마감'" />
                             </label>
                         </div>
-                        <button @click="refreshMyStock()" class="btn btn-sm btn-ghost btn-circle text-success">
+                        <button @click="refreshMyStock()" class="btn btn-sm btn-ghost btn-circle text-success"
+                            :disabled="market_name === '장마감'">
                             <i class="bi bi-arrow-clockwise text-lg" :class="{'animate-spin': loading_mystock}"></i>
                         </button>
                     </div>
@@ -397,6 +416,7 @@
                 autoRefresh_account: false,
                 autoRefreshInterval_account: null,
                 refreshIntervalSeconds_account: 30,
+                accountSummaryVisible: true,
 
                 async init() {
                     try {
