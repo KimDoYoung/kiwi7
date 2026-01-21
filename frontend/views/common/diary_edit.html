@@ -1,354 +1,298 @@
 <!-- 매매일지 작성/수정 모달 -->
-<div class="modal fade" id="stkDiaryModal" tabindex="-1" aria-labelledby="stkDiaryModalLabel" aria-hidden="true" x-data="diaryFormData()" x-init="initForm()">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="stkDiaryModalLabel">
-                    <i class="bi bi-pencil-square text-success me-2"></i>주식 일지 작성
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
-            </div>
-            <div class="modal-body">
-                <form id="diaryForm">
-                    <!-- 날짜 선택 -->
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="ymd" class="form-label">날짜</label>
-                            <input type="date" 
-                                   class="form-control" 
-                                   id="ymd" 
-                                   x-model="form.ymd"
-                                   required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="stock_code" class="form-label">종목코드 (선택사항)</label>
-                            <div class="input-group">
-                                <input type="text" 
-                                       class="form-control" 
-                                       id="stock_code" 
-                                       x-model="form.stk_cd"
-                                       placeholder="종목코드 입력"
-                                       maxlength="6">
-                                <button type="button" 
-                                        class="btn btn-outline-secondary" 
-                                        @click="searchStock()"
-                                        x-show="form.stk_cd && form.stk_cd.length === 6">
-                                    <i class="bi bi-search"></i>
-                                </button>
-                            </div>
-                            <small class="form-text text-muted">특정 종목에 대한 일지가 아닌 경우 비워두세요.</small>
-                        </div>
-                    </div>
+<dialog id="stkDiaryModal" class="modal" x-data="diaryFormData()" x-init="initForm()">
+    <div class="modal-box w-11/12 max-w-3xl">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
 
-                    <!-- 종목명 표시 (종목코드 입력시에만) -->
-                    <div x-show="form.stk_cd && diary_stockName" class="row mb-3">
-                        <div class="col-12">
-                            <label class="form-label">종목명</label>
-                            <input type="text" 
-                                   class="form-control" 
-                                   x-model="diary_stockName"
-                                   readonly>
-                        </div>
-                    </div>
+        <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
+            <i class="bi bi-pencil-square text-success"></i> 주식 일지 작성
+        </h3>
 
-                    <!-- 일지 내용 -->
-                    <div class="mb-3">
-                        <label for="note" class="form-label">일지 내용 <span class="text-danger">*</span></label>
-                        <textarea class="form-control" 
-                                  id="note" 
-                                  x-model="form.note"
-                                  rows="8"
-                                  placeholder="오늘의 주식 시장에 대한 생각, 특정 종목에 대한 분석, 투자 전략 등을 자유롭게 기록하세요..."
-                                  required></textarea>
-                        <div class="form-text">
-                            <small class="text-muted">
-                                예시: 오늘 코스피가 3% 상승했다. 반도체 업종이 강세를 보였는데...
-                            </small>
-                        </div>
+        <div class="py-2">
+            <form id="diaryForm" @submit.prevent="saveDiary">
+                <!-- 날짜 및 종목코드 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-bold">날짜</span>
+                        </label>
+                        <input type="date" class="input input-bordered w-full" id="ymd" x-model="form.ymd" required>
                     </div>
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-bold">종목코드 <span
+                                    class="text-xs font-normal text-base-content/60">(선택사항)</span></span>
+                        </label>
+                        <div class="join w-full">
+                            <input type="text" class="input input-bordered join-item w-full" id="stock_code"
+                                x-model="form.stk_cd" placeholder="종목코드 입력" maxlength="6">
+                            <button type="button" class="btn join-item" @click="searchStock()"
+                                x-show="form.stk_cd && form.stk_cd.length === 6">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                        <label class="label">
+                            <span class="label-text-alt text-base-content/60">특정 종목 일지가 아니면 비워두세요.</span>
+                        </label>
+                    </div>
+                </div>
 
-                    <!-- 에러 메시지 -->
-                    <div x-show="diary_errorMessage" class="alert alert-danger" x-text="diary_errorMessage"></div>
-                    
-                    <!-- 성공 메시지 -->
-                    <div x-show="diary_successMessage" class="alert alert-success" x-text="diary_successMessage"></div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                <button type="button" 
-                        class="btn btn-primary" 
-                        @click="saveDiary()"
+                <!-- 종목명 표시 -->
+                <div x-show="form.stk_cd && diary_stockName" class="form-control mb-4">
+                    <label class="label">
+                        <span class="label-text font-bold">종목명</span>
+                    </label>
+                    <input type="text" class="input input-bordered w-full bg-base-200" x-model="diary_stockName"
+                        readonly>
+                </div>
+
+                <!-- 일지 내용 -->
+                <div class="form-control mb-6">
+                    <label class="label">
+                        <span class="label-text font-bold">일지 내용 <span class="text-error">*</span></span>
+                    </label>
+                    <textarea class="textarea textarea-bordered h-48 w-full text-base" id="note" x-model="form.note"
+                        placeholder="오늘의 주식 시장에 대한 생각, 특정 종목에 대한 분석, 투자 전략 등을 자유롭게 기록하세요..." required></textarea>
+                    <label class="label">
+                        <span class="label-text-alt text-base-content/60">예: 오늘 코스피가 3% 상승했다. 반도체 업종이 강세...</span>
+                    </label>
+                </div>
+
+                <!-- 메시지 -->
+                <div x-show="diary_errorMessage" class="alert alert-error mb-4 text-sm" x-text="diary_errorMessage">
+                </div>
+                <div x-show="diary_successMessage" class="alert alert-success mb-4 text-sm"
+                    x-text="diary_successMessage"></div>
+
+                <!-- Footer Actions -->
+                <div class="modal-action">
+                    <button type="button" class="btn"
+                        onclick="document.getElementById('stkDiaryModal').close()">취소</button>
+                    <button type="submit" class="btn btn-primary"
                         :disabled="diary_loading || !form.note || !form.note.trim()">
-                    <span x-text="mode === 'update' ? '수정' : '저장'"></span>
-                </button>
-            </div>
+                        <span x-show="diary_loading" class="loading loading-spinner loading-xs"></span>
+                        <span x-text="mode === 'update' ? '수정' : '저장'"></span>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-</div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
 
 <script>
-function diaryFormData() {
-    return {
-        mode: 'insert', // 'insert' or 'update'
-        form: {
-            id: '',
-            ymd: new Date().toISOString().split('T')[0],
-            stk_cd: '',
-            note: ''
-        },
-        diary_stockName: '',
-        diary_loading: false,
-        diary_errorMessage: '',
-        diary_successMessage: '',
-
-        // Alpine.js 초기화 시 호출
-        init() {
-            console.log('주식 일지 Alpine 컴포넌트 초기화');
-            this.initDiaryForm();
-        },
-
-        initDiaryForm() {
-            console.log('주식 일지 폼 초기화');
-            // 폼 초기화
-            this.clearDiaryMessages();
-            this.diary_loading = false; // 로딩 상태 확실히 초기화
-            this.diary_stockName = '';
-            
-            // 전역 상태에서 종목코드 확인
-            if (window.kiwiGlobal && window.kiwiGlobal.selectedStockCode) {
-                this.form.stk_cd = window.kiwiGlobal.selectedStockCode;
-                // 종목명 자동 검색
-                this.searchStock();
-                // 사용 후 초기화
-                window.kiwiGlobal.selectedStockCode = null;
-            }
-            
-            // 오늘 날짜로 설정
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-            this.form.ymd = `${year}-${month}-${day}`; // input[type="date"] 형식
-            this.form.stk_cd = '';
-            this.form.note = '';
-        },
-
-        clearDiaryMessages() {
-            this.diary_errorMessage = '';
-            this.diary_successMessage = '';
-        },
-
-        initForm() {
-            // 폼 초기화 - 오늘 날짜로 설정하고 로딩 상태 리셋
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-            
-            this.form = {
-                ymd: `${year}-${month}-${day}`,
+    function diaryFormData() {
+        return {
+            mode: 'insert',
+            form: {
+                id: '',
+                ymd: new Date().toISOString().split('T')[0],
                 stk_cd: '',
                 note: ''
-            };
-            this.diary_stockName = '';
-            this.diary_loading = false; // 중요: 로딩 상태 초기화
-            this.clearDiaryMessages();
-        },
+            },
+            diary_stockName: '',
+            diary_loading: false,
+            diary_errorMessage: '',
+            diary_successMessage: '',
 
-        async searchStock() {
-            if (!this.form.stk_cd || this.form.stk_cd.length !== 6) {
-                this.diary_errorMessage = '6자리 종목코드를 입력해주세요.';
-                this.diary_stockName = '';
-                return;
-            }
-
-            this.diary_loading = true;
-            this.clearDiaryMessages();
-
-            try {
-                const response = await getFetch(`/api/v1/stock/info/${this.form.stk_cd}`);
-                if (response.success && response.data) {
-                    this.diary_stockName = response.data.name || '종목명 없음';
-                } else {
-                    this.diary_errorMessage = '종목 정보를 찾을 수 없습니다.';
-                    this.diary_stockName = '';
-                }
-            } catch (error) {
-                console.error('Error searching stock:', error);
-                this.diary_errorMessage = '종목 검색 중 오류가 발생했습니다: ' + error.message;
-                this.diary_stockName = '';
-            } finally {
-                this.diary_loading = false;
-            }
-        },
-
-        validateForm() {
-            this.clearDiaryMessages();
-
-            if (!this.form.ymd) {
-                this.diary_errorMessage = '날짜를 입력해주세요.';
-                return false;
-            }
-
-            if (!this.form.note || !this.form.note.trim()) {
-                this.diary_errorMessage = '일지 내용을 입력해주세요.';
-                return false;
-            }
-
-            if (this.form.stk_cd && this.form.stk_cd.length !== 6) {
-                this.diary_errorMessage = '종목코드는 6자리여야 합니다.';
-                return false;
-            }
-
-            return true;
-        },
-
-        async saveDiary() {
-            console.log('saveDiary() 함수 시작');
-            console.log('현재 form 데이터:', this.form);
-            
-            if (!this.validateForm()) {
-                console.log('validation 실패');
-                return;
-            }
-
-            console.log('validation 통과, API 호출 시작');
-            this.diary_loading = true;
-            this.clearDiaryMessages();
-
-            try {
-                // 날짜를 YYYYMMDD 형식으로 변환
-                const dateStr = this.form.ymd.replace(/-/g, '');
-                let requestData ;
-                let response;
-                if (this.mode == 'insert') {
-                    requestData = {
-                        api_id: "diary_create",
-                        payload: {
-                            ymd: dateStr,
-                            stk_cd: this.form.stk_cd || null, // 빈 문자열은 null로
-                            note: this.form.note.trim()
-                        }
-                    };
-                    console.log('요청 데이터:', requestData);
-                    response = await postFetch('/api/v1/diary', requestData);
-                } else {
-                    requestData = {
-                        api_id: "diary_update",
-                        payload: {
-                            id: this.form.id,
-                            ymd: dateStr,
-                            stk_cd: this.form.stk_cd || null,
-                            note: this.form.note.trim()
-                        }
-                    };
-                    console.log('요청 데이터:', requestData);
-                    response = await putFetch('/api/v1/diary/' + this.form.id, requestData);
-                }
-                console.log('API 응답 데이터:', response);
-
-                if (response.success) {
-                    console.log('저장 성공');
-                    this.diary_successMessage = response.data?.message || '주식 일지가 성공적으로 저장되었습니다.';
-                    
-                    // 2초 후 모달 닫기 및 폼 리셋
-                    setTimeout(() => {
-                        const modal = bootstrap.Modal.getInstance(document.getElementById('stkDiaryModal'));
-                        if (modal) {
-                            modal.hide();
-                        }
-                        this.resetDiaryForm();
-                    }, 2000);
-                } else {
-                    console.log('저장 실패:', response);
-                    this.diary_errorMessage = response.error_message || response.detail || '저장 중 오류가 발생했습니다.';
-                }
-            } catch (error) {
-                console.error('Error saving diary:', error);
-                this.diary_errorMessage = '저장 중 오류가 발생했습니다: ' + error.message;
-            } finally {
-                console.log('saveDiary() 함수 종료');
-                this.diary_loading = false;
-            }
-        },
-
-        resetDiaryForm() {
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-            
-            this.form = {
-                ymd: `${year}-${month}-${day}`,
-                stk_cd: '',
-                note: ''
-            };
-            this.diary_stockName = '';
-            this.diary_loading = false; // 로딩 상태 확실히 초기화
-            this.clearDiaryMessages();
-        },
-
-        setDiary(diary) {
-            if (diary) {
-                this.mode = 'update';
-                this.form.id = diary.id || '';
-                this.form.ymd = diary.ymd ? diary.ymd.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3') : '';
-                this.form.stk_cd = diary.stk_cd || '';
-                this.form.note = diary.note || '';
-                this.diary_stockName = diary.stk_nm || '';
-            } else {
-                this.mode = 'insert';
+            init() {
                 this.initDiaryForm();
-            }
-        },
-    }
-}
+                // Listen for custom open event
+                document.addEventListener('diary:open', (ev) => {
+                    console.log('diary:open received', ev.detail);
+                    this.setDiary(ev.detail);
+                    document.getElementById('stkDiaryModal').showModal();
+                });
+            },
 
-// 모달 이벤트 리스너 추가
-document.addEventListener('DOMContentLoaded', function() {
-    const diaryModal = document.getElementById('stkDiaryModal');
-    if (diaryModal) {
-        // 모달이 열릴 때
-        diaryModal.addEventListener('show.bs.modal', function (event) {
-            console.log('주식 일지 모달 초기화');
-            // Alpine.js 컴포넌트가 로드될 때까지 잠시 대기
-            setTimeout(() => {
-                const formElement = diaryModal.querySelector('[x-data]');
-                if (formElement && window.Alpine) {
-                    const alpineData = Alpine.$data(formElement);
-                    if (alpineData && typeof alpineData.initForm === 'function') {
-                        // only initialize if in insert mode (avoid overwriting update data)
-                        if (!alpineData.mode || alpineData.mode === 'insert') {
-                            alpineData.initForm();
-                        }
+            initDiaryForm() {
+                this.clearDiaryMessages();
+                this.diary_loading = false;
+                this.diary_stockName = '';
+
+                if (window.kiwiGlobal && window.kiwiGlobal.selectedStockCode) {
+                    this.form.stk_cd = window.kiwiGlobal.selectedStockCode;
+                    this.searchStock();
+                    window.kiwiGlobal.selectedStockCode = null;
+                }
+
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                this.form.ymd = `${year}-${month}-${day}`;
+                this.form.stk_cd = '';
+                this.form.note = '';
+            },
+
+            clearDiaryMessages() {
+                this.diary_errorMessage = '';
+                this.diary_successMessage = '';
+            },
+
+            initForm() {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+
+                this.form = {
+                    ymd: `${year}-${month}-${day}`,
+                    stk_cd: '',
+                    note: ''
+                };
+                this.diary_stockName = '';
+                this.diary_loading = false;
+                this.clearDiaryMessages();
+            },
+
+            async searchStock() {
+                if (!this.form.stk_cd || this.form.stk_cd.length !== 6) {
+                    this.diary_errorMessage = '6자리 종목코드를 입력해주세요.';
+                    this.diary_stockName = '';
+                    return;
+                }
+
+                this.diary_loading = true;
+                this.clearDiaryMessages();
+
+                try {
+                    const response = await getFetch(`/api/v1/stock/info/${this.form.stk_cd}`);
+                    if (response.success && response.data) {
+                        this.diary_stockName = response.data.name || '종목명 없음';
+                    } else {
+                        this.diary_errorMessage = '종목 정보를 찾을 수 없습니다.';
+                        this.diary_stockName = '';
                     }
+                } catch (error) {
+                    console.error('Error searching stock:', error);
+                    this.diary_errorMessage = '종목 검색 중 오류가 발생했습니다: ' + error.message;
+                    this.diary_stockName = '';
+                } finally {
+                    this.diary_loading = false;
                 }
-            }, 100);
-        });
-        // custom event으로 외부에서 diary 전달 가능
-        diaryModal.addEventListener('diary:open', function(ev) {
-            console.log('diary:open 이벤트 수신', ev.detail);
-            const formElement = diaryModal.querySelector('[x-data]');
-            if (formElement && window.Alpine) {
-                const alpineData = Alpine.$data(formElement);
-                if (alpineData && typeof alpineData.setDiary === 'function') {
-                    alpineData.setDiary(ev.detail);
+            },
+
+            validateForm() {
+                this.clearDiaryMessages();
+
+                if (!this.form.ymd) {
+                    this.diary_errorMessage = '날짜를 입력해주세요.';
+                    return false;
                 }
-            }
-        });
-        
-        // 모달이 닫힐 때
-        diaryModal.addEventListener('hidden.bs.modal', function (event) {
-            console.log('주식 일지 모달 닫힘');
-            const formElement = diaryModal.querySelector('[x-data]');
-            if (formElement && window.Alpine) {
-                const alpineData = Alpine.$data(formElement);
-                if (alpineData && typeof alpineData.resetDiaryForm === 'function') {
-                    alpineData.resetDiaryForm();
+
+                if (!this.form.note || !this.form.note.trim()) {
+                    this.diary_errorMessage = '일지 내용을 입력해주세요.';
+                    return false;
                 }
-            }
-        });
+
+                if (this.form.stk_cd && this.form.stk_cd.length !== 6) {
+                    this.diary_errorMessage = '종목코드는 6자리여야 합니다.';
+                    return false;
+                }
+
+                return true;
+            },
+
+            async saveDiary() {
+                if (!this.validateForm()) {
+                    return;
+                }
+
+                this.diary_loading = true;
+                this.clearDiaryMessages();
+
+                try {
+                    const dateStr = this.form.ymd.replace(/-/g, '');
+                    let requestData;
+                    let response;
+                    if (this.mode == 'insert') {
+                        requestData = {
+                            api_id: "diary_create",
+                            payload: {
+                                ymd: dateStr,
+                                stk_cd: this.form.stk_cd || null,
+                                note: this.form.note.trim()
+                            }
+                        };
+                        response = await postFetch('/api/v1/diary', requestData);
+                    } else {
+                        requestData = {
+                            api_id: "diary_update",
+                            payload: {
+                                id: this.form.id,
+                                ymd: dateStr,
+                                stk_cd: this.form.stk_cd || null,
+                                note: this.form.note.trim()
+                            }
+                        };
+                        response = await putFetch('/api/v1/diary/' + this.form.id, requestData);
+                    }
+
+                    if (response.success) {
+                        this.diary_successMessage = response.data?.message || '주식 일지가 성공적으로 저장되었습니다.';
+
+                        setTimeout(() => {
+                            document.getElementById('stkDiaryModal').close();
+                            this.resetDiaryForm();
+                        }, 1500);
+                    } else {
+                        this.diary_errorMessage = response.error_message || response.detail || '저장 중 오류가 발생했습니다.';
+                    }
+                } catch (error) {
+                    console.error('Error saving diary:', error);
+                    this.diary_errorMessage = '저장 중 오류가 발생했습니다: ' + error.message;
+                } finally {
+                    this.diary_loading = false;
+                }
+            },
+
+            resetDiaryForm() {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+
+                this.form = {
+                    ymd: `${year}-${month}-${day}`,
+                    stk_cd: '',
+                    note: ''
+                };
+                this.diary_stockName = '';
+                this.diary_loading = false;
+                this.clearDiaryMessages();
+            },
+
+            setDiary(diary) {
+                if (diary) {
+                    this.mode = 'update';
+                    this.form.id = diary.id || '';
+                    this.form.ymd = diary.ymd ? diary.ymd.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3') : '';
+                    this.form.stk_cd = diary.stk_cd || '';
+                    this.form.note = diary.note || '';
+                    this.diary_stockName = diary.stk_nm || '';
+                } else {
+                    this.mode = 'insert';
+                    this.initDiaryForm();
+                }
+            },
+        }
     }
-});
+
+    // Global helper to show modal if needed
+    function showDiaryModal(diaryData = null) {
+        if (diaryData) {
+            document.dispatchEvent(new CustomEvent('diary:open', { detail: diaryData }));
+        } else {
+            document.getElementById('stkDiaryModal').showModal();
+            // Trigger init if needed, or rely on Alpine init.
+            // Alpine data is reactive, so if we just open it, it shows current state.
+            // Better to reset state on open if it was closed.
+            // We can do that by dispatching event even for empty.
+            document.dispatchEvent(new CustomEvent('diary:open', { detail: null }));
+        }
+    }
 </script>
