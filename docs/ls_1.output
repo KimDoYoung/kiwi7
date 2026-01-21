@@ -1,8 +1,0 @@
-# LS증권 Open API Definitions
-# Auto-generated from LS Securities Open API website
-
-LS_REQUEST_DEF = {
-}
-
-LS_RESPONSE_DEF = {
-}
