@@ -497,7 +497,7 @@
       async refreshJisu() {
         this.loading_jisu = true;
         this.error_jisu = null;
-        
+
         try {
           // 실제 API 호출
           const response = await fetch('/api/v1/kiwoom/jisu');
@@ -505,12 +505,12 @@
             throw new Error(`HTTP error! status: ${response.status}`);
           }
           const data = await response.json();
-          
+
           // 성공 응답인지 확인
           if (data.success === false) {
             throw new Error(data.error_message || '지수 정보를 불러오는데 실패했습니다.');
           }
-          
+
           this.jisu = data;
           console.info(this.jisu)
           let market = this.jisu.market
@@ -524,8 +524,24 @@
           }
         } catch (error) {
           console.error('지수 정보 조회 실패:', error);
+
+          // 로그아웃되었을 때 (JSON 파싱 에러 - HTML 응답) 감지
+          if (error instanceof SyntaxError && error.message.includes('JSON')) {
+            console.warn('세션이 만료되었습니다. 로그아웃 처리합니다.');
+            this.stopAutoRefresh_jisu();
+            // 로그아웃 API 호출
+            try {
+              await fetch('/logout');
+            } catch (logoutError) {
+              console.error('로그아웃 중 오류:', logoutError);
+            }
+            // 로그인 페이지로 이동
+            window.location.href = '/login';
+            return;
+          }
+
           this.error_jisu = error.message || '지수 정보를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.';
-          
+
           // 오류 발생 시 임시 데이터 표시 (개발용)
           this.jisu = {
             'KOSPI': {'index': 'N/A', 'diff': 'N/A', 'rate': 'N/A'},
@@ -539,7 +555,7 @@
       async refreshMyStock(){
         this.loading_mystock = true;
         this.error_mystock = null;
-        
+
         try {
           const response = await fetch('/api/v1/mystock/');
           if (!response.ok) {
@@ -550,12 +566,28 @@
           if (data.success === false) {
             throw new Error(data.error_message || 'My Stock 정보를 불러오는데 실패했습니다.');
           }
-          
+
           this.mystocks = data.data.list || [];
           console.info('My Stock 정보:', this.mystocks);
-          
+
         } catch (error) {
           console.error('My Stock 조회 실패:', error);
+
+          // 로그아웃되었을 때 (JSON 파싱 에러 - HTML 응답) 감지
+          if (error instanceof SyntaxError && error.message.includes('JSON')) {
+            console.warn('세션이 만료되었습니다. 로그아웃 처리합니다.');
+            this.stopAutoRefresh_mystock();
+            // 로그아웃 API 호출
+            try {
+              await fetch('/logout');
+            } catch (logoutError) {
+              console.error('로그아웃 중 오류:', logoutError);
+            }
+            // 로그인 페이지로 이동
+            window.location.href = '/login';
+            return;
+          }
+
           this.error_mystock = error.message || 'My Stock 정보를 불러오는데 실패했습니다.';
           this.mystocks = [];
         } finally {
@@ -758,6 +790,21 @@
           this.account_summary = data;
         } catch (error) {
           console.error('계좌 정보 조회 실패:', error);
+
+          // 로그아웃되었을 때 (JSON 파싱 에러 - HTML 응답) 감지
+          if (error instanceof SyntaxError && error.message.includes('JSON')) {
+            console.warn('세션이 만료되었습니다. 로그아웃 처리합니다.');
+            // 로그아웃 API 호출
+            try {
+              await fetch('/logout');
+            } catch (logoutError) {
+              console.error('로그아웃 중 오류:', logoutError);
+            }
+            // 로그인 페이지로 이동
+            window.location.href = '/login';
+            return;
+          }
+
           this.error_account = error.message || '계좌 정보를 불러오는데 실패했습니다.';
           this.account_summary = {};
         } finally {
