@@ -150,7 +150,7 @@
                         <!-- 보기/숨기기 체크박스 -->
                         <div class="form-control" data-tip="요약정보 보기/숨기기">
                             <label class="label cursor-pointer gap-2">
-                                <span class="label-text">요약</span>
+                                <span class="label-text" x-text="accountSummaryVisible ? '숨김' : '펼침'"></span>
                                 <input type="checkbox" class="toggle toggle-sm toggle-info"
                                     x-model="accountSummaryVisible" />
                             </label>
@@ -179,7 +179,6 @@
                     </div>
 
                     <div x-show="!loading_account && account_summary.summary">
-                        <!-- 전체 요약 (상단 큰 통계) -->
                         <!-- 전체 요약 (상단 큰 통계) -->
                         <div class="border border-base-300 bg-base-100 rounded-box p-4 mb-6 relative">
                             <div class="absolute -top-3 left-4 bg-base-100 px-2 text-sm font-bold text-base-content/60">

@@ -86,6 +86,25 @@
                 box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
             }
         }
+
+        /* 숫자 패드 버튼 색상 */
+        .numpad-number {
+            background-color: #a8d8f0;
+            color: #1e3a5f;
+            border: none;
+        }
+
+        .numpad-backspace {
+            background-color: #ffd699;
+            color: #6b5200;
+            border: none;
+        }
+
+        .numpad-clear {
+            background-color: #ffb3ba;
+            color: #6b1a1f;
+            border: none;
+        }
     </style>
 </head>
 
@@ -145,7 +164,7 @@
                                 <div class="grid grid-cols-3 gap-3">
                                     <!-- 숫자 1-9 -->
                                     <template x-for="num in [1,2,3,4,5,6,7,8,9]" :key="num">
-                                        <button type="button" class="btn btn-neutral text-xl numpad-btn"
+                                        <button type="button" class="btn text-xl numpad-btn numpad-number"
                                             @click="password.length < 4 && (password += num.toString(), errorMessage = '')"
                                             :disabled="isLoading || password.length >= 4">
                                             <span class="font-bold" x-text="num"></span>
@@ -153,21 +172,21 @@
                                     </template>
 
                                     <!-- 백스페이스 (왼쪽 하단) -->
-                                    <button type="button" class="btn btn-warning text-xl numpad-btn"
+                                    <button type="button" class="btn text-xl numpad-btn numpad-backspace"
                                         @click="password = password.slice(0, -1)"
                                         :disabled="isLoading || password.length === 0">
                                         <i class="bi bi-backspace"></i>
                                     </button>
 
                                     <!-- 0 (중앙 하단) -->
-                                    <button type="button" class="btn btn-neutral text-xl numpad-btn"
+                                    <button type="button" class="btn text-xl numpad-btn numpad-number"
                                         @click="password.length < 4 && (password += '0', errorMessage = '')"
                                         :disabled="isLoading || password.length >= 4">
                                         <span class="font-bold">0</span>
                                     </button>
 
                                     <!-- 클리어 (오른쪽 하단) -->
-                                    <button type="button" class="btn btn-error text-xl numpad-btn"
+                                    <button type="button" class="btn text-xl numpad-btn numpad-clear"
                                         @click="password = ''; errorMessage = ''"
                                         :disabled="isLoading || password.length === 0">
                                         <i class="bi bi-x-lg"></i>
