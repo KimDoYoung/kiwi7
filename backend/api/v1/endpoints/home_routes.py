@@ -1,4 +1,3 @@
-
 # home_routes.py
 """
 모듈 설명: 
@@ -16,19 +15,18 @@
 """
 
 from datetime import datetime, timedelta
-from fastapi import APIRouter, Form, HTTPException, Query, Request, Response
-from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
-from fastapi import status
+
+from fastapi import APIRouter, Form, HTTPException, Query, Request, Response, status
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 
 from backend.core.config import config
+from backend.core.logger import get_logger
+from backend.core.security import create_jwt_access_token, get_current_user
+from backend.core.template_engine import render_template
 from backend.domains.models.settings_model import AccessToken
 from backend.domains.services.dependency import get_service
-from backend.utils.kiwi_utils import get_today
-from backend.core.template_engine import render_template
-from backend.core.security import create_jwt_access_token, get_current_user
-
-from backend.core.logger import get_logger
 from backend.page_contexts.context_registry import PAGE_CONTEXT_PROVIDERS
+from backend.utils.kiwi_utils import get_today
 
 logger = get_logger(__name__)
 

@@ -36,17 +36,17 @@
                 <li>
                     <a>계좌</a>
                     <ul class="p-2">
-                        <li><a href="/page?path=account/list">계좌현황</a></li>
-                        <li><a href="/page?path=account/detail">계좌상세</a></li>
+                        <li><a href="/page?path=stkcompany/kiwoom/account/list">계좌현황</a></li>
+                        <li><a href="/page?path=stkcompany/kiwoom/account/detail">계좌상세</a></li>
                         <li>
                             <div class="divider my-1"></div>
                         </li>
-                        <li><a href="/page?path=account/fill">체결내역</a></li>
-                        <li><a href="/page?path=account/balance">체결잔고</a></li>
+                        <li><a href="/page?path=stkcompany/kiwoom/account/fill">체결내역</a></li>
+                        <li><a href="/page?path=stkcompany/kiwoom/account/balance">체결잔고</a></li>
                         <li>
                             <div class="divider my-1"></div>
                         </li>
-                        <li><a href="/page?path=account/profit_lose">계좌손익</a></li>
+                        <li><a href="/page?path=stkcompany/kiwoom/account/profit_lose">계좌손익</a></li>
                     </ul>
                 </li>
                 <li>
@@ -148,3 +148,34 @@
         {% include "common/nav_right.html" %}
     </div>
 </div>
+
+<script>
+    // 네비게이션 메뉴 자동 닫기 스크립트
+    // 다른 메뉴를 열 때 기존에 열려있는 메뉴를 닫습니다.
+    document.addEventListener("DOMContentLoaded", function() {
+        // 데스크탑 메뉴의 details 요소들 (menu-horizontal 클래스 내부)
+        const details = document.querySelectorAll(".menu-horizontal details");
+        
+        details.forEach((targetDetail) => {
+            targetDetail.addEventListener("click", () => {
+                // 클릭된 details 이외의 다른 details가 열려있다면 닫음
+                details.forEach((detail) => {
+                    if (detail !== targetDetail && detail.hasAttribute("open")) {
+                        detail.removeAttribute("open");
+                    }
+                });
+            });
+        });
+
+        // (선택사항) 메뉴 외부를 클릭했을 때 닫기 기능을 원한다면 아래 주석 해제
+        /*
+        document.addEventListener("click", (event) => {
+            if (!event.target.closest(".menu-horizontal details")) {
+                details.forEach((detail) => {
+                    detail.removeAttribute("open");
+                });
+            }
+        });
+        */
+    });
+</script>

@@ -261,6 +261,34 @@ async def get_kiwoom_account_summary() -> AccountSummary | None:
 
 
 async def get_kis_account_summary() -> AccountSummary | None:
+    """
+    KIS(한국투자증권) 계좌 요약 정보를 조회하는 비동기 함수입니다.
+    이 함수는 한국투자증권 API를 통해 계좌의 자산 현황과 보유 종목 정보를 조회하여
+    표준화된 AccountSummary 객체로 반환합니다.
+    주요 기능:
+    - CTRP6548R API를 사용한 투자계좌자산현황조회
+    - TTTC8434R API를 사용한 보유종목 개수 조회
+    - 한글 필드명으로 데이터 변환
+    - 평가손익 및 수익률 자동 계산
+    조회되는 정보:
+    - 계좌번호: 설정에서 가져온 KIS 계좌번호
+    - 총자산: 평가금액합계
+    - 매입금액: 매입금액합계
+    - 주문가능금액: 총예수금액
+    - 보유종목수: 현재 보유 중인 종목 개수
+    - 평가손익: 자동 계산 (총자산 - 매입금액)
+    - 수익률: 자동 계산 (평가손익 / 매입금액 * 100)
+    Returns:
+        AccountSummary | None: 
+            성공 시 계좌 요약 정보가 담긴 AccountSummary 객체
+            실패 시 None 반환
+    Raises:
+        Exception: API 호출 실패, 네트워크 오류, 인증 실패 등의 경우
+    Note:
+        - KIS API 인스턴스가 정상적으로 생성되어야 함
+        - config.KIS_ACCT_NO가 10자리 계좌번호 형식이어야 함 (8자리 CANO + 2자리 ACNT_PRDT_CD)
+        - 보유종목 조회 실패 시에도 기본 계좌 정보는 반환됨
+    """
     """KIS(한투) 계좌 요약 조회 (routes 구조와 동일)"""
     try:
         # routes/kis_routes.py의 kis_rest_api 함수와 동일 구조
@@ -302,7 +330,13 @@ async def get_kis_account_summary() -> AccountSummary | None:
             response.data = korea_data
 
         logger.info('KIS 응답 수신')
-
+        # 디버그: response.data 출력
+        logger.info("--- KIS Account Summary Response Data ---")
+        if response.data:
+            logger.info(f'[KIS] Response data: {json.dumps(response.data, ensure_ascii=False, indent=2)}')
+        else:
+            logger.info('[KIS] Response data: None')
+        logger.info("----------------------------------------")
         # 응답에서 데이터 추출 (to_korea_data 적용 후 한글 필드명 사용)
         account_summary = AccountSummary('KIS', '한국투자증권')
         account_summary.data['계좌번호'] = config.KIS_ACCT_NO
