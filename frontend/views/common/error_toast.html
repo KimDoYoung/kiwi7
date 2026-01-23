@@ -1,12 +1,13 @@
-<!-- 에러용 Toast component -->
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-    <div id="toastError" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <img src="/public/images/error1.png" class="rounded me-2" alt="error image" style="width: 60px;">
-            <strong class="me-auto">Status Code : <span id="error-status-code"></span> </strong>
+<!-- 에러용 Toast component (Tailwind/DaisyUI) -->
+<div class="toast toast-end toast-bottom z-50 pointer-events-none">
+    <div id="toastError" class="alert alert-error flex flex-col items-start gap-2 shadow-lg hidden pointer-events-auto min-w-[320px] max-w-md">
+        <div class="flex items-center w-full gap-3 border-b border-black/10 pb-2 mb-1">
+            <img src="/public/images/error1.png" class="rounded w-[50px] h-[50px] object-cover bg-white" alt="error image">
+            <div class="font-bold flex-1 text-lg">
+                Status Error <span id="error-status-code" class="badge badge-sm badge-ghost ml-2"></span>
+            </div>
+            <button class="btn btn-sm btn-circle btn-ghost" onclick="document.getElementById('toastError').classList.add('hidden')">✕</button>
         </div>
-        <div class="toast-body">
-            <div id="error-detail"></div>
-        </div>
+        <div id="error-detail" class="text-sm w-full break-all whitespace-pre-wrap pl-1"></div>
     </div>
 </div>

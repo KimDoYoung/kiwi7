@@ -62,8 +62,8 @@
         updateElement('#change-rate', `${changeRate}%`);
         
         // 가격 색상 적용
-        const priceColor = prevDiff > 0 ? 'text-danger' : prevDiff < 0 ? 'text-primary' : 'text-dark';
-        document.querySelector('#current-price')?.setAttribute('class', `fs-4 fw-bold ${priceColor}`);
+        const priceColor = prevDiff > 0 ? 'text-red-500' : prevDiff < 0 ? 'text-blue-500' : 'text-base-content';
+        document.querySelector('#current-price')?.setAttribute('class', `text-2xl font-bold ${priceColor}`);
         document.querySelector('#price-diff')?.setAttribute('class', `${priceColor}`);
         document.querySelector('#change-rate')?.setAttribute('class', `${priceColor}`);
 
@@ -120,13 +120,13 @@
             updateElement('#high-250', formatNumber(parseInt(data['250최고']?.replace(/[^0-9]/g, '')) || 0));
             updateElement('#high-250-date', formatDate(data['250최고가일']));
             updateElement('#high-250-ratio', `${data['250최고가대비율']}%`);
-            document.getElementById('high-250-card')?.classList.remove('d-none');
+            document.getElementById('high-250-card')?.classList.remove('hidden');
         }
         if (data['250최저']) {
             updateElement('#low-250', formatNumber(parseInt(data['250최저']?.replace(/[^0-9]/g, '')) || 0));
             updateElement('#low-250-date', formatDate(data['250최저가일']));
             updateElement('#low-250-ratio', `${data['250최저가대비율']}%`);
-            document.getElementById('low-250-card')?.classList.remove('d-none');
+            document.getElementById('low-250-card')?.classList.remove('hidden');
         }
     }
 
@@ -142,14 +142,10 @@
      * 회사 정보 offcanvas를 표시합니다.
      */
     function showCompanyOffcanvas() {
-        const companyCanvas = document.getElementById('offcanvasCompany');
-        let offcanvasCompany = bootstrap.Offcanvas.getInstance(companyCanvas);
-        
-        if (!offcanvasCompany) {
-            offcanvasCompany = new bootstrap.Offcanvas(companyCanvas);
+        const toggle = document.getElementById('company-info-toggle');
+        if (toggle) {
+            toggle.checked = true;
         }
-        
-        offcanvasCompany.show();
     }
 
     /**
@@ -208,17 +204,11 @@
 
         console.log('showBuySellCanvas called with:', params);
 
-        // offcanvas 요소 찾기
-        const buySellCanvas = document.getElementById('offcanvasBuySell');
-        if (!buySellCanvas) {
-            console.error('offcanvasBuySell element not found');
+        // offcanvas 요소 찾기 (DaisyUI Drawer Toggle)
+        const drawerToggle = document.getElementById('buy-sell-drawer-toggle');
+        if (!drawerToggle) {
+            console.error('buy-sell-drawer-toggle element not found');
             return;
-        }
-
-        // Bootstrap offcanvas 인스턴스 생성 또는 가져오기
-        let offcanvasBuySell = bootstrap.Offcanvas.getInstance(buySellCanvas);
-        if (!offcanvasBuySell) {
-            offcanvasBuySell = new bootstrap.Offcanvas(buySellCanvas);
         }
 
         // 폼 데이터 설정
@@ -249,12 +239,10 @@
                 showSection(buySection);
                 hideSection(sellSection);
                 clearForm(sellForm);
-                document.getElementById('offcanvasExampleLabel').innerText = '매수';
             } else if (which === '매도') {
                 showSection(sellSection);
                 hideSection(buySection);
                 clearForm(buyForm);
-                document.getElementById('offcanvasExampleLabel').innerText = '매도';
             } else {
                 // 둘 다 표시
                 showSection(buySection);
@@ -266,19 +254,21 @@
         }
 
         // offcanvas 표시
-        offcanvasBuySell.show();
+        drawerToggle.checked = true;
     }
 
     // 섹션 표시 헬퍼 함수
     function showSection(section) {
         if (!section) return;
-        section.style.display = 'block';
+        section.classList.remove('hidden');
+        section.style.display = 'block'; // fallback
     }
 
     // 섹션 숨김 헬퍼 함수
     function hideSection(section) {
         if (!section) return;
-        section.style.display = 'none';
+        section.classList.add('hidden');
+        section.style.display = 'none'; // fallback
     }
 
     // 폼 초기화 헬퍼 함수
@@ -293,40 +283,54 @@
     }
     //toast 에러메세지 표시
     function showToastError(error) {
-        const statusCode = error.status;
-        const detail = error.detail || error.message;
-        // $('#toastError').find('#error-status-code').text(statusCode);
-        // $('#toastError').find('#error-detail').text(detail);
-        var toast = new bootstrap.Toast(document.getElementById('toastError'));
-        $('.toast').toast({
-                animation: false,
-                delay: 1000
-            });
-        $('.toast').toast('show');
+        const statusCode = error.status || 'Error';
+        const detail = error.detail || error.message || '알 수 없는 오류가 발생했습니다.';
+        
+        console.error(`Toast Error: [${statusCode}] ${detail}`);
+
+        const toast = document.getElementById('toastError');
+        const codeEl = document.getElementById('error-status-code');
+        const detailEl = document.getElementById('error-detail');
+
+        if (toast && codeEl && detailEl) {
+            codeEl.textContent = statusCode;
+            detailEl.textContent = detail;
+            
+            toast.classList.remove('hidden');
+            
+            // 5초 후 자동으로 닫기
+            if (toast.hideTimer) clearTimeout(toast.hideTimer);
+            toast.hideTimer = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 5000);
+        } else {
+            // Toast 요소가 없으면 alertfallback
+            alert(`오류가 발생했습니다: \n${detail} (${statusCode})`);
+        }
     }
     
-    // 범용 Alert 함수 - 다양한 유형의 Alert 표시
+    // 범용 Alert 함수 - 다양한 유형의 Alert 표시 (Tailwind/DaisyUI)
     function showAlert(message, type = 'info', duration = 5000) {
         const alertConfig = {
             success: {
                 class: 'alert-success',
-                icon: 'bi-check-circle',
-                prefix: '[성공]'
+                icon: 'bi-check-circle-fill',
+                prefix: '성공'
             },
             error: {
-                class: 'alert-danger',
-                icon: 'bi-exclamation-triangle',
-                prefix: '[오류]'
+                class: 'alert-error',
+                icon: 'bi-exclamation-triangle-fill',
+                prefix: '오류'
             },
             warning: {
                 class: 'alert-warning',
-                icon: 'bi-exclamation-triangle',
-                prefix: '[경고]'
+                icon: 'bi-exclamation-triangle-fill',
+                prefix: '경고'
             },
             info: {
                 class: 'alert-info',
-                icon: 'bi-info-circle',
-                prefix: '[정보]'
+                icon: 'bi-info-circle-fill',
+                prefix: '알림'
             }
         };
 
@@ -341,18 +345,21 @@
             return;
         }
 
-        // Alert 스타일 초기화
-        $alert.className = `alert d-flex align-items-center ${config.class}`;
-        $alertIcon.className = `bi ${config.icon} me-2`;
+        // Alert 스타일 초기화 (기본 클래스 보존)
+        $alert.className = `alert shadow-lg pointer-events-auto flex justify-between ${config.class}`;
+        $alertIcon.className = `bi ${config.icon} text-2xl shrink-0`;
         $alertStatus.textContent = config.prefix;
         $alertMessage.textContent = message;
 
         // Alert 표시
-        $alert.classList.remove('d-none');
+        $alert.classList.remove('hidden');
 
         // 지정된 시간 후 자동으로 숨김
         if (duration > 0) {
-            setTimeout(() => {
+            // 기존 타이머 제거
+            if ($alert.hideTimer) clearTimeout($alert.hideTimer);
+            
+            $alert.hideTimer = setTimeout(() => {
                 hideAlert();
             }, duration);
         }
@@ -362,7 +369,7 @@
     function hideAlert() {
         const $alert = document.getElementById('alert');
         if ($alert) {
-            $alert.classList.add('d-none');
+            $alert.classList.add('hidden');
         }
     }
 
@@ -626,18 +633,12 @@ function showDiaryModal() {
         if (modalElement) {
             console.log('모달 요소 발견, Bootstrap Modal 인스턴스 생성');
             
-            // 기존 인스턴스가 있는지 확인
-            let modal = bootstrap.Modal.getInstance(modalElement);
-            if (!modal) {
-                // 새 인스턴스 생성
-                modal = new bootstrap.Modal(modalElement);
-                console.log('새 Bootstrap Modal 인스턴스 생성됨');
+            // DaisyUI showModal
+            if (typeof modalElement.showModal === "function") {
+                modalElement.showModal();
             } else {
-                console.log('기존 Bootstrap Modal 인스턴스 사용');
+                console.error("Not a dialog element");
             }
-            
-            // 모달 표시
-            modal.show();
             console.log('모달 표시 완료');
         } else {
             console.error('stkDiaryModal 요소를 찾을 수 없습니다.');
@@ -717,13 +718,9 @@ function showDiaryModal(diary = null) {
             }
         }
 
-        // Bootstrap Modal 인스턴스 확보 및 표시
-        let modal = bootstrap.Modal.getInstance(modalElement);
-        if (!modal) {
-            modal = new bootstrap.Modal(modalElement);
-            console.log('새 Bootstrap Modal 인스턴스 생성됨');
+        if (typeof modalElement.showModal === "function") {
+            modalElement.showModal();
         }
-        modal.show();
         console.log('모달 표시 완료');
 
     } catch (error) {

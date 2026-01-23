@@ -1,20 +1,13 @@
-<!-- loading layer -->
-<!-- <div class="container-fluid mt-5 d-none" id="julia-loading-div">
-    <div class="row">
-        <div class="col d-flex align-items-center justify-content-center vh-100">
-        <div class="spinner-border text-secondary" role="status">
-        </div>
-        <span class="m-2"> Please Wait... </span>
-        </div>
-    </div>
-</div> -->
+
 <div>
     <input type="hidden" name="page_path" id="page_path" value="{{page_path}}">
 </div>
-<div class="container-fluid vh-100 d-flex align-items-center justify-content-center d-none" id="julia-loading-div">
-    <div class="text-center">
-        <div class="spinner-border text-secondary" role="status">
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-base-100/50 hidden" id="julia-loading-div">
+    <div class="text-center p-5 rounded-box bg-base-100 shadow-xl border border-base-200">
+        <img src="/public/images/error1.png" class="rounded mx-auto mb-3" alt="loading image" style="width: 60px;">
+        <div class="flex items-center justify-center gap-2">
+            <span class="loading loading-spinner loading-md text-primary"></span>
+            <span class="font-bold text-lg">Please Wait...</span>
         </div>
-        <span class="m-2"> Please Wait... </span>
     </div>
 </div>

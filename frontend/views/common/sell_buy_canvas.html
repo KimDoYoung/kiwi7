@@ -1,385 +1,374 @@
-<!-- 매수/매도용 Offcanvas component -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasBuySell" aria-labelledby="offcanvasExampleLabel" >
-    <div class="offcanvas-header">
-        <h2 class="offcanvas-title" id="offcanvasExampleLabel">매수/매도</h2>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        <div id="offcanvasBuy" class="bg-buy mb-3 p-2">
-            <form action="" id="buy-form">
-                <div class="mb-3 p-2">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="market" id="market-krx" value="KRX" required checked>
-                        <label class="form-check-label" for="market-krx">KRX</label>
+<!-- 매수/매도용 Right Drawer component -->
+<div class="drawer drawer-end z-50" id="buy-sell-drawer-container" style="position: fixed; pointer-events: none; inset: 0;">
+    <input id="buy-sell-drawer-toggle" type="checkbox" class="drawer-toggle" />
+    <div class="drawer-side">
+        <label for="buy-sell-drawer-toggle" aria-label="close sidebar" class="drawer-overlay"></label>
+        <div class="menu p-4 w-96 min-h-full bg-base-100 text-base-content flex flex-col" id="offcanvasBuySell">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">매수/매도</h2>
+                <label for="buy-sell-drawer-toggle" class="btn btn-sm btn-circle btn-ghost">✕</label>
+            </div>
+            
+            <div id="offcanvasBuy" class="bg-red-50 rounded-box mb-4 p-4 border border-red-200">
+                <form action="" id="buy-form">
+                    <div class="mb-3">
+                        <label class="label cursor-pointer justify-start gap-4">
+                            <span class="label-text">KRX</span>
+                            <input type="radio" name="market" id="market-krx" value="KRX" class="radio radio-sm radio-error" checked required />
+                        </label>
+                        <label class="label cursor-pointer justify-start gap-4">
+                            <span class="label-text">NXT</span>
+                            <input type="radio" name="market" id="market-nxt" value="NXT" class="radio radio-sm radio-error" />
+                        </label>
                     </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="market" id="market-nxt" value="NXT">
-                        <label class="form-check-label" for="market-nxt">NXT</label>
+                    <div class="grid grid-cols-3 gap-2 mb-3">
+                        <div class="col-span-1">
+                            <label for="pdno" class="label label-text pb-1 pt-0">종목번호</label>
+                            <input type="text" class="input input-bordered input-sm w-full" name="pdno" required>
+                        </div>
+                        <div class="col-span-2">
+                            <label for="pdnm" class="label label-text pb-1 pt-0">종목명</label>
+                            <input type="text" class="input input-bordered input-sm w-full" name="pdnm" readonly required>
+                        </div>
                     </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-4">
-                        <label for="pdno" class="form-label">종목번호</label>
-                        <input type="text" class="form-control" name="pdno" required>
+                    <div class="grid grid-cols-2 gap-2 mb-4">
+                        <div>
+                            <label for="qty" class="label label-text pb-1 pt-0">수량</label>
+                            <input type="number" class="input input-bordered input-sm w-full" name="qty" required min="1">
+                        </div>
+                        <div>
+                            <label for="cost" class="label label-text pb-1 pt-0">지정가<small class="text-xs text-gray-500 ml-1">(0:시장가)</small></label>
+                            <input type="number" class="input input-bordered input-sm w-full" name="cost" required min="0">
+                        </div>
                     </div>
-                    <div class="col-8">
-                        <label for="pdno" class="form-label">종목명</label>
-                        <input type="text" class="form-control" name="pdnm" readonly required>
+                    <div class="flex gap-2">
+                        <button type="submit" class="btn btn-error btn-sm flex-1 btnBuyCash text-white">매수</button>
+                        <button type="button" class="btn btn-outline btn-sm btnClearBuySell">초기화</button>
                     </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col">
-                        <label for="qty" class="form-label">수량</label>
-                        <input type="number" class="form-control" name="qty" required min="1">
+                </form>
+            </div> 
+            
+            <div id="offcanvasSell" class="bg-blue-50 rounded-box p-4 border border-blue-200">
+                <form action="" id="sell-form">
+                    <div class="mb-3">
+                        <label class="label cursor-pointer justify-start gap-4">
+                            <span class="label-text">KRX</span>
+                            <input type="radio" name="market" id="market-krx1" value="KRX" class="radio radio-sm radio-info" checked required />
+                        </label>
+                        <label class="label cursor-pointer justify-start gap-4">
+                            <span class="label-text">NXT</span>
+                            <input type="radio" name="market" id="market-nxt1" value="NXT" class="radio radio-sm radio-info" />
+                        </label>
                     </div>
-                    <div class="col">
-                        <label for="cost" class="form-label">지정가<small>(0:시장가)</small></label>
-                        <input type="number" class="form-control" name="cost" required min="0">
+                    <div class="grid grid-cols-3 gap-2 mb-3">
+                        <div class="col-span-1">
+                            <label for="pdno" class="label label-text pb-1 pt-0">종목번호</label>
+                            <input type="text" class="input input-bordered input-sm w-full" name="pdno" required>
+                        </div>
+                        <div class="col-span-2">
+                            <label for="pdnm" class="label label-text pb-1 pt-0">종목명</label>
+                            <input type="text" class="input input-bordered input-sm w-full" name="pdnm" readonly required>
+                        </div>
                     </div>
-                </div>
-                <button type="submit" class="btn btn-danger  btnBuyCash">매수</button>
-                <button type="button" class="btn btn-secondary btnClearBuySell">초기화</button>
-            </form>
-        </div> 
-        <div id="offcanvasSell" class="bg-sell p-2">
-            <form action="" id="sell-form">
-                <div class="mb-3 p-2">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="market" id="market-krx1" value="KRX" required checked>
-                        <label class="form-check-label" for="market-krx1">KRX</label>
+                    <div class="grid grid-cols-2 gap-2 mb-4">
+                        <div>
+                            <label for="qty" class="label label-text pb-1 pt-0">수량</label>
+                            <input type="number" class="input input-bordered input-sm w-full" name="qty" required min="1">
+                        </div>
+                        <div>
+                            <label for="cost" class="label label-text pb-1 pt-0">지정가<small class="text-xs text-gray-500 ml-1">(0:시장가)</small></label>
+                            <input type="number" class="input input-bordered input-sm w-full" name="cost" required min="0">
+                        </div>
                     </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="market" id="market-nxt1" value="NXT">
-                        <label class="form-check-label" for="market-nxt1">NXT</label>
+                    <div class="flex gap-2">
+                        <button type="submit" class="btn btn-info btn-sm flex-1 btnSellCash text-white">매도</button>
+                        <button type="button" class="btn btn-outline btn-sm btnClearBuySell">초기화</button>
                     </div>
-                </div>
-                <div class="row mb-3 p-2">
-                    <div class="col">
-                        <label for="pdno" class="form-label">종목번호</label>
-                        <input type="text" class="form-control" name="pdno" required>
-                    </div>
-                    <div class="col">
-                        <label for="pdno" class="form-label">종목명</label>
-                        <input type="text" class="form-control" name="pdnm" readonly required>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col">
-                        <label for="qty" class="form-label">수량</label>
-                        <input type="number" class="form-control" name="qty"  min="1" required>
-                    </div>
-                    <div class="col">
-                        <label for="cost" class="form-label">지정가<small>(0:시장가)</small></label>
-                        <input type="number" class="form-control" name="cost" min="0" required>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary btnSellCash">매도</button>
-                <button type="button" class="btn btn-secondary btnClearBuySell">초기화</button>
-            </form>        
+                </form>        
+            </div>
+            <div id="buy-sell-message-area" class="mt-4"></div>
         </div>
-        <div id="buy-sell-message-area"></div>
     </div>
 </div>
 
-<!-- 회사정보를 보여주는 offcanvas component -->
-<div class="offcanvas offcanvas-bottom" style="height: 70vh;" tabindex="-1" id="offcanvasCompany">
-    <div class="offcanvas-header border-bottom">
-        <h5 class="offcanvas-title fw-bold" id="offcanvasCompanyName">회사 정보</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        <!-- 로딩 표시 -->
-        <div id="company-loading" class="text-center py-4" style="display: none;">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <p class="mt-2 text-muted">정보를 불러오는 중...</p>
+<!-- 회사정보를 보여주는 Bottom Sheet component -->
+<input type="checkbox" id="company-info-toggle" class="modal-toggle" />
+<div class="modal modal-bottom" role="dialog" id="company-info-modal">
+    <div class="modal-box w-full max-w-5xl h-[80vh] p-0 rounded-t-2xl bg-base-100" id="offcanvasCompany">
+        <!-- Header -->
+        <div class="flex justify-between items-center p-4 border-b sticky top-0 bg-base-100 z-10">
+            <h3 class="text-lg font-bold" id="offcanvasCompanyName">회사 정보</h3>
+            <label for="company-info-toggle" class="btn btn-sm btn-circle btn-ghost">✕</label>
         </div>
-
-        <!-- 오류 표시 -->
-        <div id="company-error" class="alert alert-danger d-none"></div>
-
-        <div class="row h-100">
-            <!-- 좌측 정보 영역 -->
-            <div class="col-6">
-                <!-- 현재가 섹션 -->
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h6 class="card-title text-muted mb-3">현재가 정보</h6>
-                        <div class="row align-items-center">
-                            <div class="col-6">
-                                <div class="fs-4 fw-bold text-danger" id="current-price">-</div>
-                                <small class="text-muted">현재가</small>
-                            </div>
-                            <div class="col-6 text-end">
-                                <div class="text-danger" id="price-diff">-</div>
-                                <div class="text-danger" id="change-rate">-</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 거래 정보 -->
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h6 class="card-title text-muted mb-3">거래 정보</h6>
-                        <div class="row g-2">
-                            <div class="col-6">
-                                <div class="border rounded p-2 text-center">
-                                    <div class="fw-bold" id="volume">-</div>
-                                    <small class="text-muted">거래량</small>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="border rounded p-2 text-center">
-                                    <div class="fw-bold text-danger" id="high-price">-</div>
-                                    <small class="text-muted">고가</small>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="border rounded p-2 text-center">
-                                    <div class="fw-bold text-primary" id="low-price">-</div>
-                                    <small class="text-muted">저가</small>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="border rounded p-2 text-center">
-                                    <div class="fw-bold" id="open-price">-</div>
-                                    <small class="text-muted">시가</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 기업 정보 -->
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h6 class="card-title text-muted mb-3">기업 정보</h6>
-                        <table class="table table-sm">
-                            <tbody>
-                                <tr>
-                                    <td>시가총액</td>
-                                    <td class="text-end fw-bold" id="market-cap">-</td>
-                                </tr>
-                                <tr>
-                                    <td>상장주식</td>
-                                    <td class="text-end" id="shares">-</td>
-                                </tr>
-                                <tr>
-                                    <td>52주 최고</td>
-                                    <td class="text-end text-danger" id="year-high">-</td>
-                                </tr>
-                                <tr>
-                                    <td>52주 최저</td>
-                                    <td class="text-end text-primary" id="year-low">-</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- 250일 정보 (있는 경우) -->
-                <div class="card mb-3 d-none" id="high-250-card">
-                    <div class="card-body">
-                        <h6 class="card-title text-muted mb-3">250일 최고가</h6>
-                        <table class="table table-sm">
-                            <tbody>
-                                <tr>
-                                    <td>가격</td>
-                                    <td class="text-end fw-bold text-danger" id="high-250">-</td>
-                                </tr>
-                                <tr>
-                                    <td>일자</td>
-                                    <td class="text-end" id="high-250-date">-</td>
-                                </tr>
-                                <tr>
-                                    <td>대비율</td>
-                                    <td class="text-end" id="high-250-ratio">-</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="card mb-3 d-none" id="low-250-card">
-                    <div class="card-body">
-                        <h6 class="card-title text-muted mb-3">250일 최저가</h6>
-                        <table class="table table-sm">
-                            <tbody>
-                                <tr>
-                                    <td>가격</td>
-                                    <td class="text-end fw-bold text-primary" id="low-250">-</td>
-                                </tr>
-                                <tr>
-                                    <td>일자</td>
-                                    <td class="text-end" id="low-250-date">-</td>
-                                </tr>
-                                <tr>
-                                    <td>대비율</td>
-                                    <td class="text-end" id="low-250-ratio">-</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- 재무 정보 -->
-                <div class="card">
-                    <div class="card-body">
-                        <h6 class="card-title text-muted mb-3">재무 정보</h6>
-                        <div class="row g-2">
-                            <div class="col-4">
-                                <div class="text-center border rounded p-2">
-                                    <div class="fw-bold" id="per">-</div>
-                                    <small class="text-muted">PER</small>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="text-center border rounded p-2">
-                                    <div class="fw-bold" id="pbr">-</div>
-                                    <small class="text-muted">PBR</small>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="text-center border rounded p-2">
-                                    <div class="fw-bold" id="roe">-</div>
-                                    <small class="text-muted">ROE</small>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="text-center border rounded p-2">
-                                    <div class="fw-bold" id="eps">-</div>
-                                    <small class="text-muted">EPS</small>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="text-center border rounded p-2">
-                                    <div class="fw-bold" id="bps">-</div>
-                                    <small class="text-muted">BPS</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        
+        <!-- Body -->
+        <div class="p-4 overflow-y-auto h-[calc(100%-4rem)]">
+            <!-- 로딩 표시 -->
+            <div id="company-loading" class="text-center py-10 hidden">
+                <span class="loading loading-spinner loading-lg text-primary"></span>
+                <p class="mt-2 text-base-content/60">정보를 불러오는 중...</p>
             </div>
 
-            <!-- 우측 회사 정보 영역 -->
-            <div class="col-6">
-                <!-- 회사 개요 -->
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h6 class="card-title text-muted mb-3">회사 개요</h6>
-                        <div class="text-wrap" style="max-height: 150px; overflow-y: auto;">
-                            <p id="company-summary" class="mb-0 small">-</p>
-                        </div>
-                    </div>
-                </div>
+            <!-- 오류 표시 -->
+            <div id="company-error" class="alert alert-error hidden mb-4"></div>
 
-                <!-- 회사 기본 정보 -->
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h6 class="card-title text-muted mb-3">기본 정보</h6>
-                        <table class="table table-sm">
-                            <tbody>
-                                <tr>
-                                    <td width="50%">시장명</td>
-                                    <td class="text-end" id="market-name">-</td>
-                                </tr>
-                                <tr>
-                                    <td>업종명</td>
-                                    <td class="text-end" id="sector-name">-</td>
-                                </tr>
-                                <tr>
-                                    <td>회사분류</td>
-                                    <td class="text-end" id="company-type">-</td>
-                                </tr>
-                                <tr>
-                                    <td>상장일</td>
-                                    <td class="text-end" id="listing-date">-</td>
-                                </tr>
-                                <tr>
-                                    <td>종목상태</td>
-                                    <td class="text-end" id="stock-status">-</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- 재무 상세 정보 -->
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h6 class="card-title text-muted mb-3">재무 상세</h6>
-                        <div class="row g-2">
-                            <div class="col-4">
-                                <div class="text-center border rounded p-2">
-                                    <div class="fw-bold small" id="revenue">-</div>
-                                    <small class="text-muted">매출액</small>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
+                <!-- 좌측 정보 영역 -->
+                <div class="flex flex-col gap-4">
+                    <!-- 현재가 섹션 -->
+                    <div class="card bg-base-200 shadow-sm">
+                        <div class="card-body p-4">
+                            <h6 class="card-title text-sm text-base-content/60 mb-2">현재가 정보</h6>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div class="text-2xl font-bold" id="current-price">-</div>
+                                    <small class="text-base-content/60">현재가</small>
                                 </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="text-center border rounded p-2">
-                                    <div class="fw-bold small" id="operating-profit">-</div>
-                                    <small class="text-muted">영업이익</small>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="text-center border rounded p-2">
-                                    <div class="fw-bold small" id="net-income">-</div>
-                                    <small class="text-muted">당기순이익</small>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row g-2 mt-2">
-                            <div class="col-6">
-                                <div class="text-center border rounded p-2">
-                                    <div class="fw-bold small" id="face-value">-</div>
-                                    <small class="text-muted">액면가</small>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="text-center border rounded p-2">
-                                    <div class="fw-bold small" id="capital">-</div>
-                                    <small class="text-muted">자본금</small>
+                                <div class="text-right">
+                                    <div class="" id="price-diff">-</div>
+                                    <div class="" id="change-rate">-</div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- 거래 정보 -->
+                    <div class="card bg-base-200 shadow-sm">
+                        <div class="card-body p-4">
+                            <h6 class="card-title text-sm text-base-content/60 mb-2">거래 정보</h6>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="bg-base-100 rounded p-2 text-center">
+                                    <div class="font-bold" id="volume">-</div>
+                                    <small class="text-base-content/60">거래량</small>
+                                </div>
+                                <div class="bg-base-100 rounded p-2 text-center">
+                                    <div class="font-bold text-red-500" id="high-price">-</div>
+                                    <small class="text-base-content/60">고가</small>
+                                </div>
+                                <div class="bg-base-100 rounded p-2 text-center">
+                                    <div class="font-bold text-blue-500" id="low-price">-</div>
+                                    <small class="text-base-content/60">저가</small>
+                                </div>
+                                <div class="bg-base-100 rounded p-2 text-center">
+                                    <div class="font-bold" id="open-price">-</div>
+                                    <small class="text-base-content/60">시가</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 기업 정보 -->
+                    <div class="card bg-base-200 shadow-sm">
+                        <div class="card-body p-4">
+                            <h6 class="card-title text-sm text-base-content/60 mb-2">기업 정보</h6>
+                            <table class="table table-sm text-sm">
+                                <tbody>
+                                    <tr>
+                                        <td>시가총액</td>
+                                        <td class="text-right font-bold" id="market-cap">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>상장주식</td>
+                                        <td class="text-right" id="shares">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>52주 최고</td>
+                                        <td class="text-right text-red-500" id="year-high">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>52주 최저</td>
+                                        <td class="text-right text-blue-500" id="year-low">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 250일 정보 (있는 경우) -->
+                    <div class="card bg-base-200 shadow-sm hidden" id="high-250-card">
+                        <div class="card-body p-4">
+                            <h6 class="card-title text-sm text-base-content/60 mb-2">250일 최고가</h6>
+                            <table class="table table-sm text-sm">
+                                <tbody>
+                                    <tr>
+                                        <td>가격</td>
+                                        <td class="text-right font-bold text-red-500" id="high-250">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>일자</td>
+                                        <td class="text-right" id="high-250-date">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>대비율</td>
+                                        <td class="text-right" id="high-250-ratio">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card bg-base-200 shadow-sm hidden" id="low-250-card">
+                        <div class="card-body p-4">
+                            <h6 class="card-title text-sm text-base-content/60 mb-2">250일 최저가</h6>
+                            <table class="table table-sm text-sm">
+                                <tbody>
+                                    <tr>
+                                        <td>가격</td>
+                                        <td class="text-right font-bold text-blue-500" id="low-250">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>일자</td>
+                                        <td class="text-right" id="low-250-date">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>대비율</td>
+                                        <td class="text-right" id="low-250-ratio">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 재무 정보 -->
+                    <div class="card bg-base-200 shadow-sm">
+                        <div class="card-body p-4">
+                            <h6 class="card-title text-sm text-base-content/60 mb-2">재무 정보</h6>
+                            <div class="grid grid-cols-3 gap-2">
+                                <div class="text-center bg-base-100 rounded p-2">
+                                    <div class="font-bold" id="per">-</div>
+                                    <small class="text-base-content/60">PER</small>
+                                </div>
+                                <div class="text-center bg-base-100 rounded p-2">
+                                    <div class="font-bold" id="pbr">-</div>
+                                    <small class="text-base-content/60">PBR</small>
+                                </div>
+                                <div class="text-center bg-base-100 rounded p-2">
+                                    <div class="font-bold" id="roe">-</div>
+                                    <small class="text-base-content/60">ROE</small>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 mt-2">
+                                <div class="text-center bg-base-100 rounded p-2">
+                                    <div class="font-bold" id="eps">-</div>
+                                    <small class="text-base-content/60">EPS</small>
+                                </div>
+                                <div class="text-center bg-base-100 rounded p-2">
+                                    <div class="font-bold" id="bps">-</div>
+                                    <small class="text-base-content/60">BPS</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- 투자 정보 -->
-                <div class="card">
-                    <div class="card-body">
-                        <h6 class="card-title text-muted mb-3">투자 정보</h6>
-                        <table class="table table-sm">
-                            <tbody>
-                                <tr>
-                                    <td width="50%">유통비율</td>
-                                    <td class="text-end" id="float-ratio">-</td>
-                                </tr>
-                                <tr>
-                                    <td>외인소진률</td>
-                                    <td class="text-end" id="foreign-ownership">-</td>
-                                </tr>
-                                <tr>
-                                    <td>신용비율</td>
-                                    <td class="text-end" id="credit-ratio">-</td>
-                                </tr>
-                                <tr>
-                                    <td>NXT가능여부</td>
-                                    <td class="text-end" id="nxt-available">-</td>
-                                </tr>
-                                <tr>
-                                    <td>감리구분</td>
-                                    <td class="text-end" id="supervision-status">-</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <!-- 우측 회사 정보 영역 -->
+                <div class="flex flex-col gap-4">
+                    <!-- 회사 개요 -->
+                    <div class="card bg-base-200 shadow-sm">
+                        <div class="card-body p-4">
+                            <h6 class="card-title text-sm text-base-content/60 mb-2">회사 개요</h6>
+                            <div class="text-wrap max-h-[150px] overflow-y-auto">
+                                <p id="company-summary" class="mb-0 text-sm">-</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 회사 기본 정보 -->
+                    <div class="card bg-base-200 shadow-sm">
+                        <div class="card-body p-4">
+                            <h6 class="card-title text-sm text-base-content/60 mb-2">기본 정보</h6>
+                            <table class="table table-sm text-sm">
+                                <tbody>
+                                    <tr>
+                                        <td width="50%">시장명</td>
+                                        <td class="text-right" id="market-name">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>업종명</td>
+                                        <td class="text-right" id="sector-name">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>회사분류</td>
+                                        <td class="text-right" id="company-type">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>상장일</td>
+                                        <td class="text-right" id="listing-date">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>종목상태</td>
+                                        <td class="text-right" id="stock-status">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 재무 상세 정보 -->
+                    <div class="card bg-base-200 shadow-sm">
+                        <div class="card-body p-4">
+                            <h6 class="card-title text-sm text-base-content/60 mb-2">재무 상세</h6>
+                            <div class="grid grid-cols-3 gap-2">
+                                <div class="text-center bg-base-100 rounded p-2">
+                                    <div class="font-bold text-sm" id="revenue">-</div>
+                                    <small class="text-base-content/60">매출액</small>
+                                </div>
+                                <div class="text-center bg-base-100 rounded p-2">
+                                    <div class="font-bold text-sm" id="operating-profit">-</div>
+                                    <small class="text-base-content/60">영업이익</small>
+                                </div>
+                                <div class="text-center bg-base-100 rounded p-2">
+                                    <div class="font-bold text-sm" id="net-income">-</div>
+                                    <small class="text-base-content/60">당기순이익</small>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-2 mt-2">
+                                <div class="text-center bg-base-100 rounded p-2">
+                                    <div class="font-bold text-sm" id="face-value">-</div>
+                                    <small class="text-base-content/60">액면가</small>
+                                </div>
+                                <div class="text-center bg-base-100 rounded p-2">
+                                    <div class="font-bold text-sm" id="capital">-</div>
+                                    <small class="text-base-content/60">자본금</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 투자 정보 -->
+                    <div class="card bg-base-200 shadow-sm">
+                        <div class="card-body p-4">
+                            <h6 class="card-title text-sm text-base-content/60 mb-2">투자 정보</h6>
+                            <table class="table table-sm text-sm">
+                                <tbody>
+                                    <tr>
+                                        <td width="50%">유통비율</td>
+                                        <td class="text-right" id="float-ratio">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>외인소진률</td>
+                                        <td class="text-right" id="foreign-ownership">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>신용비율</td>
+                                        <td class="text-right" id="credit-ratio">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>NXT가능여부</td>
+                                        <td class="text-right" id="nxt-available">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>감리구분</td>
+                                        <td class="text-right" id="supervision-status">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <label class="modal-backdrop" for="company-info-toggle">Close</label>
     </div>
 </div>

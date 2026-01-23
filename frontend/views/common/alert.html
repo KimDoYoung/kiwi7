@@ -1,11 +1,15 @@
-<!-- 범용 Alert component -->
-<div class="container mt-3">
-    <div id="alert" class="alert d-flex align-items-center d-none" role="alert">
-        <i id="alertIcon" class="bi me-2"></i>
-        <div>
-            <span id="alertStatus" class="me-2"></span>
-            <span id="alertMessage"></span>
+<!-- 범용 Alert component (Refactored for Tailwind/DaisyUI) -->
+<div class="toast toast-top toast-center z-[100] w-full max-w-md p-0 mt-4 pointer-events-none">
+    <div id="alert" class="alert shadow-lg hidden pointer-events-auto flex justify-between" role="alert">
+        <div class="flex items-center gap-3 overflow-hidden">
+            <i id="alertIcon" class="bi text-2xl shrink-0"></i>
+            <div class="flex flex-col min-w-0">
+                <span id="alertStatus" class="font-bold text-sm"></span>
+                <span id="alertMessage" class="text-sm truncate hover:text-clip hover:whitespace-normal"></span>
+            </div>
         </div>
-        <button type="button" class="btn-close ms-auto" aria-label="Close" onclick="hideAlert()"></button>
+        <button type="button" class="btn btn-sm btn-circle btn-ghost shrink-0" aria-label="Close" onclick="hideAlert()">
+            <i class="bi bi-x-lg"></i>
+        </button>
     </div>
 </div>

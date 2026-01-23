@@ -36,100 +36,104 @@
 </style>
 {% endblock %}
 {% block content %}
-<div class="container mt-4" x-data="kt00004_component"  >
+<div class="container mx-auto px-4 mt-4" x-data="kt00004_component"  >
     <!-- 계좌명과 헤드 시작-->
-    <div class="d-flex align-items-center">
-        <span x-text="data?.계좌명"></span>
-        <span class="ms-2">(<span x-text="data?.지점명"></span>)</span>
-        <div class="form-check ms-3 mt-0">
-            <input class="form-check-input" type="checkbox" id="summaryFullCheck" x-model="summary_show">
-            <label class="form-check-label" for="summaryFullCheck">현황상세</label>
+    <div class="flex items-center">
+        <span x-text="data?.계좌명" class="font-bold text-lg"></span>
+        <span class="ml-2">(<span x-text="data?.지점명"></span>)</span>
+        <div class="form-control ml-3 mt-0">
+            <label class="label cursor-pointer gap-2">
+                <span class="label-text">현황상세</span>
+                <input type="checkbox" class="checkbox checkbox-sm checkbox-primary" id="summaryFullCheck" x-model="summary_show" />
+            </label>
         </div>
-        <div class="form-check form-switch ms-3 mt-0">
-            <input class="form-check-input" type="checkbox" id="autoRefreshCheck" x-model="autoRefresh">
-            <label class="form-check-label fw-bold" for="autoRefreshCheck">
-                자동 새로고침 
-                <span x-show="!autoRefresh" class="badge bg-secondary ms-1">30초</span>
-                <span x-show="autoRefresh" 
-                      :class="`badge ms-1 ${countdown <= 5 ? 'bg-warning' : 'bg-primary'}`" 
-                      x-text="`${countdown}초`"></span>
+        <div class="form-control ml-3 mt-0">
+            <label class="label cursor-pointer gap-2">
+                <span class="label-text font-bold">
+                    자동 새로고침 
+                    <span x-show="!autoRefresh" class="badge badge-secondary ml-1">30초</span>
+                    <span x-show="autoRefresh" 
+                          :class="`badge ml-1 ${countdown <= 5 ? 'badge-warning' : 'badge-primary'}`" 
+                          x-text="`${countdown}초`"></span>
+                </span>
+                <input type="checkbox" class="toggle toggle-primary toggle-sm" id="autoRefreshCheck" x-model="autoRefresh" />
             </label>
         </div>
     </div> 
-    <div class="d-flex align-items-center mt-2 gap-4">
+    <div class="flex items-center mt-2 gap-4 text-sm">
         <div>
             <span>자산:</span>
-            <span class="fw-bold" x-text="Number(data?.추정예탁자산).toLocaleString() + ' 원'"></span>
+            <span class="font-bold" x-text="Number(data?.추정예탁자산).toLocaleString() + ' 원'"></span>
         </div>
         <div>
             <span>수익:</span>
-            <span class="fw-bold" x-text="profit.toLocaleString() + ' 원'" :class="formatClass(profit)"></span>
+            <span class="font-bold" x-text="profit.toLocaleString() + ' 원'" :class="formatClass(profit)"></span>
         </div>
         <div>
             <span>매수가능:</span>
-            <span class="fw-bold" x-text="Number(data?.['D+2추정예수금']).toLocaleString() + ' 원'"></span>
+            <span class="font-bold" x-text="Number(data?.['D+2추정예수금']).toLocaleString() + ' 원'"></span>
         </div>
     </div>
     <!-- 계좌명과 헤드 끝-->
     <!-- 계좌 요약 정보 시작--> 
-    <div class="rounded-3 shadow-sm bg-white p-1 mt-4" x-show="summary_show">
-        <table class="mt-2 table table-bordered table-striped align-middle">
+    <div class="rounded-lg shadow-sm bg-base-100 p-1 mt-4" x-show="summary_show">
+        <table class="mt-2 table table-zebra w-full text-sm">
         <tbody>
             <tr>
-            <th class="bg-light">예수금</th>
-            <td class="text-end" x-text="Number(data?.예수금).toLocaleString() + ' 원'"></td>
+            <th class="bg-base-200">예수금</th>
+            <td class="text-right" x-text="Number(data?.예수금).toLocaleString() + ' 원'"></td>
 
-            <th class="bg-light">D+2추정예수금</th>
-            <td class="text-end fw-bold" x-text="Number(data?.['D+2추정예수금']).toLocaleString() + ' 원'"></td>
+            <th class="bg-base-200">D+2추정예수금</th>
+            <td class="text-right font-bold" x-text="Number(data?.['D+2추정예수금']).toLocaleString() + ' 원'"></td>
             </tr>
             <tr>
-            <th class="bg-light">유가잔고평가액</th>
-            <td class="text-end" x-text="Number(data?.유가잔고평가액).toLocaleString() + ' 원'"></td>
+            <th class="bg-base-200">유가잔고평가액</th>
+            <td class="text-right" x-text="Number(data?.유가잔고평가액).toLocaleString() + ' 원'"></td>
 
-            <th class="bg-light">예탁자산평가액</th>
-            <td class="text-end" x-text="Number(data?.예탁자산평가액).toLocaleString() + ' 원'"></td>
+            <th class="bg-base-200">예탁자산평가액</th>
+            <td class="text-right" x-text="Number(data?.예탁자산평가액).toLocaleString() + ' 원'"></td>
             </tr>
             <tr>
-            <th class="bg-light">총매입금액</th>
-            <td class="text-end" x-text="Number(data?.총매입금액).toLocaleString() + ' 원'"></td>
+            <th class="bg-base-200">총매입금액</th>
+            <td class="text-right" x-text="Number(data?.총매입금액).toLocaleString() + ' 원'"></td>
 
-            <th class="bg-light">추정예탁자산</th>
-            <td class="text-end" x-text="Number(data?.추정예탁자산).toLocaleString() + ' 원'"></td>
+            <th class="bg-base-200">추정예탁자산</th>
+            <td class="text-right" x-text="Number(data?.추정예탁자산).toLocaleString() + ' 원'"></td>
             </tr>
             <tr>
-            <th class="bg-light">매도담보대출금</th>
-            <td class="text-end" x-text="Number(data?.매도담보대출금).toLocaleString() + ' 원'"></td>
+            <th class="bg-base-200">매도담보대출금</th>
+            <td class="text-right" x-text="Number(data?.매도담보대출금).toLocaleString() + ' 원'"></td>
 
-            <th class="bg-light">당일투자원금</th>
-            <td class="text-end" x-text="Number(data?.당일투자원금).toLocaleString() + ' 원'"></td>
+            <th class="bg-base-200">당일투자원금</th>
+            <td class="text-right" x-text="Number(data?.당일투자원금).toLocaleString() + ' 원'"></td>
             </tr>
             <tr>
-            <th class="bg-light">당월투자원금</th>
-            <td class="text-end" x-text="Number(data?.당월투자원금).toLocaleString() + ' 원'"></td>
+            <th class="bg-base-200">당월투자원금</th>
+            <td class="text-right" x-text="Number(data?.당월투자원금).toLocaleString() + ' 원'"></td>
 
-            <th class="bg-light">누적투자원금</th>
-            <td class="text-end" x-text="Number(data?.누적투자원금).toLocaleString() + ' 원'"></td>
+            <th class="bg-base-200">누적투자원금</th>
+            <td class="text-right" x-text="Number(data?.누적투자원금).toLocaleString() + ' 원'"></td>
             </tr>
             <tr>
-            <th class="bg-light">당일투자손익</th>
-            <td class="text-end text-danger" x-text="Number(data?.당일투자손익).toLocaleString() + ' 원'"></td>
+            <th class="bg-base-200">당일투자손익</th>
+            <td class="text-right text-red-500" x-text="Number(data?.당일투자손익).toLocaleString() + ' 원'"></td>
 
-            <th class="bg-light">당월투자손익</th>
-            <td class="text-end text-danger" x-text="Number(data?.당월투자손익).toLocaleString() + ' 원'"></td>
+            <th class="bg-base-200">당월투자손익</th>
+            <td class="text-right text-red-500" x-text="Number(data?.당월투자손익).toLocaleString() + ' 원'"></td>
             </tr>
             <tr>
-            <th class="bg-light">누적투자손익</th>
-            <td class="text-end text-danger" x-text="Number(data?.누적투자손익).toLocaleString() + ' 원'"></td>
+            <th class="bg-base-200">누적투자손익</th>
+            <td class="text-right text-red-500" x-text="Number(data?.누적투자손익).toLocaleString() + ' 원'"></td>
 
-            <th class="bg-light">당일손익율</th>
-            <td class="text-end" x-text="data?.당일손익율 + ' %'"></td>
+            <th class="bg-base-200">당일손익율</th>
+            <td class="text-right" x-text="data?.당일손익율 + ' %'"></td>
             </tr>
             <tr>
-            <th class="bg-light">당월손익율</th>
-            <td class="text-end" x-text="data?.당월손익율 + ' %'"></td>
+            <th class="bg-base-200">당월손익율</th>
+            <td class="text-right" x-text="data?.당월손익율 + ' %'"></td>
 
-            <th class="bg-light">누적손익율</th>
-            <td class="text-end" x-text="data?.누적손익율 + ' %'"></td>
+            <th class="bg-base-200">누적손익율</th>
+            <td class="text-right" x-text="data?.누적손익율 + ' %'"></td>
             </tr>
         </tbody>
         </table>
@@ -138,33 +142,33 @@
 
     <!-- 계좌 요약 정보 끝--> 
     <div class="mt-4">
-        <div class="mt-2 mb-2 d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center gap-3">
-                <select aria-label="손익율 필터" class="form-select form-select-sm w-auto" x-model="profitFilter">
+        <div class="mt-2 mb-2 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <select aria-label="손익율 필터" class="select select-bordered select-sm w-auto" x-model="profitFilter">
                     <option value="all">전체</option>
                     <option value="plus">+손익율</option>
                     <option value="minus">-손익율</option>
                 </select>
                 <div>종목갯수 : <span x-text="filtered_item_count"></span> / <span x-text="total_item_count"></span></div>
             </div>
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-success btn-sm" title="엑셀로 저장" @click="exportCSV()">
+            <div class="flex gap-2">
+                <button class="btn btn-outline btn-success btn-sm" title="엑셀로 저장" @click="exportCSV()">
                     <i class="bi bi-file-earmark-excel"></i>
                 </button>
-                <button class="btn btn-outline-success btn-sm" title="My Stock에 저장" @click="addMyStock()">
+                <button class="btn btn-outline btn-success btn-sm" title="My Stock에 저장" @click="addMyStock()">
                     <i class="bi bi-plus-lg"></i>
                 </button>
             </div>            
         </div>
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover align-middle text-center">
-                <thead class="table-light">
+        <div class="overflow-x-auto">
+            <table class="table table-zebra table-hover text-center w-full">
+                <thead class="bg-base-200">
                     <tr>
                         <template x-for="column in getTableColumns()" :key="column.key">
                             <th>
                                 <template x-if="column.sortable">
                                     <a href="#" @click.prevent="sortBy(column.key)" 
-                                        class="text-decoration-none text-dark sortable-header">
+                                        class="no-underline text-base-content sortable-header">
                                         <span x-text="column.label"></span>
                                         <span x-show="sort_key === column.key" 
                                                 x-text="sort_asc ? '▲' : '▼'"></span>
@@ -185,21 +189,21 @@
                         <tr>
                             <template x-for="column in getTableColumns()" :key="column.key">
                                 <td x-text="getCellValue(item, column)"
-                                    :class="getCellClass(item, column) + (column.clickable ? ' clickable-cell' : '') + ((column.format === 'number' || column.format === 'profit') ? ' text-end' : '')"
+                                    :class="getCellClass(item, column) + (column.clickable ? ' clickable-cell' : '') + ((column.format === 'number' || column.format === 'profit') ? ' text-right' : '')"
                                     @click="handleCellClick(item, column)">
                                 </td>
                             </template>
                             <template x-if="hasActionButtons()">
                                 <td>
-                                    <div class="btn-group" role="group">
+                                    <div class="join" role="group">
                                         <template x-if="actions.includes('buy')">
-                                            <button type="button" class="btn btn-sm btn-danger" @click="buy(item)" title="매수(buy)">買</button>
+                                            <button type="button" class="btn btn-sm btn-error join-item" @click="buy(item)" title="매수(buy)">買</button>
                                         </template>
                                         <template x-if="actions.includes('sell')">
-                                            <button type="button" class="btn btn-sm btn-primary" @click="sell(item)" title="매도(sell)">賣</button>
+                                            <button type="button" class="btn btn-sm btn-info join-item" @click="sell(item)" title="매도(sell)">賣</button>
                                         </template>
                                         <template x-if="actions.includes('detail')">
-                                            <button type="button" class="btn btn-sm btn-info" @click="detail(item)" title="종목상세(detail info)">詳</button>
+                                            <button type="button" class="btn btn-sm btn-success join-item" @click="detail(item)" title="종목상세(detail info)">詳</button>
                                         </template>
                                     </div>
                                 </td>
@@ -216,7 +220,7 @@
                 </tbody>
                 <tbody x-show="!loading && (!data || sorted_items.length === 0)">
                     <tr>
-                        <td :colspan="getTableColumns().length" class="text-center py-4 text-muted">
+                        <td :colspan="getTableColumns().length" class="text-center py-4 text-base-content/50">
                             표시할 데이터가 없습니다.
                         </td>
                     </tr>
@@ -226,15 +230,15 @@
     </div> 
     <!-- 데이터 테이블 끝-->   
 </div>
-<div class="container mt-4" x-data="ka10075_component" > 
+<div class="container mx-auto px-4 mt-4" x-data="ka10075_component" > 
     <!-- 미체결 주문: 데이터 있을 때만 전체 영역 표시 -->
     <template x-if="items.length > 0">
         <div>
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 x-text="title" class="mb-0"></h5>
-                <div class="d-flex align-items-center gap-2">
-                    <small class="text-muted">총 <span x-text="items.length"></span>건</small>
-                    <button class="btn btn-outline-primary btn-sm" @click="fetchData()" :disabled="loading">
+            <div class="flex justify-between items-center mb-3">
+                <h5 x-text="title" class="mb-0 text-lg font-bold"></h5>
+                <div class="flex items-center gap-2">
+                    <small class="text-base-content/70">총 <span x-text="items.length"></span>건</small>
+                    <button class="btn btn-outline btn-primary btn-sm" @click="fetchData()" :disabled="loading">
                         <i class="bi bi-arrow-clockwise" :class="{'spin': loading}"></i> 새로고침
                     </button>
                 </div>
@@ -242,9 +246,9 @@
             <div x-show="loading" class="text-center py-4">
                 <i class="bi bi-arrow-clockwise spin"></i> 미체결 데이터를 불러오는 중...
             </div>
-            <div x-show="!loading && items.length > 0" class="table-responsive">
-                <table class="table table-bordered table-hover align-middle text-center">
-                    <thead class="table-light">
+            <div x-show="!loading && items.length > 0" class="overflow-x-auto">
+                <table class="table table-zebra table-hover text-center w-full">
+                    <thead class="bg-base-200">
                         <tr>
                             <th>시간</th>
                             <th>종목명</th>
@@ -262,30 +266,30 @@
                         <template x-for="item in items" :key="item.주문번호">
                             <tr>
                                 <td x-text="formatTime(item.시간)"></td>
-                                <td x-text="item.종목명" class="text-start"></td>
+                                <td x-text="item.종목명" class="text-left"></td>
                                 <td>
-                                    <span :class="item.주문구분.includes('매수') ? 'text-danger' : 'text-primary'" 
+                                    <span :class="item.주문구분.includes('매수') ? 'text-red-500' : 'text-blue-500'" 
                                           x-text="item.주문구분"></span>
                                 </td>
-                                <td x-text="Number(item.주문가격).toLocaleString() + '원'" class="text-end"></td>
-                                <td x-text="Number(item.주문수량).toLocaleString() + '주'" class="text-end"></td>
-                                <td x-text="Number(item.미체결수량).toLocaleString() + '주'" class="text-end fw-bold text-warning"></td>
-                                <td class="text-end">
+                                <td x-text="Number(item.주문가격).toLocaleString() + '원'" class="text-right"></td>
+                                <td x-text="Number(item.주문수량).toLocaleString() + '주'" class="text-right"></td>
+                                <td x-text="Number(item.미체결수량).toLocaleString() + '주'" class="text-right font-bold text-warning"></td>
+                                <td class="text-right">
                                     <span :class="getPriceClass(item.현재가)" 
                                           x-text="formatPriceText(item.현재가)"></span>
                                 </td>
                                 <td>
-                                    <span :class="item.주문상태 === '접수' ? 'badge bg-info' : 'badge bg-secondary'" 
+                                    <span :class="item.주문상태 === '접수' ? 'badge badge-info' : 'badge badge-ghost'" 
                                           x-text="item.주문상태"></span>
                                 </td>
                                 <td x-text="item.거래소구분텍스트"></td>
                                 <td>
-                                    <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-sm btn-outline-danger" 
+                                    <div class="join" role="group">
+                                        <button type="button" class="btn btn-sm btn-outline btn-error join-item" 
                                                 @click="cancelOrder(item)" title="주문취소">취소</button>
-                                        <button type="button" class="btn btn-sm btn-outline-info" 
+                                        <button type="button" class="btn btn-sm btn-outline btn-info join-item" 
                                                 @click="modifyOrder(item)" title="주문수정">수정</button>
-                                        <button type="button" class="btn btn-sm btn-outline-success" 
+                                        <button type="button" class="btn btn-sm btn-outline btn-success join-item" 
                                                 @click="showDetail(item)" title="상세정보">詳</button>
                                     </div>
                                 </td>
@@ -298,15 +302,15 @@
     </template>
 </div>
 
-<div class="container mt-4" x-data="ka10076_component" > 
+<div class="container mx-auto px-4 mt-4" x-data="ka10076_component" > 
     <!-- 체결 주문: 데이터 있을 때만 전체 영역 표시 -->
     <template x-if="items.length > 0">
         <div>
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 x-text="title" class="mb-0"></h5>
-                <div class="d-flex align-items-center gap-2">
-                    <small class="text-muted">총 <span x-text="items.length"></span>건</small>
-                    <button class="btn btn-outline-primary btn-sm" @click="fetchData()" :disabled="loading">
+            <div class="flex justify-between items-center mb-3">
+                <h5 x-text="title" class="mb-0 text-lg font-bold"></h5>
+                <div class="flex items-center gap-2">
+                    <small class="text-base-content/70">총 <span x-text="items.length"></span>건</small>
+                    <button class="btn btn-outline btn-primary btn-sm" @click="fetchData()" :disabled="loading">
                         <i class="bi bi-arrow-clockwise" :class="{'spin': loading}"></i> 새로고침
                     </button>
                 </div>
@@ -314,9 +318,9 @@
             <div x-show="loading" class="text-center py-4">
                 <i class="bi bi-arrow-clockwise spin"></i> 체결 데이터를 불러오는 중...
             </div>
-            <div x-show="!loading && items.length > 0" class="table-responsive">
-                <table class="table table-bordered table-hover align-middle text-center">
-                    <thead class="table-light">
+            <div x-show="!loading && items.length > 0" class="overflow-x-auto">
+                <table class="table table-zebra table-hover text-center w-full">
+                    <thead class="bg-base-200">
                         <tr>
                             <th>주문시간</th>
                             <th>종목명</th>
@@ -337,23 +341,23 @@
                         <template x-for="item in items" :key="item.주문번호">
                             <tr>
                                 <td x-text="formatTime(item.주문시간)"></td>
-                                <td x-text="item.종목명" class="text-start"></td>
+                                <td x-text="item.종목명" class="text-left"></td>
                                 <td>
-                                    <span :class="item.주문구분.includes('매수') ? 'text-danger' : 'text-primary'" 
+                                    <span :class="item.주문구분.includes('매수') ? 'text-red-500' : 'text-blue-500'" 
                                           x-text="item.주문구분"></span>
                                 </td>
                                 <td x-text="item.매매구분"></td>
-                                <td class="text-end">
+                                <td class="text-right">
                                     <span x-text="formatOrderPrice(item.주문가격, item.매매구분)"></span>
                                 </td>
-                                <td x-text="Number(item.체결가).toLocaleString() + '원'" class="text-end fw-bold text-success"></td>
-                                <td x-text="Number(item.주문수량).toLocaleString() + '주'" class="text-end"></td>
-                                <td x-text="Number(item.체결량).toLocaleString() + '주'" class="text-end fw-bold text-primary"></td>
-                                <td x-text="Number(item.미체결수량).toLocaleString() + '주'" class="text-end"></td>
-                                <td x-text="Number(item.당일매매수수료).toLocaleString() + '원'" class="text-end text-muted"></td>
-                                <td x-text="Number(item.당일매매세금).toLocaleString() + '원'" class="text-end text-muted"></td>
+                                <td x-text="Number(item.체결가).toLocaleString() + '원'" class="text-right font-bold text-success"></td>
+                                <td x-text="Number(item.주문수량).toLocaleString() + '주'" class="text-right"></td>
+                                <td x-text="Number(item.체결량).toLocaleString() + '주'" class="text-right font-bold text-blue-500"></td>
+                                <td x-text="Number(item.미체결수량).toLocaleString() + '주'" class="text-right"></td>
+                                <td x-text="Number(item.당일매매수수료).toLocaleString() + '원'" class="text-right text-base-content/60"></td>
+                                <td x-text="Number(item.당일매매세금).toLocaleString() + '원'" class="text-right text-base-content/60"></td>
                                 <td>
-                                    <span class="badge bg-success" x-text="item.주문상태"></span>
+                                    <span class="badge badge-success" x-text="item.주문상태"></span>
                                 </td>
                                 <td x-text="item.거래소구분텍스트"></td>
                             </tr>
@@ -365,106 +369,104 @@
     </template>
 </div>
 
-<!-- 미체결 주문 상세 정보 Modal -->
-<div class="modal fade" id="unfillOrderDetailModal" tabindex="-1" aria-labelledby="unfillOrderDetailModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="unfillOrderDetailModalLabel">미체결 주문 상세 정보</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <table class="table table-sm">
-                            <tbody>
-                                <tr>
-                                    <th class="bg-light">주문번호</th>
-                                    <td id="modal-order-no"></td>
-                                </tr>
-                                <tr>
-                                    <th class="bg-light">종목명</th>
-                                    <td id="modal-stock-name"></td>
-                                </tr>
-                                <tr>
-                                    <th class="bg-light">종목코드</th>
-                                    <td id="modal-stock-code"></td>
-                                </tr>
-                                <tr>
-                                    <th class="bg-light">주문구분</th>
-                                    <td id="modal-order-type"></td>
-                                </tr>
-                                <tr>
-                                    <th class="bg-light">매매구분</th>
-                                    <td id="modal-trade-type"></td>
-                                </tr>
-                                <tr>
-                                    <th class="bg-light">주문가격</th>
-                                    <td id="modal-order-price"></td>
-                                </tr>
-                                <tr>
-                                    <th class="bg-light">주문수량</th>
-                                    <td id="modal-order-qty"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col-md-6">
-                        <table class="table table-sm">
-                            <tbody>
-                                <tr>
-                                    <th class="bg-light">미체결수량</th>
-                                    <td id="modal-unfill-qty" class="fw-bold text-warning"></td>
-                                </tr>
-                                <tr>
-                                    <th class="bg-light">체결누계금액</th>
-                                    <td id="modal-fill-amount"></td>
-                                </tr>
-                                <tr>
-                                    <th class="bg-light">현재가</th>
-                                    <td id="modal-current-price"></td>
-                                </tr>
-                                <tr>
-                                    <th class="bg-light">매수호가</th>
-                                    <td id="modal-buy-price"></td>
-                                </tr>
-                                <tr>
-                                    <th class="bg-light">매도호가</th>
-                                    <td id="modal-sell-price"></td>
-                                </tr>
-                                <tr>
-                                    <th class="bg-light">주문상태</th>
-                                    <td id="modal-order-status"></td>
-                                </tr>
-                                <tr>
-                                    <th class="bg-light">주문시간</th>
-                                    <td id="modal-order-time"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+<!-- 미체결 주문 상세 정보 Modal (DaisyUI) -->
+<dialog id="unfillOrderDetailModal" class="modal">
+    <div class="modal-box w-11/12 max-w-5xl">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <h3 class="font-bold text-lg" id="unfillOrderDetailModalLabel">미체결 주문 상세 정보</h3>
+        <div class="py-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr>
+                                <th class="bg-base-200 w-1/3">주문번호</th>
+                                <td id="modal-order-no"></td>
+                            </tr>
+                            <tr>
+                                <th class="bg-base-200">종목명</th>
+                                <td id="modal-stock-name"></td>
+                            </tr>
+                            <tr>
+                                <th class="bg-base-200">종목코드</th>
+                                <td id="modal-stock-code"></td>
+                            </tr>
+                            <tr>
+                                <th class="bg-base-200">주문구분</th>
+                                <td id="modal-order-type"></td>
+                            </tr>
+                            <tr>
+                                <th class="bg-base-200">매매구분</th>
+                                <td id="modal-trade-type"></td>
+                            </tr>
+                            <tr>
+                                <th class="bg-base-200">주문가격</th>
+                                <td id="modal-order-price"></td>
+                            </tr>
+                            <tr>
+                                <th class="bg-base-200">주문수량</th>
+                                <td id="modal-order-qty"></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="row mt-3">
-                    <div class="col-12">
-                        <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded">
-                            <div>
-                                <strong>거래소:</strong> <span id="modal-exchange"></span>
-                            </div>
-                            <div>
-                                <strong>원주문번호:</strong> <span id="modal-orig-order-no"></span>
-                            </div>
-                        </div>
-                    </div>
+                <div>
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr>
+                                <th class="bg-base-200 w-1/3">미체결수량</th>
+                                <td id="modal-unfill-qty" class="font-bold text-warning"></td>
+                            </tr>
+                            <tr>
+                                <th class="bg-base-200">체결누계금액</th>
+                                <td id="modal-fill-amount"></td>
+                            </tr>
+                            <tr>
+                                <th class="bg-base-200">현재가</th>
+                                <td id="modal-current-price"></td>
+                            </tr>
+                            <tr>
+                                <th class="bg-base-200">매수호가</th>
+                                <td id="modal-buy-price"></td>
+                            </tr>
+                            <tr>
+                                <th class="bg-base-200">매도호가</th>
+                                <td id="modal-sell-price"></td>
+                            </tr>
+                            <tr>
+                                <th class="bg-base-200">주문상태</th>
+                                <td id="modal-order-status"></td>
+                            </tr>
+                            <tr>
+                                <th class="bg-base-200">주문시간</th>
+                                <td id="modal-order-time"></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-danger" id="modal-cancel-order">주문 취소</button>
-                <button type="button" class="btn btn-outline-info" id="modal-modify-order">주문 수정</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            <div class="mt-4">
+                <div class="flex justify-between items-center p-3 bg-base-200 rounded-lg">
+                    <div>
+                        <strong>거래소:</strong> <span id="modal-exchange"></span>
+                    </div>
+                    <div>
+                        <strong>원주문번호:</strong> <span id="modal-orig-order-no"></span>
+                    </div>
+                </div>
             </div>
         </div>
+        <div class="modal-action">
+            <button type="button" class="btn btn-outline btn-error" id="modal-cancel-order">주문 취소</button>
+            <button type="button" class="btn btn-outline btn-info" id="modal-modify-order">주문 수정</button>
+            <form method="dialog">
+                <button class="btn">닫기</button>
+            </form>
+        </div>
     </div>
-</div>
+</dialog>
 
 {% raw %}
 <!--handlebar scripts-->
@@ -652,8 +654,8 @@ function createKt00004Component() {
 
         // === 유틸리티 메서드 ===
         formatClass(value) {
-            if (value > 0) return 'text-danger';
-            if (value < 0) return 'text-primary';
+            if (value > 0) return 'text-red-500';
+            if (value < 0) return 'text-blue-500';
             return '';
         },
         addMyStock() {
@@ -754,7 +756,7 @@ function createKa10075Component() {
             if (!priceStr) return '';
             // 원래 값이 음수였다면 파란색, 양수면 빨간색
             const isNegative = priceStr.toString().startsWith('-');
-            return isNegative ? 'text-primary' : 'text-danger';
+            return isNegative ? 'text-blue-500' : 'text-red-500';
         },
 
         cancelOrder(item) {
@@ -814,7 +816,7 @@ function createKa10075Component() {
             document.getElementById('modal-stock-name').textContent = item.종목명;
             document.getElementById('modal-stock-code').textContent = item.종목코드;
             document.getElementById('modal-order-type').innerHTML = 
-                `<span class="${item.주문구분.includes('매수') ? 'text-danger' : 'text-primary'}">${item.주문구분}</span>`;
+                `<span class="${item.주문구분.includes('매수') ? 'text-red-500' : 'text-blue-500'}">${item.주문구분}</span>`;
             document.getElementById('modal-trade-type').textContent = item.매매구분;
             document.getElementById('modal-order-price').textContent = Number(item.주문가격).toLocaleString() + '원';
             document.getElementById('modal-order-qty').textContent = Number(item.주문수량).toLocaleString() + '주';
@@ -827,11 +829,11 @@ function createKa10075Component() {
             currentPriceElement.innerHTML = `<span class="${priceClass}">${this.formatPriceText(item.현재가)}</span>`;
             
             document.getElementById('modal-buy-price').innerHTML = 
-                `<span class="text-danger">${this.formatPriceText(item.매수호가)}</span>`;
+                `<span class="text-red-500">${this.formatPriceText(item.매수호가)}</span>`;
             document.getElementById('modal-sell-price').innerHTML = 
-                `<span class="text-primary">${this.formatPriceText(item.매도호가)}</span>`;
+                `<span class="text-blue-500">${this.formatPriceText(item.매도호가)}</span>`;
             document.getElementById('modal-order-status').innerHTML = 
-                `<span class="${item.주문상태 === '접수' ? 'badge bg-info' : 'badge bg-secondary'}">${item.주문상태}</span>`;
+                `<span class="${item.주문상태 === '접수' ? 'badge badge-info' : 'badge badge-ghost'}">${item.주문상태}</span>`;
             document.getElementById('modal-order-time').textContent = this.formatTime(item.시간);
             document.getElementById('modal-exchange').textContent = item.거래소구분텍스트;
             document.getElementById('modal-orig-order-no').textContent = item.원주문번호;
@@ -848,20 +850,19 @@ function createKa10075Component() {
             
             // 새 이벤트 리스너 추가
             newCancelBtn.addEventListener('click', () => {
-                const modal = bootstrap.Modal.getInstance(document.getElementById('unfillOrderDetailModal'));
-                modal.hide();
+                const modal = document.getElementById('unfillOrderDetailModal');
+                modal.close();
                 this.cancelOrder(item);
             });
             
             newModifyBtn.addEventListener('click', () => {
-                const modal = bootstrap.Modal.getInstance(document.getElementById('unfillOrderDetailModal'));
-                modal.hide();
+                const modal = document.getElementById('unfillOrderDetailModal');
+                modal.close();
                 this.modifyOrder(item);
             });
             
             // Modal 표시
-            const modal = new bootstrap.Modal(document.getElementById('unfillOrderDetailModal'));
-            modal.show();
+            document.getElementById('unfillOrderDetailModal').showModal();
         },
 
         init() {
