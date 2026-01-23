@@ -10,7 +10,7 @@ class KiwiError extends Error {
     }
     toString() {
         return `Error ${this.status}: ${this.message} (Server Time: ${this.server_time})`;
-    }    
+    }
 }
 /**
  * 공통 fetch 함수
@@ -36,7 +36,7 @@ async function callKiwiApi(url, method, data = null) {
             options.body = JSON.stringify(data);
         }
         const response = await fetch(url, options);
-        
+
         // 세션 타임아웃으로 인해 401 상태 코드가 반환되었는지 체크
         if (response.status === 401) {
             console.error('세션이 만료되었습니다.');
@@ -48,7 +48,7 @@ async function callKiwiApi(url, method, data = null) {
         if (!response.ok) {
             console.error('에러 발생:', response);
             // 응답이 JSON인지 체크하여 에러 데이터 처리
-            const contentType = response.headers.get('content-type');            
+            const contentType = response.headers.get('content-type');
             if (contentType && contentType.includes('application/json')) {
                 const errorData = await response.json();
                 // Kiwi7 프로젝트의 KiwoomResponse 에러 형식에 맞게 수정
@@ -56,7 +56,7 @@ async function callKiwiApi(url, method, data = null) {
                 throw new KiwiError(response.status, errorMessage, response.response_time);
             } else {
                 throw new KiwiError(response.status, 'Unexpected response format', response.response_time);
-            }            
+            }
         }
 
         const responseData = await response.json();
@@ -126,12 +126,12 @@ async function deleteFetch(url, data) {
  */
 async function callKiwoomApi(api_id, payload, contYn = 'N', nextKey = null) {
     const requestData = {
-        api_id : api_id,
+        api_id: api_id,
         cont_yn: contYn,
         next_key: nextKey,
         payload: payload
     };
-    
+
     const url = `/api/v1/kiwoom/${api_id}`;
     return postFetch(url, requestData);
 }
@@ -147,12 +147,12 @@ async function callKiwoomApi(api_id, payload, contYn = 'N', nextKey = null) {
  */
 async function callKisApi(api_id, payload, contYn = 'N', nextKey = null) {
     const requestData = {
-        api_id : api_id,
+        api_id: api_id,
         cont_yn: contYn,
         next_key: nextKey,
         payload: payload
     };
-    
+
     const url = `/api/v1/kis/${api_id}`;
     return postFetch(url, requestData);
 }
@@ -168,13 +168,24 @@ async function callKisApi(api_id, payload, contYn = 'N', nextKey = null) {
  */
 async function callLsApi(api_id, payload, contYn = 'N', nextKey = null) {
     const requestData = {
-        api_id : api_id,
+        api_id: api_id,
         cont_yn: contYn,
         next_key: nextKey,
         payload: payload
     };
-    
+
     const url = `/api/v1/ls/${api_id}`;
     return postFetch(url, requestData);
 }
 
+
+// 전역 객체에 함수 할당 (Alpine.js 등에서 접근 가능하도록)
+window.callKiwiApi = callKiwiApi;
+window.getFetch = getFetch;
+window.postFetch = postFetch;
+window.putFetch = putFetch;
+window.deleteFetch = deleteFetch;
+window.callKiwoomApi = callKiwoomApi;
+window.callKisApi = callKisApi;
+window.callLsApi = callLsApi;
+window.KiwiError = KiwiError;

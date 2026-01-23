@@ -38,10 +38,10 @@
 {% endblock %}
 {% block content %}
 <div class="container mx-auto px-4 mt-4" x-data="t0424_component">
+
     <!-- 계좌명과 헤드 시작-->
     <div class="flex items-center">
-        <span x-text="data?.계좌명" class="font-bold text-lg"></span>
-        <span class="ml-2">(<span x-text="data?.지점명"></span>)</span>
+        <span class="font-bold text-lg">LS증권 계좌</span>
         <div class="form-control ml-3 mt-0">
             <label class="label cursor-pointer gap-2">
                 <span class="label-text">현황상세</span>
@@ -66,15 +66,16 @@
     <div class="flex items-center mt-2 gap-4 text-sm">
         <div>
             <span>자산:</span>
-            <span class="font-bold" x-text="Number(data?.추정예탁자산).toLocaleString() + ' 원'"></span>
+            <span class="font-bold" x-text="Number(data?.t0424OutBlock?.예탁자산총액 || 0).toLocaleString() + ' 원'"></span>
         </div>
         <div>
             <span>수익:</span>
-            <span class="font-bold" x-text="profit.toLocaleString() + ' 원'" :class="formatClass(profit)"></span>
+            <span class="font-bold" x-text="Number(data?.t0424OutBlock?.평가손익합계 || 0).toLocaleString() + ' 원'"
+                :class="formatClass(data?.t0424OutBlock?.평가손익합계)"></span>
         </div>
         <div>
             <span>매수가능:</span>
-            <span class="font-bold" x-text="Number(data?.['D+2추정예수금']).toLocaleString() + ' 원'"></span>
+            <span class="font-bold" x-text="Number(data?.t0424OutBlock?.주문가능금액 || 0).toLocaleString() + ' 원'"></span>
         </div>
     </div>
     <!-- 계좌명과 헤드 끝-->
@@ -84,59 +85,37 @@
             <tbody>
                 <tr>
                     <th class="bg-base-200">예수금</th>
-                    <td class="text-right" x-text="Number(data?.예수금).toLocaleString() + ' 원'"></td>
+                    <td class="text-right" x-text="Number(data?.t0424OutBlock?.예수금 || 0).toLocaleString() + ' 원'"></td>
 
-                    <th class="bg-base-200">D+2추정예수금</th>
-                    <td class="text-right font-bold" x-text="Number(data?.['D+2추정예수금']).toLocaleString() + ' 원'"></td>
+                    <th class="bg-base-200">출금가능금액</th>
+                    <td class="text-right font-bold"
+                        x-text="Number(data?.t0424OutBlock?.출금가능금액 || 0).toLocaleString() + ' 원'"></td>
                 </tr>
                 <tr>
-                    <th class="bg-base-200">유가잔고평가액</th>
-                    <td class="text-right" x-text="Number(data?.유가잔고평가액).toLocaleString() + ' 원'"></td>
+                    <th class="bg-base-200">잔고평가금액</th>
+                    <td class="text-right" x-text="Number(data?.t0424OutBlock?.잔고평가금액 || 0).toLocaleString() + ' 원'">
+                    </td>
 
-                    <th class="bg-base-200">예탁자산평가액</th>
-                    <td class="text-right" x-text="Number(data?.예탁자산평가액).toLocaleString() + ' 원'"></td>
+                    <th class="bg-base-200">예탁자산총액</th>
+                    <td class="text-right" x-text="Number(data?.t0424OutBlock?.예탁자산총액 || 0).toLocaleString() + ' 원'">
+                    </td>
                 </tr>
                 <tr>
                     <th class="bg-base-200">총매입금액</th>
-                    <td class="text-right" x-text="Number(data?.총매입금액).toLocaleString() + ' 원'"></td>
+                    <td class="text-right" x-text="Number(data?.t0424OutBlock?.총매입금액 || 0).toLocaleString() + ' 원'">
+                    </td>
 
-                    <th class="bg-base-200">추정예탁자산</th>
-                    <td class="text-right" x-text="Number(data?.추정예탁자산).toLocaleString() + ' 원'"></td>
+                    <th class="bg-base-200">투자원금</th>
+                    <td class="text-right" x-text="Number(data?.t0424OutBlock?.투자원금 || 0).toLocaleString() + ' 원'"></td>
                 </tr>
                 <tr>
-                    <th class="bg-base-200">매도담보대출금</th>
-                    <td class="text-right" x-text="Number(data?.매도담보대출금).toLocaleString() + ' 원'"></td>
+                    <th class="bg-base-200">평가손익합계</th>
+                    <td class="text-right" :class="formatClass(data?.t0424OutBlock?.평가손익합계)"
+                        x-text="Number(data?.t0424OutBlock?.평가손익합계 || 0).toLocaleString() + ' 원'"></td>
 
-                    <th class="bg-base-200">당일투자원금</th>
-                    <td class="text-right" x-text="Number(data?.당일투자원금).toLocaleString() + ' 원'"></td>
-                </tr>
-                <tr>
-                    <th class="bg-base-200">당월투자원금</th>
-                    <td class="text-right" x-text="Number(data?.당월투자원금).toLocaleString() + ' 원'"></td>
-
-                    <th class="bg-base-200">누적투자원금</th>
-                    <td class="text-right" x-text="Number(data?.누적투자원금).toLocaleString() + ' 원'"></td>
-                </tr>
-                <tr>
-                    <th class="bg-base-200">당일투자손익</th>
-                    <td class="text-right text-red-500" x-text="Number(data?.당일투자손익).toLocaleString() + ' 원'"></td>
-
-                    <th class="bg-base-200">당월투자손익</th>
-                    <td class="text-right text-red-500" x-text="Number(data?.당월투자손익).toLocaleString() + ' 원'"></td>
-                </tr>
-                <tr>
-                    <th class="bg-base-200">누적투자손익</th>
-                    <td class="text-right text-red-500" x-text="Number(data?.누적투자손익).toLocaleString() + ' 원'"></td>
-
-                    <th class="bg-base-200">당일손익율</th>
-                    <td class="text-right" x-text="data?.당일손익율 + ' %'"></td>
-                </tr>
-                <tr>
-                    <th class="bg-base-200">당월손익율</th>
-                    <td class="text-right" x-text="data?.당월손익율 + ' %'"></td>
-
-                    <th class="bg-base-200">누적손익율</th>
-                    <td class="text-right" x-text="data?.누적손익율 + ' %'"></td>
+                    <th class="bg-base-200">손익율</th>
+                    <td class="text-right" :class="formatClass(data?.t0424OutBlock?.평가손익합계)"
+                        x-text="(data?.t0424OutBlock?.손익율 || 0) + ' %'"></td>
                 </tr>
             </tbody>
         </table>
@@ -187,7 +166,7 @@
                     </tr>
                 </thead>
                 <tbody x-show="data && !loading">
-                    <template x-for="item in sorted_items" :key="item.종목코드">
+                    <template x-for="(item, index) in sorted_items" :key="item.종목코드 || index">
                         <tr>
                             <template x-for="column in getTableColumns()" :key="column.key">
                                 <td x-text="getCellValue(item, column)"
@@ -340,7 +319,11 @@
 
             registerCallbacks() {
                 this.addCallback((data) => {
-                    this.profit = data?.['유가잔고평가액'] - data?.['총매입금액'];
+                    // LS 데이터는 t0424OutBlock에 요약 정보가 있음
+                    const summary = data?.t0424OutBlock;
+                    if (summary) {
+                        this.profit = Number(summary['평가손익합계']) || 0;
+                    }
                 });
             },
 
@@ -375,10 +358,12 @@
 
                 switch (filterValue) {
                     case 'plus':
-                        this.addFilter(item => item.손익율 > 0);
+                        // LS 키: 수익율
+                        this.addFilter(item => Number(item.수익율) > 0);
                         break;
                     case 'minus':
-                        this.addFilter(item => item.손익율 < 0);
+                        // LS 키: 수익율
+                        this.addFilter(item => Number(item.수익율) < 0);
                         break;
                     // 'all'은 필터를 추가하지 않음
                 }
@@ -387,21 +372,23 @@
             // === 액션 메서드 ===
             buy(item) {
                 console.log('구매:', item);
-                const { 종목코드: stk_code, 종목명: stk_name, 매입가 } = item;
+                // LS 키: 평균단가
+                const { 종목코드: stk_code, 종목명: stk_name, 평균단가 } = item;
 
                 showBuySellCanvas({
                     stk_code,
                     stk_name,
                     which: '매수',
                     qty: 1,
-                    cost: 매입가 || 0
+                    cost: 평균단가 || 0
                 });
             },
 
             sell(item) {
                 console.log('판매:', item);
-                const { 종목코드: stk_code, 종목명: stk_name, 보유수량 } = item;
-                const qty = Number(보유수량) || 0;
+                // LS 키: 잔고수량
+                const { 종목코드: stk_code, 종목명: stk_name, 잔고수량 } = item;
+                const qty = Number(잔고수량) || 0;
 
                 showBuySellCanvas({
                     stk_code,
@@ -424,15 +411,23 @@
                 return '';
             },
             addMyStock() {
-                let list = this.data["종목별계좌평가현황"]
+                // LS 데이터 구조 (t0424OutBlock1: 리스트)
+                let list = this.data?.t0424OutBlock1 || [];
                 let codes = []
                 for (let i = 0; i < list.length; i++) {
-                    code = list[i]["종목코드"]
-                    if (!/^[0-9]+$/.test(code)) {
-                        code = code.replace(/[^0-9]/g, '')
+                    let code = list[i]["종목코드"]
+                    if (code) {
+                        if (!/^[0-9]+$/.test(code)) {
+                            code = code.replace(/[^0-9]/g, '')
+                        }
+                        codes.push(code)
                     }
-                    codes.push(code)
                 }
+                if (codes.length === 0) {
+                    showAlert('추가할 종목이 없습니다.', 'warning');
+                    return;
+                }
+
                 postFetch('/api/v1/mystock/bulk', {
                     api_id: 'kiwi7_mystock_bulk_add',
                     payload: {
@@ -445,7 +440,7 @@
                         showAlert('My Stock 추가에 실패했습니다: ' + response.error_message, 'error');
                     }
                 });
-                console.log('My Stock에 추가:', this.data);
+                console.log('My Stock에 추가:', codes);
             }
         };
     }
