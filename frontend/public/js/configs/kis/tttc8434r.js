@@ -1,7 +1,7 @@
 // KIS 주식잔고조회 설정
 const tttc8434r = {
     title: '계좌평가현황(KIS)',
-    api_endpoint: 'tttc8434r',
+    api_endpoint: 'TTTC8434R',
     action_buttons: ['buy', 'sell', 'detail'],
     payload: {
         // 기본 조회 조건
@@ -31,11 +31,11 @@ const tttc8434r = {
             { key: '매입평균가격', label: '평균단가', sortable: true, format: 'number' },
             { key: '현재가', label: '현재가', sortable: true, format: 'number' },
             // 파생 컬럼: 주당순익
-            { 
-                key: '주당손익', 
-                label: '1주당', 
-                sortable: true, 
-                align: 'right', 
+            {
+                key: '주당손익',
+                label: '1주당',
+                sortable: true,
+                align: 'right',
                 format: 'profit',
                 derived: true,
                 formula: (item) => {

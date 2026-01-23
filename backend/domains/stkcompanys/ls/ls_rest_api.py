@@ -38,7 +38,7 @@ class LsRestApi(StockApi):
       'Content-Type': 'application/json;charset=UTF-8',
       'authorization': f'Bearer {token}',
       'tr_cd': tr_cd,
-      'tr_cont': 'N' if request.cont_yn.value == 'N' else 'Y',
+      'tr_cont': 'N' if request.cont_yn == 'N' else 'Y',
       'tr_cont_key': request.next_key or '',
     }
 

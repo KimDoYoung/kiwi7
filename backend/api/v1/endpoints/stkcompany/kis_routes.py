@@ -3,6 +3,7 @@ KIS(한국투자증권) API 라우트
 """
 from fastapi import APIRouter
 
+from backend.core.config import config
 from backend.core.exceptions import KisApiException
 from backend.core.logger import get_logger
 from backend.domains.stkcompanys.kis.kis_service import get_kis_api, get_kis_token_manager
@@ -10,7 +11,6 @@ from backend.domains.stkcompanys.kis.models.kis_schema import KisApiHelper, KisR
 
 router = APIRouter()
 logger = get_logger(__name__)
-
 
 @router.post("/{api_id}", response_model=KisResponse)
 async def kis_rest_api(api_id: str, req: KisRequest):
@@ -27,6 +27,25 @@ async def kis_rest_api(api_id: str, req: KisRequest):
 
         # URL path의 api_id로 업데이트
         req.api_id = api_id
+
+        # [FIX] TTTC8434R (주식잔고조회) 필수 파라미터 주입
+        if api_id == "TTTC8434R":
+            defaults = {
+                "CANO": config.KIS_ACCT_NO[:8],
+                "ACNT_PRDT_CD": config.KIS_ACCT_PRDT_CD,
+                "AFHR_FLPR_YN": "N",
+                "OFL_YN": "",
+                "INQR_DVSN": "02",
+                "UNPR_DVSN": "01",
+                "FUND_STTL_ICLD_YN": "N",
+                "FNCG_AMT_AUTO_RDPT_YN": "N",
+                "PRCS_DVSN": "00",
+                "CTX_AREA_FK100": "",
+                "CTX_AREA_NK100": ""
+            }
+            for key, value in defaults.items():
+                if key not in req.payload:
+                    req.payload[key] = value
 
         # payload 유효성 검증
         validation_errors = req.validate_payload()

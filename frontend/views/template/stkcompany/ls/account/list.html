@@ -5,34 +5,39 @@
 {% extends 'common/base.html' %}
 {% block style %}
 <style>
-.spin {
-    animation: spin 1s linear infinite;
-}
+    .spin {
+        animation: spin 1s linear infinite;
+    }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
 
-.clickable-cell {
-    cursor: pointer;
-}
+        100% {
+            transform: rotate(360deg);
+        }
+    }
 
-.clickable-cell:hover {
-    background-color: #f8f9fa;
-}
+    .clickable-cell {
+        cursor: pointer;
+    }
 
-.sortable-header {
-    cursor: pointer;
-}
+    .clickable-cell:hover {
+        background-color: #f8f9fa;
+    }
 
-.sortable-header:hover {
-    background-color: #e9ecef;
-}
+    .sortable-header {
+        cursor: pointer;
+    }
+
+    .sortable-header:hover {
+        background-color: #e9ecef;
+    }
 </style>
 {% endblock %}
 {% block content %}
-<div class="container mx-auto px-4 mt-4" x-data="t0424_component"  >
+<div class="container mx-auto px-4 mt-4" x-data="t0424_component">
     <!-- 계좌명과 헤드 시작-->
     <div class="flex items-center">
         <span x-text="data?.계좌명" class="font-bold text-lg"></span>
@@ -40,22 +45,24 @@
         <div class="form-control ml-3 mt-0">
             <label class="label cursor-pointer gap-2">
                 <span class="label-text">현황상세</span>
-                <input type="checkbox" class="checkbox checkbox-sm checkbox-primary" id="summaryFullCheck" x-model="summary_show" />
+                <input type="checkbox" class="checkbox checkbox-sm checkbox-primary" id="summaryFullCheck"
+                    x-model="summary_show" />
             </label>
         </div>
         <div class="form-control ml-3 mt-0">
             <label class="label cursor-pointer gap-2">
                 <span class="label-text font-bold">
-                    자동 새로고침 
+                    자동 새로고침
                     <span x-show="!autoRefresh" class="badge badge-secondary ml-1">30초</span>
-                    <span x-show="autoRefresh" 
-                          :class="`badge ml-1 ${countdown <= 5 ? 'badge-warning' : 'badge-primary'}`" 
-                          x-text="`${countdown}초`"></span>
+                    <span x-show="autoRefresh"
+                        :class="`badge ml-1 ${countdown <= 5 ? 'badge-warning' : 'badge-primary'}`"
+                        x-text="`${countdown}초`"></span>
                 </span>
-                <input type="checkbox" class="toggle toggle-primary toggle-sm" id="autoRefreshCheck" x-model="autoRefresh" />
+                <input type="checkbox" class="toggle toggle-primary toggle-sm" id="autoRefreshCheck"
+                    x-model="autoRefresh" />
             </label>
         </div>
-    </div> 
+    </div>
     <div class="flex items-center mt-2 gap-4 text-sm">
         <div>
             <span>자산:</span>
@@ -71,72 +78,72 @@
         </div>
     </div>
     <!-- 계좌명과 헤드 끝-->
-    <!-- 계좌 요약 정보 시작--> 
+    <!-- 계좌 요약 정보 시작-->
     <div class="rounded-lg shadow-sm bg-base-100 p-1 mt-4" x-show="summary_show">
         <table class="mt-2 table table-zebra w-full text-sm">
-        <tbody>
-            <tr>
-            <th class="bg-base-200">예수금</th>
-            <td class="text-right" x-text="Number(data?.예수금).toLocaleString() + ' 원'"></td>
+            <tbody>
+                <tr>
+                    <th class="bg-base-200">예수금</th>
+                    <td class="text-right" x-text="Number(data?.예수금).toLocaleString() + ' 원'"></td>
 
-            <th class="bg-base-200">D+2추정예수금</th>
-            <td class="text-right font-bold" x-text="Number(data?.['D+2추정예수금']).toLocaleString() + ' 원'"></td>
-            </tr>
-            <tr>
-            <th class="bg-base-200">유가잔고평가액</th>
-            <td class="text-right" x-text="Number(data?.유가잔고평가액).toLocaleString() + ' 원'"></td>
+                    <th class="bg-base-200">D+2추정예수금</th>
+                    <td class="text-right font-bold" x-text="Number(data?.['D+2추정예수금']).toLocaleString() + ' 원'"></td>
+                </tr>
+                <tr>
+                    <th class="bg-base-200">유가잔고평가액</th>
+                    <td class="text-right" x-text="Number(data?.유가잔고평가액).toLocaleString() + ' 원'"></td>
 
-            <th class="bg-base-200">예탁자산평가액</th>
-            <td class="text-right" x-text="Number(data?.예탁자산평가액).toLocaleString() + ' 원'"></td>
-            </tr>
-            <tr>
-            <th class="bg-base-200">총매입금액</th>
-            <td class="text-right" x-text="Number(data?.총매입금액).toLocaleString() + ' 원'"></td>
+                    <th class="bg-base-200">예탁자산평가액</th>
+                    <td class="text-right" x-text="Number(data?.예탁자산평가액).toLocaleString() + ' 원'"></td>
+                </tr>
+                <tr>
+                    <th class="bg-base-200">총매입금액</th>
+                    <td class="text-right" x-text="Number(data?.총매입금액).toLocaleString() + ' 원'"></td>
 
-            <th class="bg-base-200">추정예탁자산</th>
-            <td class="text-right" x-text="Number(data?.추정예탁자산).toLocaleString() + ' 원'"></td>
-            </tr>
-            <tr>
-            <th class="bg-base-200">매도담보대출금</th>
-            <td class="text-right" x-text="Number(data?.매도담보대출금).toLocaleString() + ' 원'"></td>
+                    <th class="bg-base-200">추정예탁자산</th>
+                    <td class="text-right" x-text="Number(data?.추정예탁자산).toLocaleString() + ' 원'"></td>
+                </tr>
+                <tr>
+                    <th class="bg-base-200">매도담보대출금</th>
+                    <td class="text-right" x-text="Number(data?.매도담보대출금).toLocaleString() + ' 원'"></td>
 
-            <th class="bg-base-200">당일투자원금</th>
-            <td class="text-right" x-text="Number(data?.당일투자원금).toLocaleString() + ' 원'"></td>
-            </tr>
-            <tr>
-            <th class="bg-base-200">당월투자원금</th>
-            <td class="text-right" x-text="Number(data?.당월투자원금).toLocaleString() + ' 원'"></td>
+                    <th class="bg-base-200">당일투자원금</th>
+                    <td class="text-right" x-text="Number(data?.당일투자원금).toLocaleString() + ' 원'"></td>
+                </tr>
+                <tr>
+                    <th class="bg-base-200">당월투자원금</th>
+                    <td class="text-right" x-text="Number(data?.당월투자원금).toLocaleString() + ' 원'"></td>
 
-            <th class="bg-base-200">누적투자원금</th>
-            <td class="text-right" x-text="Number(data?.누적투자원금).toLocaleString() + ' 원'"></td>
-            </tr>
-            <tr>
-            <th class="bg-base-200">당일투자손익</th>
-            <td class="text-right text-red-500" x-text="Number(data?.당일투자손익).toLocaleString() + ' 원'"></td>
+                    <th class="bg-base-200">누적투자원금</th>
+                    <td class="text-right" x-text="Number(data?.누적투자원금).toLocaleString() + ' 원'"></td>
+                </tr>
+                <tr>
+                    <th class="bg-base-200">당일투자손익</th>
+                    <td class="text-right text-red-500" x-text="Number(data?.당일투자손익).toLocaleString() + ' 원'"></td>
 
-            <th class="bg-base-200">당월투자손익</th>
-            <td class="text-right text-red-500" x-text="Number(data?.당월투자손익).toLocaleString() + ' 원'"></td>
-            </tr>
-            <tr>
-            <th class="bg-base-200">누적투자손익</th>
-            <td class="text-right text-red-500" x-text="Number(data?.누적투자손익).toLocaleString() + ' 원'"></td>
+                    <th class="bg-base-200">당월투자손익</th>
+                    <td class="text-right text-red-500" x-text="Number(data?.당월투자손익).toLocaleString() + ' 원'"></td>
+                </tr>
+                <tr>
+                    <th class="bg-base-200">누적투자손익</th>
+                    <td class="text-right text-red-500" x-text="Number(data?.누적투자손익).toLocaleString() + ' 원'"></td>
 
-            <th class="bg-base-200">당일손익율</th>
-            <td class="text-right" x-text="data?.당일손익율 + ' %'"></td>
-            </tr>
-            <tr>
-            <th class="bg-base-200">당월손익율</th>
-            <td class="text-right" x-text="data?.당월손익율 + ' %'"></td>
+                    <th class="bg-base-200">당일손익율</th>
+                    <td class="text-right" x-text="data?.당일손익율 + ' %'"></td>
+                </tr>
+                <tr>
+                    <th class="bg-base-200">당월손익율</th>
+                    <td class="text-right" x-text="data?.당월손익율 + ' %'"></td>
 
-            <th class="bg-base-200">누적손익율</th>
-            <td class="text-right" x-text="data?.누적손익율 + ' %'"></td>
-            </tr>
-        </tbody>
+                    <th class="bg-base-200">누적손익율</th>
+                    <td class="text-right" x-text="data?.누적손익율 + ' %'"></td>
+                </tr>
+            </tbody>
         </table>
 
     </div>
 
-    <!-- 계좌 요약 정보 끝--> 
+    <!-- 계좌 요약 정보 끝-->
     <div class="mt-4">
         <div class="mt-2 mb-2 flex justify-between items-center">
             <div class="flex items-center gap-3">
@@ -154,7 +161,7 @@
                 <button class="btn btn-outline btn-success btn-sm" title="My Stock에 저장" @click="addMyStock()">
                     <i class="bi bi-plus-lg"></i>
                 </button>
-            </div>            
+            </div>
         </div>
         <div class="overflow-x-auto">
             <table class="table table-zebra table-hover text-center w-full">
@@ -163,11 +170,10 @@
                         <template x-for="column in getTableColumns()" :key="column.key">
                             <th>
                                 <template x-if="column.sortable">
-                                    <a href="#" @click.prevent="sortBy(column.key)" 
+                                    <a href="#" @click.prevent="sortBy(column.key)"
                                         class="no-underline text-base-content sortable-header">
                                         <span x-text="column.label"></span>
-                                        <span x-show="sort_key === column.key" 
-                                                x-text="sort_asc ? '▲' : '▼'"></span>
+                                        <span x-show="sort_key === column.key" x-text="sort_asc ? '▲' : '▼'"></span>
                                     </a>
                                 </template>
                                 <template x-if="!column.sortable">
@@ -193,13 +199,16 @@
                                 <td>
                                     <div class="join" role="group">
                                         <template x-if="actions.includes('buy')">
-                                            <button type="button" class="btn btn-sm btn-error join-item" @click="buy(item)" title="매수(buy)">買</button>
+                                            <button type="button" class="btn btn-sm btn-error join-item"
+                                                @click="buy(item)" title="매수(buy)">買</button>
                                         </template>
                                         <template x-if="actions.includes('sell')">
-                                            <button type="button" class="btn btn-sm btn-info join-item" @click="sell(item)" title="매도(sell)">賣</button>
+                                            <button type="button" class="btn btn-sm btn-info join-item"
+                                                @click="sell(item)" title="매도(sell)">賣</button>
                                         </template>
                                         <template x-if="actions.includes('detail')">
-                                            <button type="button" class="btn btn-sm btn-success join-item" @click="detail(item)" title="종목상세(detail info)">詳</button>
+                                            <button type="button" class="btn btn-sm btn-success join-item"
+                                                @click="detail(item)" title="종목상세(detail info)">詳</button>
                                         </template>
                                     </div>
                                 </td>
@@ -222,9 +231,9 @@
                     </tr>
                 </tbody>
             </table>
-        </div>        
-    </div> 
-    <!-- 데이터 테이블 끝-->   
+        </div>
+    </div>
+    <!-- 데이터 테이블 끝-->
 </div>
 
 {% raw %}
@@ -237,214 +246,214 @@
 <script src="/public/js/components/kiwi7-base.js"></script>
 {% raw %}
 <script>
-// Alpine 컴포넌트 팩토리 함수
-function createT0424Component() {
-    const base = window.createKiwi7Base(t0424, {
-        callApi: callLsApi,
-        utils: window.Kiwi7Utils,
-        debug: false
-    });
+    // Alpine 컴포넌트 팩토리 함수
+    function createT0424Component() {
+        const base = window.createKiwi7Base(t0424, {
+            callApi: callLsApi,
+            utils: window.Kiwi7Utils,
+            debug: false
+        });
 
-    return {
-        ...base,
-        
-        // === 상태 변수 ===
-        summary_show: false,
-        profit: 0,
-        profitFilter: 'all',
-        autoRefresh: false,           // 자동 새로고침 스위치 상태
-        countdownInterval: null,      // 카운트다운 인터벌 ID
-        countdown: 30,                // 카운트다운 값
+        return {
+            ...base,
 
-        // === 초기화 ===
-        init() {
-            this.initializeBase();
-            this.setupWatchers();
-            this.setupAutoRefreshWatcher();
-            this.setupCleanup();
-            this.registerCallbacks();
-            this.registerClickHandlers();
-        },
+            // === 상태 변수 ===
+            summary_show: false,
+            profit: 0,
+            profitFilter: 'all',
+            autoRefresh: false,           // 자동 새로고침 스위치 상태
+            countdownInterval: null,      // 카운트다운 인터벌 ID
+            countdown: 30,                // 카운트다운 값
 
-        initializeBase() {
-            if (base.init) {
-                base.init.call(this);
-            }
-        },
+            // === 초기화 ===
+            init() {
+                this.initializeBase();
+                this.setupWatchers();
+                this.setupAutoRefreshWatcher();
+                this.setupCleanup();
+                this.registerCallbacks();
+                this.registerClickHandlers();
+            },
 
-        setupWatchers() {
-            this.$watch('profitFilter', (newValue, oldValue) => {
-                console.log('profitFilter changed from', oldValue, 'to', newValue);
-                this.clearFilters(); 
-                this.onProfitFilterChange(newValue);
-            });
-        },
-
-        // === 자동 새로고침 관리 ===
-        setupAutoRefreshWatcher() {
-            // autoRefresh 상태 변화 감지
-            this.$watch('autoRefresh', (newValue) => {
-                if (newValue) {
-                    this.startAutoRefresh();
-                } else {
-                    this.stopAutoRefresh();
+            initializeBase() {
+                if (base.init) {
+                    base.init.call(this);
                 }
-            });
-        },
+            },
 
-        setupCleanup() {
-            // 페이지 언로드 시 인터벌 정리
-            window.addEventListener('beforeunload', () => {
-                this.stopAutoRefresh();
-            });
-        },
+            setupWatchers() {
+                this.$watch('profitFilter', (newValue, oldValue) => {
+                    console.log('profitFilter changed from', oldValue, 'to', newValue);
+                    this.clearFilters();
+                    this.onProfitFilterChange(newValue);
+                });
+            },
 
-        startAutoRefresh() {
-            console.log('자동 새로고침 시작 (30초 간격)');
-            this.countdown = 30;
-            
-            // 카운트다운 시작 (1초마다)
-            this.countdownInterval = setInterval(() => {
-                if (this.autoRefresh) {
-                    this.countdown--;
-                    
-                    if (this.countdown <= 0) {
-                        // 카운트다운이 0이 되면 새로고침 실행
-                        if (!this.loading) {
-                            console.log('자동 새로고침 실행...');
-                            this.fetch_data(); // kiwi7-base의 fetch_data 함수 호출
-                        }
-                        this.countdown = 30; // 카운트다운 리셋
+            // === 자동 새로고침 관리 ===
+            setupAutoRefreshWatcher() {
+                // autoRefresh 상태 변화 감지
+                this.$watch('autoRefresh', (newValue) => {
+                    if (newValue) {
+                        this.startAutoRefresh();
+                    } else {
+                        this.stopAutoRefresh();
                     }
+                });
+            },
+
+            setupCleanup() {
+                // 페이지 언로드 시 인터벌 정리
+                window.addEventListener('beforeunload', () => {
+                    this.stopAutoRefresh();
+                });
+            },
+
+            startAutoRefresh() {
+                console.log('자동 새로고침 시작 (30초 간격)');
+                this.countdown = 30;
+
+                // 카운트다운 시작 (1초마다)
+                this.countdownInterval = setInterval(() => {
+                    if (this.autoRefresh) {
+                        this.countdown--;
+
+                        if (this.countdown <= 0) {
+                            // 카운트다운이 0이 되면 새로고침 실행
+                            if (!this.loading) {
+                                console.log('자동 새로고침 실행...');
+                                this.fetch_data(); // kiwi7-base의 fetch_data 함수 호출
+                            }
+                            this.countdown = 30; // 카운트다운 리셋
+                        }
+                    }
+                }, 1000); // 1초마다 카운트다운
+            },
+
+            stopAutoRefresh() {
+                console.log('자동 새로고침 중지');
+                if (this.countdownInterval) {
+                    clearInterval(this.countdownInterval);
+                    this.countdownInterval = null;
                 }
-            }, 1000); // 1초마다 카운트다운
-        },
+                this.countdown = 30; // 카운트다운 리셋
+            },
 
-        stopAutoRefresh() {
-            console.log('자동 새로고침 중지');
-            if (this.countdownInterval) {
-                clearInterval(this.countdownInterval);
-                this.countdownInterval = null;
-            }
-            this.countdown = 30; // 카운트다운 리셋
-        },
+            registerCallbacks() {
+                this.addCallback((data) => {
+                    this.profit = data?.['유가잔고평가액'] - data?.['총매입금액'];
+                });
+            },
 
-        registerCallbacks() {
-            this.addCallback((data) => {
-                this.profit = data?.['유가잔고평가액'] - data?.['총매입금액'];
-            });
-        },
+            registerClickHandlers() {
+                this.addClickHandler('종목명', (item) => {
+                    console.log('종목명 클릭:', item);
+                    showCompanyCanvas(item.종목코드);
+                });
+            },
 
-        registerClickHandlers() {
-            this.addClickHandler('종목명', (item) => {
-                console.log('종목명 클릭:', item);
-                showCompanyCanvas(item.종목코드);
-            });
-        },
+            // === 계산된 속성 ===
+            get sorted_items() {
+                return this.sortedItems();
+            },
 
-        // === 계산된 속성 ===
-        get sorted_items() {
-            return this.sortedItems();
-        },
+            get total_item_count() {
+                return this.totalItemCount() || 0;
+            },
 
-        get total_item_count() {
-            return this.totalItemCount() || 0;
-        },
+            get filtered_item_count() {
+                return this.filteredItemCount();
+            },
 
-        get filtered_item_count() {
-            return this.filteredItemCount();
-        },
+            get actions() {
+                return this.getActions();
+            },
 
-        get actions() {
-            return this.getActions();
-        },
+            // === 필터링 메서드 ===
+            onProfitFilterChange(filterValue) {
+                console.log('필터가 변경되었습니다:', filterValue);
+                this.clearFilters();
 
-        // === 필터링 메서드 ===
-        onProfitFilterChange(filterValue) {
-            console.log('필터가 변경되었습니다:', filterValue);
-            this.clearFilters();
-            
-            switch (filterValue) {
-                case 'plus':
-                    this.addFilter(item => item.손익율 > 0);
-                    break;
-                case 'minus':
-                    this.addFilter(item => item.손익율 < 0);
-                    break;
-                // 'all'은 필터를 추가하지 않음
-            }
-        },
-
-        // === 액션 메서드 ===
-        buy(item) {
-            console.log('구매:', item);
-            const { 종목코드: stk_code, 종목명: stk_name, 매입가 } = item;
-            
-            showBuySellCanvas({
-                stk_code,
-                stk_name,
-                which: '매수',
-                qty: 1,
-                cost: 매입가 || 0
-            });
-        },
-
-        sell(item) {
-            console.log('판매:', item);
-            const { 종목코드: stk_code, 종목명: stk_name, 보유수량 } = item;
-            const qty = Number(보유수량) || 0;
-            
-            showBuySellCanvas({
-                stk_code,
-                stk_name,
-                which: '매도',
-                qty,
-                cost: 0
-            });
-        },
-
-        detail(item) {
-            console.log('상세 정보:', item);
-            window.open(`/page?path=stock/detail&stk_cd=${item.종목코드}`, '_blank');
-        },
-
-        // === 유틸리티 메서드 ===
-        formatClass(value) {
-            if (value > 0) return 'text-red-500';
-            if (value < 0) return 'text-blue-500';
-            return '';
-        },
-        addMyStock() {
-            let list = this.data["종목별계좌평가현황"]
-            let codes = []
-            for (let i = 0; i < list.length; i++) {
-                code  = list[i]["종목코드"]
-                if (!/^[0-9]+$/.test(code)) {
-                    code = code.replace(/[^0-9]/g, '')
-                } 
-                codes.push(code)
-            }
-            postFetch('/api/v1/mystock/bulk', {
-                api_id: 'kiwi7_mystock_bulk_add',
-                payload: {
-                    codes : codes
-                },
-            }).then(response => {
-                if (response.success) {
-                    showAlert('My Stock에 추가되었습니다.', 'success');
-                } else {
-                    showAlert('My Stock 추가에 실패했습니다: ' + response.error_message, 'error');
+                switch (filterValue) {
+                    case 'plus':
+                        this.addFilter(item => item.손익율 > 0);
+                        break;
+                    case 'minus':
+                        this.addFilter(item => item.손익율 < 0);
+                        break;
+                    // 'all'은 필터를 추가하지 않음
                 }
-            });
-            console.log('My Stock에 추가:', this.data);
-        }
-    };
-}
+            },
 
-// Alpine.js 컴포넌트 등록
-document.addEventListener('alpine:init', () => {
-    Alpine.data('t0424_component', createT0424Component);
-});
+            // === 액션 메서드 ===
+            buy(item) {
+                console.log('구매:', item);
+                const { 종목코드: stk_code, 종목명: stk_name, 매입가 } = item;
+
+                showBuySellCanvas({
+                    stk_code,
+                    stk_name,
+                    which: '매수',
+                    qty: 1,
+                    cost: 매입가 || 0
+                });
+            },
+
+            sell(item) {
+                console.log('판매:', item);
+                const { 종목코드: stk_code, 종목명: stk_name, 보유수량 } = item;
+                const qty = Number(보유수량) || 0;
+
+                showBuySellCanvas({
+                    stk_code,
+                    stk_name,
+                    which: '매도',
+                    qty,
+                    cost: 0
+                });
+            },
+
+            detail(item) {
+                console.log('상세 정보:', item);
+                window.open(`/page?path=stock/detail&stk_cd=${item.종목코드}`, '_blank');
+            },
+
+            // === 유틸리티 메서드 ===
+            formatClass(value) {
+                if (value > 0) return 'text-red-500';
+                if (value < 0) return 'text-blue-500';
+                return '';
+            },
+            addMyStock() {
+                let list = this.data["종목별계좌평가현황"]
+                let codes = []
+                for (let i = 0; i < list.length; i++) {
+                    code = list[i]["종목코드"]
+                    if (!/^[0-9]+$/.test(code)) {
+                        code = code.replace(/[^0-9]/g, '')
+                    }
+                    codes.push(code)
+                }
+                postFetch('/api/v1/mystock/bulk', {
+                    api_id: 'kiwi7_mystock_bulk_add',
+                    payload: {
+                        codes: codes
+                    },
+                }).then(response => {
+                    if (response.success) {
+                        showAlert('My Stock에 추가되었습니다.', 'success');
+                    } else {
+                        showAlert('My Stock 추가에 실패했습니다: ' + response.error_message, 'error');
+                    }
+                });
+                console.log('My Stock에 추가:', this.data);
+            }
+        };
+    }
+
+    // Alpine.js 컴포넌트 등록
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('t0424_component', createT0424Component);
+    });
 </script>
 {% endraw %}
 {% endblock %}

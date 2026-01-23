@@ -49,7 +49,7 @@ class KisRestApi(StockApi):
         }
 
         # 연속조회 헤더
-        if request.cont_yn.value == 'Y':
+        if request.cont_yn == 'Y':
             headers['tr_cont'] = 'N'
         else:
             headers['tr_cont'] = ''
