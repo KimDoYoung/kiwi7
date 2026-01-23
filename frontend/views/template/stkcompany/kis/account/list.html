@@ -34,6 +34,10 @@
     .sortable-header:hover {
         background-color: #e9ecef;
     }
+
+    [x-cloak] {
+        display: none !important;
+    }
 </style>
 {% endblock %}
 {% block content %}
@@ -82,7 +86,7 @@
     </div>
     <!-- 계좌명과 헤드 끝-->
     <!-- 계좌 요약 정보 시작-->
-    <div class="rounded-lg shadow-sm bg-base-100 p-1 mt-4" x-show="summary_show">
+    <div class="rounded-lg shadow-sm bg-base-100 p-1 mt-4" x-show="summary_show" x-cloak>
         <table class="mt-2 table table-zebra w-full text-sm">
             <tbody>
                 <tr>
