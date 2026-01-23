@@ -156,6 +156,22 @@ async function callKisApi(api_id, payload, contYn = 'N', nextKey = null) {
     const url = `/api/v1/kis/${api_id}`;
     return postFetch(url, requestData);
 }
+/**
+ * KIS GET API 호출 함수
+ * 
+ * @param {string} api_id - KIS API ID
+ * @param {Object} payload - API 파라미터 데이터
+ * @returns {Promise<Object>} - KIS API 응답 데이터
+ */
+async function callGetKisApi(api_id, payload) {
+    const requestData = {
+        api_id: api_id,
+        payload: payload
+    };
+
+    const url = `/api/v1/kis/${api_id}`;
+    return getFetch(url);
+}
 
 /**
  * LS API 호출 함수
@@ -180,12 +196,18 @@ async function callLsApi(api_id, payload, contYn = 'N', nextKey = null) {
 
 
 // 전역 객체에 함수 할당 (Alpine.js 등에서 접근 가능하도록)
-window.callKiwiApi = callKiwiApi;
+window.callKiwiApi = callKiwiApi; // basic fetch api
+// method만 다르게 사용
 window.getFetch = getFetch;
 window.postFetch = postFetch;
 window.putFetch = putFetch;
 window.deleteFetch = deleteFetch;
-window.callKiwoomApi = callKiwoomApi;
-window.callKisApi = callKisApi;
-window.callLsApi = callLsApi;
+
+//각 증권사 api
+window.callKiwoomApi = callKiwoomApi; // 키움 api
+window.callKisApi = callKisApi; // KIS api
+window.callGetKisApi = callGetKisApi; // KIS api
+window.callLsApi = callLsApi; // LS api
+
+//에러
 window.KiwiError = KiwiError;
