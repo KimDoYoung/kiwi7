@@ -1,45 +1,170 @@
+<!--
+    - TTTC8434R(KIS 계좌평가현황)
+    - 이 템플릿은 KIS 계좌의 요약 정보와 종목별 평가 현황을 Alpine.js로 동적으로 표시합니다.
+-->
 {% extends 'common/base.html' %}
 {% block style %}
 <style>
 .spin {
     animation: spin 1s linear infinite;
 }
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+.clickable-cell {
+    cursor: pointer;
+}
+
+.clickable-cell:hover {
+    background-color: #f8f9fa;
+}
+
+.sortable-header {
+    cursor: pointer;
+}
+
+.sortable-header:hover {
+    background-color: #e9ecef;
+}
 </style>
 {% endblock %}
 {% block content %}
-<div class="container mt-4" x-data="kt00007_component">
+<div class="container mx-auto px-4 mt-4" x-data="tttc8434r_component"  >
+    <!-- 계좌명과 헤드 시작-->
+    <div class="flex items-center">
+        <span x-text="data?.계좌명" class="font-bold text-lg"></span>
+        <span class="ml-2">(<span x-text="data?.지점명"></span>)</span>
+        <div class="form-control ml-3 mt-0">
+            <label class="label cursor-pointer gap-2">
+                <span class="label-text">현황상세</span>
+                <input type="checkbox" class="checkbox checkbox-sm checkbox-primary" id="summaryFullCheck" x-model="summary_show" />
+            </label>
+        </div>
+        <div class="form-control ml-3 mt-0">
+            <label class="label cursor-pointer gap-2">
+                <span class="label-text font-bold">
+                    자동 새로고침 
+                    <span x-show="!autoRefresh" class="badge badge-secondary ml-1">30초</span>
+                    <span x-show="autoRefresh" 
+                          :class="`badge ml-1 ${countdown <= 5 ? 'badge-warning' : 'badge-primary'}`" 
+                          x-text="`${countdown}초`"></span>
+                </span>
+                <input type="checkbox" class="toggle toggle-primary toggle-sm" id="autoRefreshCheck" x-model="autoRefresh" />
+            </label>
+        </div>
+    </div> 
+    <div class="flex items-center mt-2 gap-4 text-sm">
+        <div>
+            <span>자산:</span>
+            <span class="font-bold" x-text="Number(data?.추정예탁자산).toLocaleString() + ' 원'"></span>
+        </div>
+        <div>
+            <span>수익:</span>
+            <span class="font-bold" x-text="profit.toLocaleString() + ' 원'" :class="formatClass(profit)"></span>
+        </div>
+        <div>
+            <span>매수가능:</span>
+            <span class="font-bold" x-text="Number(data?.['D+2추정예수금']).toLocaleString() + ' 원'"></span>
+        </div>
+    </div>
+    <!-- 계좌명과 헤드 끝-->
+    <!-- 계좌 요약 정보 시작--> 
+    <div class="rounded-lg shadow-sm bg-base-100 p-1 mt-4" x-show="summary_show">
+        <table class="mt-2 table table-zebra w-full text-sm">
+        <tbody>
+            <tr>
+            <th class="bg-base-200">예수금</th>
+            <td class="text-right" x-text="Number(data?.예수금).toLocaleString() + ' 원'"></td>
+
+            <th class="bg-base-200">D+2추정예수금</th>
+            <td class="text-right font-bold" x-text="Number(data?.['D+2추정예수금']).toLocaleString() + ' 원'"></td>
+            </tr>
+            <tr>
+            <th class="bg-base-200">유가잔고평가액</th>
+            <td class="text-right" x-text="Number(data?.유가잔고평가액).toLocaleString() + ' 원'"></td>
+
+            <th class="bg-base-200">예탁자산평가액</th>
+            <td class="text-right" x-text="Number(data?.예탁자산평가액).toLocaleString() + ' 원'"></td>
+            </tr>
+            <tr>
+            <th class="bg-base-200">총매입금액</th>
+            <td class="text-right" x-text="Number(data?.총매입금액).toLocaleString() + ' 원'"></td>
+
+            <th class="bg-base-200">추정예탁자산</th>
+            <td class="text-right" x-text="Number(data?.추정예탁자산).toLocaleString() + ' 원'"></td>
+            </tr>
+            <tr>
+            <th class="bg-base-200">매도담보대출금</th>
+            <td class="text-right" x-text="Number(data?.매도담보대출금).toLocaleString() + ' 원'"></td>
+
+            <th class="bg-base-200">당일투자원금</th>
+            <td class="text-right" x-text="Number(data?.당일투자원금).toLocaleString() + ' 원'"></td>
+            </tr>
+            <tr>
+            <th class="bg-base-200">당월투자원금</th>
+            <td class="text-right" x-text="Number(data?.당월투자원금).toLocaleString() + ' 원'"></td>
+
+            <th class="bg-base-200">누적투자원금</th>
+            <td class="text-right" x-text="Number(data?.누적투자원금).toLocaleString() + ' 원'"></td>
+            </tr>
+            <tr>
+            <th class="bg-base-200">당일투자손익</th>
+            <td class="text-right text-red-500" x-text="Number(data?.당일투자손익).toLocaleString() + ' 원'"></td>
+
+            <th class="bg-base-200">당월투자손익</th>
+            <td class="text-right text-red-500" x-text="Number(data?.당월투자손익).toLocaleString() + ' 원'"></td>
+            </tr>
+            <tr>
+            <th class="bg-base-200">누적투자손익</th>
+            <td class="text-right text-red-500" x-text="Number(data?.누적투자손익).toLocaleString() + ' 원'"></td>
+
+            <th class="bg-base-200">당일손익율</th>
+            <td class="text-right" x-text="data?.당일손익율 + ' %'"></td>
+            </tr>
+            <tr>
+            <th class="bg-base-200">당월손익율</th>
+            <td class="text-right" x-text="data?.당월손익율 + ' %'"></td>
+
+            <th class="bg-base-200">누적손익율</th>
+            <td class="text-right" x-text="data?.누적손익율 + ' %'"></td>
+            </tr>
+        </tbody>
+        </table>
+
+    </div>
+
+    <!-- 계좌 요약 정보 끝--> 
     <div class="mt-4">
-        <div class="mt-2 mb-2 d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center gap-3">
-                <select aria-label="손익율 필터" class="form-select form-select-sm w-auto" x-model="profitFilter">
+        <div class="mt-2 mb-2 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <select aria-label="손익율 필터" class="select select-bordered select-sm w-auto" x-model="profitFilter">
                     <option value="all">전체</option>
                     <option value="plus">+손익율</option>
                     <option value="minus">-손익율</option>
                 </select>
                 <div>종목갯수 : <span x-text="filtered_item_count"></span> / <span x-text="total_item_count"></span></div>
             </div>
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-success btn-sm" title="엑셀로 저장" @click="exportCSV()">
+            <div class="flex gap-2">
+                <button class="btn btn-outline btn-success btn-sm" title="엑셀로 저장" @click="exportCSV()">
                     <i class="bi bi-file-earmark-excel"></i>
                 </button>
-                <button class="btn btn-outline-success btn-sm" title="My Stock에 저장" @click="addMyStock()">
+                <button class="btn btn-outline btn-success btn-sm" title="My Stock에 저장" @click="addMyStock()">
                     <i class="bi bi-plus-lg"></i>
                 </button>
             </div>            
         </div>
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover align-middle text-center">
-                <thead class="table-light">
+        <div class="overflow-x-auto">
+            <table class="table table-zebra table-hover text-center w-full">
+                <thead class="bg-base-200">
                     <tr>
                         <template x-for="column in getTableColumns()" :key="column.key">
                             <th>
                                 <template x-if="column.sortable">
                                     <a href="#" @click.prevent="sortBy(column.key)" 
-                                        class="text-decoration-none text-dark sortable-header">
+                                        class="no-underline text-base-content sortable-header">
                                         <span x-text="column.label"></span>
                                         <span x-show="sort_key === column.key" 
                                                 x-text="sort_asc ? '▲' : '▼'"></span>
@@ -60,21 +185,21 @@
                         <tr>
                             <template x-for="column in getTableColumns()" :key="column.key">
                                 <td x-text="getCellValue(item, column)"
-                                    :class="getCellClass(item, column) + (column.clickable ? ' clickable-cell' : '') + ((column.format === 'number' || column.format === 'profit') ? ' text-end' : '')"
+                                    :class="getCellClass(item, column) + (column.clickable ? ' clickable-cell' : '') + ((column.format === 'number' || column.format === 'profit') ? ' text-right' : '')"
                                     @click="handleCellClick(item, column)">
                                 </td>
                             </template>
                             <template x-if="hasActionButtons()">
                                 <td>
-                                    <div class="btn-group" role="group">
+                                    <div class="join" role="group">
                                         <template x-if="actions.includes('buy')">
-                                            <button type="button" class="btn btn-sm btn-danger" @click="buy(item)" title="매수(buy)">買</button>
+                                            <button type="button" class="btn btn-sm btn-error join-item" @click="buy(item)" title="매수(buy)">買</button>
                                         </template>
                                         <template x-if="actions.includes('sell')">
-                                            <button type="button" class="btn btn-sm btn-primary" @click="sell(item)" title="매도(sell)">賣</button>
+                                            <button type="button" class="btn btn-sm btn-info join-item" @click="sell(item)" title="매도(sell)">賣</button>
                                         </template>
                                         <template x-if="actions.includes('detail')">
-                                            <button type="button" class="btn btn-sm btn-info" @click="detail(item)" title="종목상세(detail info)">詳</button>
+                                            <button type="button" class="btn btn-sm btn-success join-item" @click="detail(item)" title="종목상세(detail info)">詳</button>
                                         </template>
                                     </div>
                                 </td>
@@ -91,7 +216,7 @@
                 </tbody>
                 <tbody x-show="!loading && (!data || sorted_items.length === 0)">
                     <tr>
-                        <td :colspan="getTableColumns().length" class="text-center py-4 text-muted">
+                        <td :colspan="getTableColumns().length" class="text-center py-4 text-base-content/50">
                             표시할 데이터가 없습니다.
                         </td>
                     </tr>
@@ -99,17 +224,23 @@
             </table>
         </div>        
     </div> 
+    <!-- 데이터 테이블 끝-->   
 </div>
+
+{% raw %}
+<!--handlebar scripts-->
+{% endraw %}
 {% endblock %}
 {% block script %}
-<script src="/public/js/configs/kiwoom/kt00007.js"></script>
+<script src="/public/js/configs/kis/tttc8434r.js"></script>
 <script src="/public/js/utils/kiwi7-utils.js"></script>
 <script src="/public/js/components/kiwi7-base.js"></script>
+{% raw %}
 <script>
-// Alpine 컴포넌트 등록 예시 (kiwi7-base 활용)
-function createKt00007Component() {
-    const base = window.createKiwi7Base(kt00007, {
-        callApi: callKiwoomApi,
+// Alpine 컴포넌트 팩토리 함수
+function createTttc8434rComponent() {
+    const base = window.createKiwi7Base(tttc8434r, {
+        callApi: callKisApi,
         utils: window.Kiwi7Utils,
         debug: false
     });
@@ -274,13 +405,13 @@ function createKt00007Component() {
 
         detail(item) {
             console.log('상세 정보:', item);
-            showCompanyCanvas(item.종목코드);
+            window.open(`/page?path=stock/detail&stk_cd=${item.종목코드}`, '_blank');
         },
 
         // === 유틸리티 메서드 ===
         formatClass(value) {
-            if (value > 0) return 'text-danger';
-            if (value < 0) return 'text-primary';
+            if (value > 0) return 'text-red-500';
+            if (value < 0) return 'text-blue-500';
             return '';
         },
         addMyStock() {
@@ -306,13 +437,14 @@ function createKt00007Component() {
                 }
             });
             console.log('My Stock에 추가:', this.data);
-            // My Stock에 추가하는 로직 구현
         }
     };
 }
 
+// Alpine.js 컴포넌트 등록
 document.addEventListener('alpine:init', () => {
-    Alpine.data('kt00007_component', createKt00007Component);
+    Alpine.data('tttc8434r_component', createTttc8434rComponent);
 });
 </script>
+{% endraw %}
 {% endblock %}

@@ -1,5 +1,5 @@
-// static/js/utils/kiwoom-utils.js
-window.KiwoomUtils = {
+// static/js/utils/kiwi7-utils.js
+window.Kiwi7Utils = {
     // 값 포맷팅
     formatValue(value, format) {
         if (value === null || value === undefined || value === '') return '';

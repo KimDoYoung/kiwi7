@@ -229,15 +229,15 @@
 {% endblock %}
 {% block script %}
 <script src="/public/js/configs/kiwoom/kt00005.js"></script>
-<script src="/public/js/utils/kiwoom-utils.js"></script>
-<script src="/public/js/components/kiwoom-base.js"></script>
+<script src="/public/js/utils/kiwi7-utils.js"></script>
+<script src="/public/js/components/kiwi7-base.js"></script>
 {% raw %}
 <script>
 // Alpine 컴포넌트 팩토리 함수
 function createKt00005Component() {
-    const base = window.createKiwoomBase(kt00005, {
+    const base = window.createKiwi7Base(kt00005, {
         callApi: callKiwoomApi,
-        utils: window.KiwoomUtils,
+        utils: window.Kiwi7Utils,
         debug: false
     });
 

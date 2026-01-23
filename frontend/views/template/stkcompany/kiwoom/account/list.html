@@ -474,15 +474,15 @@
 {% endblock %}
 {% block script %}
 <script src="/public/js/configs/kiwoom/kt00004.js"></script>
-<script src="/public/js/utils/kiwoom-utils.js"></script>
-<script src="/public/js/components/kiwoom-base.js"></script>
+<script src="/public/js/utils/kiwi7-utils.js"></script>
+<script src="/public/js/components/kiwi7-base.js"></script>
 {% raw %}
 <script>
 // Alpine 컴포넌트 팩토리 함수
 function createKt00004Component() {
-    const base = window.createKiwoomBase(kt00004, {
+    const base = window.createKiwi7Base(kt00004, {
         callApi: callKiwoomApi,
-        utils: window.KiwoomUtils,
+        utils: window.Kiwi7Utils,
         debug: false
     });
 
@@ -553,7 +553,7 @@ function createKt00004Component() {
                         // 카운트다운이 0이 되면 새로고침 실행
                         if (!this.loading) {
                             console.log('자동 새로고침 실행...');
-                            this.fetch_data(); // kiwoom-base의 fetch_data 함수 호출
+                            this.fetch_data(); // kiwi7-base의 fetch_data 함수 호출
                         }
                         this.countdown = 30; // 카운트다운 리셋
                     }

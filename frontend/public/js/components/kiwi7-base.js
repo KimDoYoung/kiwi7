@@ -1,6 +1,6 @@
-// kiwoom-base.improved.js
+// kiwi7-base.improved.js
 // 의존성 주입 + 추가 개선사항 적용
-window.createKiwoomBase = function createKiwoomBase(config, depends = {}) {
+window.createKiwi7Base = function createKiwi7Base(config, depends = {}) {
   // 설정 검증
   if (!config) throw new Error('config는 필수입니다');
   if (!config.table?.columns?.length) throw new Error('config.table.columns가 필요합니다');
@@ -33,9 +33,9 @@ window.createKiwoomBase = function createKiwoomBase(config, depends = {}) {
 
   // 로깅 유틸리티
   const logger = {
-    log: (...args) => debug && console.log('[KiwoomBase]', ...args),
-    warn: (...args) => console.warn('[KiwoomBase]', ...args),
-    error: (...args) => console.error('[KiwoomBase]', ...args)
+    log: (...args) => debug && console.log('[Kiwi7Base]', ...args),
+    warn: (...args) => console.warn('[Kiwi7Base]', ...args),
+    error: (...args) => console.error('[Kiwi7Base]', ...args)
   };
 
   // 데이터 유틸리티
@@ -507,7 +507,7 @@ window.createKiwoomBase = function createKiwoomBase(config, depends = {}) {
         
         // const response = await callApi(config.api_endpoint, config.payload);
         const response = await callApi(endpoint, payload);
-        console.log("응답(kiwoom-base):", response);
+        console.log("응답(kiwi7-base):", response);
         if (!response?.success) {
           throw new Error(response?.error_message || 'API 호출 실패');
         }

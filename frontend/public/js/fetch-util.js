@@ -136,3 +136,45 @@ async function callKiwoomApi(api_id, payload, contYn = 'N', nextKey = null) {
     return postFetch(url, requestData);
 }
 
+/**
+ * KIS API 호출 함수
+ * 
+ * @param {string} api_id - KIS API ID
+ * @param {Object} payload - API 파라미터 데이터
+ * @param {string} contYn - 연속조회 여부 ('Y' 또는 'N', 기본값: 'N')
+ * @param {string} nextKey - 연속조회 키 (옵션)
+ * @returns {Promise<Object>} - KIS API 응답 데이터
+ */
+async function callKisApi(api_id, payload, contYn = 'N', nextKey = null) {
+    const requestData = {
+        api_id : api_id,
+        cont_yn: contYn,
+        next_key: nextKey,
+        payload: payload
+    };
+    
+    const url = `/api/v1/kis/${api_id}`;
+    return postFetch(url, requestData);
+}
+
+/**
+ * LS API 호출 함수
+ * 
+ * @param {string} api_id - LS API ID
+ * @param {Object} payload - API 파라미터 데이터
+ * @param {string} contYn - 연속조회 여부 ('Y' 또는 'N', 기본값: 'N')
+ * @param {string} nextKey - 연속조회 키 (옵션)
+ * @returns {Promise<Object>} - LS API 응답 데이터
+ */
+async function callLsApi(api_id, payload, contYn = 'N', nextKey = null) {
+    const requestData = {
+        api_id : api_id,
+        cont_yn: contYn,
+        next_key: nextKey,
+        payload: payload
+    };
+    
+    const url = `/api/v1/ls/${api_id}`;
+    return postFetch(url, requestData);
+}
+

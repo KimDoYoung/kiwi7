@@ -45,14 +45,14 @@
 {% endblock %}
 {% block script %}
 <script src="/public/js/configs/kiwoom/kt00004.js"></script>
-<script src="/public/js/utils/kiwoom-utils.js"></script>
-<script src="/public/js/components/kiwoom-base.js"></script>
+<script src="/public/js/utils/kiwi7-utils.js"></script>
+<script src="/public/js/components/kiwi7-base.js"></script>
 <script>
 document.addEventListener('alpine:init', () => {
     Alpine.data('test_001', () => {
-        let base = window.createKiwoomBase(kt00004, {
+        let base = window.createKiwi7Base(kt00004, {
             callApi : callKiwoomApi,
-            utils : window.KiwoomUtils,
+            utils : window.Kiwi7Utils,
             debug: false
         });
         return {

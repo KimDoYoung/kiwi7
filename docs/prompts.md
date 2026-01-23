@@ -111,3 +111,11 @@ KIS_RESPONSE_DEF = {
    }
 
 ```
+
+## list만들기
+
+kis `TTTC8434R`
+ls `t0424`
+위  api id를 쓰고 stkcompany/kis/account/list,stkcompany/ls/account/list
+list.html 2개를 각각 만들어줘.
+stkcompany/kiwoom/account/list.html를 보고 유사하게 만들어줘
