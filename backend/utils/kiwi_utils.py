@@ -2,6 +2,21 @@ import datetime
 import json
 from typing import Any, Dict
 
+def format_account_number(company_abbr:str, account_number: str ) -> str:
+    if company_abbr == "KIWOOM":
+        # account_number에서 '-' 를 제거 후 4자리-4자리 로 만들어서 리턴
+        account_number = account_number.replace('-', '')
+        return f"{account_number[:4]}-{account_number[4:]}"
+    elif company_abbr == "KIS":
+        # account_number에서 '-' 를 제거 후 8자리-2자리로 리턴
+        account_number = account_number.replace('-', '')
+        return f"{account_number[:8]}-{account_number[8:]}"
+    elif company_abbr == "LS":
+        # account_number에서 '-' 를 제거 후 3자리-2자리-나머지 로 리턴
+        account_number = account_number.replace('-', '')
+        return f"{account_number[:3]}-{account_number[3:6]}-{account_number[6:]}"
+    else:
+        return account_number
 
 def is_time_exceeded(time_str:str, time_:str) -> bool:
     ''' time_str을 datetime으로m  time_ : 30s, 10m, 10d 형식의 문자열, 초과시 true'''

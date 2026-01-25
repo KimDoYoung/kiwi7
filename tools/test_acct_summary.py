@@ -12,10 +12,12 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import asyncio
 import json
+from datetime import date, datetime
 from typing import List
 
 from backend.core.config import config
 from backend.core.logger import get_logger
+from backend.utils.kiwi_utils import format_account_number
 from backend.domains.stkcompanys.kis.kis_service import get_kis_api
 from backend.domains.stkcompanys.kis.models.kis_response_definition import (
     get_response_definition as get_kis_response_def,
@@ -27,6 +29,13 @@ from backend.domains.stkcompanys.ls.ls_service import get_ls_api
 from backend.domains.stkcompanys.ls.models.ls_schema import LsApiHelper, LsRequest
 
 logger = get_logger(__name__)
+
+
+def json_serial(obj):
+    """JSON serializer for objects not serializable by default json code"""
+    if isinstance(obj, (datetime, date)):
+        return obj.isoformat()
+    return str(obj)
 
 
 def extract_holdings_from_kis_response(response_data: dict, api_id: str) -> list:
@@ -227,13 +236,15 @@ async def get_kiwoom_account_summary() -> AccountSummary | None:
 
         # 응답에서 데이터 추출 (to_korea_data 적용 후 한글 필드명 사용)
         account_summary = AccountSummary('Kiwoom', '키움증권')
-        account_summary.data['계좌번호'] = config.KIWOOM_ACCT_NO
+        account_summary.data['계좌번호'] = format_account_number('KIWOOM', config.KIWOOM_ACCT_NO)
 
         if response.success and response.data:
             data = response.data
             if isinstance(data, dict):
                 # 예탁자산평가액 = 총자산 (예수금 + 유가잔고)
-                account_summary.data['총자산'] = int(data.get('예탁자산평가액', 0) or 0)
+                #account_summary.data['총자산'] = int(data.get('예탁자산평가액', 0) or 0)
+                account_summary.data['총자산'] = int(data.get('유가잔고평가액', 0) or 0)
+                
                 # 매입금액 계산
                 orderable = int(data.get('예수금', 0) or 0)
                 account_summary.data['주문가능금액'] = orderable
@@ -251,7 +262,9 @@ async def get_kiwoom_account_summary() -> AccountSummary | None:
             account_summary.raw_data = response.model_dump()
         else:
             account_summary.raw_data = vars(response)
-
+        logger.info("---------------------------------")
+        logger.info(f'Kiwoom 응답 데이터: {json.dumps(account_summary.raw_data, ensure_ascii=False, indent=2, default=json_serial)}')
+        logger.info("---------------------------------")
         logger.info(f'Kiwoom 계좌 요약: {account_summary}')
         return account_summary
 
@@ -333,7 +346,7 @@ async def get_kis_account_summary() -> AccountSummary | None:
         # 디버그: response.data 출력
         logger.info("--- KIS Account Summary Response Data ---")
         if response.data:
-            logger.info(f'[KIS] Response data: {json.dumps(response.data, ensure_ascii=False, indent=2)}')
+            logger.info(f'[KIS] Response data: {json.dumps(response.data, ensure_ascii=False, indent=2, default=json_serial)}')
         else:
             logger.info('[KIS] Response data: None')
         logger.info("----------------------------------------")
@@ -436,6 +449,9 @@ async def get_ls_account_summary() -> AccountSummary | None:
                 account_summary.raw_data = response.model_dump()
             else:
                 account_summary.raw_data = vars(response)
+            logger.info("---------------------------------")
+            logger.info(f'LS 응답 데이터: {json.dumps(account_summary.raw_data, ensure_ascii=False, indent=2, default=json_serial)}')
+            logger.info("---------------------------------")
             logger.info(f'LS 계좌 요약: {account_summary}')
             return account_summary
 
@@ -453,6 +469,10 @@ async def get_ls_account_summary() -> AccountSummary | None:
         # t0424OutBlock에서 계좌 요약 정보 추출
         if response.success and response.data:
             data = response.data
+            logger.info("---------------------------------")
+            logger.info(f'LS 응답 데이터: {json.dumps(data, ensure_ascii=False, indent=2, default=json_serial)}')
+            logger.info("---------------------------------")
+
             if isinstance(data, dict):
                 block = data.get('t0424OutBlock', {})
                 if isinstance(block, dict):

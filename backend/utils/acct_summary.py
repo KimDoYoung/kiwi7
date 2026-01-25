@@ -3,6 +3,7 @@
 3개 증권사(Kiwoom, KIS, LS)의 계좌별 자산 정보를 통합 조회
 """
 
+from backend.utils.kiwi_utils import format_account_number
 import json
 from typing import List
 
@@ -116,7 +117,7 @@ async def get_kiwoom_account_summary() -> AccountSummary | None:
 
         # 응답에서 데이터 추출
         account_summary = AccountSummary('Kiwoom', '키움증권')
-        account_summary.data['계좌번호'] = config.KIWOOM_ACCT_NO
+        account_summary.data['계좌번호'] = format_account_number('KIWOOM', config.KIWOOM_ACCT_NO)
 
         if response.success and response.data:
             data = response.data
@@ -195,7 +196,7 @@ async def get_kis_account_summary() -> AccountSummary | None:
 
         # 응답에서 데이터 추출
         account_summary = AccountSummary('KIS', '한국투자증권')
-        account_summary.data['계좌번호'] = config.KIS_ACCT_NO
+        account_summary.data['계좌번호'] = format_account_number('KIS', config.KIS_ACCT_NO)
 
         if response.success and response.data:
             data = response.data
@@ -294,7 +295,6 @@ async def get_ls_account_summary() -> AccountSummary | None:
             )
             # 실패한 경우에도 기본 계좌 정보로 반환
             account_summary = AccountSummary('LS', 'LS증권')
-            account_summary.data['계좌번호'] = config.LS_ACCT_NO
             if hasattr(response, 'model_dump'):
                 account_summary.raw_data = response.model_dump()
             else:
@@ -311,7 +311,7 @@ async def get_ls_account_summary() -> AccountSummary | None:
 
         # 응답에서 데이터 추출
         account_summary = AccountSummary('LS', 'LS증권')
-        account_summary.data['계좌번호'] = config.LS_ACCT_NO
+        account_summary.data['계좌번호'] = format_account_number('LS', config.LS_ACCT_NO)
 
         # t0424OutBlock에서 계좌 요약 정보 추출
         if response.success and response.data:
@@ -321,11 +321,11 @@ async def get_ls_account_summary() -> AccountSummary | None:
                 if isinstance(block, dict):
                     # 추정순자산 = 총자산
                     account_summary.data['총자산'] = int(
-                        block.get('추정순자산', 0) or 0
+                        block.get('평가금액', 0) or 0
                     )
                     # 평가손익 = 매입금액 (이미 평가손익임)
                     account_summary.data['매입금액'] = int(
-                        block.get('평가손익', 0) or 0
+                        block.get('매입금액', 0) or 0
                     )
                     # 추정D2예수금 = 주문가능금액
                     account_summary.data['주문가능금액'] = int(
@@ -338,7 +338,16 @@ async def get_ls_account_summary() -> AccountSummary | None:
             if isinstance(data, dict):
                 block1 = data.get('t0424OutBlock1', [])
                 if isinstance(block1, list):
-                    account_summary.data['보유종목수'] = len(block1)
+                    # 종목번호가 있는 항목만 카운트 (빈 항목 제외)
+                    valid_items = [
+                        item for item in block1 
+                        if (
+                            item.get('종목번호') 
+                            and str(item.get('종목번호')).strip() 
+                            and int(item.get('잔고수량', 0) or 0) > 0
+                        )
+                    ]
+                    account_summary.data['보유종목수'] = len(valid_items)
                 # 평가손익과 수익률 자동 계산
                 account_summary._calculate_pl_and_rate()
 

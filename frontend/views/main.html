@@ -655,6 +655,7 @@
                         }
                         const data = await response.json();
                         this.account_summary = data;
+                        console.log("account_summary", this.account_summary);
                     } catch (error) {
                         console.error('계좌 정보 조회 실패:', error);
                         if (error instanceof SyntaxError && error.message.includes('JSON')) {

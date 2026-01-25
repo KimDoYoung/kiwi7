@@ -19,16 +19,16 @@ applyTo: '**/*.py'
 - uvicorn
 - jinja2
 - alpine.js
-- bootstrap5
+- tailwindcss
+- daisyui
 
 ---
 전반적인 규칙
 ---
 * html을 만들때 alpine.js를 사용합니다.
-* bootstrap5를 사용하여 스타일링합니다.
-* bootstrap5 icon을 사용합니다.
+* tailwindcss와 daisyui를 사용하여 스타일링합니다.
 * ajax동작은 자체적으로 작성한 fetch_util.js를 사용합니다.
-    * `fetchUtil.js`는 `GET`, `POST`, `PUT`, `DELETE` 요청을 위한 유틸리티 함수를 포함합니다.
+    * `fetch-util.js`는 `GET`, `POST`, `PUT`, `DELETE` 요청을 위한 유틸리티 함수를 포함합니다.
     * kiwoom API와의 통신을 위한 함수도 포함됩니다.
     * 자체적인 KiwiError 클래스를 사용하여 에러 처리를 합니다. 
 ---

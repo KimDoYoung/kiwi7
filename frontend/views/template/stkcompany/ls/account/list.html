@@ -46,87 +46,42 @@
     <!-- 계좌명과 헤드 시작-->
     <div class="flex items-center">
         <span class="font-bold text-lg">LS증권 계좌</span>
-        <div class="form-control ml-3 mt-0">
-            <label class="label cursor-pointer gap-2">
-                <span class="label-text">현황상세</span>
-                <input type="checkbox" class="checkbox checkbox-sm checkbox-primary" id="summaryFullCheck"
-                    x-model="summary_show" />
-            </label>
-        </div>
-        <div class="form-control ml-3 mt-0">
-            <label class="label cursor-pointer gap-2">
-                <span class="label-text font-bold">
-                    자동 새로고침
-                    <span x-show="!autoRefresh" class="badge badge-secondary ml-1">30초</span>
-                    <span x-show="autoRefresh"
-                        :class="`badge ml-1 ${countdown <= 5 ? 'badge-warning' : 'badge-primary'}`"
-                        x-text="`${countdown}초`"></span>
-                </span>
-                <input type="checkbox" class="toggle toggle-primary toggle-sm" id="autoRefreshCheck"
-                    x-model="autoRefresh" />
-            </label>
-        </div>
+
+
     </div>
     <div class="flex items-center mt-2 gap-4 text-sm">
         <div>
             <span>자산:</span>
-            <span class="font-bold" x-text="Number(data?.t0424OutBlock?.예탁자산총액 || 0).toLocaleString() + ' 원'"></span>
+            <span class="font-bold" x-text="Number(data?.t0424OutBlock?.평가금액 || 0).toLocaleString() + ' 원'"></span>
         </div>
         <div>
             <span>수익:</span>
-            <span class="font-bold" x-text="Number(data?.t0424OutBlock?.평가손익합계 || 0).toLocaleString() + ' 원'"
-                :class="formatClass(data?.t0424OutBlock?.평가손익합계)"></span>
+            <span class="font-bold" x-text="Number(data?.t0424OutBlock?.평가손익 || 0).toLocaleString() + ' 원'"
+                :class="formatClass(data?.t0424OutBlock?.평가손익)"></span>
         </div>
         <div>
             <span>매수가능:</span>
-            <span class="font-bold" x-text="Number(data?.t0424OutBlock?.주문가능금액 || 0).toLocaleString() + ' 원'"></span>
+            <span class="font-bold" x-text="Number(data?.t0424OutBlock?.추정D2예수금 || 0).toLocaleString() + ' 원'"></span>
+        </div>
+        <div class="ml-auto">
+            <div class="form-control mt-0">
+                <label class="label cursor-pointer gap-2">
+                    <span class="label-text font-bold">
+                        자동 새로고침
+                        <span x-show="!autoRefresh" class="badge badge-secondary ml-1">30초</span>
+                        <span x-show="autoRefresh"
+                            :class="`badge ml-1 ${countdown <= 5 ? 'badge-warning' : 'badge-primary'}`"
+                            x-text="`${countdown}초`"></span>
+                    </span>
+                    <input type="checkbox" class="toggle toggle-primary toggle-sm" id="autoRefreshCheck"
+                        x-model="autoRefresh" />
+                </label>
+            </div>
         </div>
     </div>
     <!-- 계좌명과 헤드 끝-->
-    <!-- 계좌 요약 정보 시작-->
-    <div class="rounded-lg shadow-sm bg-base-100 p-1 mt-4" x-show="summary_show" x-cloak>
-        <table class="mt-2 table table-zebra w-full text-sm">
-            <tbody>
-                <tr>
-                    <th class="bg-base-200">예수금</th>
-                    <td class="text-right" x-text="Number(data?.t0424OutBlock?.예수금 || 0).toLocaleString() + ' 원'"></td>
 
-                    <th class="bg-base-200">출금가능금액</th>
-                    <td class="text-right font-bold"
-                        x-text="Number(data?.t0424OutBlock?.출금가능금액 || 0).toLocaleString() + ' 원'"></td>
-                </tr>
-                <tr>
-                    <th class="bg-base-200">잔고평가금액</th>
-                    <td class="text-right" x-text="Number(data?.t0424OutBlock?.잔고평가금액 || 0).toLocaleString() + ' 원'">
-                    </td>
 
-                    <th class="bg-base-200">예탁자산총액</th>
-                    <td class="text-right" x-text="Number(data?.t0424OutBlock?.예탁자산총액 || 0).toLocaleString() + ' 원'">
-                    </td>
-                </tr>
-                <tr>
-                    <th class="bg-base-200">총매입금액</th>
-                    <td class="text-right" x-text="Number(data?.t0424OutBlock?.총매입금액 || 0).toLocaleString() + ' 원'">
-                    </td>
-
-                    <th class="bg-base-200">투자원금</th>
-                    <td class="text-right" x-text="Number(data?.t0424OutBlock?.투자원금 || 0).toLocaleString() + ' 원'"></td>
-                </tr>
-                <tr>
-                    <th class="bg-base-200">평가손익합계</th>
-                    <td class="text-right" :class="formatClass(data?.t0424OutBlock?.평가손익합계)"
-                        x-text="Number(data?.t0424OutBlock?.평가손익합계 || 0).toLocaleString() + ' 원'"></td>
-
-                    <th class="bg-base-200">손익율</th>
-                    <td class="text-right" :class="formatClass(data?.t0424OutBlock?.평가손익합계)"
-                        x-text="(data?.t0424OutBlock?.손익율 || 0) + ' %'"></td>
-                </tr>
-            </tbody>
-        </table>
-
-    </div>
-
-    <!-- 계좌 요약 정보 끝-->
     <div class="mt-4">
         <div class="mt-2 mb-2 flex justify-between items-center">
             <div class="flex items-center gap-3">
@@ -135,7 +90,8 @@
                     <option value="plus">+손익율</option>
                     <option value="minus">-손익율</option>
                 </select>
-                <div>종목갯수 : <span x-text="filtered_item_count"></span> / <span x-text="total_item_count"></span></div>
+                <div>종목갯수 : <span x-text="filtered_item_count"></span> / <span x-text="total_item_count"></span>
+                </div>
             </div>
             <div class="flex gap-2">
                 <button class="btn btn-outline btn-success btn-sm" title="엑셀로 저장" @click="exportCSV()">
@@ -170,7 +126,7 @@
                     </tr>
                 </thead>
                 <tbody x-show="data && !loading">
-                    <template x-for="(item, index) in sorted_items" :key="item.종목코드 || index">
+                    <template x-for="(item, index) in sorted_items" :key="item.종목번호 || index">
                         <tr>
                             <template x-for="column in getTableColumns()" :key="column.key">
                                 <td x-text="getCellValue(item, column)"
@@ -334,7 +290,7 @@
             registerClickHandlers() {
                 this.addClickHandler('종목명', (item) => {
                     console.log('종목명 클릭:', item);
-                    showCompanyCanvas(item.종목코드);
+                    showCompanyCanvas(item.종목번호);
                 });
             },
 
@@ -377,7 +333,7 @@
             buy(item) {
                 console.log('구매:', item);
                 // LS 키: 평균단가
-                const { 종목코드: stk_code, 종목명: stk_name, 평균단가 } = item;
+                const { 종목번호: stk_code, 종목명: stk_name, 평균단가 } = item;
 
                 showBuySellCanvas({
                     stk_code,
@@ -391,7 +347,7 @@
             sell(item) {
                 console.log('판매:', item);
                 // LS 키: 잔고수량
-                const { 종목코드: stk_code, 종목명: stk_name, 잔고수량 } = item;
+                const { 종목번호: stk_code, 종목명: stk_name, 잔고수량 } = item;
                 const qty = Number(잔고수량) || 0;
 
                 showBuySellCanvas({
@@ -405,7 +361,7 @@
 
             detail(item) {
                 console.log('상세 정보:', item);
-                window.open(`/page?path=stock/detail&stk_cd=${item.종목코드}`, '_blank');
+                window.open(`/page?path=stock/detail&stk_cd=${item.종목번호}`, '_blank');
             },
 
             // === 유틸리티 메서드 ===
@@ -419,7 +375,7 @@
                 let list = this.data?.t0424OutBlock1 || [];
                 let codes = []
                 for (let i = 0; i < list.length; i++) {
-                    let code = list[i]["종목코드"]
+                    let code = list[i]["종목번호"]
                     if (code) {
                         if (!/^[0-9]+$/.test(code)) {
                             code = code.replace(/[^0-9]/g, '')

@@ -47,92 +47,42 @@
     <div class="flex items-center">
         <span x-text="data?.output2?.계좌명 || 'KIS계좌'" class="font-bold text-lg"></span>
         <span class="ml-2">(<span x-text="data?.output2?.지점명 || 'Online'"></span>)</span>
-        <div class="form-control ml-3 mt-0">
-            <label class="label cursor-pointer gap-2">
-                <span class="label-text">현황상세</span>
-                <input type="checkbox" class="checkbox checkbox-sm checkbox-primary" id="summaryFullCheck"
-                    x-model="summary_show" />
-            </label>
-        </div>
-        <div class="form-control ml-3 mt-0">
-            <label class="label cursor-pointer gap-2">
-                <span class="label-text font-bold">
-                    자동 새로고침
-                    <span x-show="!autoRefresh" class="badge badge-secondary ml-1">30초</span>
-                    <span x-show="autoRefresh"
-                        :class="`badge ml-1 ${countdown <= 5 ? 'badge-warning' : 'badge-primary'}`"
-                        x-text="`${countdown}초`"></span>
-                </span>
-                <input type="checkbox" class="toggle toggle-primary toggle-sm" id="autoRefreshCheck"
-                    x-model="autoRefresh" />
-            </label>
-        </div>
+
+
     </div>
     <div class="flex items-center mt-2 gap-4 text-sm">
         <div>
             <span>자산:</span>
-            <span class="font-bold"
-                x-text="Number(data?.output2?.순자산금액 || data?.output2?.총평가금액).toLocaleString() + ' 원'"></span>
+            <span class="font-bold" x-text="Number(data?.output2[0]?.총평가금액).toLocaleString() + ' 원'"></span>
         </div>
         <div>
             <span>수익:</span>
-            <span class="font-bold" x-text="(data?.output2?.평가손익합계금액 || 0).toLocaleString() + ' 원'"
-                :class="formatClass(data?.output2?.평가손익합계금액)"></span>
+            <span class="font-bold" x-text="Number(data?.output2[0]?.평가손익합계금액 || 0).toLocaleString() + ' 원'"
+                :class="formatClass(data?.output2[0]?.평가손익합계금액)"></span>
         </div>
         <div>
             <span>D+2예수:</span>
-            <span class="font-bold" x-text="Number(data?.output2?.익일정산금액).toLocaleString() + ' 원'"></span>
+            <span class="font-bold" x-text="Number(data?.output2[0]?.예수금총금액).toLocaleString() + ' 원'"></span>
+        </div>
+        <div class="ml-auto">
+            <div class="form-control mt-0">
+                <label class="label cursor-pointer gap-2">
+                    <span class="label-text font-bold">
+                        자동 새로고침
+                        <span x-show="!autoRefresh" class="badge badge-secondary ml-1">30초</span>
+                        <span x-show="autoRefresh"
+                            :class="`badge ml-1 ${countdown <= 5 ? 'badge-warning' : 'badge-primary'}`"
+                            x-text="`${countdown}초`"></span>
+                    </span>
+                    <input type="checkbox" class="toggle toggle-primary toggle-sm" id="autoRefreshCheck"
+                        x-model="autoRefresh" />
+                </label>
+            </div>
         </div>
     </div>
     <!-- 계좌명과 헤드 끝-->
-    <!-- 계좌 요약 정보 시작-->
-    <div class="rounded-lg shadow-sm bg-base-100 p-1 mt-4" x-show="summary_show" x-cloak>
-        <table class="mt-2 table table-zebra w-full text-sm">
-            <tbody>
-                <tr>
-                    <th class="bg-base-200">예수금</th>
-                    <td class="text-right" x-text="Number(data?.output2?.예수금총금액).toLocaleString() + ' 원'"></td>
 
-                    <th class="bg-base-200">D+1정산금</th>
-                    <td class="text-right font-bold" x-text="Number(data?.output2?.익일정산금액).toLocaleString() + ' 원'">
-                    </td>
-                </tr>
-                <tr>
-                    <th class="bg-base-200">유가평가금액</th>
-                    <td class="text-right" x-text="Number(data?.output2?.유가평가금액).toLocaleString() + ' 원'"></td>
 
-                    <th class="bg-base-200">총평가금액</th>
-                    <td class="text-right" x-text="Number(data?.output2?.총평가금액).toLocaleString() + ' 원'"></td>
-                </tr>
-                <tr>
-                    <th class="bg-base-200">매입금액합계</th>
-                    <td class="text-right" x-text="Number(data?.output2?.매입금액합계금액).toLocaleString() + ' 원'"></td>
-
-                    <th class="bg-base-200">순자산금액</th>
-                    <td class="text-right" x-text="Number(data?.output2?.순자산금액).toLocaleString() + ' 원'"></td>
-                </tr>
-                <tr>
-                    <th class="bg-base-200">총대출금액</th>
-                    <td class="text-right" x-text="Number(data?.output2?.총대출금액).toLocaleString() + ' 원'"></td>
-
-                    <th class="bg-base-200">평가손익합계</th>
-                    <td class="text-right" :class="formatClass(data?.output2?.평가손익합계금액)"
-                        x-text="Number(data?.output2?.평가손익합계금액).toLocaleString() + ' 원'"></td>
-                </tr>
-                <tr>
-                    <th class="bg-base-200">자산증감액</th>
-                    <td class="text-right" :class="formatClass(data?.output2?.자산증감액)"
-                        x-text="Number(data?.output2?.자산증감액).toLocaleString() + ' 원'"></td>
-
-                    <th class="bg-base-200">-</th>
-                    <td class="text-right">-</td>
-                </tr>
-            </tbody>
-        </table>
-
-    </div>
-
-    <!-- 계좌 요약 정보 끝-->
     <div class="mt-4">
         <div class="mt-2 mb-2 flex justify-between items-center">
             <div class="flex items-center gap-3">
@@ -336,6 +286,8 @@
                         const eval_amt = Number(summary['유가평가금액']) || 0;
                         const buy_amt = Number(summary['매입금액합계금액']) || 0;
                         this.profit = eval_amt - buy_amt;
+                        this.output2 = data?.output2;
+
                     }
                 });
             },

@@ -23,17 +23,17 @@ const t0424 = {
     table: {
         data_key: 't0424OutBlock1',
         columns: [
-            { key: '종목코드', label: '종목코드', sortable: true, clickable: true },
+            { key: '종목번호', label: '종목번호', sortable: true, clickable: true },
             { key: '종목명', label: '종목명', sortable: true, clickable: true },
             { key: '잔고수량', label: '보유수량', sortable: true, format: 'number' },
             { key: '평균단가', label: '평균단가', sortable: true, format: 'number' },
             { key: '현재가', label: '현재가', sortable: true, format: 'number' },
             // 파생 컬럼: 주당손익
-            { 
-                key: '주당손익', 
-                label: '1주당', 
-                sortable: true, 
-                align: 'right', 
+            {
+                key: '주당손익',
+                label: '1주당',
+                sortable: true,
+                align: 'right',
                 format: 'profit',
                 derived: true,
                 formula: (item) => {
