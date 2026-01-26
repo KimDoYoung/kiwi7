@@ -278,18 +278,28 @@
             },
 
             registerCallbacks() {
+                //this.addCallback((data) => {
+                //    // KIS 데이터는 output2에 요약 정보가 있음
+                //    const summary = data?.output2;
+                //    if (summary) {
+                //        // 문자열을 숫자로 변환하여 계산
+                //        const eval_amt = Number(summary['유가평가금액']) || 0;
+                //        const buy_amt = Number(summary['매입금액합계금액']) || 0;
+                //        this.profit = eval_amt - buy_amt;
+                //        this.output2 = data?.output2;
+//
+                //    }
+                //});
                 this.addCallback((data) => {
-                    // KIS 데이터는 output2에 요약 정보가 있음
-                    const summary = data?.output2;
-                    if (summary) {
-                        // 문자열을 숫자로 변환하여 계산
-                        const eval_amt = Number(summary['유가평가금액']) || 0;
-                        const buy_amt = Number(summary['매입금액합계금액']) || 0;
-                        this.profit = eval_amt - buy_amt;
-                        this.output2 = data?.output2;
-
+                    debugger;
+                    let data_list = data?.output1 || [];
+                    let total_money =  Number(data?.output2[0]["매입금액합계금액"])
+                    for (let i = 0; i < data_list.length; i++) {
+                        let avgcost = Number(data_list[i]['매입평균가격']);
+                        let qty = Number(data_list[i]['보유수량']);
+                        data_list[i]['보유비중'] = avgcost * qty / total_money * 100;
                     }
-                });
+                });                
             },
 
             registerClickHandlers() {

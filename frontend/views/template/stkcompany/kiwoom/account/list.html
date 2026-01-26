@@ -520,11 +520,19 @@
                 }
                 this.countdown = 30; // 카운트다운 리셋
             },
-
+            //데이터를 가져온 후 처리
             registerCallbacks() {
-                this.addCallback((data) => {
-                    this.profit = data?.['유가잔고평가액'] - data?.['총매입금액'];
-                });
+                
+                //this.addCallback((data) => {
+                //    debugger;
+                //    let data_list = data?.output1 || [];
+                //    let total_money =  Number(data?.output2["매입금액합계금액"])
+                //    for (let i = 0; i < data_list.length; i++) {
+                //        let avgcost = Number(data_list[i]['매입평균가격']);
+                //        let qty = Number(data_list[i]['보유수량']);
+                //        data_list[i]['보유금액'] = avgcost * qty / total_money * 100;
+                //    }
+                //});
             },
 
             registerClickHandlers() {

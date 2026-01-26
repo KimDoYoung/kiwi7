@@ -27,26 +27,9 @@ async def kis_rest_api(api_id: str, req: KisRequest):
 
         # URL path의 api_id로 업데이트
         req.api_id = api_id
-
-        # [FIX] TTTC8434R (주식잔고조회) 필수 파라미터 주입
-        if api_id == "TTTC8434R":
-            defaults = {
-                "CANO": config.KIS_ACCT_NO[:8],
-                "ACNT_PRDT_CD": config.KIS_ACCT_PRDT_CD,
-                "AFHR_FLPR_YN": "N",
-                "OFL_YN": "",
-                "INQR_DVSN": "02",
-                "UNPR_DVSN": "01",
-                "FUND_STTL_ICLD_YN": "N",
-                "FNCG_AMT_AUTO_RDPT_YN": "N",
-                "PRCS_DVSN": "00",
-                "CTX_AREA_FK100": "",
-                "CTX_AREA_NK100": ""
-            }
-            for key, value in defaults.items():
-                if key not in req.payload:
-                    req.payload[key] = value
-
+        #req.payload의 CANO는 config에서 주입
+        req.payload["CANO"] = config.KIS_ACCT_NO[:8]
+        req.payload["ACNT_PRDT_CD"] = config.KIS_ACCT_PRDT_CD
         # payload 유효성 검증
         validation_errors = req.validate_payload()
         if validation_errors:
@@ -62,7 +45,6 @@ async def kis_rest_api(api_id: str, req: KisRequest):
         if response.success and response.data:
             korea_data = KisApiHelper.to_korea_data(response.data, api_id)
             response.data = korea_data
-
         return response
 
     except KisApiException as e:

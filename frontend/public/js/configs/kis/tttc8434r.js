@@ -5,7 +5,17 @@ const tttc8434r = {
     action_buttons: ['buy', 'sell', 'detail'],
     payload: {
         // 기본 조회 조건
-        inqr_dvsn: "02" // 01:대출일별, 02:종목별
+         "CANO": '',
+         "ACNT_PRDT_CD": '',
+         "AFHR_FLPR_YN": "N",
+         "OFL_YN": "",
+         "INQR_DVSN": "02", // 01:대출일별, 02:종목별
+         "UNPR_DVSN": "01",
+         "FUND_STTL_ICLD_YN": "N",
+         "FNCG_AMT_AUTO_RDPT_YN": "N",
+         "PRCS_DVSN": "00",
+         "CTX_AREA_FK100": "",
+         "CTX_AREA_NK100": ""
     },
     summary: {
         basic_fields: [
@@ -27,8 +37,8 @@ const tttc8434r = {
         columns: [
             { key: '상품번호', label: '종목코드', sortable: true, clickable: true },
             { key: '상품명', label: '종목명', sortable: true, clickable: true },
-            { key: '보유수량', label: '보유수량', sortable: true, format: 'number' },
-            { key: '매입평균가격', label: '평균단가', sortable: true, format: 'number' },
+            { key: '전일대비증감', label: '전일대비', sortable: true, format: 'number', profit_loss: true },
+            { key: '매입평균가격', label: '매입평단', sortable: true, format: 'number' },
             { key: '현재가', label: '현재가', sortable: true, format: 'number' },
             // 파생 컬럼: 주당순익
             {
@@ -44,11 +54,12 @@ const tttc8434r = {
                     return price - avg;
                 }
             },
-            { key: '평가금액', label: '평가금액', sortable: true, format: 'number' },
-            { key: '평가손익금액', label: '손익금액', sortable: true, format: 'number', profit_loss: true },
-            { key: '평가손익율', label: '손익율', sortable: true, format: 'percent', profit_loss: true },
+            { key: '보유수량', label: '보유수량', sortable: true, format: 'number' },
+            { key: '보유비중', label: '보유비중', sortable: true, format: 'number' },
             { key: '매입금액', label: '매입금액', sortable: true, format: 'number' },
-            { key: '주문가능수량', label: '주문가능', sortable: true, format: 'number' }
+            { key: '평가금액', label: '평가금액', sortable: true, format: 'number' },
+            { key: '평가손익율', label: '손익율', sortable: true, format: 'percent', profit_loss: true },
+            { key: '평가손익금액', label: '손익금액', sortable: true, format: 'number', profit_loss: true }
         ]
     },
     auto_refresh: 0
