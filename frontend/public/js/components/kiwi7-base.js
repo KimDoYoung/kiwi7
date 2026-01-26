@@ -71,24 +71,27 @@ window.createKiwi7Base = function createKiwi7Base(config, depends = {}) {
 
   // 포맷터
   const formatters = {
-    number: (value) => {
+    comma: (value) => {
+      // 소수점 없이 천단위 쉼표 표시
       const num = dataUtils.toNumber(value);
-      return Number.isFinite(num) ? num.toLocaleString() : CONSTANTS.DEFAULT_EMPTY_VALUE;
+      return Number.isFinite(num) ? Math.round(num).toLocaleString() : CONSTANTS.DEFAULT_EMPTY_VALUE;
+    },
+
+    number: (value) => {
+      // number는 comma와 동일하게 처리 (호환성)
+      const num = dataUtils.toNumber(value);
+      return Number.isFinite(num) ? Math.round(num).toLocaleString() : CONSTANTS.DEFAULT_EMPTY_VALUE;
     },
 
     percent: (value) => {
+      // 소수점 2자리
       const num = dataUtils.toNumber(value);
-      return Number.isFinite(num) ? num.toFixed(2) + '%' : CONSTANTS.DEFAULT_EMPTY_VALUE;
+      return Number.isFinite(num) ? num.toFixed(2) : CONSTANTS.DEFAULT_EMPTY_VALUE;
     },
 
-    currency: (value) => {
-      const num = dataUtils.toNumber(value);
-      return Number.isFinite(num) ? num.toLocaleString() + '원' : CONSTANTS.DEFAULT_EMPTY_VALUE;
-    },
-
-    profit: (value) => {
-      const num = dataUtils.toNumber(value);
-      return Number.isFinite(num) ? num.toLocaleString() : CONSTANTS.DEFAULT_EMPTY_VALUE;
+    text: (value) => {
+      // 그대로 표시
+      return dataUtils.isEmpty(value) ? CONSTANTS.DEFAULT_EMPTY_VALUE : String(value);
     },
 
     default: (value) => {
