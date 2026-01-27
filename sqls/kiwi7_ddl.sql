@@ -11,7 +11,7 @@ INSERT OR IGNORE INTO settings (name, value) VALUES ('user_pw', '1111');
 CREATE TABLE IF NOT EXISTS kdemon_rules (
   id                INTEGER PRIMARY KEY AUTOINCREMENT,
   name              TEXT NOT NULL,
-  symbol            TEXT NOT NULL,                -- 종목코드 (예: 005930)
+  stk_cd            TEXT NOT NULL,                -- 종목코드 (예: 005930)
   condition_op      TEXT NOT NULL,                -- 'gte' | 'lte' | 'cross_up' | 'cross_down'
   threshold         REAL NOT NULL,                -- 기준값 (예: 100.0)
   action            TEXT NOT NULL,                -- 'buy' | 'sell'
@@ -98,16 +98,16 @@ CREATE TABLE IF NOT EXISTS stk_trades_history (
 CREATE TABLE IF NOT EXISTS stk_cache (
   id         INTEGER PRIMARY KEY AUTOINCREMENT,    -- 고유 ID
   stk_cd     TEXT    NOT NULL,                     -- 종목코드
-  name       TEXT    NOT NULL,                     -- 종목명
-  value      TEXT    NOT NULL,                     -- 전일종가 등 값
+  name       TEXT    NOT NULL,                     -- 전일종가 등 key name
+  value      TEXT    NOT NULL,                     -- 전일종가 등 value
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP   -- 생성 시각
 );
 -- ---------------------------------------------------------------
 -- 종목 기본정보 국내주식 > 종목정보 > 종목정보 리스트(ka10099) 결과를 넣어두기 위함
 -- ---------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS stk_info (
-  code                TEXT PRIMARY KEY,                                      -- 종목코드(단축코드)
-  name                TEXT,                                                  -- 종목명
+  stk_cd              TEXT PRIMARY KEY,                                      -- 종목코드(단축코드)
+  stk_nm              TEXT,                                                  -- 종목명
   list_count          TEXT,                                                  -- 상장주식수 (API 원문: String)
   audit_info          TEXT,                                                  -- 감리구분
   reg_day             TEXT,                                                  -- 상장일 (YYYYMMDD)

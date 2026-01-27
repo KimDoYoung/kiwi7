@@ -33,8 +33,8 @@ class StkInfoService:
     def _row_to_stkinfo(self, row) -> StkInfo:
         """DB row를 StkInfo 객체로 변환"""
         return StkInfo(
-            code=row[0],
-            name=row[1],
+            stk_cd=row[0],
+            stk_nm=row[1],
             list_count=row[2],
             audit_info=row[3],
             reg_day=row[4],
@@ -63,13 +63,13 @@ class StkInfoService:
             
             cur.execute("""
                 INSERT INTO stk_info (
-                    code, name, list_count, audit_info, reg_day, last_price, state,
+                    stk_cd, stk_nm, list_count, audit_info, reg_day, last_price, state,
                     market_code, market_name, up_name, up_size_name, company_class_name,
                     order_warning, nxt_enable, created_at
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
-                stk_info.code,
-                stk_info.name,
+                stk_info.stk_cd,
+                stk_info.stk_nm,
                 stk_info.list_count,
                 stk_info.audit_info,
                 stk_info.reg_day,
@@ -87,8 +87,8 @@ class StkInfoService:
             conn.commit()
             
             return StkInfo(
-                code=stk_info.code,
-                name=stk_info.name,
+                stk_cd=stk_info.stk_cd,
+                stk_nm=stk_info.stk_nm,
                 list_count=stk_info.list_count,
                 audit_info=stk_info.audit_info,
                 reg_day=stk_info.reg_day,
@@ -114,11 +114,11 @@ class StkInfoService:
         with self._get_conn() as conn:
             cur = conn.cursor()
             cur.execute("""
-                SELECT code, name, list_count, audit_info, reg_day, last_price, state,
+                SELECT stk_cd, stk_nm, list_count, audit_info, reg_day, last_price, state,
                        market_code, market_name, up_name, up_size_name, company_class_name,
                        order_warning, nxt_enable, created_at
                 FROM stk_info
-                WHERE code = ?
+                WHERE stk_cd = ?
             """, (code,))
             
             row = cur.fetchone()
@@ -140,8 +140,8 @@ class StkInfoService:
 
         # 업데이트할 필드들만 추출
         update_fields = {}
-        if update_data.name is not None:
-            update_fields['name'] = update_data.name
+        if update_data.stk_nm is not None:
+            update_fields['stk_nm'] = update_data.stk_nm
         if update_data.list_count is not None:
             update_fields['list_count'] = update_data.list_count
         if update_data.audit_info is not None:
@@ -177,9 +177,9 @@ class StkInfoService:
             cur = conn.cursor()
             values = list(update_fields.values()) + [code]
             cur.execute(f"""
-                UPDATE stk_info 
+                UPDATE stk_info
                 SET {set_clause}
-                WHERE code = ?
+                WHERE stk_cd = ?
             """, values)
             conn.commit()
 
@@ -207,7 +207,7 @@ class StkInfoService:
     def _delete_sync(self, code: str) -> bool:
         with self._get_conn() as conn:
             cur = conn.cursor()
-            cur.execute("DELETE FROM stk_info WHERE code = ?", (code,))
+            cur.execute("DELETE FROM stk_info WHERE stk_cd = ?", (code,))
             conn.commit()
             return cur.rowcount > 0
 
@@ -219,7 +219,7 @@ class StkInfoService:
 
     def _list_all_sync(self, filter_data: Optional[StkInfoFilter] = None, limit: Optional[int] = None, offset: Optional[int] = None) -> List[StkInfo]:
         query = """
-            SELECT code, name, list_count, audit_info, reg_day, last_price, state,
+            SELECT stk_cd, stk_nm, list_count, audit_info, reg_day, last_price, state,
                    market_code, market_name, up_name, up_size_name, company_class_name,
                    order_warning, nxt_enable, created_at
             FROM stk_info
@@ -251,20 +251,20 @@ class StkInfoService:
             if filter_data.nxt_enable is not None:
                 conditions.append("nxt_enable = ?")
                 params.append(filter_data.nxt_enable)
-            
-            if filter_data.name_like is not None:
-                conditions.append("name LIKE ?")
-                params.append(f"%{filter_data.name_like}%")
-                
-            if filter_data.code_like is not None:
-                conditions.append("code LIKE ?")
-                params.append(f"%{filter_data.code_like}%")
+
+            if filter_data.stk_nm_like is not None:
+                conditions.append("stk_nm LIKE ?")
+                params.append(f"%{filter_data.stk_nm_like}%")
+
+            if filter_data.stk_cd_like is not None:
+                conditions.append("stk_cd LIKE ?")
+                params.append(f"%{filter_data.stk_cd_like}%")
 
         if conditions:
             query += " WHERE " + " AND ".join(conditions)
 
-        query += " ORDER BY code"
-        
+        query += " ORDER BY stk_cd"
+
         if limit is not None:
             query += f" LIMIT {limit}"
             if offset is not None:
@@ -312,14 +312,14 @@ class StkInfoService:
             if filter_data.nxt_enable is not None:
                 conditions.append("nxt_enable = ?")
                 params.append(filter_data.nxt_enable)
-            
-            if filter_data.name_like is not None:
-                conditions.append("name LIKE ?")
-                params.append(f"%{filter_data.name_like}%")
-                
-            if filter_data.code_like is not None:
-                conditions.append("code LIKE ?")
-                params.append(f"%{filter_data.code_like}%")
+
+            if filter_data.stk_nm_like is not None:
+                conditions.append("stk_nm LIKE ?")
+                params.append(f"%{filter_data.stk_nm_like}%")
+
+            if filter_data.stk_cd_like is not None:
+                conditions.append("stk_cd LIKE ?")
+                params.append(f"%{filter_data.stk_cd_like}%")
 
         if conditions:
             query += " WHERE " + " AND ".join(conditions)
@@ -350,12 +350,12 @@ class StkInfoService:
                         # REPLACE INTO 사용 (INSERT OR REPLACE)
                         cur.execute("""
                             REPLACE INTO stk_info (
-                                code, name, list_count, audit_info, reg_day, last_price, state,
+                                stk_cd, stk_nm, list_count, audit_info, reg_day, last_price, state,
                                 market_code, market_name, up_name, up_size_name, company_class_name,
                                 order_warning, nxt_enable, created_at
                             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                         """, (
-                            stk_info.code, stk_info.name, stk_info.list_count, stk_info.audit_info,
+                            stk_info.stk_cd, stk_info.stk_nm, stk_info.list_count, stk_info.audit_info,
                             stk_info.reg_day, stk_info.last_price, stk_info.state, stk_info.market_code,
                             stk_info.market_name, stk_info.up_name, stk_info.up_size_name,
                             stk_info.company_class_name, stk_info.order_warning, stk_info.nxt_enable, now
@@ -364,12 +364,12 @@ class StkInfoService:
                         # INSERT OR IGNORE 사용 (중복 시 무시)
                         cur.execute("""
                             INSERT OR IGNORE INTO stk_info (
-                                code, name, list_count, audit_info, reg_day, last_price, state,
+                                stk_cd, stk_nm, list_count, audit_info, reg_day, last_price, state,
                                 market_code, market_name, up_name, up_size_name, company_class_name,
                                 order_warning, nxt_enable, created_at
                             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                         """, (
-                            stk_info.code, stk_info.name, stk_info.list_count, stk_info.audit_info,
+                            stk_info.stk_cd, stk_info.stk_nm, stk_info.list_count, stk_info.audit_info,
                             stk_info.reg_day, stk_info.last_price, stk_info.state, stk_info.market_code,
                             stk_info.market_name, stk_info.up_name, stk_info.up_size_name,
                             stk_info.company_class_name, stk_info.order_warning, stk_info.nxt_enable, now
@@ -377,7 +377,7 @@ class StkInfoService:
                     success_count += 1
                     
                 except Exception as e:
-                    logger.error(f"종목 정보 저장 실패 - 코드: {stk_info.code}, 오류: {e}")
+                    logger.error(f"종목 정보 저장 실패 - 코드: {stk_info.stk_cd}, 오류: {e}")
                     error_count += 1
                     
             conn.commit()
@@ -387,7 +387,7 @@ class StkInfoService:
 
     async def search_by_name(self, name: str) -> List[StkInfo]:
         """종목명으로 검색"""
-        filter_data = StkInfoFilter(name_like=name)
+        filter_data = StkInfoFilter(stk_nm_like=name)
         return await self.list_all(filter_data)
 
     async def get_by_market(self, market_code: str) -> List[StkInfo]:
@@ -477,19 +477,19 @@ class StkInfoService:
             
             cur.execute("""
                 REPLACE INTO stk_info (
-                    code, name, list_count, audit_info, reg_day, last_price, state,
+                    stk_cd, stk_nm, list_count, audit_info, reg_day, last_price, state,
                     market_code, market_name, up_name, up_size_name, company_class_name,
                     order_warning, nxt_enable, created_at
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
-                stk_info.code, stk_info.name, stk_info.list_count, stk_info.audit_info,
+                stk_info.stk_cd, stk_info.stk_nm, stk_info.list_count, stk_info.audit_info,
                 stk_info.reg_day, stk_info.last_price, stk_info.state, stk_info.market_code,
                 stk_info.market_name, stk_info.up_name, stk_info.up_size_name,
                 stk_info.company_class_name, stk_info.order_warning, stk_info.nxt_enable, now
             ))
             conn.commit()
-            
-            return self._get_by_code_sync(stk_info.code)
+
+            return self._get_by_code_sync(stk_info.stk_cd)
 
 
 #---------------------------------------------------------

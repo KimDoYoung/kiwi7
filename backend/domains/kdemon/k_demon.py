@@ -17,7 +17,7 @@ def now_ymdhms() -> str:
 class Rule:
     id: int
     name: str
-    symbol: str
+    stk_cd: str
     condition_op: str
     threshold: float
     action: str
@@ -62,7 +62,7 @@ class KDemon:
         rules = []
         for r in cur.fetchall():
             rules.append(Rule(
-                id=r["id"], name=r["name"], symbol=r["symbol"],
+                id=r["id"], name=r["name"], stk_cd=r["stk_cd"],
                 condition_op=r["condition_op"], threshold=float(r["threshold"]),
                 action=r["action"], qty=int(r["qty"]), status=r["status"],
                 cooldown_sec=int(r["cooldown_sec"]),
@@ -122,7 +122,7 @@ class KDemon:
     async def _place_order(self, rule: Rule, price: float):
         """주문 실행. 실제 API/필드명은 환경에 맞게 교체."""
         if self.dry_run:
-            logger.info(f"[kdemon] (DRY-RUN) {rule.action.upper()} {rule.qty} @ {price} / {rule.symbol} (rule:{rule.id})")
+            logger.info(f"[kdemon] (DRY-RUN) {rule.action.upper()} {rule.qty} @ {price} / {rule.stk_cd} (rule:{rule.id})")
             return
 
         api_id = "ka20001"  # 예: 현금 매수/매도 API ID로 교체
@@ -132,7 +132,7 @@ class KDemon:
             "cont_yn": "N",
             "next_key": "",
             "payload": {
-                "stk_cd": rule.symbol,
+                "stk_cd": rule.stk_cd,
                 "ord_qty": rule.qty,
                 "ord_prc": price,      # 지정가/시장가 정책에 맞게 필드 조정
                 "ord_dvsn": side,
@@ -222,7 +222,7 @@ class KDemon:
                     if not self._cooldown_ok(rule):
                         continue
 
-                    price = await self._get_current_price(rule.symbol)
+                    price = await self._get_current_price(rule.stk_cd)
                     if price is None:
                         continue
 

@@ -26,8 +26,8 @@ class StkInfo:
     - 키움 API에서 제공하는 종목의 기본 정보를 관리
     - 종목코드(단축코드)를 PK로 사용
     """
-    code: str                                # 종목코드(단축코드) - PK (예: 005930)
-    name: Optional[str] = None               # 종목명 (예: 삼성전자)
+    stk_cd: str                              # 종목코드(단축코드) - PK (예: 005930)
+    stk_nm: Optional[str] = None             # 종목명 (예: 삼성전자)
     list_count: Optional[str] = None         # 상장주식수 (API 원문: String)
     audit_info: Optional[str] = None         # 감리구분
     reg_day: Optional[str] = None            # 상장일 (YYYYMMDD)
@@ -44,13 +44,13 @@ class StkInfo:
 
 class StkInfoCreate(BaseModel):
     """종목 기본정보 생성 요청 모델
-    
+
     새로운 종목 정보를 stk_info 테이블에 추가할 때 사용
-    - code는 중복 불가 (PK 제약조건)
+    - stk_cd는 중복 불가 (PK 제약조건)
     - 키움 API 응답 데이터를 그대로 저장
     """
-    code: str = Field(..., description="종목코드(단축코드)", example="005930", max_length=10)
-    name: Optional[str] = Field(None, description="종목명", example="삼성전자")
+    stk_cd: str = Field(..., description="종목코드(단축코드)", example="005930", max_length=10)
+    stk_nm: Optional[str] = Field(None, description="종목명", example="삼성전자")
     list_count: Optional[str] = Field(None, description="상장주식수", example="5969782550")
     audit_info: Optional[str] = Field(None, description="감리구분", example="정상")
     reg_day: Optional[str] = Field(None, description="상장일 (YYYYMMDD)", example="19750611")
@@ -66,12 +66,12 @@ class StkInfoCreate(BaseModel):
 
 class StkInfoUpdate(BaseModel):
     """종목 기본정보 수정 요청 모델
-    
+
     기존 종목 정보를 부분적으로 업데이트할 때 사용
     - 모든 필드가 Optional (수정하고 싶은 필드만 제공)
-    - code는 PK이므로 수정 불가 (URL 파라미터로 식별)
+    - stk_cd는 PK이므로 수정 불가 (URL 파라미터로 식별)
     """
-    name: Optional[str] = Field(None, description="종목명")
+    stk_nm: Optional[str] = Field(None, description="종목명")
     list_count: Optional[str] = Field(None, description="상장주식수")
     audit_info: Optional[str] = Field(None, description="감리구분")
     reg_day: Optional[str] = Field(None, description="상장일 (YYYYMMDD)")
@@ -87,13 +87,13 @@ class StkInfoUpdate(BaseModel):
 
 class StkInfoResponse(BaseModel):
     """종목 기본정보 응답 모델
-    
+
     API 응답으로 반환되는 완전한 종목 정보
     - DB에서 조회된 모든 필드 포함
     - created_at은 필수 (DB에서 자동 생성)
     """
-    code: str = Field(..., description="종목코드(단축코드)", example="005930")
-    name: Optional[str] = Field(None, description="종목명", example="삼성전자")
+    stk_cd: str = Field(..., description="종목코드(단축코드)", example="005930")
+    stk_nm: Optional[str] = Field(None, description="종목명", example="삼성전자")
     list_count: Optional[str] = Field(None, description="상장주식수", example="5969782550")
     audit_info: Optional[str] = Field(None, description="감리구분", example="정상")
     reg_day: Optional[str] = Field(None, description="상장일 (YYYYMMDD)", example="19750611")
@@ -121,8 +121,8 @@ class StkInfoFilter(BaseModel):
     up_size_name: Optional[str] = Field(None, description="회사크기분류 필터", example="대형")
     order_warning: Optional[str] = Field(None, description="투자유의종목여부 필터", example="0")
     nxt_enable: Optional[str] = Field(None, description="NXT 가능여부 필터", example="Y")
-    name_like: Optional[str] = Field(None, description="종목명 부분 검색", example="삼성")
-    code_like: Optional[str] = Field(None, description="종목코드 부분 검색", example="005")
+    stk_nm_like: Optional[str] = Field(None, description="종목명 부분 검색", example="삼성")
+    stk_cd_like: Optional[str] = Field(None, description="종목코드 부분 검색", example="005")
 
 class StkInfoBulkCreate(BaseModel):
     """종목 기본정보 대량 생성 요청 모델

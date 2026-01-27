@@ -2,10 +2,17 @@
 import json
 from backend.api.common.validators import validate_market_type
 from backend.domains.stkcompanys.kiwoom.kiwoom_service import get_kiwoom_api
-from backend.domains.stkcompanys.kiwoom.models.kiwoom_schema import KiwoomApiHelper, KiwoomRequest
+from backend.domains.stkcompanys.kiwoom.models.kiwoom_schema import (
+    KiwoomApiHelper,
+    KiwoomRequest,
+)
 from backend.domains.services.dependency import get_service
 from backend.domains.services.settings_keys import SettingsKey
-from backend.domains.models.stk_info_model import StkInfoBulkCreate, StkInfoCreate
+from backend.domains.services.cache_keys import CacheKey
+from backend.domains.models.stk_info_model import (
+    StkInfoBulkCreate,
+    StkInfoCreate,
+)
 # from backend.domains.services.stk_info_service import get_stk_info_service
 from backend.utils.kiwi_utils import get_current_timestamp, is_time_exceeded, to_dict, to_str
 from backend.core.logger import get_logger
@@ -48,8 +55,8 @@ async def stk_info_fill(force:bool=False):
             for item in results:
                 try:
                     stk_info = StkInfoCreate(
-                        code=item.get('code', ''),
-                        name=item.get('name', ''),
+                        stk_cd=item.get('code', ''),
+                        stk_nm=item.get('name', ''),
                         list_count=item.get('listCount', ''),
                         audit_info=item.get('auditInfo', ''),
                         reg_day=item.get('regDay', ''),
@@ -86,8 +93,8 @@ async def get_stock_name(stk_code: str) -> str:
     ''' stk_code로 stk_name을 구한다. stk_info테이블에서 구하고 없으면 api로 구함'''
     stk_info_service = get_service("stk_info")
     stk_info = await stk_info_service.get_by_code(stk_code)
-    if stk_info and stk_info.name:
-        return stk_info.name
+    if stk_info and stk_info.stk_nm:
+        return stk_info.stk_nm
     else:
         api = await get_kiwoom_api()
         api_response = await api.send_request(KiwoomRequest(api_id="ka10001", payload={"stk_cd": stk_code}))
@@ -100,31 +107,47 @@ async def get_stock_name(stk_code: str) -> str:
     return None
 
 async def fetch_stk_info(stk_code_list):
-    ''' 
-    stk_code_list를 받아서 종목정보조회ka10100을 호출해서 모은 후 리스트로 리턴
+    '''
+    stk_code_list를 받아서 종목정보조회(ka10100)를 호출해서 모은 후 리스트로 리턴
     캐시에서 먼저 찾고, 없으면 API 호출
+
+    캐시 매니저를 사용하여 간단한 인터페이스로 캐시 처리:
+    - get_dict(): JSON 파싱 + 손상된 캐시 자동 삭제
+    - put(): 캐시 저장
+    - CacheKey enum으로 타입 안전한 캐시 키 관리
     '''
     api_id = "ka10100"
-    cache_service = get_service("stk_cache")
+    cache_mgr = get_service("cache_manager")
     api = await get_kiwoom_api()
     results = []
-    for stk_cd in stk_code_list:
-        cached_data = await cache_service.get_by_stock_and_name(stk_cd,f"stk_info_{api_id}")
-        if cached_data:
-            try:
-                cached_value = to_dict(cached_data.value)
-                results.append(cached_value)
-                continue
-            except (json.JSONDecodeError, TypeError) as e:
-                logger.error(f"fetch_stk_info함수 내에서 decode 실패 code: {stk_cd}: {e}")
-                await cache_service.delete(cached_data.id) # 삭제
 
-        response = await api.send_request(KiwoomRequest(api_id="ka10100", payload={"stk_cd": stk_cd}))
+    for stk_cd in stk_code_list:
+        # 1. 캐시에서 먼저 조회 (8시간 만료 정책 자동 적용)
+        # get_dict()는 JSON 파싱과 손상된 캐시 삭제를 자동으로 처리
+        cached_value = await cache_mgr.get_dict(
+            stk_cd, CacheKey.STK_INFO_KA10100
+        )
+
+        if cached_value:
+            results.append(cached_value)
+            continue
+
+        # 2. 캐시 미스: API 호출
+        response = await api.send_request(
+            KiwoomRequest(api_id="ka10100", payload={"stk_cd": stk_cd})
+        )
         if response.success:
             # 결과 추가 및 캐시 저장
-            korea_data = KiwoomApiHelper.to_korea_data(response.data, api_id)
+            korea_data = KiwoomApiHelper.to_korea_data(
+                response.data, api_id
+            )
             results.append(korea_data)
-            await cache_service.upsert(stk_cd, f"stk_info_{api_id}", to_str(korea_data))
+            await cache_mgr.put(
+                stk_cd, CacheKey.STK_INFO_KA10100, to_str(korea_data)
+            )
         else:
-            logger.error(f"fetch_stk_info 함수에서 {stk_cd}로 ka10100 요청 실패: {response.error_message}")
+            logger.error(
+                f"fetch_stk_info 함수에서 {stk_cd}로 ka10100 "
+                f"요청 실패: {response.error_message}"
+            )
     return results

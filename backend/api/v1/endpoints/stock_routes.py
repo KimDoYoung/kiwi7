@@ -94,8 +94,8 @@ async def find_stock(request: KiwoomRequest):
         result_data = []
         for stock in search_results:
             result_data.append({
-                "code": stock.code,
-                "name": stock.name or "",
+                "stk_cd": stock.stk_cd,
+                "stk_nm": stock.stk_nm or "",
                 "market_name": stock.market_name or "",
                 "up_name": stock.up_name or "",
                 "list_count": stock.list_count or "",

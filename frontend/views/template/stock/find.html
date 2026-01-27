@@ -83,20 +83,20 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <template x-for="(item, index) in data" :key="item.code || index">
+                                <template x-for="(item, index) in data" :key="item.stk_cd || index">
                                     <tr>
                                         <td class="text-center" x-text="index + 1"></td>
                                         <td>
                                             <a href="javascript:void(0);" 
-                                               @click="goNaver(item.code)" 
+                                               @click="goNaver(item.stk_cd)" 
                                                class="text-decoration-none fw-bold"
-                                               x-text="item.code || '-'"></a>
+                                               x-text="item.stk_cd || '-'"></a>
                                         </td>
                                         <td>
                                             <a href="javascript:void(0);" 
                                                @click="showDetail(item)" 
                                                class="text-decoration-none"
-                                               x-text="item.name || '-'"></a>
+                                               x-text="item.stk_nm || '-'"></a>
                                         </td>
                                         <td>
                                             <span class="badge" 
@@ -116,14 +116,14 @@
                                             <div class="d-flex gap-1">
                                                 <button class="btn btn-outline-primary btn-sm" 
                                                         @click="showDetail(item)"
-                                                        :disabled="!item.code"
+                                                        :disabled="!item.stk_cd"
                                                         title="상세정보 보기"
                                                         style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
                                                     <i class="bi bi-info-circle"></i>
                                                 </button>
                                                 <button class="btn btn-outline-success btn-sm" 
                                                         @click="addMyStock(item)"
-                                                        :disabled="!item.code"
+                                                        :disabled="!item.stk_cd"
                                                         title="My Stock 추가(Watching)"
                                                         style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;">
                                                     <i class="bi bi-plus"></i>
@@ -242,15 +242,15 @@ document.addEventListener('alpine:init', () => {
             },
             
             showDetail(item) {
-                if (!item.code) {
+                if (!item.stk_cd) {
                     this.showMessage('종목코드가 없습니다.', 'error');
                     return;
                 }
-                
+
                 console.log('상세 정보:', item);
                 // 기존 showCompanyCanvas 함수 사용
                 if (typeof showCompanyCanvas === 'function') {
-                    showCompanyCanvas(item.code);
+                    showCompanyCanvas(item.stk_cd);
                 } else {
                     console.warn('showCompanyCanvas 함수를 찾을 수 없습니다.');
                     this.goNaver(item.code);
@@ -267,16 +267,16 @@ document.addEventListener('alpine:init', () => {
                 window.open(url, '_blank');
             },
             addMyStock(item){
-                if (!item.code) {
+                if (!item.stk_cd) {
                     this.showMessage('종목코드가 없습니다.', 'error');
                     return;
                 }
-                let stk_cd = item.code;
+                let stk_cd = item.stk_cd;
                 putFetch('/api/v1/mystock/' + stk_cd)
                 .then(response => {
                     console.log('My Stock 추가 응답:', response);
                     if (response.success) {
-                        this.showMessage(`'${item.name}' 종목이 My Stock에 추가되었습니다.`, 'info');
+                        this.showMessage(`'${item.stk_nm}' 종목이 My Stock에 추가되었습니다.`, 'info');
                     } else {
                         this.showMessage(response.error_message || 'My Stock 추가 중 오류가 발생했습니다.', 'error');
                     }
