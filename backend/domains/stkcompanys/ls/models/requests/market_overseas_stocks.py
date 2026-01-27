@@ -5,6 +5,7 @@ MARKET_OVERSEAS_STOCKS_REQUESTS = {
     'COSAQ00102': {
         'tr_cd': 'COSAQ00102',
         'title': '해외주식 계좌주문체결내역조회 API',
+        'url' : '/overseas-stock/accno',
         'fields': [
             {
                 'key': 'COSAQ00102InBlock1',
@@ -112,6 +113,7 @@ MARKET_OVERSEAS_STOCKS_REQUESTS = {
     'COSAQ01400': {
         'tr_cd': 'COSAQ01400',
         'title': '예약주문 처리결과 조회',
+        'url': '/overseas-stock/accno',
         'blocks': {
             'COSAQ01400InBlock1': {
                 'fields': [{'key': 'RecCnt', 'name': '레코드갯수', 'type': 'float', 'length': 5, 'required': True}, {'key': 'QryTpCode', 'name': '조회구분코드', 'type': 'string', 'length': 1, 'required': True}, {'key': 'CntryCode', 'name': '국가코드', 'type': 'string', 'length': 3, 'required': True}, {'key': 'AcntNo', 'name': '계좌번호', 'type': 'string', 'length': 20, 'required': True}, {'key': 'Pwd', 'name': '비밀번호', 'type': 'string', 'length': 8, 'required': True}, {'key': 'SrtDt', 'name': '시작일자', 'type': 'string', 'length': 8, 'required': True}, {'key': 'EndDt', 'name': '종료일자', 'type': 'string', 'length': 8, 'required': True}, {'key': 'BnsTpCode', 'name': '매매구분코드', 'type': 'string', 'length': 1, 'required': True}, {'key': 'RsvOrdCndiCode', 'name': '예약주문조건코드', 'type': 'string', 'length': 2, 'required': True}, {'key': 'RsvOrdStatCode', 'name': '예약주문상태코드', 'type': 'string', 'length': 1, 'required': True}],
@@ -122,6 +124,7 @@ MARKET_OVERSEAS_STOCKS_REQUESTS = {
     'COSAT00301': {
         'tr_cd': 'COSAT00301',
         'title': '미국시장주문 API',
+        'url': '/overseas-stock/accno',
         'blocks': {
             'COSAT00301InBlock1': {
                 'fields': [{'key': 'RecCnt', 'name': '레코드갯수', 'type': 'float', 'length': 5, 'desc': '00001', 'required': True}, {'key': 'OrdPtnCode', 'name': '주문유형코드', 'type': 'string', 'length': 2, 'desc': '01 : 매도주문<br/>02 : 매수주문<br/>08 : 취소주문', 'required': True}, {'key': 'OrgOrdNo', 'name': '원주문번호', 'type': 'float', 'length': 10, 'desc': '취소주문인 경우만 필수 입력', 'required': True}, {'key': 'OrdMktCode', 'name': '주문시장코드', 'type': 'string', 'length': 2, 'desc': '81 : 뉴욕거래소<br/>82 : NASDAQ', 'required': True}, {'key': 'IsuNo', 'name': '종목번호', 'type': 'string', 'length': 12, 'desc': '단축종목코드<br/>ex.TSLA', 'required': True}, {'key': 'OrdQty', 'name': '주문수량', 'type': 'float', 'length': 16, 'required': True}, {'key': 'OvrsOrdPrc', 'name': '해외주문가', 'type': 'float', 'length': 28.7, 'required': True}, {'key': 'OrdprcPtnCode', 'name': '호가유형코드', 'type': 'string', 'length': 2, 'desc': '00@지정가<br/>M1@LOO<br/>M2@LOC<br/><br/>매도인경우 호가유형 확대<br/>03@시장가<br/>M3@MOO<br/>M4@MOC', 'required': True}, {'key': 'BrkTpCode', 'name': '중개인구분코드', 'type': 'string', 'length': 2, 'required': True}],
@@ -132,6 +135,7 @@ MARKET_OVERSEAS_STOCKS_REQUESTS = {
     'COSAT00311': {
         'tr_cd': 'COSAT00311',
         'title': '미국시장정정주문 API',
+        'url': '/overseas-stock/accno',
         'blocks': {
             'COSAT00311InBlock1': {
                 'fields': [{'key': 'RecCnt', 'name': '레코드갯수', 'type': 'float', 'length': 5, 'desc': '00001', 'required': True}, {'key': 'OrdPtnCode', 'name': '주문유형코드', 'type': 'string', 'length': 2, 'desc': '07@정정주문', 'required': True}, {'key': 'OrgOrdNo', 'name': '원주문번호', 'type': 'float', 'length': 10, 'required': True}, {'key': 'OrdMktCode', 'name': '주문시장코드', 'type': 'string', 'length': 2, 'desc': '81@뉴욕거래소<br/>82@NASDAQ', 'required': True}, {'key': 'IsuNo', 'name': '종목번호', 'type': 'string', 'length': 12, 'required': True}, {'key': 'OrdQty', 'name': '주문수량', 'type': 'float', 'length': 16, 'desc': '0 입력', 'required': True}, {'key': 'OvrsOrdPrc', 'name': '해외주문가', 'type': 'float', 'length': 28.7, 'required': True}, {'key': 'OrdprcPtnCode', 'name': '호가유형코드', 'type': 'string', 'length': 2, 'required': True}, {'key': 'BrkTpCode', 'name': '중개인구분코드', 'type': 'string', 'length': 2, 'required': True}],
@@ -142,6 +146,7 @@ MARKET_OVERSEAS_STOCKS_REQUESTS = {
     'COSAT00400': {
         'tr_cd': 'COSAT00400',
         'title': '해외주식 예약주문 등록 및 취소',
+        'url': '/overseas-stock/accno',
         'fields': [
             {
                 'key': 'COSAT00400InBlock1',
@@ -288,6 +293,7 @@ MARKET_OVERSEAS_STOCKS_REQUESTS = {
     'g3101': {
         'tr_cd': 'g3101',
         'title': '해외주식 API 현재가 조회',
+        'url': '/overseas-stock/accno',
         'fields': [
             {
                 'key': 'g3101InBlock',
@@ -333,6 +339,7 @@ MARKET_OVERSEAS_STOCKS_REQUESTS = {
     'g3102': {
         'tr_cd': 'g3102',
         'title': '해외주식 API 시간대별',
+        'url': '/overseas-stock/accno',
         'blocks': {
             'g3102InBlock': {
                 'fields': [{'key': 'delaygb', 'name': '지연구분', 'type': 'string', 'length': 1, 'desc': 'R', 'required': True}, {'key': 'keysymbol', 'name': 'KEY종목코드', 'type': 'string', 'length': 18, 'desc': 'ex) 82TSLA', 'required': True}, {'key': 'exchcd', 'name': '거래소코드', 'type': 'string', 'length': 2, 'desc': '81 : 뉴욕/아멕스, 82 : 나스닥', 'required': True}, {'key': 'readcnt', 'name': '조회갯수', 'type': 'float', 'length': 4, 'required': True}, {'key': 'cts_seq', 'name': '연속시퀀스', 'type': 'float', 'length': 17, 'required': True}],
@@ -343,6 +350,7 @@ MARKET_OVERSEAS_STOCKS_REQUESTS = {
     'g3103': {
         'tr_cd': 'g3103',
         'title': '해외주식 API 일주월 조회',
+        'url': '/overseas-stock/accno',
         'fields': [
             {
                 'key': 'g3103InBlock',
@@ -398,6 +406,7 @@ MARKET_OVERSEAS_STOCKS_REQUESTS = {
     'g3104': {
         'tr_cd': 'g3104',
         'title': '해외주식 API 종목정보 조회',
+        'url': '/overseas-stock/accno',
         'blocks': {
             'g3104InBlock': {
                 'fields': [{'key': 'delaygb', 'name': '지연구분', 'type': 'string', 'length': 1, 'required': True}, {'key': 'keysymbol', 'name': 'KEY종목코드', 'type': 'string', 'length': 18, 'required': True}, {'key': 'exchcd', 'name': '거래소코드', 'type': 'string', 'length': 2, 'required': True}, {'key': 'symbol', 'name': '종목코드', 'type': 'string', 'length': 16, 'required': True}],
@@ -408,6 +417,7 @@ MARKET_OVERSEAS_STOCKS_REQUESTS = {
     'g3106': {
         'tr_cd': 'g3106',
         'title': '해외주식 API 현재가호가 조회',
+        'url': '/overseas-stock/accno',
         'blocks': {
             'g3106InBlock': {
                 'fields': [{'key': 'delaygb', 'name': '지연구분', 'type': 'string', 'length': 1, 'required': True}, {'key': 'keysymbol', 'name': 'KEY종목코드', 'type': 'string', 'length': 18, 'required': True}, {'key': 'exchcd', 'name': '거래소코드', 'type': 'string', 'length': 2, 'required': True}, {'key': 'symbol', 'name': '종목코드', 'type': 'string', 'length': 16, 'required': True}],
@@ -418,6 +428,7 @@ MARKET_OVERSEAS_STOCKS_REQUESTS = {
     'g3190': {
         'tr_cd': 'g3190',
         'title': '해외주식 API 마스터 조회',
+        'url': '/overseas-stock/accno',
         'blocks': {
             'g3190InBlock': {
                 'fields': [{'key': 'delaygb', 'name': '지연구분', 'type': 'string', 'length': 1, 'required': True}, {'key': 'natcode', 'name': '국가구분', 'type': 'string', 'length': 2, 'required': True}, {'key': 'exgubun', 'name': '거래소구분', 'type': 'string', 'length': 1, 'required': True}, {'key': 'readcnt', 'name': '조회갯수', 'type': 'float', 'length': 4, 'required': True}, {'key': 'cts_value', 'name': '연속구분', 'type': 'string', 'length': 16, 'required': True}],
@@ -428,6 +439,7 @@ MARKET_OVERSEAS_STOCKS_REQUESTS = {
     'g3202': {
         'tr_cd': 'g3202',
         'title': '해외주식 API 차트NTICK 조회',
+        'url': '/overseas-stock/accno',
         'fields': [
             {
                 'key': 'g3202InBlock',
@@ -511,6 +523,7 @@ MARKET_OVERSEAS_STOCKS_REQUESTS = {
     'g3203': {
         'tr_cd': 'g3203',
         'title': '해외주식 API 차트NMIN 조회',
+        'url': '/overseas-stock/accno',
         'blocks': {
             'g3203InBlock': {
                 'fields': [{'key': 'delaygb', 'name': '지연구분', 'type': 'string', 'length': 1, 'required': True}, {'key': 'keysymbol', 'name': 'KEY종목코드', 'type': 'string', 'length': 18, 'required': True}, {'key': 'exchcd', 'name': '거래소코드', 'type': 'string', 'length': 2, 'required': True}, {'key': 'symbol', 'name': '종목코드', 'type': 'string', 'length': 16, 'required': True}, {'key': 'ncnt', 'name': '단위(n분)', 'type': 'float', 'length': 4, 'required': True}, {'key': 'qrycnt', 'name': '요청건수(최대-압축:2000비압축:5', 'type': 'float', 'length': 4, 'required': True}, {'key': 'comp_yn', 'name': '압축여부(Y:압축N:비압축)', 'type': 'string', 'length': 1, 'required': True}, {'key': 'sdate', 'name': '시작일자', 'type': 'string', 'length': 8, 'required': True}, {'key': 'edate', 'name': '종료일자', 'type': 'string', 'length': 8, 'required': True}, {'key': 'cts_date', 'name': '연속일자', 'type': 'string', 'length': 8, 'required': True}, {'key': 'cts_time', 'name': '연속시간', 'type': 'string', 'length': 6, 'required': True}],
@@ -521,6 +534,7 @@ MARKET_OVERSEAS_STOCKS_REQUESTS = {
     'g3204': {
         'tr_cd': 'g3204',
         'title': '해외주식 API 차트일주월년별 조회',
+        'url': '/overseas-stock/accno',
         'fields': [
             {
                 'key': 'g3204InBlock',

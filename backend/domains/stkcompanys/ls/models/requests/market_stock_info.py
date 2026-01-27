@@ -5,6 +5,7 @@ MARKET_STOCK_INFO_REQUESTS = {
     't1101': {
         'tr_cd': 't1101',
         'title': '주식현재가호가조회',
+        'url': '/stock/market-data',
         'blocks': {
             't1101InBlock': {
                 'fields': [{'key': 'shcode', 'name': '단축코드', 'type': 'string', 'length': 6, 'required': True}],
@@ -15,6 +16,7 @@ MARKET_STOCK_INFO_REQUESTS = {
     't1102': {
         'tr_cd': 't1102',
         'title': '주식현재가(시세)조회',
+        'url': '/stock/market-data',
         'blocks': {
             't1102InBlock': {
                 'fields': [{'key': 'shcode', 'name': '단축코드', 'type': 'string', 'length': 6, 'required': True}, {'key': 'exchgubun', 'name': '거래소구분코드', 'type': 'string', 'length': 1, 'desc': 'K: KRX<br/>N: NXT<br/>U:통합<br/>그외 입력값은 KRX로 처리<br/>', 'required': True}],
@@ -25,6 +27,7 @@ MARKET_STOCK_INFO_REQUESTS = {
     't1104': {
         'tr_cd': 't1104',
         'title': '주식현재가시세메모',
+        'url': '/stock/market-data',
         'blocks': {
             't1104InBlock': {
                 'fields': [{'key': 'code', 'name': '종목코드', 'type': 'string', 'length': 6, 'required': True}, {'key': 'nrec', 'name': '건수', 'type': 'string', 'length': 2, 'desc': 't1104InBlock1 의 개수', 'required': True}, {'key': 'exchgubun', 'name': '거래소구분코드', 'type': 'string', 'length': 1, 'desc': ' K: KRX<br/> N: NXT<br/> U:통합<br/>그외 입력값은 KRX로 처리', 'required': True}],
@@ -39,6 +42,7 @@ MARKET_STOCK_INFO_REQUESTS = {
     't1105': {
         'tr_cd': 't1105',
         'title': '주식피봇/디마크조회',
+        'url': '/stock/market-data',
         'blocks': {
             't1105InBlock': {
                 'fields': [{'key': 'shcode', 'name': '단축코드', 'type': 'string', 'length': 6, 'required': True}, {'key': 'exchgubun', 'name': '거래소구분코드', 'type': 'string', 'length': 1, 'desc': 'K: KRX<br/>N: NXT<br/>U:통합<br/>그외 입력값은 KRX로 처리<br/>', 'required': True}],
@@ -49,6 +53,7 @@ MARKET_STOCK_INFO_REQUESTS = {
     't1109': {
         'tr_cd': 't1109',
         'title': '시간외체결량',
+        'url': '/stock/market-data',
         'blocks': {
             't1109InBlock': {
                 'fields': [{'key': 'shcode', 'name': '종목코드', 'type': 'string', 'length': 6, 'required': True}, {'key': 'dan_chetime', 'name': '체결cts', 'type': 'string', 'length': 10, 'desc': '연속조회시 OutBlock의 동일필드 입력', 'required': True}, {'key': 'idx', 'name': 'IDX', 'type': 'float', 'length': 4, 'desc': '연속조회시 OutBlock의 동일필드 입력', 'required': True}],

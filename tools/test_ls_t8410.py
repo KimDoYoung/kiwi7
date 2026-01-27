@@ -21,20 +21,18 @@ async def main():
     # t8410: API전용주식차트(일주월년)
     api_id = "t8410"
     
-    target_date = datetime.now().strftime("%Y%m%d")
-
+    today = datetime.now().strftime("%Y%m%d")
+    target_date = "20260120"
     payload = {
-        't8410InBlock':{
 
             "shcode": "005930",
             "gubun": "2",      # 2:일, 3:주, 4:월, 5:년
-            "qrycnt": "10",     # 최근 1건
+            "qrycnt": 2,     # 최근 1건
             "sdate": "",      # 종료일 (Space: 최신) -> Not sure if this means start/end logic inverted or just end date
-            "edate": "",
+            "edate": "20260127",
             "cts_date": "",
             "comp_yn": "N",
             "sujung": "Y"
-        }
     }
     
     # If sdate/edate logic is different (e.g. sdate=start, edate=end), I might need to adjust.

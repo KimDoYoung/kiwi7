@@ -5,6 +5,7 @@ MARKET_PREFERRED_BOND_REQUESTS = {
     't1511': {
         'tr_cd': 't1511',
         'title': '업종현재가',
+        'url': '/stock/market-data',
         'blocks': {
             't1511InBlock': {
                 'fields': [{'key': 'upcode', 'name': '업종코드', 'type': 'string', 'length': 3, 'desc': '코스피@001<br/>코스피200@101<br/>KRX100@501<br/>코스닥@301', 'required': True}],
@@ -15,6 +16,7 @@ MARKET_PREFERRED_BOND_REQUESTS = {
     't1514': {
         'tr_cd': 't1514',
         'title': '업종기간별추이',
+        'url': '/stock/market-data',
         'blocks': {
             't1514InBlock': {
                 'fields': [{'key': 'upcode', 'name': '업종코드', 'type': 'string', 'length': 3, 'required': True}, {'key': 'gubun1', 'name': '구분1', 'type': 'string', 'length': 1, 'desc': '미사용항목임 - 스페이스설정', 'required': True}, {'key': 'gubun2', 'name': '구분2', 'type': 'string', 'length': 1, 'desc': '일@1 주@2 월@3 분', 'required': True}, {'key': 'cts_date', 'name': 'CTS_일자', 'type': 'string', 'length': 8, 'desc': '연속조회기준일(LT) - 연속조회일 경우 이 값 기준으로 조회(cont:1일때) (이전 조회한 t1514OutBlock.cts_date 값으로 설정) -처음조회시 스페이스설정.', 'required': True}, {'key': 'cnt', 'name': '조회건수', 'type': 'long', 'length': 4, 'required': True}, {'key': 'rate_gbn', 'name': '비중구분', 'type': 'string', 'length': 1, 'desc': '비중구분 - 1:거래량비중 - 2:거래대금비중', 'required': True}],
@@ -25,6 +27,7 @@ MARKET_PREFERRED_BOND_REQUESTS = {
     't1516': {
         'tr_cd': 't1516',
         'title': '업종별종목시세',
+        'url': '/stock/market-data',
         'blocks': {
             't1516InBlock': {
                 'fields': [{'key': 'upcode', 'name': '업종코드', 'type': 'string', 'length': 3, 'required': True}, {'key': 'gubun', 'name': '구분', 'type': 'string', 'length': 1, 'desc': '1:코스피업종 2:코스닥업종 3:섹터지수', 'required': True}, {'key': 'shcode', 'name': '종목코드', 'type': 'string', 'length': 6, 'desc': '처음 조회시는 Space 연속 조회시에 이전 조회한 OutBlock의 shcode 값으로 설정', 'required': True}],
@@ -35,6 +38,7 @@ MARKET_PREFERRED_BOND_REQUESTS = {
     't1531': {
         'tr_cd': 't1531',
         'title': '테마별종목',
+        'url': '/stock/market-data',
         'blocks': {
             't1531InBlock': {
                 'fields': [{'key': 'tmname', 'name': '테마명', 'type': 'string', 'length': 36, 'desc': 't8425조회하여 확인 후 입력', 'required': True}, {'key': 'tmcode', 'name': '테마코드', 'type': 'string', 'length': 4, 'desc': 't8425조회하여 확인 후 입력', 'required': True}],
@@ -45,6 +49,7 @@ MARKET_PREFERRED_BOND_REQUESTS = {
     't1532': {
         'tr_cd': 't1532',
         'title': '종목별테마',
+        'url': '/stock/market-data',
         'blocks': {
             't1532InBlock': {
                 'fields': [{'key': 'shcode', 'name': '종목코드', 'type': 'string', 'length': 6, 'required': True}],
@@ -55,6 +60,7 @@ MARKET_PREFERRED_BOND_REQUESTS = {
     't1533': {
         'tr_cd': 't1533',
         'title': '특이테마',
+        'url': '/stock/market-data',
         'blocks': {
             't1533InBlock': {
                 'fields': [{'key': 'gubun', 'name': '구분', 'type': 'string', 'length': 1, 'desc': '1@상승율 상위 2@하락율 상위 3@거래증가율 상위 4@거래증가율 하위 5@상승종목비율 상위 6@상승종목비율 하위 7@기준대비 상승율 상위 8@기준대비 하락율 상위', 'required': True}, {'key': 'chgdate', 'name': '대비일자', 'type': 'float', 'length': 2, 'required': True}],
@@ -65,6 +71,7 @@ MARKET_PREFERRED_BOND_REQUESTS = {
     't1537': {
         'tr_cd': 't1537',
         'title': '테마종목별시세조회',
+        'url': '/stock/market-data',
         'blocks': {
             't1537InBlock': {
                 'fields': [{'key': 'tmcode', 'name': '테마코드', 'type': 'string', 'length': 4, 'desc': 't8425조회하여 확인 후 입력', 'required': True}],

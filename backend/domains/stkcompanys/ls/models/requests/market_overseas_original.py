@@ -5,6 +5,7 @@ MARKET_OVERSEAS_REQUESTS = {
     'AS0': {
         'tr_cd': 'AS0',
         'title': '해외주식주문접수(미국)',
+        'url': '/overseas-stock/accno',
         'fields': [
             {
                 'desc': 'LS증권 거래코드',
@@ -25,6 +26,7 @@ MARKET_OVERSEAS_REQUESTS = {
     'AS1': {
         'tr_cd': 'AS1',
         'title': '해외주식주문체결(미국)',
+        'url': '/overseas-stock/accno',
         'fields': [
             {
                 'desc': 'LS증권 거래코드',
@@ -45,6 +47,7 @@ MARKET_OVERSEAS_REQUESTS = {
     'AS2': {
         'tr_cd': 'AS2',
         'title': '해외주식주문정정(미국)',
+        'url': '/overseas-stock/accno',
         'fields': [
             {
                 'desc': 'LS증권 거래코드',
@@ -65,6 +68,7 @@ MARKET_OVERSEAS_REQUESTS = {
     'AS3': {
         'tr_cd': 'AS3',
         'title': '해외주식주문취소(미국)',
+        'url': '/overseas-stock/accno',
         'fields': [
             {
                 'desc': 'LS증권 거래코드',
@@ -85,6 +89,7 @@ MARKET_OVERSEAS_REQUESTS = {
     'AS4': {
         'tr_cd': 'AS4',
         'title': '해외주식주문거부(미국)',
+        'url': '/overseas-stock/accno',
         'fields': [
             {
                 'desc': 'LS증권 거래코드',
@@ -105,6 +110,7 @@ MARKET_OVERSEAS_REQUESTS = {
     'GSC': {
         'tr_cd': 'GSC',
         'title': '해외주식 체결',
+        'url': '/overseas-stock/accno',
         'fields': [
             {
                 'desc': 'LS증권 거래코드',
@@ -126,6 +132,7 @@ MARKET_OVERSEAS_REQUESTS = {
     'GSH': {
         'tr_cd': 'GSH',
         'title': '해외주식 호가',
+        'url': '/overseas-stock/accno',
         'fields': [
             {
                 'desc': 'LS증권 거래코드',
@@ -147,6 +154,7 @@ MARKET_OVERSEAS_REQUESTS = {
     'OVC': {
         'tr_cd': 'OVC',
         'title': '해외선물 체결',
+        'url': '/overseas-stock/accno',
         'fields': [
             {
                 'desc': 'LS증권 거래코드',
@@ -168,6 +176,7 @@ MARKET_OVERSEAS_REQUESTS = {
     'OVH': {
         'tr_cd': 'OVH',
         'title': '해외선물 호가',
+        'url': '/overseas-stock/accno',
         'fields': [
             {
                 'desc': 'LS증권 거래코드',
@@ -189,6 +198,7 @@ MARKET_OVERSEAS_REQUESTS = {
     'TC1': {
         'tr_cd': 'TC1',
         'title': '해외선물 주문접수',
+        'url': '/overseas-stock/accno',
         'fields': [
             {
                 'desc': 'LS증권 거래코드',
@@ -210,6 +220,7 @@ MARKET_OVERSEAS_REQUESTS = {
     'TC2': {
         'tr_cd': 'TC2',
         'title': '해외선물 주문응답',
+        'url': '/overseas-stock/accno',
         'fields': [
             {
                 'desc': 'LS증권 거래코드',
@@ -231,6 +242,7 @@ MARKET_OVERSEAS_REQUESTS = {
     'TC3': {
         'tr_cd': 'TC3',
         'title': '해외선물 주문체결',
+        'url': '/overseas-stock/accno',
         'fields': [
             {
                 'desc': 'LS증권 거래코드',
@@ -252,6 +264,7 @@ MARKET_OVERSEAS_REQUESTS = {
     'WOC': {
         'tr_cd': 'WOC',
         'title': '해외옵션 체결',
+        'url': '/overseas-stock/accno',
         'fields': [
             {
                 'desc': 'LS증권 거래코드',
@@ -273,6 +286,7 @@ MARKET_OVERSEAS_REQUESTS = {
     'WOH': {
         'tr_cd': 'WOH',
         'title': '해외옵션 호가',
+        'url': '/overseas-stock/accno',
         'fields': [
             {
                 'desc': 'LS증권 거래코드',

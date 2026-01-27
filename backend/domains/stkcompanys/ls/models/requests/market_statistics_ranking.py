@@ -5,6 +5,7 @@ MARKET_STATISTICS_RANKING_REQUESTS = {
     't1422': {
         'tr_cd': 't1422',
         'title': '상/하한',
+        'url': '/stock/market-data',
         'blocks': {
             't1422InBlock': {
                 'fields': [{'key': 'qrygb', 'name': '조회구분', 'type': 'string', 'length': 1, 'desc': '1:20종목씩 조회<br/>2:전체조회', 'required': True}, {'key': 'gubun', 'name': '구분', 'type': 'string', 'length': 1, 'desc': '0:전체<br/>1:코스피<br/>2:코스닥', 'required': True}, {'key': 'jnilgubun', 'name': '전일구분', 'type': 'string', 'length': 1, 'desc': '0:당일<br/>1:전일', 'required': True}, {'key': 'sign', 'name': '상하한구분', 'type': 'string', 'length': 1, 'desc': '1:상한<br/>4:하한', 'required': True}, {'key': 'jc_num', 'name': '대상제외', 'type': 'float', 'length': 12, 'desc': '대상제외값(설정시 저장됨)<br/>증거금50 : 0x00400000<br/>증거금100 : 0x00800000<br/>증거금50/100 : 0x00200000<br/>관리종목 : 0x00000080<br/>시장경보 : 0x00000100<br/>거래정지 : 0x00000200<br/>우선주 : 0x00004000<br/>투자유의 : 0x04000000<br/>정리매매 : 0x01000000<br/>불성실공시 : 0x80000000', 'required': True}, {'key': 'sprice', 'name': '시작가격', 'type': 'float', 'length': 8, 'desc': '현재가 >= sprice', 'required': True}, {'key': 'eprice', 'name': '종료가격', 'type': 'float', 'length': 8, 'desc': '현재가 <= eprice', 'required': True}, {'key': 'volume', 'name': '거래량', 'type': 'float', 'length': 12, 'desc': '거래량 >= volume', 'required': True}, {'key': 'idx', 'name': 'IDX', 'type': 'float', 'length': 4, 'desc': '처음 조회시는 Space<br/>연속 조회시에 이전 조회한 OutBlock의 idx 값으로 설정', 'required': True}, {'key': 'exchgubun', 'name': '거래소구분코드', 'type': 'string', 'length': 1, 'desc': 'K: KRX<br/>N: NXT<br/>U:통합<br/>그외 입력값은 KRX로 처리<br/>', 'required': True}],
@@ -15,6 +16,7 @@ MARKET_STATISTICS_RANKING_REQUESTS = {
     't1427': {
         'tr_cd': 't1427',
         'title': '상/하한가직전',
+        'url': '/stock/market-data',
         'blocks': {
             't1427InBlock': {
                 'fields': [{'key': 'qrygb', 'name': '조회구분', 'type': 'string', 'length': 1, 'desc': '1:20종목씩 조회<br/>그외:전체조회', 'required': True}, {'key': 'gubun', 'name': '구분', 'type': 'string', 'length': 1, 'desc': '0:전체<br/>1:코스피<br/>2:코스닥', 'required': True}, {'key': 'signgubun', 'name': '상하한가구분', 'type': 'string', 'length': 1, 'desc': '1:상한직전<br/>2:하한직전', 'required': True}, {'key': 'diff', 'name': '등락율', 'type': 'float', 'length': 3, 'desc': "등락율<br/>signgubun 이 '1'(상한직전)인 경우 diff 이상<br/>signgubun 이 '1'(상한직전)인 경우 -diff 이하", 'required': True}, {'key': 'jc_num', 'name': '대상제외', 'type': 'float', 'length': 12, 'desc': '대상제외값(설정시 저장됨)<br/>Default:000000000000<br/>000000000128(0x00000080):관리종목<br/>000000000256(0x00000100):시장경보<br/>000000000512(0x00000200):거래정지<br/>000000016384(0x00004000):우선주<br/>000002097152(0x00200000):증거금50/100<br/>000004194304(0x00400000):증거금50<br/>000008388608(0x00800000):증거금100<br/>000016777216(0x01000000):정리매매<br/>000067108864(0x04000000):투자유의<br/>002147483648(0x80000000):불성실공시<br/>ex) 관리종목, 시장경보 종목 제외시 : 000000000384( 128 + 256 )', 'required': True}, {'key': 'sprice', 'name': '시작가격', 'type': 'float', 'length': 8, 'desc': '현재가 >= sprice', 'required': True}, {'key': 'eprice', 'name': '종료가격', 'type': 'float', 'length': 8, 'desc': '현재가 <= eprice', 'required': True}, {'key': 'volume', 'name': '거래량', 'type': 'float', 'length': 12, 'desc': '거래량 >= volume', 'required': True}, {'key': 'idx', 'name': 'IDX', 'type': 'float', 'length': 4, 'desc': '처음 조회시는 Space<br/>연속 조회시에 이전 조회한 OutBlock의 idx 값으로 설정', 'required': True}, {'key': 'jshex', 'name': '전일상하한제외', 'type': 'string', 'length': 1, 'desc': "c' or 'C' 입력시<br/>전일 상/하한가 제외", 'required': True}],
@@ -25,6 +27,7 @@ MARKET_STATISTICS_RANKING_REQUESTS = {
     't1441': {
         'tr_cd': 't1441',
         'title': '등락율상위',
+        'url': '/stock/market-data',
         'blocks': {
             't1441InBlock': {
                 'fields': [{'key': 'gubun1', 'name': '구분', 'type': 'string', 'length': 1, 'desc': '0:전체<br/>1:코스피<br/>2:코스닥', 'required': True}, {'key': 'gubun2', 'name': '상승하락', 'type': 'string', 'length': 1, 'desc': '0: 상승률<br/>1: 하락률<br/>2: 보합', 'required': True}, {'key': 'gubun3', 'name': '당일전일', 'type': 'string', 'length': 1, 'desc': '0: 당일<br/>1: 전일', 'required': True}, {'key': 'jc_num', 'name': '대상제외', 'type': 'float', 'length': 12, 'desc': '대상제외값<br/>증거금50 : 0x00400000<br/>증거금100 : 0x00800000<br/>증거금50/100 : 0x00200000<br/>관리종목 : 0x00000080<br/>시장경보 : 0x00000100<br/>거래정지 : 0x00000200<br/>우선주 : 0x00004000<br/>투자유의 : 0x04000000<br/>정리매매 : 0x01000000<br/>불성실공시 : 0x80000000', 'required': True}, {'key': 'sprice', 'name': '시작가격', 'type': 'float', 'length': 8, 'desc': '현재가 >= sprice', 'required': True}, {'key': 'eprice', 'name': '종료가격', 'type': 'float', 'length': 8, 'desc': '현재가 <= eprice', 'required': True}, {'key': 'volume', 'name': '거래량', 'type': 'float', 'length': 12, 'desc': '거래량 >= volume', 'required': True}, {'key': 'idx', 'name': 'IDX', 'type': 'float', 'length': 4, 'desc': '처음 조회시는 Space<br/>연속 조회시에 이전 조회한 OutBlock의 idx 값으로 설정', 'required': True}, {'key': 'jc_num2', 'name': '대상제외2', 'type': 'float', 'length': 12, 'desc': '기본         => 000000000000<br/>상장지수펀드 => 000000000001<br/>선박투자회사 => 000000000002<br/>스펙         => 000000000004<br/>ETN          => 000000000008(0x00000008)<br/>투자주의     => 000000000016(0x00000010)<br/>투자위험     => 000000000032(0x00000020)<br/>위험예고     => 000000000064(0x00000040)<br/>담보불가     => 000000000128(0x00000080)<br/>두개 이상 제외시 해당 값을 합산한다.', 'required': True}, {'key': 'exchgubun', 'name': '거래소구분코드', 'type': 'string', 'length': 1, 'desc': 'K: KRX<br/>N: NXT<br/>U:통합<br/>그외 입력값은 KRX로 처리<br/>', 'required': True}],
@@ -35,6 +38,7 @@ MARKET_STATISTICS_RANKING_REQUESTS = {
     't1442': {
         'tr_cd': 't1442',
         'title': '신고/신저가',
+        'url': '/stock/market-data',
         'blocks': {
             't1442InBlock': {
                 'fields': [{'key': 'gubun', 'name': '구분', 'type': 'string', 'length': 1, 'desc': '0:전체<br/>1:코스피<br/>2:코스닥', 'required': True}, {'key': 'type1', 'name': '신고신저', 'type': 'string', 'length': 1, 'desc': '0:신고<br/>1:신저', 'required': True}, {'key': 'type2', 'name': '기간', 'type': 'string', 'length': 1, 'desc': '0@전일<br/>1@5일<br/>2@10일<br/>3@20일<br/>4@60일<br/>5@90일<br/>6@52주<br/>7@년중', 'required': True}, {'key': 'type3', 'name': '유지여부', 'type': 'string', 'length': 1, 'desc': '0:일시돌파<br/>1:돌파유지', 'required': True}, {'key': 'jc_num', 'name': '대상제외', 'type': 'float', 'length': 12, 'desc': '대상제외값(설정시 저장됨)<br/>증거금50 : 0x00400000<br/>증거금100 : 0x00800000<br/>증거금50/100 : 0x00200000<br/>관리종목 : 0x00000080<br/>시장경보 : 0x00000100<br/>거래정지 : 0x00000200<br/>우선주 : 0x00004000<br/>투자유의 : 0x04000000<br/>정리매매 : 0x01000000<br/>불성실공시 : 0x80000000', 'required': True}, {'key': 'sprice', 'name': '시작가격', 'type': 'float', 'length': 8, 'desc': '현재가 >= sprice', 'required': True}, {'key': 'eprice', 'name': '종료가격', 'type': 'float', 'length': 8, 'desc': '현재가 <= eprice', 'required': True}, {'key': 'volume', 'name': '거래량', 'type': 'float', 'length': 12, 'desc': '거래량 >= volume', 'required': True}, {'key': 'idx', 'name': 'IDX', 'type': 'float', 'length': 4, 'desc': '처음 조회시는 Space<br/>연속 조회시에 이전 조회한 OutBlock의 idx 값으로 설정', 'required': True}, {'key': 'jc_num2', 'name': '대상제외2', 'type': 'float', 'length': 12, 'desc': '기본         => 000000000000<br/>상장지수펀드 => 000000000001<br/>선박투자회사 => 000000000002<br/>스펙         => 000000000004<br/>ETN          => 000000000008(0x00000008)<br/>투자주의     => 000000000016(0x00000010)<br/>투자위험     => 000000000032(0x00000020)<br/>위험예고     => 000000000064(0x00000040)<br/>담보불가     => 000000000128(0x00000080)<br/>두개 이상 제외시 해당 값을 합산한다.', 'required': True}],
@@ -45,6 +49,7 @@ MARKET_STATISTICS_RANKING_REQUESTS = {
     't1444': {
         'tr_cd': 't1444',
         'title': '시가총액상위',
+        'url': '/stock/market-data',
         'blocks': {
             't1444InBlock': {
                 'fields': [{'key': 'upcode', 'name': '업종코드', 'type': 'string', 'length': 3, 'required': True}, {'key': 'idx', 'name': 'IDX', 'type': 'float', 'length': 4, 'desc': '처음 조회시 Space 연속 조회시 이전 조회한 OutBlock의 idx 값으로 설정', 'required': True}],
@@ -55,6 +60,7 @@ MARKET_STATISTICS_RANKING_REQUESTS = {
     't1449': {
         'tr_cd': 't1449',
         'title': '가격대별매매비중조회',
+        'url': '/stock/market-data',
         'blocks': {
             't1449InBlock': {
                 'fields': [{'key': 'shcode', 'name': '단축코드', 'type': 'string', 'length': 6, 'required': True}, {'key': 'dategb', 'name': '일자구분', 'type': 'string', 'length': 1, 'desc': '1@당일 2@전일 3@당일+전일', 'required': True}],
@@ -65,6 +71,7 @@ MARKET_STATISTICS_RANKING_REQUESTS = {
     't1452': {
         'tr_cd': 't1452',
         'title': '거래량상위',
+        'url': '/stock/market-data',
         'blocks': {
             't1452InBlock': {
                 'fields': [{'key': 'gubun', 'name': '구분', 'type': 'string', 'length': 1, 'desc': '0:전체 1:코스피 2:코스닥', 'required': True}, {'key': 'jnilgubun', 'name': '전일구분', 'type': 'string', 'length': 1, 'desc': '1:당일 2:전일', 'required': True}, {'key': 'sdiff', 'name': '시작등락율', 'type': 'float', 'length': 3, 'desc': '현재등락율 >= sdiff', 'required': True}, {'key': 'ediff', 'name': '종료등락율', 'type': 'float', 'length': 3, 'desc': '현재등락율 <= ediff', 'required': True}, {'key': 'jc_num', 'name': '대상제외', 'type': 'float', 'length': 12, 'desc': '대상제외값 (0x00000080)관리종목  => 000000000128 (0x00000100)시장경보  => 000000000256 (0x00000200)거래정지  => 000000000512 (0x00004000)우선주  => 000000016384 (0x00200000)증거금50  => 000008388608 (0x01000000)정리매매  => 000016777216 (0x04000000)투자유의  => 000067108864 (0x80000000)불성실공시  => -02147483648 두개 이상 제외시 해당 값을 합산한다 예)관리종목 + 시장경보 = 000000000128 + 000000000256 = 000000000384', 'required': True}, {'key': 'sprice', 'name': '시작가격', 'type': 'float', 'length': 8, 'desc': '현재가 >= sprice', 'required': True}, {'key': 'eprice', 'name': '종료가격', 'type': 'float', 'length': 8, 'desc': '현재가 <= eprice', 'required': True}, {'key': 'volume', 'name': '거래량', 'type': 'float', 'length': 12, 'desc': '거래량 >= volume', 'required': True}, {'key': 'idx', 'name': 'IDX', 'type': 'float', 'length': 4, 'desc': '처음 조회시는 Space 연속 조회시에 이전 조회한 OutBlock의 idx 값으로 설정', 'required': True}],
@@ -75,6 +82,7 @@ MARKET_STATISTICS_RANKING_REQUESTS = {
     't1463': {
         'tr_cd': 't1463',
         'title': '거래대금상위',
+        'url': '/stock/market-data',
         'blocks': {
             't1463InBlock': {
                 'fields': [{'key': 'gubun', 'name': '구분', 'type': 'string', 'length': 1, 'desc': '0 : 전체<br/>1 : 코스피<br/>2 : 코스닥', 'required': True}, {'key': 'jnilgubun', 'name': '전일구분', 'type': 'string', 'length': 1, 'desc': '0 : 당일<br/>1 : 전일', 'required': True}, {'key': 'jc_num', 'name': '대상제외', 'type': 'float', 'length': 12, 'desc': '대상제외값<br/>(0x00000080)관리종목  => 000000000128<br/>(0x00000100)시장경보  => 000000000256<br/>(0x00000200)거래정지  => 000000000512<br/>(0x00004000)우선주  => 000000016384<br/>(0x00200000)증거금50  => 000008388608<br/>(0x01000000)정리매매  => 000016777216<br/>(0x04000000)투자유의  => 000067108864<br/>(0x80000000)불성실공시  => -02147483648<br/>두개 이상 제외시 해당 값을 합산한다<br/>예)관리종목 + 시장경보 = 000000000128 + 000000000256 = 000000000384', 'required': True}, {'key': 'sprice', 'name': '시작가격', 'type': 'float', 'length': 8, 'desc': '현재가 >= sprice', 'required': True}, {'key': 'eprice', 'name': '종료가격', 'type': 'float', 'length': 8, 'desc': '현재가 <= eprice', 'required': True}, {'key': 'volume', 'name': '거래량', 'type': 'float', 'length': 12, 'desc': '거래량 >= volume', 'required': True}, {'key': 'idx', 'name': 'IDX', 'type': 'float', 'length': 4, 'desc': '처음 조회시는 Space<br/>연속 조회시에 이전 조회한 OutBlock의 idx 값으로 설정', 'required': True}, {'key': 'jc_num2', 'name': '대상제외2', 'type': 'float', 'length': 12, 'desc': '기본         => 000000000000<br/>상장지수펀드 => 000000000001<br/>선박투자회사 => 000000000002<br/>스펙         => 000000000004<br/>ETN          => 000000000008(0x00000008)<br/>투자주의     => 000000000016(0x00000010)<br/>투자위험     => 000000000032(0x00000020)<br/>위험예고     => 000000000064(0x00000040)<br/>담보불가     => 000000000128(0x00000080)<br/>두개 이상 제외시 해당 값을 합산한다.', 'required': True}, {'key': 'exchgubun', 'name': '거래소구분코드', 'type': 'string', 'length': 1, 'desc': 'K: KRX<br/>N: NXT<br/>U:통합<br/>그외 입력값은 KRX로 처리<br/>', 'required': True}],
@@ -85,6 +93,7 @@ MARKET_STATISTICS_RANKING_REQUESTS = {
     't1466': {
         'tr_cd': 't1466',
         'title': '전일동시간대비거래급증',
+        'url': '/stock/market-data',
         'blocks': {
             't1466InBlock': {
                 'fields': [{'key': 'gubun', 'name': '구분', 'type': 'string', 'length': 1, 'desc': '0 : 전체<br/>1 : 코스피<br/>2 : 코스닥', 'required': True}, {'key': 'type1', 'name': '전일거래량', 'type': 'string', 'length': 1, 'desc': '0@1주 이상<br/>1@1만주 이상<br/>2@5만주 이상<br/>3@10만주 이상<br/>4@20만주 이상<br/>5@50만주 이상<br/>6@100만주 이상', 'required': True}, {'key': 'type2', 'name': '거래급등율', 'type': 'string', 'length': 1, 'desc': '0@전체<br/>1@2000%이하<br/>2@1500%이하<br/>3@1000%이하<br/>4@500%이하<br/>5@100%이하<br/>6@50%이하', 'required': True}, {'key': 'jc_num', 'name': '대상제외', 'type': 'float', 'length': 12, 'desc': '대상제외값<br/>(0x00000080)관리종목  => 000000000128<br/>(0x00000100)시장경보  => 000000000256<br/>(0x00000200)거래정지  => 000000000512<br/>(0x00004000)우선주  => 000000016384<br/>(0x00200000)증거금50  => 000008388608<br/>(0x01000000)정리매매  => 000016777216<br/>(0x04000000)투자유의  => 000067108864<br/>(0x80000000)불성실공시  => -02147483648<br/>두개 이상 제외시 해당 값을 합산한다<br/>예)관리종목 + 시장경보 = 000000000128 + 000000000256 = 000000000384', 'required': True}, {'key': 'sprice', 'name': '시작가격', 'type': 'float', 'length': 8, 'desc': '현재가 >= sprice', 'required': True}, {'key': 'eprice', 'name': '종료가격', 'type': 'float', 'length': 8, 'desc': '현재가 <= eprice', 'required': True}, {'key': 'volume', 'name': '거래량', 'type': 'float', 'length': 12, 'desc': '거래량 >= volume', 'required': True}, {'key': 'idx', 'name': 'IDX', 'type': 'float', 'length': 4, 'desc': '처음 조회시는 Space<br/>연속 조회시에 이전 조회한 OutBlock의 idx 값으로 설정', 'required': True}, {'key': 'jc_num2', 'name': '대상제외2', 'type': 'float', 'length': 12, 'desc': '기본         => 000000000000<br/>상장지수펀드 => 000000000001<br/>선박투자회사 => 000000000002<br/>스펙         => 000000000004<br/>ETN          => 000000000008(0x00000008)<br/>투자주의     => 000000000016(0x00000010)<br/>투자위험     => 000000000032(0x00000020)<br/>위험예고     => 000000000064(0x00000040)<br/>담보불가     => 000000000128(0x00000080)<br/>두개 이상 제외시 해당 값을 합산한다.', 'required': True}, {'key': 'exchgubun', 'name': '거래소구분코드', 'type': 'string', 'length': 1, 'desc': 'K: KRX<br/>N: NXT<br/>U:통합<br/>그외 입력값은 KRX로 처리<br/>', 'required': True}],
@@ -95,6 +104,7 @@ MARKET_STATISTICS_RANKING_REQUESTS = {
     't1471': {
         'tr_cd': 't1471',
         'title': '시간대별호가잔량추이',
+        'url': '/stock/market-data',
         'blocks': {
             't1471InBlock': {
                 'fields': [{'key': 'shcode', 'name': '종목코드', 'type': 'string', 'length': 6, 'required': True}, {'key': 'gubun', 'name': '분구분', 'type': 'string', 'length': 2, 'desc': '00:30초<br/>01:1분<br/>02:2분<br/>03:3분<br/>.....', 'required': True}, {'key': 'time', 'name': '시간', 'type': 'string', 'length': 6, 'desc': '기본값 : Space, 현재시간을 기준으로 함<br/>연속조회시에 직전 조회결과인<br/>OutBlock의 time 값으로 설정', 'required': True}, {'key': 'cnt', 'name': '자료개수', 'type': 'string', 'length': 3, 'desc': '요청건수( 1 이상 500 이하값만 유효)<br/>ex) 10건 요청시 "010"', 'required': True}],
@@ -115,6 +125,7 @@ MARKET_STATISTICS_RANKING_REQUESTS = {
     't1475': {
         'tr_cd': 't1475',
         'title': '체결강도추이',
+        'url': '/stock/market-data',
         'blocks': {
             't1475InBlock': {
                 'fields': [{'key': 'shcode', 'name': '종목코드', 'type': 'string', 'length': 6, 'required': True}, {'key': 'vptype', 'name': '상승하락', 'type': 'string', 'length': 1, 'desc': '시간별/일별 구분 0 : 시간별 1 : 일별', 'required': True}, {'key': 'datacnt', 'name': '데이터개수', 'type': 'float', 'length': 4, 'desc': '스페이스 입력시 최대 20개 데이터 조회됨.', 'required': True}, {'key': 'date', 'name': '기준일자', 'type': 'float', 'length': 8, 'desc': '다음 조회시 입력. 이전 조회시 OutBlock.date값 입력', 'required': True}, {'key': 'time', 'name': '기준시간', 'type': 'float', 'length': 6, 'desc': '다음 조회시 입력. 이전 조회시 OutBlock.time값 입력', 'required': True}, {'key': 'rankcnt', 'name': '랭크카운터', 'type': 'float', 'length': 3, 'desc': '미사용 필드.', 'required': True}, {'key': 'gubun', 'name': '조회구분', 'type': 'string', 'length': 1, 'desc': '일반 조회 : 0 차트 조회 : 1 OutBlock1의 volume 필드 값 구분함. 일반 : 누적거래량, 차트 : 체결량', 'required': True}],
@@ -125,6 +136,7 @@ MARKET_STATISTICS_RANKING_REQUESTS = {
     't1481': {
         'tr_cd': 't1481',
         'title': '시간외등락율상위',
+        'url': '/stock/market-data',
         'blocks': {
             't1481InBlock': {
                 'fields': [{'key': 'gubun1', 'name': '구분', 'type': 'string', 'length': 1, 'desc': '0:전체<br/>1:코스피<br/>2:코스닥', 'required': True}, {'key': 'gubun2', 'name': '상승하락', 'type': 'string', 'length': 1, 'desc': '0: 상승률<br/>1: 하락률', 'required': True}, {'key': 'jongchk', 'name': '종목체크', 'type': 'string', 'length': 1, 'desc': '0: 전체<br/>1: 우선제외<br/>2: 관리제외<br/>3: 우선관리제외', 'required': True}, {'key': 'volume', 'name': '거래량', 'type': 'string', 'length': 1, 'desc': '0: 전체거래량<br/>1: 1천주 이상<br/>2: 5천주 이상<br/>3: 1만주 이상<br/>4: 5만주 이상<br/>5: 10만주 이상<br/>6: 50만주 이상<br/>7: 100만주 이상', 'required': True}, {'key': 'idx', 'name': 'IDX', 'type': 'float', 'length': 4, 'desc': '연속조회시 OutBlock의 idx 입력', 'required': True}],
@@ -135,6 +147,7 @@ MARKET_STATISTICS_RANKING_REQUESTS = {
     't1482': {
         'tr_cd': 't1482',
         'title': '시간외거래량상위',
+        'url': '/stock/market-data',
         'blocks': {
             't1482InBlock': {
                 'fields': [{'key': 'sort_gbn', 'name': '정렬구분', 'type': 'float', 'length': 1, 'desc': '0: 거래량<br/>1: 거래대금', 'required': True}, {'key': 'gubun', 'name': '구분', 'type': 'string', 'length': 1, 'desc': '0: 전체<br/>1: 코스피<br/>2: 코스닥', 'required': True}, {'key': 'jongchk', 'name': '거래량', 'type': 'string', 'length': 1, 'desc': '0: 전체<br/>1: 우선제외<br/>2: 관리제외<br/>3: 우선관리제외', 'required': True}, {'key': 'idx', 'name': 'IDX', 'type': 'float', 'length': 4, 'desc': '연속조회시 OutBlock의 idx 입력', 'required': True}],
@@ -145,6 +158,7 @@ MARKET_STATISTICS_RANKING_REQUESTS = {
     't1485': {
         'tr_cd': 't1485',
         'title': '예상지수',
+        'url': '/stock/market-data',
         'blocks': {
             't1485InBlock': {
                 'fields': [{'key': 'upcode', 'name': '업종코드', 'type': 'string', 'length': 3, 'desc': '코스피@001 코스닥@301 KRX100@501 KP200@101 SRI@515 코스닥프리미어@404 KRX 보험@516 KRX 운송@517', 'required': True}, {'key': 'gubun', 'name': '조회구분', 'type': 'string', 'length': 1, 'desc': '1:장전 2:장후', 'required': True}],
@@ -155,6 +169,7 @@ MARKET_STATISTICS_RANKING_REQUESTS = {
     't1486': {
         'tr_cd': 't1486',
         'title': '시간별예상체결가',
+        'url': '/stock/market-data',
         'blocks': {
             't1486InBlock': {
                 'fields': [{'key': 'shcode', 'name': '단축코드', 'type': 'string', 'length': 6, 'required': True}, {'key': 'cts_time', 'name': '시간CTS', 'type': 'string', 'length': 10, 'desc': '처음 조회시는 Space<br/>연속 조회시에 이전 조회한 OutBlock의 cts_time 값으로 설정', 'required': True}, {'key': 'cnt', 'name': '조회건수', 'type': 'long', 'length': 4, 'desc': '0020', 'required': True}, {'key': 'exchgubun', 'name': '거래소구분코드', 'type': 'string', 'length': 1, 'desc': 'K: KRX<br/>N: NXT<br/>U:통합<br/>그외 입력값은 KRX로 처리<br/>', 'required': True}],
@@ -165,6 +180,7 @@ MARKET_STATISTICS_RANKING_REQUESTS = {
     't1488': {
         'tr_cd': 't1488',
         'title': '예상체결가등락율상위조회',
+        'url': '/stock/market-data',
         'blocks': {
             't1488InBlock': {
                 'fields': [{'key': 'gubun', 'name': '거래소구분', 'type': 'string', 'length': 1, 'desc': '0:전체 1:코스피 2:코스닥', 'required': True}, {'key': 'sign', 'name': '상하락구분', 'type': 'string', 'length': 1, 'desc': '1:상승 2:하락', 'required': True}, {'key': 'jgubun', 'name': '장구분', 'type': 'string', 'length': 1, 'desc': '1:장전 2:장후 3:직전대비', 'required': True}, {'key': 'jongchk', 'name': '종목체크', 'type': 'string', 'length': 12, 'desc': '대상제외값 0x00000080:관리종목 0x00000100:시장경보 0x00000200:거래정지 0x00004000:우선주 0x00200000:증거금50/100 0x00400000:증거금50 0x00800000:증거금100 0x01000000:정리매매 0x04000000:투자유의 0x80000000:불성실공시', 'required': True}, {'key': 'idx', 'name': 'IDX', 'type': 'float', 'length': 4, 'desc': '처음 조회시는 Space 연속 조회시에 이전 조회한 OutBlock의 idx 값으로 설정', 'required': True}, {'key': 'volume', 'name': '거래량', 'type': 'string', 'length': 1, 'desc': '전체@0 1만주이상@1 5만주이상@2 10만주이상@3 50만주이상@4 백만주이상@5', 'required': True}, {'key': 'yesprice', 'name': '예상체결시작가격', 'type': 'float', 'length': 8, 'desc': 'yesprice <= 예상체결가 인 종목', 'required': True}, {'key': 'yeeprice', 'name': '예상체결종료가격', 'type': 'float', 'length': 8, 'desc': '예상체결가 <= yeeprice 인 종목', 'required': True}, {'key': 'yevolume', 'name': '예상체결량', 'type': 'float', 'length': 12, 'desc': '예상체결량 >= yevolume 인 종목', 'required': True}],
@@ -175,6 +191,7 @@ MARKET_STATISTICS_RANKING_REQUESTS = {
     't1489': {
         'tr_cd': 't1489',
         'title': '예상체결량상위조회',
+        'url': '/stock/market-data',
         'blocks': {
             't1489InBlock': {
                 'fields': [{'key': 'gubun', 'name': '거래소구분', 'type': 'string', 'length': 1, 'desc': '0:전체 1:코스피 2:코스닥', 'required': True}, {'key': 'jgubun', 'name': '장구분', 'type': 'string', 'length': 1, 'desc': '0:장전 1:장후', 'required': True}, {'key': 'jongchk', 'name': '종목체크', 'type': 'string', 'length': 12, 'desc': '대상제외값(설정시 저장됨) 증거금50 : 0x00400000 증거금100 : 0x00800000 증거금50/100 : 0x00200000 관리종목 : 0x00000080 시장경보 : 0x00000100 거래정지 : 0x00000200 우선주 : 0x00004000 투자유의 : 0x04000000 정리매매 : 0x01000000 불성실공시 : 0x80000000', 'required': True}, {'key': 'idx', 'name': 'IDX', 'type': 'float', 'length': 4, 'desc': '다음 조회시 사용 첫 조회시 Space', 'required': True}, {'key': 'yesprice', 'name': '예상체결시작가격', 'type': 'float', 'length': 8, 'desc': 'yesprice <= 예상체결가 인 종목', 'required': True}, {'key': 'yeeprice', 'name': '예상체결종료가격', 'type': 'float', 'length': 8, 'desc': '예상체결가 <= yeeprice 인 종목', 'required': True}, {'key': 'yevolume', 'name': '예상체결량', 'type': 'float', 'length': 12, 'desc': '예상체결량 >= yevolume 인 종목', 'required': True}],
@@ -185,6 +202,7 @@ MARKET_STATISTICS_RANKING_REQUESTS = {
     't1492': {
         'tr_cd': 't1492',
         'title': '단일가예상등락율상위',
+        'url': '/stock/market-data',
         'blocks': {
             't1492InBlock': {
                 'fields': [{'key': 'gubun1', 'name': '구분', 'type': 'string', 'length': 1, 'desc': '0: 전체 1: 코스피 2: 코스닥', 'required': True}, {'key': 'gubun2', 'name': '상승하락', 'type': 'string', 'length': 1, 'desc': '0: 상승률 1: 하락률', 'required': True}, {'key': 'jongchk', 'name': '종목체크', 'type': 'string', 'length': 1, 'desc': '전체@0 우선제외@1 관리제외@2 우선관리제외@3', 'required': True}, {'key': 'volume', 'name': '거래량', 'type': 'string', 'length': 1, 'desc': '전체거래량@0 1백주 이상@1 5백주 이상@2 1천주 이상@3 5천주 이상@4 1만주 이상@5 5만주 이상@6 50만주 이상@6 100만주 이상@7', 'required': True}, {'key': 'idx', 'name': 'IDX', 'type': 'float', 'length': 4, 'desc': '연속조회시 OutBlock의 idx 입력', 'required': True}],
