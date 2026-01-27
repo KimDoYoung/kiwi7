@@ -15,6 +15,7 @@ MARKET_CHART_REQUESTS = {
     't8410': {
         'tr_cd': 't8410',
         'title': 'API전용주식차트(일주월년)',
+        'url'  : '/stock/chart',
         'blocks': {
             't8410InBlock': {
                 'fields': [{'key': 'shcode', 'name': '단축코드', 'type': 'string', 'length': 6, 'required': True}, {'key': 'gubun', 'name': '주기구분(2:일3:주4:월5:년)', 'type': 'string', 'length': 1, 'required': True}, {'key': 'qrycnt', 'name': '요청건수(최대-압축:2000비압축:500)', 'type': 'float', 'length': 4, 'desc': 'OPENAPI에서는 압축 미제공', 'required': True}, {'key': 'sdate', 'name': '시작일자', 'type': 'string', 'length': 8, 'desc': '조회구간종료일<br/>Space:기본값', 'required': True}, {'key': 'edate', 'name': '종료일자', 'type': 'string', 'length': 8, 'desc': '처음조회기준일(LE)<br/>처음조회일 경우 이 값 기준으로 조회', 'required': True}, {'key': 'cts_date', 'name': '연속일자', 'type': 'string', 'length': 8, 'desc': '처음 조회시는 Space<br/>연속 조회시에 이전 조회한 OutBlock의 cts_date 값으로 설정', 'required': True}, {'key': 'comp_yn', 'name': '압축여부(Y:압축N:비압축)', 'type': 'string', 'length': 1, 'desc': 'OPENAPI에서는 압축 미제공', 'required': True}, {'key': 'sujung', 'name': '수정주가여부(Y:적용N:비적용)', 'type': 'string', 'length': 1, 'required': True}],

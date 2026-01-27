@@ -24,14 +24,17 @@ async def main():
     target_date = datetime.now().strftime("%Y%m%d")
 
     payload = {
-        "shcode": "005930",
-        "gubun": "2",      # 2:일, 3:주, 4:월, 5:년
-        "qrycnt": "1",     # 최근 1건
-        "sdate": " ",      # 종료일 (Space: 최신) -> Not sure if this means start/end logic inverted or just end date
-        "edate": target_date, # 기준일
-        "cts_date": " ",
-        "comp_yn": "N",
-        "sujung": "N"
+        't8410InBlock':{
+
+            "shcode": "005930",
+            "gubun": "2",      # 2:일, 3:주, 4:월, 5:년
+            "qrycnt": "10",     # 최근 1건
+            "sdate": "",      # 종료일 (Space: 최신) -> Not sure if this means start/end logic inverted or just end date
+            "edate": "",
+            "cts_date": "",
+            "comp_yn": "N",
+            "sujung": "Y"
+        }
     }
     
     # If sdate/edate logic is different (e.g. sdate=start, edate=end), I might need to adjust.

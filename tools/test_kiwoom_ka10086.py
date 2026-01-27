@@ -25,7 +25,7 @@ async def main():
     # 실제로는 장이 열린 날짜여야 데이터가 확실함. 
     # 테스트를 위해 최근 날짜 입력
     target_date = datetime.now().strftime("%Y%m%d")
-    target_date = '20260126'
+    # target_date = '20260126'
     payload = {
         "stk_cd": "005930",
         "qry_dt": target_date,
