@@ -10,7 +10,6 @@ stk_cache 테이블을 간단한 key-value 인터페이스로 관리합니다.
 """
 from typing import Optional, Union
 from backend.core.logger import get_logger
-from backend.domains.services.dependency import get_service
 from backend.domains.services.cache_keys import CacheKey
 import json
 
@@ -34,6 +33,7 @@ class CacheManager:
     def __init__(self):
         if self._initialized:
             return
+        from backend.domains.services.dependency import get_service
         self._cache_service = get_service("stk_cache")
         self._initialized = True
         logger.info("CacheManager 싱글톤 초기화 완료")

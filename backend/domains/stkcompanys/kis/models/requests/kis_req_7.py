@@ -2,11 +2,11 @@
 # Auto-generated from Excel file
 
 KIS_REQUEST_DEF_7 = {
-    "(매도) TTTC0011U (매수) TTTC0012U": {
+    "TTTC0011U": {
         "url": "/uapi/domestic-stock/v1/trading/order-cash",
-        "title": "주식주문(현금)",
+        "title": "주식주문(현금) - 매도",
         "method": "POST",
-        "tr_id": "(매도) TTTC0011U (매수) TTTC0012U",
+        "tr_id": "TTTC0011U",
         "body": [
             {
                 "key": "CANO",
@@ -82,11 +82,91 @@ KIS_REQUEST_DEF_7 = {
             }
         ]
     },
-    "(매도) TTTC0051U (매수) TTTC0052U": {
-        "url": "/uapi/domestic-stock/v1/trading/order-credit",
-        "title": "주식주문(신용)",
+    "TTTC0012U": {
+        "url": "/uapi/domestic-stock/v1/trading/order-cash",
+        "title": "주식주문(현금) - 매수",
         "method": "POST",
-        "tr_id": "(매도) TTTC0051U (매수) TTTC0052U",
+        "tr_id": "TTTC0012U",
+        "body": [
+            {
+                "key": "CANO",
+                "name": "종합계좌번호",
+                "type": "string",
+                "required": True,
+                "length": 8,
+                "description": "종합계좌번호"
+            },
+            {
+                "key": "ACNT_PRDT_CD",
+                "name": "계좌상품코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "상품유형코드"
+            },
+            {
+                "key": "PDNO",
+                "name": "상품번호",
+                "type": "string",
+                "required": True,
+                "length": 12,
+                "description": "종목코드(6자리) , ETN의 경우 7자리 입력"
+            },
+            {
+                "key": "SLL_TYPE",
+                "name": "매도유형 (매도주문 시)",
+                "type": "string",
+                "required": False,
+                "length": 2,
+                "description": "01@일반매도\r 02@임의매매\r 05@대차매도\r → 미입력시 01 일반매도로 진행"
+            },
+            {
+                "key": "ORD_DVSN",
+                "name": "주문구분",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "[KRX]\r 00 : 지정가\r 01 : 시장가\r 02 : 조건부지정가\r 03 : 최유리지정가\r 04 : 최우선지정가\r 05 : 장전 시간외\r 06 : 장후 시간외\r 07 : 시간외 단일가\r 11 : IOC지정가 (즉시체결,잔량취소)\r 12 : FOK지정가 (즉시체결,전량취소)\r 13 : IOC시장가 (즉시체결,잔량취소)\r 14 : FOK시장가 (즉시체결,전량취소)\r 15 : IOC최유리 (즉시체결,잔량취소)\r 16 : FOK최우선최유리 (즉시체결,전량취소)\r 21 : 중간가\r 22 : 스톱지정가\r 23 : 중간가IOC\r 24 : 중간가FOK\r \r [NXT]\r 00 : 지정가\r 03 : 최유리지정가\r 04 : 최우선지정가\r 11 : IOC지정가 (즉시체결,잔량취소)\r 12 : FOK지정가 (즉시체결,전량취소)\r 13 : IOC시장가 (즉시체결,잔량취소)\r 14 : FOK시장가 (즉시체결,전량취소)\r 15 : IOC최유리 (즉시체결,잔량취소)\r 16 : FOK최유리 (즉시체결,전량취소)\r 21 : 중간가\r 22 : 스톱지정가\r 23 : 중간가IOC\r 24 : 중간가FOK\r \r [SOR]\r 00 : 지정가\r 01 : 시장가\r 03 : 최유리지정가\r 04 : 최우선지정가\r 11 : IOC지정가 (즉시체결,잔량취소)\r 12 : FOK지정가 (즉시체결,전량취소)\r 13 : IOC시장가 (즉시체결,잔량취소)\r 14 : FOK시장가 (즉시체결,전량취소)\r 15 : IOC최유리 (즉시체결,잔량취소)\r 16 : FOK최유리 (즉시체결,전량취소)"
+            },
+            {
+                "key": "ORD_QTY",
+                "name": "주문수량",
+                "type": "string",
+                "required": True,
+                "length": 10,
+                "description": "주문수량"
+            },
+            {
+                "key": "ORD_UNPR",
+                "name": "주문단가",
+                "type": "string",
+                "required": True,
+                "length": 19,
+                "description": "주문단가\r 시장가 등 주문시, \"0\"으로 입력"
+            },
+            {
+                "key": "CNDT_PRIC",
+                "name": "조건가격",
+                "type": "string",
+                "required": False,
+                "length": 19,
+                "description": "스탑지정가호가 주문 (ORD_DVSN이 22) 사용 시에만 필수"
+            },
+            {
+                "key": "EXCG_ID_DVSN_CD",
+                "name": "거래소ID구분코드",
+                "type": "string",
+                "required": False,
+                "length": 3,
+                "description": "한국거래소 : KRX\r 대체거래소 (넥스트레이드) : NXT\r SOR (Smart Order Routing) : SOR\r → 미입력시 KRX로 진행되며, 모의투자는 KRX만 가능"
+            }
+        ]
+    },
+    "TTTC0051U": {
+        "url": "/uapi/domestic-stock/v1/trading/order-credit",
+        "title": "주식주문(신용) - 매도",
+        "method": "POST",
+        "tr_id": "TTTC0051U",
         "body": [
             {
                 "key": "CANO",
@@ -143,6 +223,193 @@ KIS_REQUEST_DEF_7 = {
                 "required": True,
                 "length": 8,
                 "description": "[KRX]\r 00 : 지정가\r 01 : 시장가\r 02 : 조건부지정가\r 03 : 최유리지정가\r 04 : 최우선지정가\r 05 : 장전 시간외\r 06 : 장후 시간외\r 07 : 시간외 단일가\r 11 : IOC지정가 (즉시체결,잔량취소)\r 12 : FOK지정가 (즉시체결,전량취소)\r 13 : IOC시장가 (즉시체결,잔량취소)\r 14 : FOK시장가 (즉시체결,전량취소)\r 15 : IOC최유리 (즉시체결,잔량취소)\r 16 : FOK최유리 (즉시체결,전량취소)\r 21 : 중간가\r 22 : 스톱지정가\r 23 : 중간가IOC\r 24 : 중간가FOK\r \r [NXT]\r 00 : 지정가\r 03 : 최유리지정가\r 04 : 최우선지정가\r 11 : IOC지정가 (즉시체결,잔량취소)\r 12 : FOK지정가 (즉시체결,전량취소)\r 13 : IOC시장가 (즉시체결,잔량취소)\r 14 : FOK시장가 (즉시체결,전량취소)\r 15 : IOC최유리 (즉시체결,잔량취소)\r 16 : FOK최유리 (즉시체결,전량취소)\r 21 : 중간가\r 22 : 스톱지정가\r 23 : 중간가IOC\r 24 : 중간가FOK\r \r [SOR]\r 00 : 지정가\r 01 : 시장가\r 03 : 최유리지정가\r 04 : 최우선지정가\r 11 : IOC지정가 (즉시체결,잔량취소)\r 12 : FOK지정가 (즉시체결,전량취소)\r 13 : IOC시장가 (즉시체결,잔량취소)\r 14 : FOK시장가 (즉시체결,전량취소)\r 15 : IOC최유리 (즉시체결,잔량취소)\r 16 : FOK최유리 (즉시체결,전량취소)"
+            },
+            {
+                "key": "ORD_QTY",
+                "name": "주문수량",
+                "type": "string",
+                "required": True,
+                "length": 2
+            },
+            {
+                "key": "ORD_UNPR",
+                "name": "주문단가",
+                "type": "string",
+                "required": True,
+                "length": 5,
+                "description": "1주당 가격 \r * 장전 시간외, 장후 시간외, 시장가의 경우 1주당 가격을 공란으로 비우지 않음 \"0\"으로 입력 권고"
+            },
+            {
+                "key": "RSVN_ORD_YN",
+                "name": "예약주문여부",
+                "type": "string",
+                "required": False,
+                "length": 2,
+                "description": "정규 증권시장이 열리지 않는 시간 (15:10분 ~ 익일 7:30분) 에 주문을 미리 설정 하여 다음 영업일 또는 설정한 기간 동안 아침 동시 호가에 주문하는 것 \r Y : 예약주문 \r N : 신용주문"
+            },
+            {
+                "key": "EMGC_ORD_YN",
+                "name": "비상주문여부",
+                "type": "string",
+                "required": False,
+                "length": 2
+            },
+            {
+                "key": "PGTR_DVSN",
+                "name": "프로그램매매구분",
+                "type": "string",
+                "required": False,
+                "length": 10
+            },
+            {
+                "key": "MGCO_APTM_ODNO",
+                "name": "운용사지정주문번호",
+                "type": "string",
+                "required": False,
+                "length": 19
+            },
+            {
+                "key": "LQTY_TR_NGTN_DTL_NO",
+                "name": "대량거래협상상세번호",
+                "type": "string",
+                "required": False,
+                "length": 1
+            },
+            {
+                "key": "LQTY_TR_AGMT_NO",
+                "name": "대량거래협정번호",
+                "type": "string",
+                "required": False,
+                "length": 20
+            },
+            {
+                "key": "LQTY_TR_NGTN_ID",
+                "name": "대량거래협상자Id",
+                "type": "string",
+                "required": False,
+                "length": 19
+            },
+            {
+                "key": "LP_ORD_YN",
+                "name": "LP주문여부",
+                "type": "string",
+                "required": False,
+                "length": 3
+            },
+            {
+                "key": "MDIA_ODNO",
+                "name": "매체주문번호",
+                "type": "string",
+                "required": False,
+                "length": 10
+            },
+            {
+                "key": "ORD_SVR_DVSN_CD",
+                "name": "주문서버구분코드",
+                "type": "string",
+                "required": False,
+                "length": 19
+            },
+            {
+                "key": "PGM_NMPR_STMT_DVSN_CD",
+                "name": "프로그램호가신고구분코드",
+                "type": "string",
+                "required": False,
+                "length": 1
+            },
+            {
+                "key": "CVRG_SLCT_RSON_CD",
+                "name": "반대매매선정사유코드",
+                "type": "string",
+                "required": False,
+                "length": 20
+            },
+            {
+                "key": "CVRG_SEQ",
+                "name": "반대매매순번",
+                "type": "string",
+                "required": False,
+                "length": 19
+            },
+            {
+                "key": "EXCG_ID_DVSN_CD",
+                "name": "거래소ID구분코드",
+                "type": "string",
+                "required": False,
+                "length": 3,
+                "description": "한국거래소 : KRX\r 대체거래소 (넥스트레이드) : NXT\r SOR (Smart Order Routing) : SOR\r → 미입력시 KRX로 진행되며, 모의투자는 KRX만 가능"
+            },
+            {
+                "key": "CNDT_PRIC",
+                "name": "조건가격",
+                "type": "string",
+                "required": False,
+                "length": 19,
+                "description": "스탑지정가호가에서 사용"
+            }
+        ]
+    },
+    "TTTC0052U": {
+        "url": "/uapi/domestic-stock/v1/trading/order-credit",
+        "title": "주식주문(신용) - 매수",
+        "method": "POST",
+        "tr_id": "TTTC0052U",
+        "body": [
+            {
+                "key": "CANO",
+                "name": "종합계좌번호",
+                "type": "string",
+                "required": True,
+                "length": 8,
+                "description": "계좌번호 체계(8-2)의 앞 8자리"
+            },
+            {
+                "key": "ACNT_PRDT_CD",
+                "name": "계좌상품코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "계좌번호 체계(8-2)의 뒤 2자리"
+            },
+            {
+                "key": "PDNO",
+                "name": "상품번호",
+                "type": "string",
+                "required": True,
+                "length": 5,
+                "description": "종목코드(6자리)"
+            },
+            {
+                "key": "SLL_TYPE",
+                "name": "매도유형",
+                "type": "string",
+                "required": False,
+                "length": 10,
+                "description": "공란 입력"
+            },
+            {
+                "key": "CRDT_TYPE",
+                "name": "신용유형",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "[매도] 22 : 유통대주신규, 24 : 자기대주신규, 25 : 자기융자상환, 27 : 유통융자상환\r [매수] 21 : 자기융자신규, 23 : 유통융자신규 , 26 : 유통대주상환, 28 : 자기대주상환"
+            },
+            {
+                "key": "LOAN_DT",
+                "name": "대출일자",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "[신용매수] \r 신규 대출로, 오늘날짜(yyyyMMdd)) 입력 \r \r [신용매도] \r 매도할 종목의 대출일자(yyyyMMdd)) 입력"
+            },
+            {
+                "key": "ORD_DVSN",
+                "name": "주문구분",
+                "type": "string",
+                "required": True,
+                "length": 8,
+                "description": "[KRX]\r 00 : 지정가\r 01 : 시장가\r 02 : 조건부지정가\r 03 : 최유리지정가\r 04 : 최우선지정가\r 05 : 장전 시간외\r 06 : 장후 시간외\r 07 : 시간외 단일가\r 11 : IOC지정가 (즉시체결,잔량취소)\r 12 : FOK지정가 (즉시체결,전량취소)\r 13 : IOC시장가 (즉시체결,잔량취소)\r 14 : FOK시장가 (즉시체결,전량취소)\r 15 : IOC최유리 (즉시체결,잔량취소)\r 16 : FOK최유리 (즉시체결,전량취소)\r 21 : 중간가\r 22 : 스톱지정가\r 23 : 중간가IOC\r 24 : 중간가FOK\r \r [NXT]\r 00 : 지정가\r 03 : 최유리지정가\r 04 : 최우선지정가\r 11 : IOC지정가 (즉시체결,잔량취소)\r 12 : FOK지정가 (즉시체결,전량취소)\r 13 : IOC시장가 (즉시체결,잔량취소)\r 14 : FOK시장가 (즉시체결,전량취소)\r 15 : IOC최우리 (즉시체결,잔량취소)\r 16 : FOK최우리 (즉시체결,전량취소)\r 21 : 중간가\r 22 : 스톱지정가\r 23 : 중간가IOC\r 24 : 중간가FOK\r \r [SOR]\r 00 : 지정가\r 01 : 시장가\r 03 : 최유리지정가\r 04 : 최우선지정가\r 11 : IOC지정가 (즉시체결,잔량취소)\r 12 : FOK지정가 (즉시체결,전량취소)\r 13 : IOC시장가 (즉시체결,잔량취소)\r 14 : FOK시장가 (즉시체결,전량취소)\r 15 : IOC최우리 (즉시체결,잔량취소)\r 16 : FOK최우리 (즉시체결,전량취소)"
             },
             {
                 "key": "ORD_QTY",
@@ -420,11 +687,139 @@ KIS_REQUEST_DEF_7 = {
             }
         ]
     },
-    "(3개월이내) TTTC0081R (3개월이전) CTSC9215R": {
+    "TTTC0081R": {
         "url": "/uapi/domestic-stock/v1/trading/inquire-daily-ccld",
-        "title": "주식일별주문체결조회",
+        "title": "주식일별주문체결조회 (3개월이내)",
         "method": "GET",
-        "tr_id": "(3개월이내) TTTC0081R (3개월이전) CTSC9215R",
+        "tr_id": "TTTC0081R",
+        "query": [
+            {
+                "key": "CANO",
+                "name": "종합계좌번호",
+                "type": "string",
+                "required": True,
+                "length": 8,
+                "description": "계좌번호 체계(8-2)의 앞 8자리"
+            },
+            {
+                "key": "ACNT_PRDT_CD",
+                "name": "계좌상품코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "계좌번호 체계(8-2)의 뒤 2자리"
+            },
+            {
+                "key": "INQR_STRT_DT",
+                "name": "조회시작일자",
+                "type": "string",
+                "required": True,
+                "length": 8,
+                "description": "YYYYMMDD"
+            },
+            {
+                "key": "INQR_END_DT",
+                "name": "조회종료일자",
+                "type": "string",
+                "required": True,
+                "length": 8,
+                "description": "YYYYMMDD"
+            },
+            {
+                "key": "SLL_BUY_DVSN_CD",
+                "name": "매도매수구분코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "00 : 전체 / 01 : 매도 / 02 : 매수"
+            },
+            {
+                "key": "PDNO",
+                "name": "상품번호",
+                "type": "string",
+                "required": False,
+                "length": 12,
+                "description": "종목번호(6자리)"
+            },
+            {
+                "key": "ORD_GNO_BRNO",
+                "name": "주문채번지점번호",
+                "type": "string",
+                "required": True,
+                "length": 5,
+                "description": "주문시 한국투자증권 시스템에서 지정된 영업점코드"
+            },
+            {
+                "key": "ODNO",
+                "name": "주문번호",
+                "type": "string",
+                "required": False,
+                "length": 10,
+                "description": "주문시 한국투자증권 시스템에서 채번된 주문번호"
+            },
+            {
+                "key": "CCLD_DVSN",
+                "name": "체결구분",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "'00 전체\r 01 체결\r 02 미체결'"
+            },
+            {
+                "key": "INQR_DVSN",
+                "name": "조회구분",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "'00 역순\r 01 정순'"
+            },
+            {
+                "key": "INQR_DVSN_1",
+                "name": "조회구분1",
+                "type": "string",
+                "required": True,
+                "length": 1,
+                "description": "'없음: 전체\r 1: ELW\r 2: 프리보드'"
+            },
+            {
+                "key": "INQR_DVSN_3",
+                "name": "조회구분3",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "'00 전체\r 01 현금\r 02 신용\r 03 담보\r 04 대주\r 05 대여\r 06 자기융자신규/상환\r 07 유통융자신규/상환'"
+            },
+            {
+                "key": "EXCG_ID_DVSN_CD",
+                "name": "거래소ID구분코드",
+                "type": "string",
+                "required": True,
+                "length": 3,
+                "description": "한국거래소 : KRX\r 대체거래소 (NXT) : NXT\r SOR (Smart Order Routing) : SOR\r ALL : 전체\r ※ 모의투자는 KRX만 제공"
+            },
+            {
+                "key": "CTX_AREA_FK100",
+                "name": "연속조회검색조건100",
+                "type": "string",
+                "required": True,
+                "length": 100,
+                "description": "'공란 : 최초 조회시는 \r 이전 조회 Output CTX_AREA_FK100 값 : 다음페이지 조회시(2번째부터)'"
+            },
+            {
+                "key": "CTX_AREA_NK100",
+                "name": "연속조회키100",
+                "type": "string",
+                "required": True,
+                "length": 100,
+                "description": "'공란 : 최초 조회시 \r 이전 조회 Output CTX_AREA_NK100 값 : 다음페이지 조회시(2번째부터)'"
+            }
+        ]
+    },
+    "CTSC9215R": {
+        "url": "/uapi/domestic-stock/v1/trading/inquire-daily-ccld",
+        "title": "주식일별주문체결조회 (3개월이전)",
+        "method": "GET",
+        "tr_id": "CTSC9215R",
         "query": [
             {
                 "key": "CANO",
@@ -905,11 +1300,131 @@ KIS_REQUEST_DEF_7 = {
             }
         ]
     },
-    "(예약취소) CTSC0009U (예약정정) CTSC0013U": {
+    "CTSC0009U": {
         "url": "/uapi/domestic-stock/v1/trading/order-resv-rvsecncl",
-        "title": "주식예약주문정정취소",
+        "title": "주식예약주문취소",
         "method": "POST",
-        "tr_id": "(예약취소) CTSC0009U (예약정정) CTSC0013U",
+        "tr_id": "CTSC0009U",
+        "body": [
+            {
+                "key": "CANO",
+                "name": "종합계좌번호",
+                "type": "string",
+                "required": True,
+                "length": 8,
+                "description": "[정정/취소] 계좌번호 체계(8-2)의 앞 8자리"
+            },
+            {
+                "key": "ACNT_PRDT_CD",
+                "name": "계좌상품코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "[정정/취소] 계좌번호 체계(8-2)의 뒤 2자리"
+            },
+            {
+                "key": "PDNO",
+                "name": "종목코드(6자리)",
+                "type": "string",
+                "required": True,
+                "length": 12,
+                "description": "[정정]"
+            },
+            {
+                "key": "ORD_QTY",
+                "name": "주문수량",
+                "type": "string",
+                "required": True,
+                "length": 10,
+                "description": "[정정] 주문주식수"
+            },
+            {
+                "key": "ORD_UNPR",
+                "name": "주문단가",
+                "type": "string",
+                "required": True,
+                "length": 19,
+                "description": "[정정] 1주당 가격 \r * 장전 시간외, 시장가의 경우 1주당 가격을 공란으로 비우지 않음 \"0\"으로 입력 권고"
+            },
+            {
+                "key": "SLL_BUY_DVSN_CD",
+                "name": "매도매수구분코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "[정정]\r 01 : 매도\r 02 : 매수"
+            },
+            {
+                "key": "ORD_DVSN_CD",
+                "name": "주문구분코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "[정정]\r 00 : 지정가\r 01 : 시장가\r 02 : 조건부지정가\r 05 : 장전 시간외"
+            },
+            {
+                "key": "ORD_OBJT_CBLC_DVSN_CD",
+                "name": "주문대상잔고구분코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "[정정]\r 10 : 현금\r 12 : 주식담보대출\r 14 : 대여상환\r 21 : 자기융자신규\r 22 : 유통대주신규\r 23 : 유통융자신규\r 24 : 자기대주신규\r 25 : 자기융자상환\r 26 : 유통대주상환\r 27 : 유통융자상환\r 28 : 자기대주상환"
+            },
+            {
+                "key": "LOAN_DT",
+                "name": "대출일자",
+                "type": "string",
+                "required": False,
+                "length": 8,
+                "description": "[정정]"
+            },
+            {
+                "key": "RSVN_ORD_END_DT",
+                "name": "예약주문종료일자",
+                "type": "string",
+                "required": False,
+                "length": 8,
+                "description": "[정정]"
+            },
+            {
+                "key": "CTAL_TLNO",
+                "name": "연락전화번호",
+                "type": "string",
+                "required": False,
+                "length": 20,
+                "description": "[정정]"
+            },
+            {
+                "key": "RSVN_ORD_SEQ",
+                "name": "예약주문순번",
+                "type": "string",
+                "required": True,
+                "length": 10,
+                "description": "[정정/취소]"
+            },
+            {
+                "key": "RSVN_ORD_ORGNO",
+                "name": "예약주문조직번호",
+                "type": "string",
+                "required": False,
+                "length": 5,
+                "description": "[정정/취소]"
+            },
+            {
+                "key": "RSVN_ORD_ORD_DT",
+                "name": "예약주문주문일자",
+                "type": "string",
+                "required": False,
+                "length": 8,
+                "description": "[정정/취소]"
+            }
+        ]
+    },
+    "CTSC0013U": {
+        "url": "/uapi/domestic-stock/v1/trading/order-resv-rvsecncl",
+        "title": "주식예약주문정정",
+        "method": "POST",
+        "tr_id": "CTSC0013U",
         "body": [
             {
                 "key": "CANO",
@@ -1170,11 +1685,80 @@ KIS_REQUEST_DEF_7 = {
             }
         ]
     },
-    "TTTC2201R(기존 KRX만 가능), TTTC2210R (KRX,NXT/SOR)": {
+    "TTTC2201R": {
         "url": "/uapi/domestic-stock/v1/trading/pension/inquire-daily-ccld",
-        "title": "퇴직연금 미체결내역",
+        "title": "퇴직연금 미체결내역 (기존 KRX만 가능)",
         "method": "GET",
-        "tr_id": "TTTC2201R(기존 KRX만 가능), TTTC2210R (KRX,NXT/SOR)",
+        "tr_id": "TTTC2201R",
+        "query": [
+            {
+                "key": "CANO",
+                "name": "종합계좌번호",
+                "type": "string",
+                "required": True,
+                "length": 8
+            },
+            {
+                "key": "ACNT_PRDT_CD",
+                "name": "계좌상품코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "29"
+            },
+            {
+                "key": "USER_DVSN_CD",
+                "name": "사용자구분코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "%%"
+            },
+            {
+                "key": "SLL_BUY_DVSN_CD",
+                "name": "매도매수구분코드",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "00 : 전체 / 01 : 매도 / 02 : 매수"
+            },
+            {
+                "key": "CCLD_NCCS_DVSN",
+                "name": "체결미체결구분",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "%% : 전체 / 01 : 체결 / 02 : 미체결"
+            },
+            {
+                "key": "INQR_DVSN_3",
+                "name": "조회구분3",
+                "type": "string",
+                "required": True,
+                "length": 2,
+                "description": "00 : 전체"
+            },
+            {
+                "key": "CTX_AREA_FK100",
+                "name": "연속조회검색조건100",
+                "type": "string",
+                "required": True,
+                "length": 100
+            },
+            {
+                "key": "CTX_AREA_NK100",
+                "name": "연속조회키100",
+                "type": "string",
+                "required": True,
+                "length": 100
+            }
+        ]
+    },
+    "TTTC2210R": {
+        "url": "/uapi/domestic-stock/v1/trading/pension/inquire-daily-ccld",
+        "title": "퇴직연금 미체결내역 (KRX,NXT/SOR)",
+        "method": "GET",
+        "tr_id": "TTTC2210R",
         "query": [
             {
                 "key": "CANO",
