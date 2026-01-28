@@ -1,5 +1,6 @@
 # APIRouter 인스턴스 생성
 from datetime import datetime
+from typing import Optional
 from zoneinfo import ZoneInfo
 
 from fastapi import APIRouter
@@ -21,9 +22,9 @@ logger = get_logger(__name__)
 
 
 @router.post("/{api_id}", response_model=KiwoomResponse)
-async def kiwoom_rest_api(api_id: str, req: KiwoomRequest):
+async def kiwoom_rest_api(api_id: str, req: KiwoomRequest, title: Optional[str] = None):
     '''kiwoom rest api 호출'''
-    logger.info(f"Received Kiwoom API request: api_id={api_id}, req=[{req}]")
+    logger.info(f"Received Kiwoom API request: api_id={api_id}, title={title}, req=[{req}]")
 
     try:
         kiwoom = await get_kiwoom_api()
@@ -45,6 +46,8 @@ async def kiwoom_rest_api(api_id: str, req: KiwoomRequest):
         if response.success:
             korea_data = KiwoomApiHelper.to_korea_data(response.data, response.api_info['api_id'])
             response.data = korea_data        
+            if title == '보유종목':
+                logger.info(f"보유종목 데이터 변환 완료: {korea_data}")
         logger.info(f"Kiwoom API response: [{response}]")
         return response
     except KiwoomApiException as e:

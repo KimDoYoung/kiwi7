@@ -1,6 +1,8 @@
 """
 KIS(한국투자증권) API 라우트
 """
+from typing import Optional
+
 from fastapi import APIRouter
 
 from backend.core.config import config
@@ -13,9 +15,9 @@ router = APIRouter()
 logger = get_logger(__name__)
 
 @router.post("/{api_id}", response_model=KisResponse)
-async def kis_rest_api(api_id: str, req: KisRequest):
+async def kis_rest_api(api_id: str, req: KisRequest, title: Optional[str] = None):
     """KIS REST API 호출"""
-    logger.info(f"[KIS] API 요청: api_id={api_id}")
+    logger.info(f"[KIS] API 요청: api_id={api_id}, title={title}")
 
     try:
         kis = await get_kis_api()

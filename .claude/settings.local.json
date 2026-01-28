@@ -6,7 +6,9 @@
       "Bash(python tools/extract_kis_resp_def.py:*)",
       "Bash(source:*)",
       "Bash(python tools/test_api_definitions.py:*)",
-      "Bash(python tools/analyze_kis_api_issues.py:*)"
+      "Bash(python tools/analyze_kis_api_issues.py:*)",
+      "Bash(python:*)",
+      "Bash(uv run python:*)"
     ]
   }
 }

@@ -11,20 +11,20 @@ import asyncio
 from pprint import pprint
 
 from backend.core.config import config
-from backend.domains.kis.kis_rest_api import KisRestApi
-from backend.domains.kis.managers.kis_token_manager import KisTokenManager
-from backend.domains.kis.models.kis_request_definition import (
+from backend.domains.stkcompanys.kis.kis_rest_api import KisRestApi
+from backend.domains.stkcompanys.kis.managers.kis_token_manager import KisTokenManager
+from backend.domains.stkcompanys.kis.models.kis_request_definition import (
   get_request_definition,
   get_required_fields,
   get_tr_id,
   is_hashkey_required,
 )
-from backend.domains.kis.models.kis_response_definition import (
+from backend.domains.stkcompanys.kis.models.kis_response_definition import (
   get_field_name,
   get_response_definition,
   get_response_fields,
 )
-from backend.domains.kis.models.kis_schema import KisApiHelper, KisRequest
+from backend.domains.stkcompanys.kis.models.kis_schema import KisApiHelper, KisRequest
 
 
 async def test_balance():

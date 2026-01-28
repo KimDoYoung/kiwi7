@@ -14,7 +14,7 @@ def get_logger(name):
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
         
-        if config.PROFILE_NAME == "local":
+        if config.PROFILE_NAME != "real":
             # 콘솔에도 로그 메시지 출력
             console_handler = logging.StreamHandler()
             console_handler.setFormatter(formatter)
