@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import Dict, Literal, Optional
 
 from backend.core.logger import get_logger
+from backend.domains.stkcompanys.kis.models.kis_schema import KisApiHelper
 
 logger = get_logger(__name__)
 
@@ -352,14 +353,19 @@ class PrevPriceCache:
         for api_name in apis:
             try:
                 if api_name == 'kiwoom':
-                    return await self._fetch_from_kiwoom(stk_cd)
+                    result = await self._fetch_from_kiwoom(stk_cd)
                 elif api_name == 'kis':
-                    return await self._fetch_from_kis(stk_cd)
+                    result = await self._fetch_from_kis(stk_cd)
                 elif api_name == 'ls':
-                    return await self._fetch_from_ls(stk_cd)
+                    result = await self._fetch_from_ls(stk_cd)
+                
+                if result != (None, None):  # 데이터 획득 성공
+                    return result
+                    
             except Exception as e:
                 logger.warning(f"{api_name} API 호출 실패 ({stk_cd}): {e}")
                 continue
+
 
         logger.error(f"모든 API 호출 실패 ({stk_cd})")
         return None, None
@@ -396,11 +402,18 @@ class PrevPriceCache:
 
                 # 가격에서 +/- 부호 제거하고 숫자만 추출
                 close_price = float(close_str.lstrip('+-'))
-
+                # date_str에서 대쉬제거
+                date_str = date_str.replace('-', '')
                 dates.append(date_str)
-                prices.append(close_price)
+                prices.append(int(close_price))
             except (ValueError, KeyError):
                 continue
+
+        # 날짜 기준으로 정렬 (오래된 순)
+        if dates and prices:
+            sorted_data = sorted(zip(dates, prices), key=lambda x: x[0])
+            dates = [d for d, _ in sorted_data]
+            prices = [p for _, p in sorted_data]
 
         return prices, dates
 
@@ -427,13 +440,13 @@ class PrevPriceCache:
 
         if not response.success or not response.data or 'output' not in response.data:
             raise Exception(f"KIS API 응답 오류: {response.error_message}")
-
+        korea_data = KisApiHelper.to_korea_data(response.data, 'FHKST01010400')
         prices = []
         dates = []
-        for item in response.data['output']:
+        for item in korea_data['output']:
             try:
-                date_str = item.get('종목별평가가일자', '')  # 한글 키명
-                close_str = item.get('종목별평가가', '')
+                date_str = item.get('주식영업일자', '')  # 한글 키명
+                close_str = item.get('주식종가', '')
 
                 # 날짜 형식: YYYYMMDD -> YYYY-MM-DD
                 if len(date_str) == 8:
@@ -445,6 +458,12 @@ class PrevPriceCache:
                 prices.append(close_price)
             except (ValueError, KeyError):
                 continue
+
+        # 날짜 기준으로 정렬 (오래된 순)
+        if dates and prices:
+            sorted_data = sorted(zip(dates, prices), key=lambda x: x[0])
+            dates = [d for d, _ in sorted_data]
+            prices = [p for _, p in sorted_data]
 
         return prices, dates
 
@@ -480,8 +499,8 @@ class PrevPriceCache:
         dates = []
         for item in response.data['t8410OutBlock1']:
             try:
-                date_str = item.get('날짜', '')
-                close_str = item.get('종가', '')
+                date_str = item.get('date', '')
+                close_str = item.get('close', '')
 
                 # 날짜 형식: YYYYMMDD -> YYYY-MM-DD
                 if len(str(date_str)) == 8:
@@ -490,9 +509,15 @@ class PrevPriceCache:
                 close_price = float(close_str)
 
                 dates.append(date_str)
-                prices.append(close_price)
+                prices.append(int(close_price))
             except (ValueError, KeyError):
                 continue
+
+        # 날짜 기준으로 정렬 (오래된 순)
+        if dates and prices:
+            sorted_data = sorted(zip(dates, prices), key=lambda x: x[0])
+            dates = [d for d, _ in sorted_data]
+            prices = [p for _, p in sorted_data]
 
         return prices, dates
 

@@ -25,6 +25,7 @@ __pycache__/
 tests/
 docs/
 examples/
+tools/
 
 # 4) OS · 도구 자동 생성물
 .DS_Store

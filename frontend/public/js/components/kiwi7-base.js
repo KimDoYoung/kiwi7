@@ -8,11 +8,12 @@ window.createKiwi7Base = function createKiwi7Base(config, depends = {}) {
 
   const {
     callApi = (ep, payload) => { throw new Error('deps.callApi가 필요합니다'); },
-    utils = { 
-      autoRefreshManager: { start(){}, stop(){}, stopAll(){} }, 
-      exportToCSV(){} 
+    utils = {
+      autoRefreshManager: { start(){}, stop(){}, stopAll(){} },
+      exportToCSV(){}
     },
     debug = false,
+    title = null,
   } = depends;
 
   // 내부 상태 (클로저로 캡슐화)
@@ -242,13 +243,14 @@ window.createKiwi7Base = function createKiwi7Base(config, depends = {}) {
     loading: false,
     sort_key: getDefaultSortKey(),
     sort_asc: true,
-    
+
     // 핸들러들
     filter_functions: [],
     callbacks: [],
     handlers: { cell: {} },
-    
+
     debug,
+    title,
 
     // ---- 생명주기 ----
     init() {
@@ -507,9 +509,9 @@ window.createKiwi7Base = function createKiwi7Base(config, depends = {}) {
       
       try {
         logger.log('Fetching data...', endpoint);
-        
+
         // const response = await callApi(config.api_endpoint, config.payload);
-        const response = await callApi(endpoint, payload);
+        const response = await callApi(endpoint, payload, { title: this.title });
         console.log("응답(kiwi7-base):", response);
         if (!response?.success) {
           throw new Error(response?.error_message || 'API 호출 실패');

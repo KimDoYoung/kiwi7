@@ -1,6 +1,5 @@
 # APIRouter 인스턴스 생성
 from datetime import datetime
-from typing import Optional
 from zoneinfo import ZoneInfo
 
 from fastapi import APIRouter
@@ -9,6 +8,7 @@ from backend.core.config import config
 from backend.core.exceptions import KiwoomApiException
 from backend.core.logger import get_logger
 from backend.domains.market.open_time_checker import OpenTimeChecker
+from backend.domains.services.prev_price_cache import get_prev_price_cache
 from backend.domains.stkcompanys.kiwoom.kiwoom_service import get_kiwoom_api, get_token_manager
 from backend.domains.stkcompanys.kiwoom.models.kiwoom_schema import (
     KiwoomApiHelper,
@@ -22,8 +22,9 @@ logger = get_logger(__name__)
 
 
 @router.post("/{api_id}", response_model=KiwoomResponse)
-async def kiwoom_rest_api(api_id: str, req: KiwoomRequest, title: Optional[str] = None):
+async def kiwoom_rest_api(api_id: str, req: KiwoomRequest):
     '''kiwoom rest api 호출'''
+    title = req.title
     logger.info(f"Received Kiwoom API request: api_id={api_id}, title={title}, req=[{req}]")
 
     try:
@@ -46,15 +47,29 @@ async def kiwoom_rest_api(api_id: str, req: KiwoomRequest, title: Optional[str] 
         if response.success:
             korea_data = KiwoomApiHelper.to_korea_data(response.data, response.api_info['api_id'])
             response.data = korea_data        
-            if title == '보유종목':
+            if title == 'stocklist':
                 logger.info(f"보유종목 데이터 변환 완료: {korea_data}")
-        logger.info(f"Kiwoom API response: [{response}]")
+                await insert_prev_costs(response.data["종목별계좌평가현황"])
+            logger.info(f"Kiwoom API response: [{response}]")
         return response
     except KiwoomApiException as e:
         return KiwoomApiHelper.create_error_response(error_code="999", error_message=str(e))    
     except Exception as e:
         logger.error(f"Error occurred while placing order: {e}")
         return KiwoomApiHelper.create_error_response(error_code="999", error_message="Internal server error")
+
+async def insert_prev_costs(stock_list: list):
+    '''보유종목 데이터에 이전 매입 단가 삽입'''
+    cache = get_prev_price_cache()
+    for stock in stock_list:
+        stk_cd = stock.get("종목코드")
+        # A005930 형태에서 005930 형태로 변환
+        if stk_cd and len(stk_cd) == 7 and stk_cd.startswith('A'):
+            stk_cd = stk_cd[1:]
+        price = await cache.get_last_price(stk_cd)
+        stock['이전종가'] = price if price else 0
+
+    
 
 @router.get("/issue-new-token", response_model=KiwoomResponse)
 async def issue_new_token():

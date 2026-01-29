@@ -117,19 +117,22 @@ async function deleteFetch(url, data) {
 
 /**
  * 키움 API 호출 함수
- * 
+ *
  * @param {string} api_id - 키움 API ID (예: 'ka10001', 'au10001')
  * @param {Object} payload - API 파라미터 데이터
- * @param {string} contYn - 연속조회 여부 ('Y' 또는 'N', 기본값: 'N')
- * @param {string} nextKey - 연속조회 키 (옵션)
+ * @param {Object} options - 옵션 객체 (선택)
+ *   - contYn: 연속조회 여부 ('Y' 또는 'N', 기본값: 'N')
+ *   - nextKey: 연속조회 키 (기본값: null)
+ *   - title: 요청 제목/메타데이터 (기본값: null)
  * @returns {Promise<Object>} - 키움 API 응답 데이터
  */
-async function callKiwoomApi(api_id, payload, contYn = 'N', nextKey = null) {
+async function callKiwoomApi(api_id, payload, options = {}) {
     const requestData = {
         api_id: api_id,
-        cont_yn: contYn,
-        next_key: nextKey,
-        payload: payload
+        cont_yn: options.contYn || 'N',
+        next_key: options.nextKey || null,
+        payload: payload,
+        title: options.title || null
     };
 
     const url = `/api/v1/kiwoom/${api_id}`;
@@ -138,19 +141,22 @@ async function callKiwoomApi(api_id, payload, contYn = 'N', nextKey = null) {
 
 /**
  * KIS API 호출 함수
- * 
+ *
  * @param {string} api_id - KIS API ID
  * @param {Object} payload - API 파라미터 데이터
- * @param {string} contYn - 연속조회 여부 ('Y' 또는 'N', 기본값: 'N')
- * @param {string} nextKey - 연속조회 키 (옵션)
+ * @param {Object} options - 옵션 객체 (선택)
+ *   - contYn: 연속조회 여부 ('Y' 또는 'N', 기본값: 'N')
+ *   - nextKey: 연속조회 키 (기본값: null)
+ *   - title: 요청 제목/메타데이터 (기본값: null)
  * @returns {Promise<Object>} - KIS API 응답 데이터
  */
-async function callKisApi(api_id, payload, contYn = 'N', nextKey = null) {
+async function callKisApi(api_id, payload, options = {}) {
     const requestData = {
         api_id: api_id,
-        cont_yn: contYn,
-        next_key: nextKey,
-        payload: payload
+        cont_yn: options.contYn || 'N',
+        next_key: options.nextKey || null,
+        payload: payload,
+        title: options.title || null
     };
 
     const url = `/api/v1/kis/${api_id}`;
@@ -175,19 +181,22 @@ async function callGetKisApi(api_id, payload) {
 
 /**
  * LS API 호출 함수
- * 
+ *
  * @param {string} api_id - LS API ID
  * @param {Object} payload - API 파라미터 데이터
- * @param {string} contYn - 연속조회 여부 ('Y' 또는 'N', 기본값: 'N')
- * @param {string} nextKey - 연속조회 키 (옵션)
+ * @param {Object} options - 옵션 객체 (선택)
+ *   - contYn: 연속조회 여부 ('Y' 또는 'N', 기본값: 'N')
+ *   - nextKey: 연속조회 키 (기본값: null)
+ *   - title: 요청 제목/메타데이터 (기본값: null)
  * @returns {Promise<Object>} - LS API 응답 데이터
  */
-async function callLsApi(api_id, payload, contYn = 'N', nextKey = null) {
+async function callLsApi(api_id, payload, options = {}) {
     const requestData = {
         api_id: api_id,
-        cont_yn: contYn,
-        next_key: nextKey,
-        payload: payload
+        cont_yn: options.contYn || 'N',
+        next_key: options.nextKey || null,
+        payload: payload,
+        title: options.title || null
     };
 
     const url = `/api/v1/ls/${api_id}`;

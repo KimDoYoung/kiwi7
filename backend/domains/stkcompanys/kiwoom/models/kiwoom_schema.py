@@ -26,6 +26,7 @@ class KiwoomRequest(BaseModel):
     cont_yn: ContYn = ContYn.N        # 연속조회 여부 (기본값: N)
     next_key: Optional[str] = None    # 연속조회 키 (연속조회 시 필요)
     payload: Dict[str, Any]           # POST body 또는 GET params 데이터
+    title: Optional[str] = None       # 요청 제목/메타데이터 (선택)
 
     def validate_payload(self) -> List[str]:
         """
