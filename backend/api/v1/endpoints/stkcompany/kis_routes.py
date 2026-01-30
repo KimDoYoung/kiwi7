@@ -48,8 +48,8 @@ async def kis_rest_api(api_id: str, req: KisRequest):
             korea_data = KisApiHelper.to_korea_data(response.data, api_id)
             response.data = korea_data
             if title == 'stocklist':
-                logger.info(f'[KIS] 보유종목 데이터 변환 완료: {korea_data}')
-                await insert_prev_costs_kis(response.data.get(response.data.output1, []))
+                # logger.info(f'[KIS] 보유종목 데이터 변환 완료: {korea_data}')
+                await insert_prev_costs_kis(response.data.get('output1', []))
         return response
 
     except KisApiException as e:
@@ -68,7 +68,7 @@ async def insert_prev_costs_kis(stock_list: list):
     """보유종목 데이터에 이전 매입 단가 삽입"""
     cache = get_prev_price_cache()
     for stock in stock_list:
-        stk_cd = stock.get('종목코드')
+        stk_cd = stock.get('상품번호')
         # A005930 형태에서 005930 형태로 변환
         if stk_cd and len(stk_cd) == 7 and stk_cd.startswith('A'):
             stk_cd = stk_cd[1:]

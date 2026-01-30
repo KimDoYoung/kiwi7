@@ -5,6 +5,7 @@ from fastapi import APIRouter
 
 from backend.core.exceptions import LsApiException
 from backend.core.logger import get_logger
+from backend.domains.services.prev_price_cache import get_prev_price_cache
 from backend.domains.stkcompanys.ls.ls_service import get_ls_api, get_ls_token_manager
 from backend.domains.stkcompanys.ls.models.ls_schema import LsApiHelper, LsRequest, LsResponse
 
@@ -44,7 +45,8 @@ async def ls_rest_api(api_id: str, req: LsRequest):
         if response.success and response.data:
             korea_data = LsApiHelper.to_korea_data(response.data, api_id)
             response.data = korea_data
-
+            if title == "stocklist":
+                await insert_prev_costs_ls(response.data.get('t0424OutBlock1', []))
         return response
 
     except LsApiException as e:
@@ -60,6 +62,16 @@ async def ls_rest_api(api_id: str, req: LsRequest):
             error_message=f"Internal server error: {str(e)}"
         )
 
+async def insert_prev_costs_ls(stock_list: list):
+    """보유종목 데이터에 이전 매입 단가 삽입"""
+    cache = get_prev_price_cache()
+    for stock in stock_list:
+        stk_cd = stock.get("종목번호")
+        # A005930 형태에서 005930 형태로 변환
+        if stk_cd and len(stk_cd) == 7 and stk_cd.startswith("A"):
+            stk_cd = stk_cd[1:]
+        price = await cache.get_last_price(stk_cd)
+        stock["전일종가"] = price if price else 0
 
 @router.get("/issue-new-token", response_model=LsResponse)
 async def issue_new_token():
@@ -90,7 +102,6 @@ async def issue_new_token():
             error_code="999",
             error_message=str(e)
         )
-
 
 @router.get("/token-info", response_model=LsResponse)
 async def get_token_info():

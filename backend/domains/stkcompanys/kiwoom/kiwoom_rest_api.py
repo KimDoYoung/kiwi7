@@ -46,19 +46,20 @@ class KiwoomRestApi(StockApi):
     def get_headers(self, data: KiwoomRequest, token:str) -> dict:
         """
         키움 API 요청에 필요한 HTTP 헤더를 생성합니다.
-        
+
         Args:
             data: 키움 API 요청 데이터
-            
+
         Returns:
             dict: HTTP 요청 헤더
         """
+        # use_enum_values=True 설정으로 인해 cont_yn이 이미 문자열이므로 직접 사용
         headers = {
             'Content-Type': 'application/json;charset=UTF-8',
             'authorization': f'Bearer {token}',
-            'cont-yn': data.cont_yn.value,  
+            'cont-yn': data.cont_yn,
             'next-key': data.next_key or '',
-            'api-id': data.api_id,  
+            'api-id': data.api_id,
         }
         return headers
 

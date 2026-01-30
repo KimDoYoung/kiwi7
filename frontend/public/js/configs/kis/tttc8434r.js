@@ -37,7 +37,14 @@ const tttc8434r = {
         columns: [
             { key: '상품번호', label: '종목코드', sortable: true, clickable: true, format: 'text', align: 'left'},
             { key: '상품명', label: '종목명', sortable: true, clickable: true, format: 'text' },
-            { key: '전일대비증감', label: '전일대비', sortable: true, format: 'comma', profit_loss: true },
+            { key: '전일대비', label: '전일대비', sortable: true, format: 'number' ,
+                derived: true,
+                formula: (item) => {
+                    const 현재가 = parseInt(item.현재가, 10) || 0;
+                    const 전일종가 = parseInt(item.전일종가, 10) || 0;
+                    return 현재가 - 전일종가;
+                }  
+            },            
             { key: '매입평균가격', label: '매입평단', sortable: true, format: 'comma' },
             { key: '현재가', label: '현재가', sortable: true, format: 'comma' },
             // 파생 컬럼: 주당순익
