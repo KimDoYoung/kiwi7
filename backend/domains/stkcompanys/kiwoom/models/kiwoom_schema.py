@@ -1,9 +1,9 @@
 from datetime import datetime
-from enum import Enum
 from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel
 
+from backend.domains.base.base_schema import BaseRequest, ContYn
 from backend.domains.stkcompanys.kiwoom.models.kiwoom_request_definition import (
     KIWOOM_REQUEST_DEF,
     get_request_definition,
@@ -12,21 +12,11 @@ from backend.domains.stkcompanys.kiwoom.models.kiwoom_request_definition import 
 from backend.domains.stkcompanys.kiwoom.models.kiwoom_response_definition import KIWOOM_RESPONSE_DEF
 
 
-class ContYn(str, Enum):
-    """연속조회 여부를 나타내는 열거형"""
-    Y = 'Y'  # 연속조회 있음
-    N = 'N'  # 연속조회 없음
-
-class KiwoomRequest(BaseModel):
+class KiwoomRequest(BaseRequest):
     """
     키움 API 요청 데이터 모델
     키움 OpenAPI 호출 시 사용되는 표준 요청 형식입니다.
     """
-    api_id: str                       # API 식별자 (예: 'ka10072')
-    cont_yn: ContYn = ContYn.N        # 연속조회 여부 (기본값: N)
-    next_key: Optional[str] = None    # 연속조회 키 (연속조회 시 필요)
-    payload: Dict[str, Any]           # POST body 또는 GET params 데이터
-    title: Optional[str] = None       # 요청 제목/메타데이터 (선택)
 
     def validate_payload(self) -> List[str]:
         """

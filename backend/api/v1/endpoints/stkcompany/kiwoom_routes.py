@@ -51,7 +51,7 @@ async def kiwoom_rest_api(api_id: str, req: KiwoomRequest):
             response.data = korea_data
             if title == 'stocklist':
                 logger.info(f'보유종목 데이터 변환 완료: {korea_data}')
-                await insert_prev_costs(response.data['종목별계좌평가현황'])
+                await insert_prev_costs_kiwoom(response.data['종목별계좌평가현황'])
             logger.info(f'Kiwoom API response: [{response}]')
         return response
     except KiwoomApiException as e:
@@ -63,7 +63,7 @@ async def kiwoom_rest_api(api_id: str, req: KiwoomRequest):
         )
 
 
-async def insert_prev_costs(stock_list: list):
+async def insert_prev_costs_kiwoom(stock_list: list):
     """보유종목 데이터에 이전 매입 단가 삽입"""
     cache = get_prev_price_cache()
     for stock in stock_list:

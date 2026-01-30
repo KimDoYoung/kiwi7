@@ -20,6 +20,7 @@ class BaseRequest(BaseModel):
     cont_yn: ContYn = ContYn.N
     next_key: Optional[str] = None
     payload: Dict[str, Any]
+    title: Optional[str] = None
 
     class Config:
         use_enum_values = True

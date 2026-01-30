@@ -1,8 +1,6 @@
 """
 LS증권 API 라우트
 """
-from typing import Optional
-
 from fastapi import APIRouter
 
 from backend.core.exceptions import LsApiException
@@ -15,8 +13,9 @@ logger = get_logger(__name__)
 
 
 @router.post("/{api_id}", response_model=LsResponse)
-async def ls_rest_api(api_id: str, req: LsRequest, title: Optional[str] = None):
+async def ls_rest_api(api_id: str, req: LsRequest):
     """LS REST API 호출"""
+    title = req.title
     logger.info(f"[LS] API 요청: api_id={api_id}, title={title}")
 
     try:
