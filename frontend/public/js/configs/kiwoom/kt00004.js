@@ -34,8 +34,15 @@ const kt00004 ={
             columns: [
                 { key: '종목코드', label: '종목코드', sortable: true, clickable: true },
                 { key: '종목명', label: '종목명', sortable: true, clickable: true },
-                { key: '보유수량', label: '보유수량', sortable: true, format: 'number' },
-                { key: '평균단가', label: '평균단가', sortable: true, format: 'number' },
+                { key: '전일대비', label: '전일대비', sortable: true, format: 'number' ,
+                  derived: true,
+                  formula: (item) => {
+                      const 현재가 = parseInt(item.현재가, 10) || 0;
+                        const 전일종가 = parseInt(item.전일종가, 10) || 0;
+                        return 현재가 - 전일종가;
+                    }  
+                },
+                { key: '평균단가', label: '매입평단', sortable: true, format: 'number' },
                 { key: '현재가', label: '현재가', sortable: true, format: 'number' },
                 // 👇 파생 컬럼 추가
                 { 
@@ -51,11 +58,13 @@ const kt00004 ={
                         return 현재가 - 평균단가;
                     }
                 },                
-                { key: '평가금액', label: '평가금액', sortable: true, format: 'number' },
-                { key: '손익금액', label: '손익금액', sortable: true, format: 'number', profit_loss: true },
-                { key: '손익율', label: '손익율', sortable: true, format: 'percent', profit_loss: true },
-                // { key: '대출일', label: '대출일', sortable: true },
+                { key: '보유수량', label: '보유수량', sortable: true, format: 'number' },
+                { key: '보유비중', label: '보유비중(%)', sortable: true, format: 'percent' },
                 { key: '매입금액', label: '매입금액', sortable: true, format: 'number' },
+                { key: '평가금액', label: '평가금액', sortable: true, format: 'number' },
+                { key: '손익율', label: '손익율', sortable: true, format: 'percent', profit_loss: true },
+                { key: '손익금액', label: '손익금액', sortable: true, format: 'number', profit_loss: true },
+                // { key: '대출일', label: '대출일', sortable: true },
                 // { key: '결제잔고', label: '결제잔고', sortable: true, format: 'number' },
                 // { key: '전일매수수량', label: '전일매수', format: 'number' },
                 // { key: '전일매도수량', label: '전일매도', format: 'number' },

@@ -35,7 +35,7 @@ const tttc8434r = {
     table: {
         data_key: 'output1',
         columns: [
-            { key: '상품번호', label: '종목코드', sortable: true, clickable: true, format: 'text' },
+            { key: '상품번호', label: '종목코드', sortable: true, clickable: true, format: 'text', align: 'left'},
             { key: '상품명', label: '종목명', sortable: true, clickable: true, format: 'text' },
             { key: '전일대비증감', label: '전일대비', sortable: true, format: 'comma', profit_loss: true },
             { key: '매입평균가격', label: '매입평단', sortable: true, format: 'comma' },
@@ -56,7 +56,7 @@ const tttc8434r = {
                 }
             },
             { key: '보유수량', label: '보유수량', sortable: true, format: 'comma' },
-            { key: '보유비중', label: '보유비중', sortable: true, format: 'percent' },
+            { key: '보유비중', label: '보유비중(%)', sortable: true, format: 'percent' },
             { key: '매입금액', label: '매입금액', sortable: true, format: 'comma' },
             { key: '평가금액', label: '평가금액', sortable: true, format: 'comma' },
             { key: '평가손익율', label: '손익율', sortable: true, format: 'percent', profit_loss: true },

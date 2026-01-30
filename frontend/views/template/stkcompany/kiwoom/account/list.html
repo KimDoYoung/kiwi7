@@ -523,7 +523,18 @@
             },
             //데이터를 가져온 후 처리
             registerCallbacks() {
+                this.addCallback((data) => {
+                    // debugger;
+                    let data_list = data?.종목별계좌평가현황 || [];
+                    let total_money =  Number(data?.총매입금액)
+                    for (let i = 0; i < data_list.length; i++) {
+                        let avgcost = Number(data_list[i]['평균단가']);
+                        let qty = Number(data_list[i]['보유수량']);
+                        data_list[i]['보유비중'] = parseFloat((avgcost * qty / total_money * 100).toFixed(2));
+                    }
+                });                
                 
+
                 //this.addCallback((data) => {
                 //    debugger;
                 //    let data_list = data?.output1 || [];
