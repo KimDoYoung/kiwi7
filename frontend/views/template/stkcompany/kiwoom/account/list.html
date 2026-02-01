@@ -110,24 +110,26 @@
                 <thead class="bg-base-200 font-bold text-base-content">
                     <tr>
                         <template x-for="column in getTableColumns()" :key="column.key">
-                            <th
-                                :class="(column.format === 'number' || column.format === 'profit' || column.format === 'comma' || column.format === 'percent') ? 'text-right' : 'text-center'">
+                            <th :class="getCellClass({}, column)" class="align-middle">
                                 <template x-if="column.sortable">
                                     <a href="#" @click.prevent="sortBy(column.key)"
-                                        class="no-underline text-base-content sortable-header flex items-center gap-1 justify-center"
-                                        :class="(column.format === 'number' || column.format === 'profit' || column.format === 'comma' || column.format === 'percent') ? 'justify-end' : 'justify-center'">
+                                        class="no-underline text-base-content sortable-header flex items-center gap-1"
+                                        :class="column.align === 'right' ? 'justify-end' : (column.align === 'center' ? 'justify-center' : 'justify-start')">
                                         <span x-text="column.label"></span>
                                         <span class="text-[10px]" x-show="sort_key === column.key"
                                             x-text="sort_asc ? '▲' : '▼'"></span>
                                     </a>
                                 </template>
                                 <template x-if="!column.sortable">
-                                    <span x-text="column.label"></span>
+                                    <div
+                                        :class="column.align === 'right' ? 'text-right' : (column.align === 'center' ? 'text-center' : 'text-left')">
+                                        <span x-text="column.label"></span>
+                                    </div>
                                 </template>
                             </th>
                         </template>
                         <template x-if="hasActionButtons()">
-                            <th>관리</th>
+                            <th class="text-center">관리</th>
                         </template>
                     </tr>
                 </thead>
@@ -142,17 +144,17 @@
                             </template>
                             <template x-if="hasActionButtons()">
                                 <td class="py-1">
-                                    <div class="join join-horizontal" role="group">
+                                    <div class="flex gap-1 justify-center" role="group">
                                         <template x-if="actions.includes('buy')">
-                                            <button type="button" class="btn btn-xs btn-error btn-outline join-item"
+                                            <button type="button" class="btn btn-xs btn-error btn-outline"
                                                 @click="buy(item)" title="매수">買</button>
                                         </template>
                                         <template x-if="actions.includes('sell')">
-                                            <button type="button" class="btn btn-xs btn-info btn-outline join-item"
+                                            <button type="button" class="btn btn-xs btn-info btn-outline"
                                                 @click="sell(item)" title="매도">賣</button>
                                         </template>
                                         <template x-if="actions.includes('detail')">
-                                            <button type="button" class="btn btn-xs btn-success btn-outline join-item"
+                                            <button type="button" class="btn btn-xs btn-success btn-outline"
                                                 @click="detail(item)" title="상세">詳</button>
                                         </template>
                                     </div>

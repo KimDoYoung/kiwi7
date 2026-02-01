@@ -90,6 +90,11 @@ window.createKiwi7Base = function createKiwi7Base(config, depends = {}) {
             return Number.isFinite(num) ? num.toFixed(2) : CONSTANTS.DEFAULT_EMPTY_VALUE;
         },
 
+        profit: (value) => {
+            // number와 동일하게 처리 (색상 처리는 getProfilClass에서 담당)
+            return formatters.number(value);
+        },
+
         text: (value) => {
             // 그대로 표시
             return dataUtils.isEmpty(value) ? CONSTANTS.DEFAULT_EMPTY_VALUE : String(value);
