@@ -4,41 +4,6 @@
 -->
 {% extends 'common/base.html' %}
 {% block style %}
-<style>
-    .spin {
-        animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
-
-        100% {
-            transform: rotate(360deg);
-        }
-    }
-
-    .clickable-cell {
-        cursor: pointer;
-    }
-
-    .clickable-cell:hover {
-        background-color: #f8f9fa;
-    }
-
-    .sortable-header {
-        cursor: pointer;
-    }
-
-    .sortable-header:hover {
-        background-color: #e9ecef;
-    }
-
-    [x-cloak] {
-        display: none !important;
-    }
-</style>
 {% endblock %}
 {% block content %}
 <div class="container mx-auto px-4 mt-4" x-data="t0424_component">

@@ -1,8 +1,48 @@
-.kiwoom-loading { opacity: 0.6; }
-.sortable-header { cursor: pointer; user-select: none; }
-.sortable-header:hover { background-color: #f8f9fa; }
-.clickable-cell { cursor: pointer;  }
-.clickable-cell:hover { background-color: #f0f0f0; color: #007bff; text-decoration: underline; }
+.kiwoom-loading {
+    opacity: 0.6;
+}
+
+/* Table Sorting & Interaction */
+.sortable-header {
+    cursor: pointer;
+    user-select: none;
+}
+
+.sortable-header:hover {
+    background-color: #e9ecef;
+}
+
+/* Standardized hover color */
+
+.clickable-cell {
+    cursor: pointer;
+}
+
+.clickable-cell:hover {
+    background-color: #f0f0f0;
+    color: #007bff;
+    text-decoration: underline;
+}
+
+/* Loading Spinner */
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Alpine.js Utility */
+[x-cloak] {
+    display: none !important;
+}
 
 .bg-buy {
     background-color: #efaaaa;
