@@ -54,7 +54,8 @@ const t0424 = {
             { key: '매입금액', label: '매입금액', sortable: true, format: 'number', profit_loss: true },
             { key: '평가금액', label: '평가금액', sortable: true, format: 'number', profit_loss: true },
             { key: '수익율', label: '손익율', sortable: true, format: 'percent', profit_loss: true },
-            { key: '평가손익', label: '손익금액', sortable: true, format: 'number' }
+            { key: '평가손익', label: '손익금액', sortable: true, format: 'number' },
+            { key: '가격추세', label: '최근추세', sortable: false }
         ]
     },
     auto_refresh: 0

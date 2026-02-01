@@ -135,8 +135,8 @@ class PrevPriceCache:
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-            cls._instance._cache: Dict[str, PriceData] = {}
-            cls._instance._last_update: Optional[datetime] = None
+            cls._instance._cache = {}
+            cls._instance._last_update = None
         return cls._instance
 
     async def get(self, stk_cd: str) -> Optional[PriceData]:

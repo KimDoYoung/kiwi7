@@ -67,7 +67,8 @@ const tttc8434r = {
             { key: '매입금액', label: '매입금액', sortable: true, format: 'comma' },
             { key: '평가금액', label: '평가금액', sortable: true, format: 'comma' },
             { key: '평가손익율', label: '손익율', sortable: true, format: 'percent', profit_loss: true },
-            { key: '평가손익금액', label: '손익금액', sortable: true, format: 'comma', profit_loss: true }
+            { key: '평가손익금액', label: '손익금액', sortable: true, format: 'comma', profit_loss: true },
+            { key: '가격추세', label: '최근추세', sortable: false }
         ]
     },
     auto_refresh: 0

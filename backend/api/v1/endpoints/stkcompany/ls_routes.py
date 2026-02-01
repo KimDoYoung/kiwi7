@@ -71,7 +71,9 @@ async def insert_prev_costs_ls(stock_list: list):
         if stk_cd and len(stk_cd) == 7 and stk_cd.startswith("A"):
             stk_cd = stk_cd[1:]
         price = await cache.get_last_price(stk_cd)
+        trend = await cache.get_last_trend(stk_cd)
         stock["전일종가"] = price if price else 0
+        stock["가격추세"] = trend if trend else "-"
 
 @router.get("/issue-new-token", response_model=LsResponse)
 async def issue_new_token():

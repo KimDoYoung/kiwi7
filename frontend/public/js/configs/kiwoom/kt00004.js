@@ -64,12 +64,7 @@ const kt00004 ={
                 { key: '평가금액', label: '평가금액', sortable: true, format: 'number' },
                 { key: '손익율', label: '손익율', sortable: true, format: 'percent', profit_loss: true },
                 { key: '손익금액', label: '손익금액', sortable: true, format: 'number', profit_loss: true },
-                // { key: '대출일', label: '대출일', sortable: true },
-                // { key: '결제잔고', label: '결제잔고', sortable: true, format: 'number' },
-                // { key: '전일매수수량', label: '전일매수', format: 'number' },
-                // { key: '전일매도수량', label: '전일매도', format: 'number' },
-                // { key: '금일매수수량', label: '금일매수', format: 'number' },
-                // { key: '금일매도수량', label: '금일매도', format: 'number' }
+                { key: '가격추세', label: '최근추세', sortable: false }
             ]
         },
         auto_refresh: 0 //0이면 자동 refresh 비활성화, 3000이면 3초
