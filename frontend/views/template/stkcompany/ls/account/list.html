@@ -85,34 +85,37 @@
     <div class="mt-4">
         <div class="mt-2 mb-2 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <select aria-label="손익율 필터" class="select select-bordered select-sm w-auto" x-model="profitFilter">
+                <select aria-label="손익율 필터" class="select select-bordered select-xs w-auto" x-model="profitFilter">
                     <option value="all">전체</option>
                     <option value="plus">+손익율</option>
                     <option value="minus">-손익율</option>
                 </select>
-                <div>종목갯수 : <span x-text="filtered_item_count"></span> / <span x-text="total_item_count"></span>
-                </div>
+                <div class="text-xs">종목 <span class="font-bold" x-text="filtered_item_count"></span> / <span
+                        x-text="total_item_count"></span></div>
             </div>
             <div class="flex gap-2">
-                <button class="btn btn-outline btn-success btn-sm" title="엑셀로 저장" @click="exportCSV()">
-                    <i class="bi bi-file-earmark-excel"></i>
+                <button class="btn btn-outline btn-success btn-xs" title="엑셀로 저장" @click="exportCSV()">
+                    <i class="bi bi-file-earmark-excel"></i> CSV
                 </button>
-                <button class="btn btn-outline btn-success btn-sm" title="My Stock에 저장" @click="addMyStock()">
-                    <i class="bi bi-plus-lg"></i>
+                <button class="btn btn-outline btn-success btn-xs" title="My Stock에 저장" @click="addMyStock()">
+                    <i class="bi bi-plus-lg"></i> My Stock
                 </button>
             </div>
         </div>
         <div class="overflow-x-auto">
-            <table class="table table-zebra table-hover text-center w-full">
-                <thead class="bg-base-200">
+            <table class="table table-xs table-pin-rows table-zebra text-center w-full">
+                <thead class="bg-base-200 font-bold text-base-content">
                     <tr>
                         <template x-for="column in getTableColumns()" :key="column.key">
-                            <th>
+                            <th
+                                :class="(column.format === 'number' || column.format === 'profit') ? 'text-right' : 'text-center'">
                                 <template x-if="column.sortable">
                                     <a href="#" @click.prevent="sortBy(column.key)"
-                                        class="no-underline text-base-content sortable-header">
+                                        class="no-underline text-base-content sortable-header flex items-center gap-1 justify-center"
+                                        :class="(column.format === 'number' || column.format === 'profit') ? 'justify-end' : 'justify-center'">
                                         <span x-text="column.label"></span>
-                                        <span x-show="sort_key === column.key" x-text="sort_asc ? '▲' : '▼'"></span>
+                                        <span class="text-[10px]" x-show="sort_key === column.key"
+                                            x-text="sort_asc ? '▲' : '▼'"></span>
                                     </a>
                                 </template>
                                 <template x-if="!column.sortable">
@@ -121,33 +124,33 @@
                             </th>
                         </template>
                         <template x-if="hasActionButtons()">
-                            <th>Actions</th>
+                            <th>관리</th>
                         </template>
                     </tr>
                 </thead>
                 <tbody x-show="data && !loading">
                     <template x-for="(item, index) in sorted_items" :key="item.종목번호 || index">
-                        <tr>
+                        <tr class="hover">
                             <template x-for="column in getTableColumns()" :key="column.key">
-                                <td x-text="getCellValue(item, column)"
-                                    :class="getCellClass(item, column) + (column.clickable ? ' clickable-cell' : '') + ((column.format === 'number' || column.format === 'profit') ? ' text-right' : '')"
-                                    @click="handleCellClick(item, column)">
+                                <td x-text="getCellValue(item, column)" class="py-1 px-2"
+                                    :class="getCellClass(item, column) + (column.clickable ? ' clickable-cell font-bold cursor-pointer hover:underline' : '') + ((column.format === 'number' || column.format === 'profit') ? ' text-right' : '')"
+                                    @click="column.clickable ? handleCellClick(item, column) : null">
                                 </td>
                             </template>
                             <template x-if="hasActionButtons()">
-                                <td>
-                                    <div class="join" role="group">
+                                <td class="py-1">
+                                    <div class="join join-horizontal" role="group">
                                         <template x-if="actions.includes('buy')">
-                                            <button type="button" class="btn btn-sm btn-error join-item"
-                                                @click="buy(item)" title="매수(buy)">買</button>
+                                            <button type="button" class="btn btn-xs btn-error btn-outline join-item"
+                                                @click="buy(item)" title="매수">買</button>
                                         </template>
                                         <template x-if="actions.includes('sell')">
-                                            <button type="button" class="btn btn-sm btn-info join-item"
-                                                @click="sell(item)" title="매도(sell)">賣</button>
+                                            <button type="button" class="btn btn-xs btn-info btn-outline join-item"
+                                                @click="sell(item)" title="매도">賣</button>
                                         </template>
                                         <template x-if="actions.includes('detail')">
-                                            <button type="button" class="btn btn-sm btn-success join-item"
-                                                @click="detail(item)" title="종목상세(detail info)">詳</button>
+                                            <button type="button" class="btn btn-xs btn-success btn-outline join-item"
+                                                @click="detail(item)" title="상세">詳</button>
                                         </template>
                                     </div>
                                 </td>
@@ -157,14 +160,16 @@
                 </tbody>
                 <tbody x-show="loading">
                     <tr>
-                        <td :colspan="getTableColumns().length" class="text-center py-4">
-                            <i class="bi bi-arrow-clockwise spin"></i> 데이터를 불러오는 중...
+                        <td :colspan="getTableColumns().length + 1" class="text-center py-10">
+                            <span class="loading loading-spinner loading-md text-primary"></span>
+                            <div class="mt-2 text-xs">데이터를 불러오는 중...</div>
                         </td>
                     </tr>
                 </tbody>
                 <tbody x-show="!loading && (!data || sorted_items.length === 0)">
                     <tr>
-                        <td :colspan="getTableColumns().length" class="text-center py-4 text-base-content/50">
+                        <td :colspan="getTableColumns().length + 1" class="text-center py-10 text-base-content/50">
+                            <i class="bi bi-inbox text-4xl block mb-2"></i>
                             표시할 데이터가 없습니다.
                         </td>
                     </tr>
@@ -367,8 +372,8 @@
 
             // === 유틸리티 메서드 ===
             formatClass(value) {
-                if (value > 0) return 'text-red-500';
-                if (value < 0) return 'text-blue-500';
+                if (value > 0) return 'text-red-600';
+                if (value < 0) return 'text-blue-600';
                 return '';
             },
             addMyStock() {

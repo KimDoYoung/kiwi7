@@ -88,34 +88,37 @@
     <div class="mt-4">
         <div class="mt-2 mb-2 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <select aria-label="손익율 필터" class="select select-bordered select-sm w-auto" x-model="profitFilter">
+                <select aria-label="손익율 필터" class="select select-bordered select-xs w-auto" x-model="profitFilter">
                     <option value="all">전체</option>
                     <option value="plus">+손익율</option>
                     <option value="minus">-손익율</option>
                 </select>
-                <div>종목갯수 : <span x-text="filtered_item_count"></span> / <span x-text="total_item_count"></span>
-                </div>
+                <div class="text-xs">종목 <span x-text="filtered_item_count" class="font-bold"></span> / <span
+                        x-text="total_item_count"></span></div>
             </div>
             <div class="flex gap-2">
-                <button class="btn btn-outline btn-success btn-sm" title="엑셀로 저장" @click="exportCSV()">
-                    <i class="bi bi-file-earmark-excel"></i>
+                <button class="btn btn-outline btn-success btn-xs" title="엑셀로 저장" @click="exportCSV()">
+                    <i class="bi bi-file-earmark-excel"></i> CSV
                 </button>
-                <button class="btn btn-outline btn-success btn-sm" title="My Stock에 저장" @click="addMyStock()">
-                    <i class="bi bi-plus-lg"></i>
+                <button class="btn btn-outline btn-success btn-xs" title="My Stock에 저장" @click="addMyStock()">
+                    <i class="bi bi-plus-lg"></i> My Stock
                 </button>
             </div>
         </div>
         <div class="overflow-x-auto">
-            <table class="table table-zebra table-hover text-center w-full">
-                <thead class="bg-base-200">
+            <table class="table table-xs table-pin-rows table-zebra text-center w-full">
+                <thead class="bg-base-200 font-bold text-base-content">
                     <tr>
                         <template x-for="column in getTableColumns()" :key="column.key">
-                            <th>
+                            <th
+                                :class="(column.format === 'number' || column.format === 'profit' || column.format === 'comma' || column.format === 'percent') ? 'text-right' : 'text-center'">
                                 <template x-if="column.sortable">
                                     <a href="#" @click.prevent="sortBy(column.key)"
-                                        class="no-underline text-base-content sortable-header">
+                                        class="no-underline text-base-content sortable-header flex items-center gap-1 justify-center"
+                                        :class="(column.format === 'number' || column.format === 'profit' || column.format === 'comma' || column.format === 'percent') ? 'justify-end' : 'justify-center'">
                                         <span x-text="column.label"></span>
-                                        <span x-show="sort_key === column.key" x-text="sort_asc ? '▲' : '▼'"></span>
+                                        <span class="text-[10px]" x-show="sort_key === column.key"
+                                            x-text="sort_asc ? '▲' : '▼'"></span>
                                     </a>
                                 </template>
                                 <template x-if="!column.sortable">
@@ -124,33 +127,33 @@
                             </th>
                         </template>
                         <template x-if="hasActionButtons()">
-                            <th>Actions</th>
+                            <th>관리</th>
                         </template>
                     </tr>
                 </thead>
                 <tbody x-show="data && !loading">
                     <template x-for="item in sorted_items" :key="item.종목코드">
-                        <tr>
+                        <tr class="hover">
                             <template x-for="column in getTableColumns()" :key="column.key">
-                                <td x-text="getCellValue(item, column)"
-                                    :class="getCellClass(item, column) + (column.clickable ? ' clickable-cell' : '') + ((column.format === 'number' || column.format === 'profit') ? ' text-right' : '')"
-                                    @click="handleCellClick(item, column)">
+                                <td x-text="getCellValue(item, column)" class="py-1 px-2"
+                                    :class="getCellClass(item, column) + (column.clickable ? ' clickable-cell font-bold cursor-pointer hover:underline' : '') + ((column.format === 'number' || column.format === 'profit') ? ' text-right' : '')"
+                                    @click="column.clickable ? handleCellClick(item, column) : null">
                                 </td>
                             </template>
                             <template x-if="hasActionButtons()">
-                                <td>
-                                    <div class="join" role="group">
+                                <td class="py-1">
+                                    <div class="join join-horizontal" role="group">
                                         <template x-if="actions.includes('buy')">
-                                            <button type="button" class="btn btn-sm btn-error join-item"
-                                                @click="buy(item)" title="매수(buy)">買</button>
+                                            <button type="button" class="btn btn-xs btn-error btn-outline join-item"
+                                                @click="buy(item)" title="매수">買</button>
                                         </template>
                                         <template x-if="actions.includes('sell')">
-                                            <button type="button" class="btn btn-sm btn-info join-item"
-                                                @click="sell(item)" title="매도(sell)">賣</button>
+                                            <button type="button" class="btn btn-xs btn-info btn-outline join-item"
+                                                @click="sell(item)" title="매도">賣</button>
                                         </template>
                                         <template x-if="actions.includes('detail')">
-                                            <button type="button" class="btn btn-sm btn-success join-item"
-                                                @click="detail(item)" title="종목상세(detail info)">詳</button>
+                                            <button type="button" class="btn btn-xs btn-success btn-outline join-item"
+                                                @click="detail(item)" title="상세">詳</button>
                                         </template>
                                     </div>
                                 </td>
@@ -160,14 +163,16 @@
                 </tbody>
                 <tbody x-show="loading">
                     <tr>
-                        <td :colspan="getTableColumns().length" class="text-center py-4">
-                            <i class="bi bi-arrow-clockwise spin"></i> 데이터를 불러오는 중...
+                        <td :colspan="getTableColumns().length + 1" class="text-center py-10">
+                            <span class="loading loading-spinner loading-md text-primary"></span>
+                            <div class="mt-2 text-xs">데이터를 불러오는 중...</div>
                         </td>
                     </tr>
                 </tbody>
                 <tbody x-show="!loading && (!data || sorted_items.length === 0)">
                     <tr>
-                        <td :colspan="getTableColumns().length" class="text-center py-4 text-base-content/50">
+                        <td :colspan="getTableColumns().length + 1" class="text-center py-10 text-base-content/50">
+                            <i class="bi bi-inbox text-4xl block mb-2"></i>
                             표시할 데이터가 없습니다.
                         </td>
                     </tr>
@@ -175,27 +180,26 @@
             </table>
         </div>
     </div>
-    <!-- 데이터 테이블 끝-->
 </div>
 <div class="container mx-auto px-4 mt-4" x-data="ka10075_component">
     <!-- 미체결 주문: 데이터 있을 때만 전체 영역 표시 -->
     <template x-if="items.length > 0">
         <div>
             <div class="flex justify-between items-center mb-3">
-                <h5 x-text="title" class="mb-0 text-lg font-bold"></h5>
+                <h5 x-text="title" class="mb-0 text-sm font-bold text-base-content/80"></h5>
                 <div class="flex items-center gap-2">
-                    <small class="text-base-content/70">총 <span x-text="items.length"></span>건</small>
-                    <button class="btn btn-outline btn-primary btn-sm" @click="fetchData()" :disabled="loading">
+                    <small class="text-base-content/70 text-xs">총 <span x-text="items.length"></span>건</small>
+                    <button class="btn btn-outline btn-primary btn-xs" @click="fetchData()" :disabled="loading">
                         <i class="bi bi-arrow-clockwise" :class="{'spin': loading}"></i> 새로고침
                     </button>
                 </div>
             </div>
-            <div x-show="loading" class="text-center py-4">
+            <div x-show="loading" class="text-center py-4 text-xs">
                 <i class="bi bi-arrow-clockwise spin"></i> 미체결 데이터를 불러오는 중...
             </div>
             <div x-show="!loading && items.length > 0" class="overflow-x-auto">
-                <table class="table table-zebra table-hover text-center w-full">
-                    <thead class="bg-base-200">
+                <table class="table table-xs table-pin-rows table-zebra text-center w-full">
+                    <thead class="bg-base-200 font-bold text-base-content">
                         <tr>
                             <th>시간</th>
                             <th>종목명</th>
@@ -206,16 +210,16 @@
                             <th>현재가</th>
                             <th>주문상태</th>
                             <th>거래소</th>
-                            <th>Actions</th>
+                            <th>관리</th>
                         </tr>
                     </thead>
                     <tbody>
                         <template x-for="item in items" :key="item.주문번호">
-                            <tr>
+                            <tr class="hover">
                                 <td x-text="formatTime(item.시간)"></td>
-                                <td x-text="item.종목명" class="text-left"></td>
+                                <td x-text="item.종목명" class="text-left font-bold"></td>
                                 <td>
-                                    <span :class="item.주문구분.includes('매수') ? 'text-red-500' : 'text-blue-500'"
+                                    <span :class="item.주문구분.includes('매수') ? 'text-red-600' : 'text-blue-600'"
                                         x-text="item.주문구분"></span>
                                 </td>
                                 <td x-text="Number(item.주문가격).toLocaleString() + '원'" class="text-right"></td>
@@ -226,17 +230,18 @@
                                     <span :class="getPriceClass(item.현재가)" x-text="formatPriceText(item.현재가)"></span>
                                 </td>
                                 <td>
-                                    <span :class="item.주문상태 === '접수' ? 'badge badge-info' : 'badge badge-ghost'"
+                                    <span
+                                        :class="item.주문상태 === '접수' ? 'badge badge-info badge-xs' : 'badge badge-ghost badge-xs'"
                                         x-text="item.주문상태"></span>
                                 </td>
                                 <td x-text="item.거래소구분텍스트"></td>
-                                <td>
-                                    <div class="join" role="group">
-                                        <button type="button" class="btn btn-sm btn-outline btn-error join-item"
+                                <td class="py-1">
+                                    <div class="join join-horizontal" role="group">
+                                        <button type="button" class="btn btn-xs btn-outline btn-error join-item"
                                             @click="cancelOrder(item)" title="주문취소">취소</button>
-                                        <button type="button" class="btn btn-sm btn-outline btn-info join-item"
+                                        <button type="button" class="btn btn-xs btn-outline btn-info join-item"
                                             @click="modifyOrder(item)" title="주문수정">수정</button>
-                                        <button type="button" class="btn btn-sm btn-outline btn-success join-item"
+                                        <button type="button" class="btn btn-xs btn-outline btn-success join-item"
                                             @click="showDetail(item)" title="상세정보">詳</button>
                                     </div>
                                 </td>
@@ -254,20 +259,20 @@
     <template x-if="items.length > 0">
         <div>
             <div class="flex justify-between items-center mb-3">
-                <h5 x-text="title" class="mb-0 text-lg font-bold"></h5>
+                <h5 x-text="title" class="mb-0 text-sm font-bold text-base-content/80"></h5>
                 <div class="flex items-center gap-2">
-                    <small class="text-base-content/70">총 <span x-text="items.length"></span>건</small>
-                    <button class="btn btn-outline btn-primary btn-sm" @click="fetchData()" :disabled="loading">
+                    <small class="text-base-content/70 text-xs">총 <span x-text="items.length"></span>건</small>
+                    <button class="btn btn-outline btn-primary btn-xs" @click="fetchData()" :disabled="loading">
                         <i class="bi bi-arrow-clockwise" :class="{'spin': loading}"></i> 새로고침
                     </button>
                 </div>
             </div>
-            <div x-show="loading" class="text-center py-4">
+            <div x-show="loading" class="text-center py-4 text-xs">
                 <i class="bi bi-arrow-clockwise spin"></i> 체결 데이터를 불러오는 중...
             </div>
             <div x-show="!loading && items.length > 0" class="overflow-x-auto">
-                <table class="table table-zebra table-hover text-center w-full">
-                    <thead class="bg-base-200">
+                <table class="table table-xs table-pin-rows table-zebra text-center w-full">
+                    <thead class="bg-base-200 font-bold text-base-content">
                         <tr>
                             <th>주문시간</th>
                             <th>종목명</th>
@@ -286,11 +291,11 @@
                     </thead>
                     <tbody>
                         <template x-for="item in items" :key="item.주문번호">
-                            <tr>
+                            <tr class="hover">
                                 <td x-text="formatTime(item.주문시간)"></td>
-                                <td x-text="item.종목명" class="text-left"></td>
+                                <td x-text="item.종목명" class="text-left font-bold"></td>
                                 <td>
-                                    <span :class="item.주문구분.includes('매수') ? 'text-red-500' : 'text-blue-500'"
+                                    <span :class="item.주문구분.includes('매수') ? 'text-red-600' : 'text-blue-600'"
                                         x-text="item.주문구분"></span>
                                 </td>
                                 <td x-text="item.매매구분"></td>
@@ -301,14 +306,14 @@
                                     class="text-right font-bold text-success"></td>
                                 <td x-text="Number(item.주문수량).toLocaleString() + '주'" class="text-right"></td>
                                 <td x-text="Number(item.체결량).toLocaleString() + '주'"
-                                    class="text-right font-bold text-blue-500"></td>
+                                    class="text-right font-bold text-blue-600"></td>
                                 <td x-text="Number(item.미체결수량).toLocaleString() + '주'" class="text-right"></td>
                                 <td x-text="Number(item.당일매매수수료).toLocaleString() + '원'"
                                     class="text-right text-base-content/60"></td>
                                 <td x-text="Number(item.당일매매세금).toLocaleString() + '원'"
                                     class="text-right text-base-content/60"></td>
                                 <td>
-                                    <span class="badge badge-success" x-text="item.주문상태"></span>
+                                    <span class="badge badge-success badge-xs" x-text="item.주문상태"></span>
                                 </td>
                                 <td x-text="item.거래소구분텍스트"></td>
                             </tr>
@@ -526,14 +531,14 @@
                 this.addCallback((data) => {
                     // debugger;
                     let data_list = data?.종목별계좌평가현황 || [];
-                    let total_money =  Number(data?.총매입금액)
+                    let total_money = Number(data?.총매입금액)
                     for (let i = 0; i < data_list.length; i++) {
                         let avgcost = Number(data_list[i]['평균단가']);
                         let qty = Number(data_list[i]['보유수량']);
                         data_list[i]['보유비중'] = parseFloat((avgcost * qty / total_money * 100).toFixed(2));
                     }
-                });                
-                
+                });
+
 
                 //this.addCallback((data) => {
                 //    debugger;
@@ -625,8 +630,8 @@
 
             // === 유틸리티 메서드 ===
             formatClass(value) {
-                if (value > 0) return 'text-red-500';
-                if (value < 0) return 'text-blue-500';
+                if (value > 0) return 'text-red-600';
+                if (value < 0) return 'text-blue-600';
                 return '';
             },
             addMyStock() {
@@ -727,7 +732,7 @@
                 if (!priceStr) return '';
                 // 원래 값이 음수였다면 파란색, 양수면 빨간색
                 const isNegative = priceStr.toString().startsWith('-');
-                return isNegative ? 'text-blue-500' : 'text-red-500';
+                return isNegative ? 'text-blue-600' : 'text-red-600';
             },
 
             cancelOrder(item) {
@@ -787,7 +792,7 @@
                 document.getElementById('modal-stock-name').textContent = item.종목명;
                 document.getElementById('modal-stock-code').textContent = item.종목코드;
                 document.getElementById('modal-order-type').innerHTML =
-                    `<span class="${item.주문구분.includes('매수') ? 'text-red-500' : 'text-blue-500'}">${item.주문구분}</span>`;
+                    `<span class="${item.주문구분.includes('매수') ? 'text-red-600' : 'text-blue-600'}">${item.주문구분}</span>`;
                 document.getElementById('modal-trade-type').textContent = item.매매구분;
                 document.getElementById('modal-order-price').textContent = Number(item.주문가격).toLocaleString() + '원';
                 document.getElementById('modal-order-qty').textContent = Number(item.주문수량).toLocaleString() + '주';
@@ -800,9 +805,9 @@
                 currentPriceElement.innerHTML = `<span class="${priceClass}">${this.formatPriceText(item.현재가)}</span>`;
 
                 document.getElementById('modal-buy-price').innerHTML =
-                    `<span class="text-red-500">${this.formatPriceText(item.매수호가)}</span>`;
+                    `<span class="text-red-600">${this.formatPriceText(item.매수호가)}</span>`;
                 document.getElementById('modal-sell-price').innerHTML =
-                    `<span class="text-blue-500">${this.formatPriceText(item.매도호가)}</span>`;
+                    `<span class="text-blue-600">${this.formatPriceText(item.매도호가)}</span>`;
                 document.getElementById('modal-order-status').innerHTML =
                     `<span class="${item.주문상태 === '접수' ? 'badge badge-info' : 'badge badge-ghost'}">${item.주문상태}</span>`;
                 document.getElementById('modal-order-time').textContent = this.formatTime(item.시간);
