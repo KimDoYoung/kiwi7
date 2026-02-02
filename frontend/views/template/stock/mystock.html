@@ -1,578 +1,619 @@
 {% extends 'common/base.html' %}
 {% block style %}
 <style>
-.stock-delete-btn:hover {
-    opacity: 1 !important;
-}
-.table th {
-    border-top: none;
-}
-.stock-row:hover {
-    background-color: var(--bs-gray-100);
-}
-.sortable {
-    cursor: pointer;
-    user-select: none;
-    position: relative;
-}
-.sortable:hover {
-    background-color: var(--bs-gray-200);
-}
-.sortable .bi {
-    font-size: 0.8rem;
-    margin-left: 4px;
-    opacity: 0.5;
-}
-.sortable.active .bi {
-    opacity: 1;
-}
-.clickable-cell {
-    cursor: pointer;
-    text-decoration: underline;
-}
-.clickable-cell:hover {
-    background-color: var(--bs-gray-100);
-}
+    /* Custom scrollbar for table container if needed */
+    .custom-scrollbar::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
 </style>
 {% endblock %}
 {% block content %}
-<div x-data="my_stock" class="container mt-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3><i class="bi bi-heart-fill text-warning me-2"></i>내 관심 종목</h3>
+<div x-data="my_stock" class="container mx-auto px-4 py-6 max-w-7xl" x-cloak>
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+        <h3 class="text-2xl font-bold flex items-center gap-3 text-slate-800">
+            <div class="w-10 h-10 rounded-xl bg-[#c8f097] flex items-center justify-center shadow-sm">
+                <i class="bi bi-heart-fill text-[#5c7c32] text-xl"></i>
             </div>
+            내 관심 종목
+        </h3>
+        <div class="flex items-center gap-2">
+            <span class="badge badge-lg bg-white border-slate-200 shadow-sm gap-2 py-3 px-4">
+                <span class="text-slate-500 text-sm">총 종목</span>
+                <span class="font-bold text-slate-800" x-text="filteredStocks.length + '개'"></span>
+            </span>
+        </div>
+    </div>
 
-            <!-- 필터 영역 -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="row g-3 align-items-center">
-                        <!-- 구분 필터 (체크박스) -->
-                        <div class="col-auto">
-                            <label class="form-label fw-bold">구분 필터:</label>
-                        </div>
-                        <div class="col-auto">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="filterHold" x-model="filters.showHold">
-                                <label class="form-check-label" for="filterHold">
-                                    <i class="bi bi-wallet-fill text-success me-1"></i>보유
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="filterWatch" x-model="filters.showWatch">
-                                <label class="form-check-label" for="filterWatch">
-                                    <i class="bi bi-heart-fill text-warning me-1"></i>관심
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <!-- 종목명 검색 -->
-                        <div class="col-md-4">
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-search"></i></span>
-                                <input type="text" class="form-control" placeholder="종목명으로 검색..." 
-                                       x-model="filters.searchText">
-                            </div>
-                        </div>
-                        
-                        <!-- 요약보기 스위치 -->
-                        <div class="col-auto">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="showSummary" x-model="showSummary">
-                                <label class="form-check-label fw-bold" for="showSummary">요약보기</label>
-                            </div>
-                        </div>
-                        
-                        <!-- 자동 새로고침 스위치 -->
-                        <div class="col-auto">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="autoRefresh" x-model="autoRefresh">
-                                <label class="form-check-label fw-bold" for="autoRefresh">
-                                    자동 새로고침 
-                                    <span x-show="!autoRefresh" class="badge bg-secondary ms-1">30초</span>
-                                    <span x-show="autoRefresh" 
-                                          :class="`badge ms-1 ${countdown <= 5 ? 'bg-warning' : 'bg-primary'}`" 
-                                          x-text="`${countdown}초`"></span>
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <!-- 결과 요약 -->
-                        <div class="col-auto ms-auto">
-                            <span class="badge bg-primary" x-text="`총 ${filteredStocks.length}개`"></span>
-                        </div>
+    <!-- Filter & Controls Card -->
+    <div class="card bg-white shadow-lg border border-slate-100 mb-8 overflow-visible">
+        <div class="card-body p-5">
+            <div class="flex flex-wrap items-center gap-6">
+                <!-- 구분 필터 -->
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Type Filter</label>
+                    <div class="flex gap-3">
+                        <label class="cursor-pointer flex items-center gap-2 group">
+                            <input type="checkbox" class="checkbox checkbox-sm checkbox-success rounded-md"
+                                x-model="filters.showHold">
+                            <span class="text-sm font-medium group-hover:text-success transition-colors"><i
+                                    class="bi bi-wallet-fill text-success mr-1"></i>보유</span>
+                        </label>
+                        <label class="cursor-pointer flex items-center gap-2 group">
+                            <input type="checkbox" class="checkbox checkbox-sm checkbox-warning rounded-md"
+                                x-model="filters.showWatch">
+                            <span class="text-sm font-medium group-hover:text-warning transition-colors"><i
+                                    class="bi bi-heart-fill text-warning mr-1"></i>관심</span>
+                        </label>
                     </div>
                 </div>
-            </div>
 
-            <!-- 요약 정보 (스위치 ON일 때만 표시) -->
-            <div x-show="showSummary && !loading && data && data.list && data.list.length > 0" class="card mb-4">
-                <div class="card-header">
-                    <h6 class="mb-0"><i class="bi bi-bar-chart text-primary me-2"></i>요약 정보</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row text-center">
-                        <div class="col-6 col-md-3">
-                            <div class="border-end">
-                                <h4 class="text-primary mb-1" x-text="data && data.list ? data.list.length : 0"></h4>
-                                <small class="text-muted">전체 종목</small>
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <div class="border-end">
-                                <h4 class="text-info mb-1" x-text="filteredStocks.length"></h4>
-                                <small class="text-muted">필터된 종목</small>
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <div class="border-end">
-                                <h4 class="text-success mb-1" x-text="getHoldCount()"></h4>
-                                <small class="text-muted">보유 종목</small>
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <div>
-                                <h4 class="text-warning mb-1" x-text="getWatchCount()"></h4>
-                                <small class="text-muted">관심 종목</small>
-                            </div>
-                        </div>
+                <div class="w-px h-10 bg-slate-100 hidden md:block"></div>
+
+                <!-- 검색 -->
+                <div class="flex-1 min-w-[200px]">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Search</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"><i
+                                class="bi bi-search"></i></span>
+                        <input type="text"
+                            class="input input-sm input-bordered w-full pl-9 focus:input-success focus:border-success bg-slate-50 border-slate-200 rounded-lg"
+                            placeholder="종목명 검색..." x-model="filters.searchText">
                     </div>
                 </div>
-            </div>
 
-            <!-- 로딩 표시 -->
-            <div x-show="loading" class="text-center py-4">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
+                <div class="w-px h-10 bg-slate-100 hidden md:block"></div>
+
+                <!-- 옵션 -->
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Options</label>
+                    <div class="flex gap-4">
+                        <div class="form-control">
+                            <label class="label cursor-pointer p-0 gap-2">
+                                <span class="label-text text-sm font-medium">요약보기</span>
+                                <input type="checkbox" class="toggle toggle-sm toggle-success" x-model="showSummary">
+                            </label>
+                        </div>
+                        <div class="form-control">
+                            <label class="label cursor-pointer p-0 gap-2">
+                                <span class="label-text text-sm font-medium">자동갱신</span>
+                                <input type="checkbox" class="toggle toggle-sm toggle-success" x-model="autoRefresh">
+                            </label>
+                        </div>
+                        <span x-show="autoRefresh" class="badge badge-sm"
+                            :class="countdown <= 5 ? 'badge-warning' : 'badge-ghost'" x-text="countdown + '초'"></span>
+                    </div>
                 </div>
-                <p class="mt-2">데이터를 불러오는 중...</p>
-            </div>
-
-            <!-- 데이터가 없는 경우 -->
-            <div x-show="!loading && (!data || !data.list || filteredStocks.length === 0)" class="text-center py-5">
-                <i class="bi bi-heart text-muted" style="font-size: 3rem;"></i>
-                <h5 class="text-muted mt-3">
-                    <span x-show="!data || !data.list || (data && data.list && data.list.length === 0)">등록된 관심 종목이 없습니다</span>
-                    <span x-show="data && data.list && data.list.length > 0 && filteredStocks.length === 0">검색 조건에 맞는 종목이 없습니다</span>
-                </h5>
-                <p class="text-muted">
-                    <span x-show="!data || !data.list || (data && data.list && data.list.length === 0)">주식 검색에서 관심 종목을 추가해보세요.</span>
-                    <span x-show="data && data.list && data.list.length > 0 && filteredStocks.length === 0">다른 검색어나 필터를 시도해보세요.</span>
-                </p>
-            </div>
-
-            <!-- 데이터 테이블 -->
-            <div x-show="!loading && data && data.list && filteredStocks.length > 0" class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="table-light">
-                        <tr>
-                            <th style="width: 80px;">번호</th>
-                            <th style="width: 120px;" class="sortable" @click="sortBy('종목코드')">
-                                종목코드 
-                                <i class="bi" :class="getSortIcon('종목코드')"></i>
-                            </th>
-                            <th class="sortable" @click="sortBy('종목명')">
-                                종목명 
-                                <i class="bi" :class="getSortIcon('종목명')"></i>
-                            </th>
-                            <th style="width: 100px;" class="text-end sortable" @click="sortBy('현재가')">
-                                현재가 
-                                <i class="bi" :class="getSortIcon('현재가')"></i>
-                            </th>
-                            <th style="width: 100px;" class="text-end sortable" @click="sortBy('전일대비')">
-                                등락폭 
-                                <i class="bi" :class="getSortIcon('전일대비')"></i>
-                            </th>
-                            <th style="width: 80px;" class="text-end sortable" @click="sortBy('등락율')">
-                                등락율 
-                                <i class="bi" :class="getSortIcon('등락율')"></i>
-                            </th>
-                            <th style="width: 80px;" class="text-center">구분</th>
-                            <th style="width: 80px;" class="text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <template x-for="(stock, index) in filteredStocks" :key="stock.종목코드">
-                            <tr class="stock-row">
-                                <td x-text="index + 1" class="text-muted"></td>
-                                <td>
-                                    <code x-text="stock.종목코드" class="text-primary clickable-cell" 
-                                          @click="openNaverPage(stock.종목코드)" 
-                                          title="네이버 페이지 열기"></code>
-                                </td>
-                                <td>
-                                    <strong x-text="stock.종목명" class="clickable-cell" 
-                                            @click="showStockDetail(stock)" 
-                                            title="상세 정보 보기"></strong>
-                                </td>
-                                <td class="text-end">
-                                    <span :class="getStockColorClass(stock.대비기호)" x-text="formatPrice(stock.현재가)"></span>
-                                </td>
-                                <td class="text-end">
-                                    <span :class="getStockColorClass(stock.대비기호)" x-text="formatStockDiff(stock.전일대비, stock.대비기호)"></span>
-                                </td>
-                                <td class="text-end">
-                                    <span :class="getStockColorClass(stock.대비기호)" x-text="formatRateOnly(stock.등락율, stock.대비기호) + '%'"></span>
-                                </td>
-                                <td class="text-center">
-                                    <div class="d-flex justify-content-center gap-1">
-                                        <i x-show="stock.is_hold == 1" 
-                                           class="bi bi-wallet-fill text-success" 
-                                           title="보유 종목"></i>
-                                        <i x-show="stock.is_watch == 1" 
-                                           class="bi bi-heart-fill text-warning" 
-                                           title="관심 종목"></i>
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-sm btn-danger" @click="buy(stock)" title="매수">買</button>
-                                        <button type="button" 
-                                                class="btn btn-sm" 
-                                                :class="stock.is_hold == 1 ? 'btn-primary' : 'btn-secondary'"
-                                                :disabled="stock.is_hold != 1"
-                                                @click="sell(stock)" 
-                                                :title="stock.is_hold == 1 ? '매도' : '보유하지 않은 종목 (매도 불가)'">賣</button>
-                                        <button type="button" class="btn btn-sm btn-info" @click="detail(stock)" title="상세">詳</button>
-                                        <button class="btn btn-sm btn-outline-danger stock-delete-btn"
-                                                @click="deleteStock(stock.종목코드, stock.종목명)"
-                                                title="삭제"
-                                                style="opacity: 0.7;">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </template>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
+
+    <!-- Summary Stats (Conditional) -->
+    <div x-show="showSummary && !loading && data && data.list && data.list.length > 0"
+        x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2"
+        x-transition:enter-end="opacity-100 translate-y-0" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+
+        <div class="stat bg-white shadow-md rounded-xl border border-slate-100 p-4">
+            <div class="stat-figure text-primary/20">
+                <i class="bi bi-list-ul text-4xl"></i>
+            </div>
+            <div class="stat-title text-slate-500 font-medium">전체 종목</div>
+            <div class="stat-value text-primary text-3xl" x-text="data && data.list ? data.list.length : 0"></div>
+            <div class="stat-desc text-slate-400">Total Stocks</div>
+        </div>
+
+        <div class="stat bg-white shadow-md rounded-xl border border-slate-100 p-4">
+            <div class="stat-figure text-info/20">
+                <i class="bi bi-funnel-fill text-4xl"></i>
+            </div>
+            <div class="stat-title text-slate-500 font-medium">필터된 종목</div>
+            <div class="stat-value text-info text-3xl" x-text="filteredStocks.length"></div>
+            <div class="stat-desc text-slate-400">Filtered Result</div>
+        </div>
+
+        <div class="stat bg-white shadow-md rounded-xl border border-slate-100 p-4">
+            <div class="stat-figure text-success/20">
+                <i class="bi bi-wallet-fill text-4xl"></i>
+            </div>
+            <div class="stat-title text-slate-500 font-medium">보유 종목</div>
+            <div class="stat-value text-success text-3xl" x-text="getHoldCount()"></div>
+            <div class="stat-desc text-slate-400">Holding</div>
+        </div>
+
+        <div class="stat bg-white shadow-md rounded-xl border border-slate-100 p-4">
+            <div class="stat-figure text-warning/20">
+                <i class="bi bi-heart-fill text-4xl"></i>
+            </div>
+            <div class="stat-title text-slate-500 font-medium">관심 종목</div>
+            <div class="stat-value text-warning text-3xl" x-text="getWatchCount()"></div>
+            <div class="stat-desc text-slate-400">Watching</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden min-h-[400px]">
+
+        <!-- Loading State -->
+        <div x-show="loading" class="flex flex-col items-center justify-center py-20">
+            <span class="loading loading-spinner loading-lg text-success mb-4"></span>
+            <p class="text-slate-500 animate-pulse font-medium">데이터를 불러오는 중입니다...</p>
+        </div>
+
+        <!-- Empty State -->
+        <div x-show="!loading && (!data || !data.list || filteredStocks.length === 0)"
+            class="flex flex-col items-center justify-center py-20 text-center">
+            <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-6">
+                <i class="bi bi-inbox text-4xl text-slate-300"></i>
+            </div>
+            <h5 class="text-lg font-bold text-slate-700 mb-2">
+                <span x-show="!data || !data.list || (data && data.list && data.list.length === 0)">등록된 관심 종목이
+                    없습니다</span>
+                <span x-show="data && data.list && data.list.length > 0 && filteredStocks.length === 0">검색 조건에 맞는 종목이
+                    없습니다</span>
+            </h5>
+            <p class="text-slate-500 max-w-sm">
+                <span x-show="!data || !data.list || (data && data.list && data.list.length === 0)">주식 찾기 메뉴에서 마음에 드는
+                    종목을 추가해보세요.</span>
+                <span x-show="data && data.list && data.list.length > 0 && filteredStocks.length === 0">필터 조건을 변경하거나
+                    검색어를 수정해보세요.</span>
+            </p>
+        </div>
+
+        <!-- Data Table -->
+        <div x-show="!loading && data && data.list && filteredStocks.length > 0"
+            class="overflow-x-auto custom-scrollbar">
+            <table class="table w-full">
+                <thead
+                    class="bg-slate-50 text-slate-500 text-sm font-bold uppercase sticky top-0 z-10 border-b border-gray-200">
+                    <tr>
+                        <th class="w-16 text-center py-4 bg-slate-50">#</th>
+                        <th class="cursor-pointer hover:bg-slate-100 transition-colors py-4 bg-slate-50"
+                            @click="sortBy('종목코드')">
+                            <div class="flex items-center gap-1 justify-center">
+                                종목코드
+                                <i class="bi text-xs" :class="getSortIcon('종목코드')"></i>
+                            </div>
+                        </th>
+                        <th class="cursor-pointer hover:bg-slate-100 transition-colors py-4 bg-slate-50 text-left pl-6"
+                            @click="sortBy('종목명')">
+                            <div class="flex items-center gap-1">
+                                종목명
+                                <i class="bi text-xs" :class="getSortIcon('종목명')"></i>
+                            </div>
+                        </th>
+                        <th class="cursor-pointer hover:bg-slate-100 transition-colors text-right py-4 bg-slate-50"
+                            @click="sortBy('현재가')">
+                            <div class="flex items-center gap-1 justify-end">
+                                현재가
+                                <i class="bi text-xs" :class="getSortIcon('현재가')"></i>
+                            </div>
+                        </th>
+                        <th class="cursor-pointer hover:bg-slate-100 transition-colors text-right py-4 bg-slate-50"
+                            @click="sortBy('전일대비')">
+                            <div class="flex items-center gap-1 justify-end">
+                                등락폭
+                                <i class="bi text-xs" :class="getSortIcon('전일대비')"></i>
+                            </div>
+                        </th>
+                        <th class="cursor-pointer hover:bg-slate-100 transition-colors text-right py-4 bg-slate-50"
+                            @click="sortBy('등락율')">
+                            <div class="flex items-center gap-1 justify-end">
+                                등락율
+                                <i class="bi text-xs" :class="getSortIcon('등락율')"></i>
+                            </div>
+                        </th>
+                        <th class="text-center py-4 bg-slate-50">구분</th>
+                        <th class="text-center py-4 bg-slate-50">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm">
+                    <template x-for="(stock, index) in filteredStocks" :key="stock.종목코드">
+                        <tr class="hover:bg-[#f8fcf0] transition-colors border-b border-slate-50 last:border-0 group">
+                            <td class="text-center text-slate-400 font-mono" x-text="index + 1"></td>
+                            <td class="text-center">
+                                <span
+                                    class="badge badge-ghost font-mono text-xs cursor-pointer hover:badge-primary transition-all"
+                                    x-text="stock.종목코드" @click="openNaverPage(stock.종목코드)" title="네이버 증권 이동"></span>
+                            </td>
+                            <td class="pl-6">
+                                <span
+                                    class="font-bold text-slate-700 cursor-pointer hover:text-green-600 transition-colors text-base"
+                                    x-text="stock.종목명" @click="showStockDetail(stock)" title="상세 정보"></span>
+                            </td>
+                            <td class="text-right font-mono font-medium text-base">
+                                <span :class="getStockColorClass(stock.대비기호)" x-text="formatPrice(stock.현재가)"></span>
+                            </td>
+                            <td class="text-right font-mono">
+                                <span :class="getStockColorClass(stock.대비기호)"
+                                    x-text="formatStockDiff(stock.전일대비, stock.대비기호)"></span>
+                            </td>
+                            <td class="text-right font-mono">
+                                <div class="inline-block px-2 py-0.5 rounded-md bg-opacity-10" :class="{
+                                         'bg-red-500': stock.대비기호 == '2', 
+                                         'bg-blue-500': stock.대비기호 == '5',
+                                         'bg-gray-500': stock.대비기호 == '3'
+                                     }">
+                                    <span :class="getStockColorClass(stock.대비기호)" class="font-semibold"
+                                        x-text="formatRateOnly(stock.등락율, stock.대비기호) + '%'"></span>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div class="flex justify-center gap-2">
+                                    <span x-show="stock.is_hold == 1"
+                                        class="w-6 h-6 rounded-full flex items-center justify-center bg-green-100 text-green-600"
+                                        title="보유 중">
+                                        <i class="bi bi-wallet-fill text-sm"></i>
+                                    </span>
+                                    <span x-show="stock.is_watch == 1"
+                                        class="w-6 h-6 rounded-full flex items-center justify-center bg-orange-100 text-orange-500"
+                                        title="관심 종목">
+                                        <i class="bi bi-heart-fill text-sm"></i>
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div
+                                    class="flex justify-center gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
+                                    <button class="btn btn-xs btn-outline btn-error hover:!text-white"
+                                        @click="buy(stock)" title="매수">매수</button>
+                                    <button class="btn btn-xs btn-outline btn-info hover:!text-white"
+                                        :disabled="stock.is_hold != 1" @click="sell(stock)" title="매도">매도</button>
+                                    <button
+                                        class="btn btn-xs btn-ghost btn-square text-slate-400 hover:text-[#5c7c32] hover:bg-green-50"
+                                        @click="detail(stock)" title="상세화면">
+                                        <i class="bi bi-box-arrow-up-right"></i>
+                                    </button>
+                                    <button
+                                        class="btn btn-xs btn-ghost btn-square text-red-300 hover:text-red-500 hover:bg-red-50"
+                                        @click="deleteStock(stock.종목코드, stock.종목명)" title="삭제">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
-{% raw %}
-<!--handlebar scripts-->
-{% endraw %}
-{% endblock %}
-{% block script %}
+
 {% raw %}
 <script>
-// Alpine 컴포넌트 팩토리 함수
-function createMyStockComponent() {
-    return {
-        // === 상태 변수 ===
-        data: { list: [] },  // 초기값을 빈 배열로 설정
-        loading: false,
-        showSummary: false,  // 요약보기 스위치 상태
-        autoRefresh: false,  // 자동 새로고침 스위치 상태
-        autoRefreshInterval: null,  // 자동 새로고침 인터벌 ID
-        countdownInterval: null,    // 카운트다운 인터벌 ID
-        countdown: 30,              // 카운트다운 값
-        
-        // === 필터 상태 ===
-        filters: {
-            showHold: true,    // 보유 종목 표시
-            showWatch: true,   // 관심 종목 표시
-            searchText: ''     // 검색어
-        },
-        
-        // === 정렬 상태 ===
-        sortConfig: {
-            field: null,       // 정렬할 필드
-            direction: 'asc'   // 정렬 방향 (asc/desc)
-        },
+    // Alpine 컴포넌트 팩토리 함수
+    function createMyStockComponent() {
+        return {
+            // === 상태 변수 ===
+            data: { list: [] },  // 초기값을 빈 배열로 설정
+            loading: false,
+            showSummary: false,  // 요약보기 스위치 상태
+            autoRefresh: false,  // 자동 새로고침 스위치 상태
+            autoRefreshInterval: null,  // 자동 새로고침 인터벌 ID
+            countdownInterval: null,    // 카운트다운 인터벌 ID
+            countdown: 30,              // 카운트다운 값
 
-        // === 계산된 속성 (filteredStocks) ===
-        get filteredStocks() {
-            if (!this.data || !this.data.list) return [];
-            
-            let filtered = this.data.list.filter(stock => {
-                // 구분 필터 체크
-                const typeMatch = (
-                    (this.filters.showHold && stock.is_hold == 1) ||
-                    (this.filters.showWatch && stock.is_watch == 1)
-                );
-                
-                // 검색어 필터 체크
-                const textMatch = !this.filters.searchText || 
-                    stock.종목명.toLowerCase().includes(this.filters.searchText.toLowerCase());
-                
-                return typeMatch && textMatch;
-            });
-            
-            // 정렬 적용
-            if (this.sortConfig.field) {
-                filtered.sort((a, b) => {
-                    let aVal = a[this.sortConfig.field];
-                    let bVal = b[this.sortConfig.field];
-                    
-                    // 숫자 형태의 문자열인 경우 숫자로 변환
-                    if (this.sortConfig.field === '현재가' || this.sortConfig.field === '전일대비' || this.sortConfig.field === '등락율') {
-                        aVal = parseFloat(String(aVal).replace(/[,+\-▲▼%]/g, '')) || 0;
-                        bVal = parseFloat(String(bVal).replace(/[,+\-▲▼%]/g, '')) || 0;
-                    }
-                    
-                    let result = 0;
-                    if (aVal < bVal) result = -1;
-                    else if (aVal > bVal) result = 1;
-                    
-                    return this.sortConfig.direction === 'desc' ? -result : result;
+            // === 필터 상태 ===
+            filters: {
+                showHold: true,    // 보유 종목 표시
+                showWatch: true,   // 관심 종목 표시
+                searchText: ''     // 검색어
+            },
+
+            // === 정렬 상태 ===
+            sortConfig: {
+                field: null,       // 정렬할 필드
+                direction: 'asc'   // 정렬 방향 (asc/desc)
+            },
+
+            // === 계산된 속성 (filteredStocks) ===
+            get filteredStocks() {
+                if (!this.data || !this.data.list) return [];
+
+                let filtered = this.data.list.filter(stock => {
+                    // 구분 필터 체크
+                    const typeMatch = (
+                        (this.filters.showHold && stock.is_hold == 1) ||
+                        (this.filters.showWatch && stock.is_watch == 1)
+                    );
+
+                    // 검색어 필터 체크
+                    const textMatch = !this.filters.searchText ||
+                        stock.종목명.toLowerCase().includes(this.filters.searchText.toLowerCase());
+
+                    return typeMatch && textMatch;
                 });
-            }
-            
-            return filtered;
-        },
 
-        // === API 호출 함수 ===
-        async fetchMyStock() {
-            this.loading = true;
-            try {
-                const response = await fetch('/api/v1/mystock/');
-                const result = await response.json();
-                
-                if (result.success) {
-                    this.data = result.data;
-                    console.log('My Stock 데이터 로드 완료:', this.data);
-                } else {
-                    console.error('My Stock 데이터 로드 실패:', result.error_message);
-                    showAlert(`데이터 로드 실패: ${result.error_message}`, 'error');
-                }
-            } catch (error) {
-                console.error('My Stock 데이터 로드 중 오류:', error);
-                showAlert('데이터를 불러오는 중 오류가 발생했습니다.', 'error');
-            } finally {
-                this.loading = false;
-            }
-        },
+                // 정렬 적용
+                if (this.sortConfig.field) {
+                    filtered.sort((a, b) => {
+                        let aVal = a[this.sortConfig.field];
+                        let bVal = b[this.sortConfig.field];
 
-        // === 삭제 함수 ===
-        async deleteStock(stockCode, stockName) {
-            if (!confirm(`'${stockName}(${stockCode})'을(를) 삭제하시겠습니까?`)) {
-                return;
-            }
-
-            try {
-                const response = await fetch(`/api/v1/mystock/${stockCode}`, {
-                    method: 'DELETE'
-                });
-                const result = await response.json();
-                
-                if (result.success) {
-                    showAlert(`'${stockName}' 삭제 완료`, 'success');
-                    // 데이터 새로고침
-                    await this.fetchMyStock();
-                } else {
-                    console.error('종목 삭제 실패:', result.error_message);
-                    showAlert(`삭제 실패: ${result.error_message}`, 'error');
-                }
-            } catch (error) {
-                console.error('종목 삭제 중 오류:', error);
-                showAlert('삭제 중 오류가 발생했습니다.', 'error');
-            }
-        },
-
-        // === 정렬 함수 ===
-        sortBy(field) {
-            if (this.sortConfig.field === field) {
-                // 같은 필드 클릭 시 방향 토글
-                this.sortConfig.direction = this.sortConfig.direction === 'asc' ? 'desc' : 'asc';
-            } else {
-                // 다른 필드 클릭 시 오름차순으로 설정
-                this.sortConfig.field = field;
-                this.sortConfig.direction = 'asc';
-            }
-        },
-
-        // === 정렬 아이콘 반환 ===
-        getSortIcon(field) {
-            if (this.sortConfig.field !== field) {
-                return 'text-muted'; // 기본 정렬 아이콘
-            }
-            return this.sortConfig.direction === 'asc' ? 'bi-arrow-up' : 'bi-arrow-down';
-        },
-
-        // === 포맷팅 함수들 ===
-        formatPrice(price) {
-            if (!price) return '-';
-            const numericPrice = price.toString().replace(/[+\-▲▼]/g, '');
-            return numericPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        },
-
-        formatStockDiff(diff, compareSign) {
-            if (!diff) return '-';
-            
-            switch(compareSign) {
-                case '2': // 상승
-                    return `▲${diff}`;
-                case '5': // 하락  
-                    return `▼${diff}`;
-                case '3': // 보합
-                    return diff;
-                default:
-                    return diff;
-            }
-        },
-
-        formatRateOnly(rate, compareSign) {
-            if (!rate) return '-';
-            return rate.toString();
-        },
-
-        getStockColorClass(compareSign) {
-            switch(compareSign) {
-                case '2': // 상승
-                    return 'text-danger'; // 빨간색
-                case '5': // 하락
-                    return 'text-primary'; // 파란색  
-                case '3': // 보합
-                    return 'text-muted'; // 회색
-                default:
-                    return 'text-muted';
-            }
-        },
-
-        // === 통계 함수들 ===
-        getHoldCount() {
-            if (!this.data || !this.data.list) return 0;
-            return this.data.list.filter(stock => stock.is_hold == 1).length;
-        },
-
-        getWatchCount() {
-            if (!this.data || !this.data.list) return 0;
-            return this.data.list.filter(stock => stock.is_watch == 1).length;
-        },
-
-        // === 액션 함수들 ===
-        buy(stock) {
-            console.log('매수:', stock);
-            const { 종목코드: stk_code, 종목명: stk_name, 현재가 } = stock;
-            
-            if (typeof showBuySellCanvas === 'function') {
-                showBuySellCanvas({
-                    stk_code,
-                    stk_name,
-                    which: '매수',
-                    qty: 1,
-                    cost: 현재가 || 0
-                });
-            } else {
-                console.log('showBuySellCanvas 함수가 없습니다.');
-                showAlert('매수 기능을 준비 중입니다.', 'info');
-            }
-        },
-
-        sell(stock) {
-            console.log('매도:', stock);
-            
-            // 보유 종목이 아닌 경우 경고 메시지
-            if (stock.is_hold != 1) {
-                showAlert('보유하지 않은 종목은 매도할 수 없습니다.', 'warning');
-                return;
-            }
-            
-            const { 종목코드: stk_code, 종목명: stk_name, 현재가 } = stock;
-            
-            if (typeof showBuySellCanvas === 'function') {
-                showBuySellCanvas({
-                    stk_code,
-                    stk_name,
-                    which: '매도',
-                    qty: 1,
-                    cost: 현재가 || 0
-                });
-            } else {
-                console.log('showBuySellCanvas 함수가 없습니다.');
-                showAlert('매도 기능을 준비 중입니다.', 'info');
-            }
-        },
-
-        detail(stock) {
-            console.log('상세 정보:', stock);
-            let stk_cd = stock.종목코드.replace(/[^0-9]/g, '');
-            window.location.href = `page?path=stock/detail&stk_cd=${stk_cd}`;
-        },
-
-        // === 클릭 이벤트 함수들 ===
-        openNaverPage(stockCode) {
-            console.log('네이버 페이지 열기:', stockCode);
-            const cleanCode = stockCode.replace(/[^0-9]/g, '');
-            const naverUrl = `https://finance.naver.com/item/main.nhn?code=${cleanCode}`;
-            window.open(naverUrl, '_blank');
-        },
-
-        showStockDetail(stock) {
-            console.log('종목 상세 보기:', stock);
-            // 공통 모듈 showCompanyCanvas 함수 사용
-            if (typeof showCompanyCanvas === 'function') {
-                showCompanyCanvas(stock.종목코드);
-            } else {
-                console.warn('showCompanyCanvas 함수를 찾을 수 없습니다.');
-                showAlert('종목 정보를 불러올 수 없습니다.', 'error');
-            }
-        },
-
-        // === 초기화 ===   
-        init() {
-            this.fetchMyStock();
-            this.setupAutoRefreshWatcher();
-            this.setupCleanup();
-        },
-
-        // === 자동 새로고침 관리 ===
-        setupAutoRefreshWatcher() {
-            // autoRefresh 상태 변화 감지
-            this.$watch('autoRefresh', (newValue) => {
-                if (newValue) {
-                    this.startAutoRefresh();
-                } else {
-                    this.stopAutoRefresh();
-                }
-            });
-        },
-
-        setupCleanup() {
-            // 페이지 언로드 시 인터벌 정리
-            window.addEventListener('beforeunload', () => {
-                this.stopAutoRefresh();
-            });
-        },
-
-        startAutoRefresh() {
-            console.log('자동 새로고침 시작 (30초 간격)');
-            this.countdown = 30;
-            
-            // 카운트다운 시작 (1초마다)
-            this.countdownInterval = setInterval(() => {
-                if (this.autoRefresh) {
-                    this.countdown--;
-                    
-                    if (this.countdown <= 0) {
-                        // 카운트다운이 0이 되면 새로고침 실행
-                        if (!this.loading) {
-                            console.log('자동 새로고침 실행...');
-                            this.fetchMyStock();
+                        // 숫자 형태의 문자열인 경우 숫자로 변환
+                        if (this.sortConfig.field === '현재가' || this.sortConfig.field === '전일대비' || this.sortConfig.field === '등락율') {
+                            aVal = parseFloat(String(aVal).replace(/[,+\-▲▼%]/g, '')) || 0;
+                            bVal = parseFloat(String(bVal).replace(/[,+\-▲▼%]/g, '')) || 0;
                         }
-                        this.countdown = 30; // 카운트다운 리셋
-                    }
+
+                        let result = 0;
+                        if (aVal < bVal) result = -1;
+                        else if (aVal > bVal) result = 1;
+
+                        return this.sortConfig.direction === 'desc' ? -result : result;
+                    });
                 }
-            }, 1000); // 1초마다 카운트다운
-        },
 
-        stopAutoRefresh() {
-            console.log('자동 새로고침 중지');
-            if (this.countdownInterval) {
-                clearInterval(this.countdownInterval);
-                this.countdownInterval = null;
+                return filtered;
+            },
+
+            // === API 호출 함수 ===
+            async fetchMyStock() {
+                this.loading = true;
+                try {
+                    const response = await fetch('/api/v1/mystock/');
+                    const result = await response.json();
+
+                    if (result.success) {
+                        this.data = result.data;
+                        console.log('My Stock 데이터 로드 완료:', this.data);
+                    } else {
+                        console.error('My Stock 데이터 로드 실패:', result.error_message);
+                        showAlert(`데이터 로드 실패: ${result.error_message}`, 'error');
+                    }
+                } catch (error) {
+                    console.error('My Stock 데이터 로드 중 오류:', error);
+                    showAlert('데이터를 불러오는 중 오류가 발생했습니다.', 'error');
+                } finally {
+                    this.loading = false;
+                }
+            },
+
+            // === 삭제 함수 ===
+            async deleteStock(stockCode, stockName) {
+                if (!confirm(`'${stockName}(${stockCode})'을(를) 삭제하시겠습니까?`)) {
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`/api/v1/mystock/${stockCode}`, {
+                        method: 'DELETE'
+                    });
+                    const result = await response.json();
+
+                    if (result.success) {
+                        showAlert(`'${stockName}' 삭제 완료`, 'success');
+                        // 데이터 새로고침
+                        await this.fetchMyStock();
+                    } else {
+                        console.error('종목 삭제 실패:', result.error_message);
+                        showAlert(`삭제 실패: ${result.error_message}`, 'error');
+                    }
+                } catch (error) {
+                    console.error('종목 삭제 중 오류:', error);
+                    showAlert('삭제 중 오류가 발생했습니다.', 'error');
+                }
+            },
+
+            // === 정렬 함수 ===
+            sortBy(field) {
+                if (this.sortConfig.field === field) {
+                    // 같은 필드 클릭 시 방향 토글
+                    this.sortConfig.direction = this.sortConfig.direction === 'asc' ? 'desc' : 'asc';
+                } else {
+                    // 다른 필드 클릭 시 오름차순으로 설정
+                    this.sortConfig.field = field;
+                    this.sortConfig.direction = 'asc';
+                }
+            },
+
+            // === 정렬 아이콘 반환 ===
+            getSortIcon(field) {
+                if (this.sortConfig.field !== field) {
+                    return 'text-slate-300'; // 기본 비활성 아이콘 색상
+                }
+                return this.sortConfig.direction === 'asc' ? 'bi-arrow-up text-[#5c7c32]' : 'bi-arrow-down text-[#5c7c32]';
+            },
+
+            // === 포맷팅 함수들 ===
+            formatPrice(price) {
+                if (!price) return '-';
+                const numericPrice = price.toString().replace(/[+\-▲▼]/g, '');
+                return numericPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            },
+
+            formatStockDiff(diff, compareSign) {
+                if (!diff) return '-';
+
+                switch (compareSign) {
+                    case '2': // 상승
+                        return `▲${diff}`;
+                    case '5': // 하락  
+                        return `▼${diff}`;
+                    case '3': // 보합
+                        return diff;
+                    default:
+                        return diff;
+                }
+            },
+
+            formatRateOnly(rate, compareSign) {
+                if (!rate) return '-';
+                return rate.toString();
+            },
+
+            getStockColorClass(compareSign) {
+                switch (compareSign) {
+                    case '2': // 상승
+                        return 'text-red-600'; // 빨간색
+                    case '5': // 하락
+                        return 'text-blue-600'; // 파란색  
+                    case '3': // 보합
+                        return 'text-slate-500'; // 회색
+                    default:
+                        return 'text-slate-500';
+                }
+            },
+
+            // === 통계 함수들 ===
+            getHoldCount() {
+                if (!this.data || !this.data.list) return 0;
+                return this.data.list.filter(stock => stock.is_hold == 1).length;
+            },
+
+            getWatchCount() {
+                if (!this.data || !this.data.list) return 0;
+                return this.data.list.filter(stock => stock.is_watch == 1).length;
+            },
+
+            // === 액션 함수들 ===
+            buy(stock) {
+                console.log('매수:', stock);
+                const { 종목코드: stk_code, 종목명: stk_name, 현재가 } = stock;
+
+                if (typeof showBuySellCanvas === 'function') {
+                    showBuySellCanvas({
+                        stk_code,
+                        stk_name,
+                        which: '매수',
+                        qty: 1,
+                        cost: 현재가 || 0
+                    });
+                } else {
+                    console.log('showBuySellCanvas 함수가 없습니다.');
+                    showAlert('매수 기능을 준비 중입니다.', 'info');
+                }
+            },
+
+            sell(stock) {
+                console.log('매도:', stock);
+
+                // 보유 종목이 아닌 경우 경고 메시지
+                if (stock.is_hold != 1) {
+                    showAlert('보유하지 않은 종목은 매도할 수 없습니다.', 'warning');
+                    return;
+                }
+
+                const { 종목코드: stk_code, 종목명: stk_name, 현재가 } = stock;
+
+                if (typeof showBuySellCanvas === 'function') {
+                    showBuySellCanvas({
+                        stk_code,
+                        stk_name,
+                        which: '매도',
+                        qty: 1,
+                        cost: 현재가 || 0
+                    });
+                } else {
+                    console.log('showBuySellCanvas 함수가 없습니다.');
+                    showAlert('매도 기능을 준비 중입니다.', 'info');
+                }
+            },
+
+            detail(stock) {
+                console.log('상세 정보:', stock);
+                let stk_cd = stock.종목코드.replace(/[^0-9]/g, '');
+                window.location.href = `page?path=stock/detail&stk_cd=${stk_cd}`;
+            },
+
+            // === 클릭 이벤트 함수들 ===
+            openNaverPage(stockCode) {
+                console.log('네이버 페이지 열기:', stockCode);
+                const cleanCode = stockCode.replace(/[^0-9]/g, '');
+                const naverUrl = `https://finance.naver.com/item/main.nhn?code=${cleanCode}`;
+                window.open(naverUrl, '_blank');
+            },
+
+            showStockDetail(stock) {
+                console.log('종목 상세 보기:', stock);
+                // 공통 모듈 showCompanyCanvas 함수 사용
+                if (typeof showCompanyCanvas === 'function') {
+                    showCompanyCanvas(stock.종목코드);
+                } else {
+                    console.warn('showCompanyCanvas 함수를 찾을 수 없습니다.');
+                    showAlert('종목 정보를 불러올 수 없습니다.', 'error');
+                }
+            },
+
+            // === 초기화 ===   
+            init() {
+                this.fetchMyStock();
+                this.setupAutoRefreshWatcher();
+                this.setupCleanup();
+            },
+
+            // === 자동 새로고침 관리 ===
+            setupAutoRefreshWatcher() {
+                // autoRefresh 상태 변화 감지
+                this.$watch('autoRefresh', (newValue) => {
+                    if (newValue) {
+                        this.startAutoRefresh();
+                    } else {
+                        this.stopAutoRefresh();
+                    }
+                });
+            },
+
+            setupCleanup() {
+                // 페이지 언로드 시 인터벌 정리
+                window.addEventListener('beforeunload', () => {
+                    this.stopAutoRefresh();
+                });
+            },
+
+            startAutoRefresh() {
+                console.log('자동 새로고침 시작 (30초 간격)');
+                this.countdown = 30;
+
+                // 카운트다운 시작 (1초마다)
+                this.countdownInterval = setInterval(() => {
+                    if (this.autoRefresh) {
+                        this.countdown--;
+
+                        if (this.countdown <= 0) {
+                            // 카운트다운이 0이 되면 새로고침 실행
+                            if (!this.loading) {
+                                console.log('자동 새로고침 실행...');
+                                this.fetchMyStock();
+                            }
+                            this.countdown = 30; // 카운트다운 리셋
+                        }
+                    }
+                }, 1000); // 1초마다 카운트다운
+            },
+
+            stopAutoRefresh() {
+                console.log('자동 새로고침 중지');
+                if (this.countdownInterval) {
+                    clearInterval(this.countdownInterval);
+                    this.countdownInterval = null;
+                }
+                this.countdown = 30; // 카운트다운 리셋
             }
-            this.countdown = 30; // 카운트다운 리셋
-        }
-    };
-}
+        };
+    }
 
-// Alpine.js 컴포넌트 등록
-document.addEventListener('alpine:init', () => {
-    Alpine.data('my_stock', createMyStockComponent);
-});
+    // Alpine.js 컴포넌트 등록
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('my_stock', createMyStockComponent);
+    });
 </script>
 {% endraw %}
 {% endblock %}

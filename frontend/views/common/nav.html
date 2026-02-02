@@ -1,17 +1,20 @@
-<div class="navbar bg-[#c8f097] text-base-content rounded-b-lg shadow-md mb-4 z-50">
+<div
+    class="navbar bg-[#c8f097]/95 backdrop-blur-sm text-base-content rounded-b-xl shadow-lg mb-6 z-50 sticky top-0 transition-all duration-300">
     <!-- Navbar Start: Logo & Mobile Menu -->
     <div class="navbar-start">
         <!-- Mobile Dropdown -->
         <div class="dropdown">
-            <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+            <div tabindex="0" role="button"
+                class="btn btn-ghost lg:hidden hover:bg-[#b0d880] transition-colors rounded-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
                 </svg>
             </div>
-            <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+            <ul tabindex="0"
+                class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-200">
                 <li>
-                    <a>종목</a>
+                    <a class="font-bold">종목</a>
                     <ul class="p-2">
                         <li><a href="/page?path=stock/find"><i class="bi bi-search-heart"></i> 종목찾기</a></li>
                         <li><a href="/page?path=stock/mystock"><i class="bi bi-heart"></i> 관심종목</a></li>
@@ -34,10 +37,11 @@
                     </ul>
                 </li>
                 <li>
-                    <a>계좌</a>
+                    <a class="font-bold">계좌</a>
                     <ul class="p-2">
-                        <li><a href="/page?path=stkcompany/kiwoom/account/list">계좌현황</a></li>
-                        <li><a href="/page?path=stkcompany/kiwoom/account/detail">계좌상세</a></li>
+                        <li><a href="/page?path=stkcompany/kiwoom/account/list">키움</a></li>
+                        <li><a href="/page?path=stkcompany/kis/account/list">KIS</a></li>
+                        <li><a href="/page?path=stkcompany/ls/account/list">LS</a></li>
                         <li>
                             <div class="divider my-1"></div>
                         </li>
@@ -50,7 +54,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a>관리</a>
+                    <a class="font-bold">관리</a>
                     <ul class="p-2">
                         <li><a href="/page?path=/manage/diary/list">일지</a></li>
                         <li><a href="/page?path=/manage/daemon/list">K-데몬</a></li>
@@ -58,14 +62,14 @@
                     </ul>
                 </li>
                 <li>
-                    <a>매수/매도</a>
+                    <a class="font-bold">매수/매도</a>
                     <ul class="p-2">
                         <li><a href="/page?path=order/buy&stk_code=12345">매수</a></li>
                         <li><a href="/page?path=order/sell&stk_code=12345">매도</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a>테스트</a>
+                    <a class="font-bold">테스트</a>
                     <ul class="p-2">
                         <li><a href="/page?path=test/test1">test1</a></li>
                     </ul>
@@ -74,97 +78,178 @@
         </div>
 
         <!-- Logo -->
-        <a href="/" target="_blank" class="btn btn-ghost text-xl normal-case h-auto py-1">
-            <img src="/public/images/kiwi7-logo.svg" alt="Kiwoom Securities logo" class="h-8 mr-2" />
-            <span class="hidden sm:inline">kiwi7-{{data.title | default('자산관리') }}</span>
+        <a href="/" target="_blank"
+            class="btn btn-ghost normal-case h-auto py-2 hover:bg-[#b0d880] transition-colors rounded-lg group">
+            <img src="/public/images/kiwi7-logo.svg" alt="Kiwoom Securities logo"
+                class="h-9 mr-2 group-hover:scale-105 transition-transform duration-200" />
+            <span class="hidden sm:inline text-xl font-bold tracking-tight text-slate-800">kiwi7-<span
+                    class="text-slate-600 font-medium">{{data.title | default('자산관리') }}</span></span>
         </a>
 
-        <ul class="menu menu-horizontal px-1">
+        <!-- Desktop Menu -->
+        <ul class="menu menu-horizontal px-1 gap-1 hidden lg:flex">
             <li>
                 <details>
-                    <summary class="font-bold">종목</summary>
-                    <ul class="p-2 z-[50] bg-base-100 w-52 shadow-md">
-                        <li><a href="/page?path=stock/find"><i class="bi bi-search-heart"></i> 종목찾기</a></li>
-                        <li><a href="/page?path=stock/mystock"><i class="bi bi-heart"></i> 관심종목</a></li>
-                        <li><a href="/page?path=mystock/test1">TEST페이지</a></li>
-                        <div class="divider my-0"></div>
-                        <li><a href="/page?path=mystock/foreign_trade">외국인 매매종목</a></li>
-                        <li><a href="/page?path=kis/kis-opinion">증권사-투자의견</a></li>
-                        <div class="divider my-0"></div>
-                        <li><a href="/page?path=kis/kis-attension">KIS-관심종목</a></li>
-                        <li><a href="/page?path=kis/kis-psearch">KIS-조건식</a></li>
-                        <li><a href="/page?path=kis/kis-ranking">KIS-상위종목</a></li>
-                        <div class="divider my-0"></div>
-                        <li><a href="/page?path=ls/ls-ranking">LS-상위종목</a></li>
+                    <summary
+                        class="font-bold text-slate-700 hover:text-slate-900 hover:bg-[#b0d880] rounded-lg transition-all">
+                        종목</summary>
+                    <ul
+                        class="p-2 z-[50] bg-white/95 backdrop-blur-sm w-56 shadow-xl rounded-xl border border-slate-100">
+                        <li><a href="/page?path=stock/find" class="hover:bg-green-50 hover:text-green-700"><i
+                                    class="bi bi-search-heart"></i> 종목찾기</a></li>
+                        <li><a href="/page?path=stock/mystock" class="hover:bg-green-50 hover:text-green-700"><i
+                                    class="bi bi-heart"></i> 관심종목</a></li>
+                        <li><a href="/page?path=mystock/test1"
+                                class="hover:bg-green-50 hover:text-green-700">TEST페이지</a></li>
+                        <div class="divider my-1"></div>
+                        <li><a href="/page?path=mystock/foreign_trade"
+                                class="hover:bg-green-50 hover:text-green-700">외국인 매매종목</a></li>
+                        <li><a href="/page?path=kis/kis-opinion"
+                                class="hover:bg-green-50 hover:text-green-700">증권사-투자의견</a></li>
+                        <div class="divider my-1"></div>
+                        <li><a href="/page?path=kis/kis-attension"
+                                class="hover:bg-green-50 hover:text-green-700">KIS-관심종목</a></li>
+                        <li><a href="/page?path=kis/kis-psearch"
+                                class="hover:bg-green-50 hover:text-green-700">KIS-조건식</a></li>
+                        <li><a href="/page?path=kis/kis-ranking"
+                                class="hover:bg-green-50 hover:text-green-700">KIS-상위종목</a></li>
+                        <div class="divider my-1"></div>
+                        <li><a href="/page?path=ls/ls-ranking"
+                                class="hover:bg-green-50 hover:text-green-700">LS-상위종목</a></li>
                     </ul>
                 </details>
             </li>
             <li>
                 <details>
-                    <summary class="font-bold">키움</summary>
-                    <ul class="p-2 z-[50] bg-base-100 w-40 shadow-md">
-                        <li><a href="/page?path=stkcompany/kiwoom/account/list">계좌현황</a></li>
-                        <li><a href="/page?path=stkcompany/kiwoom/account/detail">계좌상세</a></li>
-                        <div class="divider my-0"></div>
-                        <li><a href="/page?path=stkcompany/kiwoom/account/fill">체결내역</a></li>
-                        <li><a href="/page?path=stkcompany/kiwoom/account/balance">체결잔고</a></li>
-                        <div class="divider my-0"></div>
-                        <li><a href="/page?path=stkcompany/kiwoom/account/profit_lose">계좌손익</a></li>
+                    <summary
+                        class="font-bold text-slate-700 hover:text-slate-900 hover:bg-[#b0d880] rounded-lg transition-all">
+                        계좌</summary>
+                    <ul
+                        class="p-2 z-[50] bg-white/95 backdrop-blur-sm w-44 shadow-xl rounded-xl border border-slate-100">
+                        <li><a href="/page?path=stkcompany/kiwoom/account/list"
+                                class="hover:bg-green-50 hover:text-green-700">키움증권</a></li>
+                        <li><a href="/page?path=stkcompany/kis/account/list"
+                                class="hover:bg-green-50 hover:text-green-700">한국투자증권</a></li>
+                        <li><a href="/page?path=stkcompany/ls/account/list"
+                                class="hover:bg-green-50 hover:text-green-700">LS증권</a></li>
+                        <div class="divider my-1"></div>
+                        <li><a href="/page?path=stkcompany/kiwoom/account/fill"
+                                class="hover:bg-green-50 hover:text-green-700">체결내역</a></li>
+                        <li><a href="/page?path=stkcompany/kiwoom/account/balance"
+                                class="hover:bg-green-50 hover:text-green-700">체결잔고</a></li>
+                        <div class="divider my-1"></div>
+                        <li><a href="/page?path=stkcompany/kiwoom/account/profit_lose"
+                                class="hover:bg-green-50 hover:text-green-700">계좌손익</a></li>
                     </ul>
                 </details>
             </li>
             <li>
                 <details>
-                    <summary class="font-bold">KIS</summary>
-                    <ul class="p-2 z-[50] bg-base-100 w-40 shadow-md">
-                        <li><a href="/page?path=stkcompany/kis/account/list">계좌현황</a></li>
-                        <li><a href="/page?path=stkcompany/kis/account/detail">계좌상세</a></li>
-                        <div class="divider my-0"></div>
-                        <li><a href="/page?path=stkcompany/kis/account/fill">체결내역</a></li>
-                        <li><a href="/page?path=stkcompany/kis/account/balance">체결잔고</a></li>
-                        <div class="divider my-0"></div>
-                        <li><a href="/page?path=stkcompany/kis/account/profit_lose">계좌손익</a></li>
+                    <summary
+                        class="font-bold text-slate-700 hover:text-slate-900 hover:bg-[#b0d880] rounded-lg transition-all">
+                        키움</summary>
+                    <ul
+                        class="p-2 z-[50] bg-white/95 backdrop-blur-sm w-44 shadow-xl rounded-xl border border-slate-100">
+                        <li><a href="/page?path=stkcompany/kiwoom/account/list"
+                                class="hover:bg-green-50 hover:text-green-700">계좌현황</a></li>
+                        <li><a href="/page?path=stkcompany/kiwoom/account/detail"
+                                class="hover:bg-green-50 hover:text-green-700">계좌상세</a></li>
+                        <div class="divider my-1"></div>
+                        <li><a href="/page?path=stkcompany/kiwoom/account/fill"
+                                class="hover:bg-green-50 hover:text-green-700">체결내역</a></li>
+                        <li><a href="/page?path=stkcompany/kiwoom/account/balance"
+                                class="hover:bg-green-50 hover:text-green-700">체결잔고</a></li>
+                        <div class="divider my-1"></div>
+                        <li><a href="/page?path=stkcompany/kiwoom/account/profit_lose"
+                                class="hover:bg-green-50 hover:text-green-700">계좌손익</a></li>
                     </ul>
                 </details>
             </li>
             <li>
                 <details>
-                    <summary class="font-bold">LS</summary>
-                    <ul class="p-2 z-[50] bg-base-100 w-40 shadow-md">
-                        <li><a href="/page?path=stkcompany/ls/account/list">계좌현황</a></li>
-                        <li><a href="/page?path=stkcompany/ls/account/detail">계좌상세</a></li>
-                        <div class="divider my-0"></div>
-                        <li><a href="/page?path=stkcompany/ls/account/fill">체결내역</a></li>
-                        <li><a href="/page?path=stkcompany/ls/account/balance">체결잔고</a></li>
-                        <div class="divider my-0"></div>
-                        <li><a href="/page?path=stkcompany/ls/account/profit_lose">계좌손익</a></li>
+                    <summary
+                        class="font-bold text-slate-700 hover:text-slate-900 hover:bg-[#b0d880] rounded-lg transition-all">
+                        KIS</summary>
+                    <ul
+                        class="p-2 z-[50] bg-white/95 backdrop-blur-sm w-44 shadow-xl rounded-xl border border-slate-100">
+                        <li><a href="/page?path=stkcompany/kis/account/list"
+                                class="hover:bg-green-50 hover:text-green-700">계좌현황</a></li>
+                        <li><a href="/page?path=stkcompany/kis/account/detail"
+                                class="hover:bg-green-50 hover:text-green-700">계좌상세</a></li>
+                        <div class="divider my-1"></div>
+                        <li><a href="/page?path=stkcompany/kis/account/fill"
+                                class="hover:bg-green-50 hover:text-green-700">체결내역</a></li>
+                        <li><a href="/page?path=stkcompany/kis/account/balance"
+                                class="hover:bg-green-50 hover:text-green-700">체결잔고</a></li>
+                        <div class="divider my-1"></div>
+                        <li><a href="/page?path=stkcompany/kis/account/profit_lose"
+                                class="hover:bg-green-50 hover:text-green-700">계좌손익</a></li>
                     </ul>
                 </details>
             </li>
             <li>
                 <details>
-                    <summary class="font-bold">관리</summary>
-                    <ul class="p-2 z-[50] bg-base-100 w-40 shadow-md">
-                        <li><a href="/page?path=/manage/diary/list">일지</a></li>
-                        <li><a href="/page?path=/manage/daemon/list">K-데몬</a></li>
-                        <li><a href="/page?path=/manage/scheduler/list">K-스케줄러</a></li>
+                    <summary
+                        class="font-bold text-slate-700 hover:text-slate-900 hover:bg-[#b0d880] rounded-lg transition-all">
+                        LS</summary>
+                    <ul
+                        class="p-2 z-[50] bg-white/95 backdrop-blur-sm w-44 shadow-xl rounded-xl border border-slate-100">
+                        <li><a href="/page?path=stkcompany/ls/account/list"
+                                class="hover:bg-green-50 hover:text-green-700">계좌현황</a></li>
+                        <li><a href="/page?path=stkcompany/ls/account/detail"
+                                class="hover:bg-green-50 hover:text-green-700">계좌상세</a></li>
+                        <div class="divider my-1"></div>
+                        <li><a href="/page?path=stkcompany/ls/account/fill"
+                                class="hover:bg-green-50 hover:text-green-700">체결내역</a></li>
+                        <li><a href="/page?path=stkcompany/ls/account/balance"
+                                class="hover:bg-green-50 hover:text-green-700">체결잔고</a></li>
+                        <div class="divider my-1"></div>
+                        <li><a href="/page?path=stkcompany/ls/account/profit_lose"
+                                class="hover:bg-green-50 hover:text-green-700">계좌손익</a></li>
                     </ul>
                 </details>
             </li>
             <li>
                 <details>
-                    <summary class="font-bold">매수/매도</summary>
-                    <ul class="p-2 z-[50] bg-base-100 w-40 shadow-md">
-                        <li><a href="/page?path=order/buy&stk_code=12345">매수</a></li>
-                        <li><a href="/page?path=order/sell&stk_code=12345">매도</a></li>
+                    <summary
+                        class="font-bold text-slate-700 hover:text-slate-900 hover:bg-[#b0d880] rounded-lg transition-all">
+                        관리</summary>
+                    <ul
+                        class="p-2 z-[50] bg-white/95 backdrop-blur-sm w-44 shadow-xl rounded-xl border border-slate-100">
+                        <li><a href="/page?path=/manage/diary/list"
+                                class="hover:bg-green-50 hover:text-green-700">일지</a></li>
+                        <li><a href="/page?path=/manage/daemon/list"
+                                class="hover:bg-green-50 hover:text-green-700">K-데몬</a></li>
+                        <li><a href="/page?path=/manage/scheduler/list"
+                                class="hover:bg-green-50 hover:text-green-700">K-스케줄러</a></li>
                     </ul>
                 </details>
             </li>
             <li>
                 <details>
-                    <summary class="font-bold">테스트</summary>
-                    <ul class="p-2 z-[50] bg-base-100 w-40 shadow-md">
-                        <li><a href="/page?path=test/test1">test1</a></li>
+                    <summary
+                        class="font-bold text-slate-700 hover:text-slate-900 hover:bg-[#b0d880] rounded-lg transition-all">
+                        매수/매도</summary>
+                    <ul
+                        class="p-2 z-[50] bg-white/95 backdrop-blur-sm w-44 shadow-xl rounded-xl border border-slate-100">
+                        <li><a href="/page?path=order/buy&stk_code=12345"
+                                class="hover:bg-green-50 hover:text-green-700"><span
+                                    class="text-red-600 font-bold">매수</span></a></li>
+                        <li><a href="/page?path=order/sell&stk_code=12345"
+                                class="hover:bg-green-50 hover:text-green-700"><span
+                                    class="text-blue-600 font-bold">매도</span></a></li>
+                    </ul>
+                </details>
+            </li>
+            <li>
+                <details>
+                    <summary
+                        class="font-bold text-slate-700 hover:text-slate-900 hover:bg-[#b0d880] rounded-lg transition-all">
+                        테스트</summary>
+                    <ul
+                        class="p-2 z-[50] bg-white/95 backdrop-blur-sm w-40 shadow-xl rounded-xl border border-slate-100">
+                        <li><a href="/page?path=test/test1" class="hover:bg-green-50 hover:text-green-700">test1</a>
+                        </li>
                     </ul>
                 </details>
             </li>
@@ -179,31 +264,34 @@
 
 <script>
     // 네비게이션 메뉴 자동 닫기 스크립트
-    // 다른 메뉴를 열 때 기존에 열려있는 메뉴를 닫습니다.
-    document.addEventListener("DOMContentLoaded", function() {
-        // 데스크탑 메뉴의 details 요소들 (menu-horizontal 클래스 내부)
+    document.addEventListener("DOMContentLoaded", function () {
         const details = document.querySelectorAll(".menu-horizontal details");
-        
+
+        // 1. 다른 메뉴 열 때 기존 메뉴 닫기
         details.forEach((targetDetail) => {
             targetDetail.addEventListener("click", () => {
-                // 클릭된 details 이외의 다른 details가 열려있다면 닫음
-                details.forEach((detail) => {
-                    if (detail !== targetDetail && detail.hasAttribute("open")) {
-                        detail.removeAttribute("open");
-                    }
-                });
+                if (!targetDetail.hasAttribute("open")) {
+                    // 클릭해서 열려고 할 때, 다른 모든 열린 메뉴를 닫음
+                    details.forEach((detail) => {
+                        if (detail !== targetDetail && detail.hasAttribute("open")) {
+                            detail.removeAttribute("open");
+                        }
+                    });
+                }
             });
         });
 
-        // (선택사항) 메뉴 외부를 클릭했을 때 닫기 기능을 원한다면 아래 주석 해제
-        /*
+        // 2. 메뉴 외부 클릭 시 닫기
         document.addEventListener("click", (event) => {
+            // 클릭된 요소가 details 내부가 아니라면
             if (!event.target.closest(".menu-horizontal details")) {
                 details.forEach((detail) => {
-                    detail.removeAttribute("open");
+                    // 열려있는 메뉴 모두 닫기
+                    if (detail.hasAttribute("open")) {
+                        detail.removeAttribute("open");
+                    }
                 });
             }
         });
-        */
     });
 </script>
