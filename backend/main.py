@@ -5,97 +5,103 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
+from backend.api.v1.endpoints.accounts_routes import router as accounts_router
+from backend.api.v1.endpoints.diary_routes import router as diary_router
+from backend.api.v1.endpoints.home_routes import router as home_router
+from backend.api.v1.endpoints.kdemon_routes import router as kdemon_router
+from backend.api.v1.endpoints.mystock_routes import router as mystock_router
+from backend.api.v1.endpoints.scheduler_routes import router as scheduler_router
+from backend.api.v1.endpoints.settings_routes import router as settings_router
+from backend.api.v1.endpoints.stkcompany.kis_routes import router as kis_router
+from backend.api.v1.endpoints.stkcompany.kiwoom_routes import router as kiwoom_router
+from backend.api.v1.endpoints.stkcompany.ls_routes import router as ls_router
+from backend.api.v1.endpoints.stock_routes import router as stock_router
+from backend.core.config import config
+from backend.core.exception_handler import add_exception_handlers
+from backend.core.jwtmiddleware import JWTAuthMiddleware
 from backend.core.kiwi7_db import create_kiwi7_db
 from backend.core.logger import get_logger
-from backend.core.config import config
-from backend.core.jwtmiddleware import JWTAuthMiddleware
-from backend.api.v1.endpoints.settings_routes import router as settings_router
-from backend.api.v1.endpoints.home_routes import router as home_router
-from backend.api.v1.endpoints.stkcompany.kiwoom_routes import router as kiwoom_router
-from backend.api.v1.endpoints.stkcompany.kis_routes import router as kis_router
-from backend.api.v1.endpoints.stkcompany.ls_routes import router as ls_router
-from backend.api.v1.endpoints.kdemon_routes import router as kdemon_router
-from backend.api.v1.endpoints.scheduler_routes import router as scheduler_router
-from backend.api.v1.endpoints.stock_routes import router as stock_router
-from backend.api.v1.endpoints.mystock_routes import router as mystock_router
-from backend.api.v1.endpoints.diary_routes import router as diary_router
-from backend.api.v1.endpoints.accounts_routes import router as accounts_router
-
-from backend.core.exception_handler import add_exception_handlers
 from backend.domains.kscheduler.k_scheduler import KScheduler
-
 
 logger = get_logger(__name__)
 schduler: KScheduler | None = None
 
+
 def create_app() -> FastAPI:
-    app = FastAPI(title="Kiwi7 - 주식매매(개인용)", version="0.0.1")
-    add_middlewares(app)
-    add_routes(app)
-    add_event_handlers(app)
-    add_static_files(app)
-    add_exception_handlers(app)
-    return app
+    kiwi7_app = FastAPI(title='Kiwi7 - 주식매매(개인용)', version='0.0.1')
+    add_middlewares(kiwi7_app)
+    add_routes(kiwi7_app)
+    add_event_handlers(kiwi7_app)
+    add_static_files(kiwi7_app)
+    add_exception_handlers(kiwi7_app)
+
+    # 루트 앱에 /kiwi7로 마운트
+    root_app = FastAPI()
+    root_app.mount('/kiwi7', kiwi7_app)
+    return root_app
+
 
 def add_middlewares(app: FastAPI):
-    ''' 미들웨어 설정 '''
+    """미들웨어 설정"""
     # CORS 설정
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],
+        allow_origins=['*'],
         allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )    
+        allow_methods=['*'],
+        allow_headers=['*'],
+    )
     # JWT 인증 미들웨어 등록
     app.add_middleware(JWTAuthMiddleware)
-
 
 
 def add_routes(app: FastAPI):
     # API 라우터 포함
     app.include_router(home_router)
-    app.include_router(settings_router, prefix="/api/v1/settings", tags=["settings"])
+    app.include_router(settings_router, prefix='/api/v1/settings', tags=['settings'])
     # 증권사 API 라우터
-    app.include_router(kiwoom_router, prefix="/api/v1/kiwoom", tags=["kiwoom"])
-    app.include_router(kis_router, prefix="/api/v1/kis", tags=["kis"])
-    app.include_router(ls_router, prefix="/api/v1/ls", tags=["ls"])
+    app.include_router(kiwoom_router, prefix='/api/v1/kiwoom', tags=['kiwoom'])
+    app.include_router(kis_router, prefix='/api/v1/kis', tags=['kis'])
+    app.include_router(ls_router, prefix='/api/v1/ls', tags=['ls'])
     # 서비스 라우터
-    app.include_router(accounts_router, prefix="/api/v1/accounts", tags=["accounts"])
-    app.include_router(kdemon_router, prefix="/api/v1/kdemon", tags=["kdemon"])
-    app.include_router(stock_router, prefix="/api/v1/stock", tags=["stock"])
-    app.include_router(mystock_router, prefix="/api/v1/mystock", tags=["mystock"])
-    app.include_router(diary_router, prefix="/api/v1/diary", tags=["diary"])
-    app.include_router(scheduler_router, prefix="/api/v1/scheduler", tags=["scheduler"])
+    app.include_router(accounts_router, prefix='/api/v1/accounts', tags=['accounts'])
+    app.include_router(kdemon_router, prefix='/api/v1/kdemon', tags=['kdemon'])
+    app.include_router(stock_router, prefix='/api/v1/stock', tags=['stock'])
+    app.include_router(mystock_router, prefix='/api/v1/mystock', tags=['mystock'])
+    app.include_router(diary_router, prefix='/api/v1/diary', tags=['diary'])
+    app.include_router(scheduler_router, prefix='/api/v1/scheduler', tags=['scheduler'])
+
 
 def add_event_handlers(app: FastAPI):
-    ''' 이벤트 핸들러 설정 '''
-    app.add_event_handler("startup", startup_event)
-    app.add_event_handler("shutdown", shutdown_event)
+    """이벤트 핸들러 설정"""
+    app.add_event_handler('startup', startup_event)
+    app.add_event_handler('shutdown', shutdown_event)
+
 
 def add_static_files(app: FastAPI):
-    ''' 정적 파일 설정 '''
+    """정적 파일 설정"""
     # static
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     static_files_path = os.path.join(BASE_DIR, 'frontend', 'public')
-    app.mount("/public", StaticFiles(directory=static_files_path), name="public")
+    app.mount('/public', StaticFiles(directory=static_files_path), name='public')
+
 
 async def startup_event():
-    ''' Kiwi7 application  시작 '''
+    """Kiwi7 application  시작"""
     logger.info('---------------------------------')
     logger.info(f'Startup 프로세스 시작 : 버전 {config.VERSION}, 모드 {config.PROFILE_NAME}')
     logger.info('---------------------------------')
 
-    db_path = config.DB_PATH 
+    db_path = config.DB_PATH
     parent_dir = os.path.dirname(db_path)
     # sqlite3데이터베이스 생성
     if not os.path.exists(parent_dir):
-        logger.info(f"DB 디렉토리가 존재하지 않습니다. 생성합니다: {parent_dir}")
+        logger.info(f'DB 디렉토리가 존재하지 않습니다. 생성합니다: {parent_dir}')
         os.makedirs(parent_dir, exist_ok=True)
     create_kiwi7_db(db_path)
-        
-    logger.info(f"DB 파일 경로: {db_path}")
-    logger.info("scheduler 시작함...")
+
+    logger.info(f'DB 파일 경로: {db_path}')
+    logger.info('scheduler 시작함...')
     global scheduler
     scheduler = KScheduler(db_path=db_path, poll_sec=1)
     asyncio.create_task(scheduler.start(worker_count=4))
@@ -103,8 +109,9 @@ async def startup_event():
     logger.info('Startup 프로세스 종료')
     logger.info('---------------------------------')
 
+
 async def shutdown_event():
-    ''' Kiwi7 application 종료 '''
+    """Kiwi7 application 종료"""
     logger.info('---------------------------------')
     logger.info('Shutdown 프로세스 시작')
     logger.info('---------------------------------')
@@ -114,9 +121,11 @@ async def shutdown_event():
     logger.info('Shutdown 프로세스 종료')
     logger.info('---------------------------------')
 
+
 app = create_app()
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     import uvicorn
-    logger.info("Kiwi7 주식매매 웹서비스 시작")
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+
+    logger.info('Kiwi7 주식매매 웹서비스 시작')
+    uvicorn.run(app, host='0.0.0.0', port=8000)
