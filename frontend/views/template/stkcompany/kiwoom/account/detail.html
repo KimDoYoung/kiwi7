@@ -522,7 +522,7 @@ function createAccountDetailComponent() {
                 if (typeof callKiwoomApi === 'function') {
                     response = await callKiwoomApi(apiId, payload);
                 } else {
-                    const fetchResponse = await fetch(`/api/v1/kiwoom/${apiId}`, {
+                    const fetchResponse = await fetch(`/kiwi7/api/v1/kiwoom/${apiId}`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)

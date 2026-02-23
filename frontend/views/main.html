@@ -458,7 +458,7 @@
                     this.error_jisu = null;
 
                     try {
-                        const response = await fetch('/api/v1/kiwoom/jisu');
+                        const response = await fetch('/kiwi7/api/v1/kiwoom/jisu');
                         if (!response.ok) {
                             throw new Error(`HTTP error! status: ${response.status}`);
                         }
@@ -482,8 +482,8 @@
                         console.error('지수 정보 조회 실패:', error);
                         if (error instanceof SyntaxError && error.message.includes('JSON')) {
                             this.stopAutoRefresh_jisu();
-                            try { await fetch('/logout'); } catch (e) { }
-                            window.location.href = '/login';
+                            try { await fetch('/kiwi7/logout'); } catch (e) { }
+                            window.location.href = '/kiwi7/login';
                             return;
                         }
                         this.error_jisu = error.message || '지수 정보를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.';
@@ -503,7 +503,7 @@
                     this.error_mystock = null;
 
                     try {
-                        const response = await fetch('/api/v1/mystock/');
+                        const response = await fetch('/kiwi7/api/v1/mystock/');
                         if (!response.ok) {
                             throw new Error(`HTTP error! status: ${response.status}`);
                         }
@@ -519,8 +519,8 @@
                         console.error('My Stock 조회 실패:', error);
                         if (error instanceof SyntaxError && error.message.includes('JSON')) {
                             this.stopAutoRefresh_mystock();
-                            try { await fetch('/logout'); } catch (e) { }
-                            window.location.href = '/login';
+                            try { await fetch('/kiwi7/logout'); } catch (e) { }
+                            window.location.href = '/kiwi7/login';
                             return;
                         }
                         this.error_mystock = error.message || 'My Stock 정보를 불러오는데 실패했습니다.';
@@ -630,7 +630,7 @@
                 },
 
                 removeFromMyStock(stockCode, stockName) {
-                    const url = '/api/v1/mystock/' + stockCode;
+                    const url = '/kiwi7/api/v1/mystock/' + stockCode;
                     fetch(url, { method: 'DELETE' })
                         .then(response => response.json())
                         .then(data => {
@@ -649,7 +649,7 @@
                     this.error_account = null;
 
                     try {
-                        const response = await fetch('/api/v1/accounts/summary');
+                        const response = await fetch('/kiwi7/api/v1/accounts/summary');
                         if (!response.ok) {
                             throw new Error(`HTTP error! status: ${response.status}`);
                         }
@@ -659,8 +659,8 @@
                     } catch (error) {
                         console.error('계좌 정보 조회 실패:', error);
                         if (error instanceof SyntaxError && error.message.includes('JSON')) {
-                            try { await fetch('/logout'); } catch (e) { }
-                            window.location.href = '/login';
+                            try { await fetch('/kiwi7/logout'); } catch (e) { }
+                            window.location.href = '/kiwi7/login';
                             return;
                         }
                         this.error_account = error.message || '계좌 정보를 불러오는데 실패했습니다.';

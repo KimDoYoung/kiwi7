@@ -78,7 +78,7 @@ function loginApp() {
                 formData.append('userId', userId);
                 formData.append('password', password);
                 
-                const response = await fetch('/login', {
+                const response = await fetch('/kiwi7/login', {
                     method: 'POST',
                     body: formData
                 });
@@ -89,7 +89,7 @@ function loginApp() {
                     console.log('로그인 성공:', result);
                     
                     // 메인 페이지로 이동
-                    window.location.href = '/main';
+                    window.location.href = '/kiwi7/main';
                 } else {
                     // 로그인 실패
                     const error = await response.json();

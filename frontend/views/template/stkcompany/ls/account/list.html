@@ -334,7 +334,7 @@
 
             detail(item) {
                 console.log('상세 정보:', item);
-                window.open(`/page?path=stock/detail&stk_cd=${item.종목번호}`, '_blank');
+                window.open(`/kiwi7/page?path=stock/detail&stk_cd=${item.종목번호}`, '_blank');
             },
 
             // === 유틸리티 메서드 ===
@@ -361,7 +361,7 @@
                     return;
                 }
 
-                postFetch('/api/v1/mystock/bulk', {
+                postFetch('/kiwi7/api/v1/mystock/bulk', {
                     api_id: 'kiwi7_mystock_bulk_add',
                     payload: {
                         codes: codes

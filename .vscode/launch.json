@@ -27,7 +27,7 @@
                 "backend.main:app",
                 "--reload",
                 "--port",
-                "8002" // 원하는 포트 번호로 변경
+                "8802" // 원하는 포트 번호로 변경
             ],
             "jinja": true,
             "justMyCode": true,
@@ -46,7 +46,7 @@
                 "backend.main:app",
                 "--reload",
                 "--port",
-                "8002" // 원하는 포트 번호로 변경
+                "8802" // 원하는 포트 번호로 변경
             ],
             "jinja": true,
             "justMyCode": true,

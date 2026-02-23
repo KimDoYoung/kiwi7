@@ -160,7 +160,7 @@
                 this.clearDiaryMessages();
 
                 try {
-                    const response = await getFetch(`/api/v1/stock/info/${this.form.stk_cd}`);
+                    const response = await getFetch(`/kiwi7/api/v1/stock/info/${this.form.stk_cd}`);
                     if (response.success && response.data) {
                         this.diary_stockName = response.data.name || '종목명 없음';
                     } else {
@@ -218,7 +218,7 @@
                                 note: this.form.note.trim()
                             }
                         };
-                        response = await postFetch('/api/v1/diary', requestData);
+                        response = await postFetch('/kiwi7/api/v1/diary', requestData);
                     } else {
                         requestData = {
                             api_id: "diary_update",
@@ -229,7 +229,7 @@
                                 note: this.form.note.trim()
                             }
                         };
-                        response = await putFetch('/api/v1/diary/' + this.form.id, requestData);
+                        response = await putFetch('/kiwi7/api/v1/diary/' + this.form.id, requestData);
                     }
 
                     if (response.success) {

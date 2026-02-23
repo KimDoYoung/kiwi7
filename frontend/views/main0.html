@@ -500,7 +500,7 @@
 
         try {
           // 실제 API 호출
-          const response = await fetch('/api/v1/kiwoom/jisu');
+          const response = await fetch('/kiwi7/api/v1/kiwoom/jisu');
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
@@ -531,12 +531,12 @@
             this.stopAutoRefresh_jisu();
             // 로그아웃 API 호출
             try {
-              await fetch('/logout');
+              await fetch('/kiwi7/logout');
             } catch (logoutError) {
               console.error('로그아웃 중 오류:', logoutError);
             }
             // 로그인 페이지로 이동
-            window.location.href = '/login';
+            window.location.href = '/kiwi7/login';
             return;
           }
 
@@ -557,7 +557,7 @@
         this.error_mystock = null;
 
         try {
-          const response = await fetch('/api/v1/mystock/');
+          const response = await fetch('/kiwi7/api/v1/mystock/');
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
@@ -579,12 +579,12 @@
             this.stopAutoRefresh_mystock();
             // 로그아웃 API 호출
             try {
-              await fetch('/logout');
+              await fetch('/kiwi7/logout');
             } catch (logoutError) {
               console.error('로그아웃 중 오류:', logoutError);
             }
             // 로그인 페이지로 이동
-            window.location.href = '/login';
+            window.location.href = '/kiwi7/login';
             return;
           }
 
@@ -758,7 +758,7 @@
       // My Stock에서 종목 제거 (테스트용 - 콘솔 로그만)
       removeFromMyStock(stockCode, stockName) {
         console.log(`My Stock에서 제거 요청: ${stockCode} - ${stockName}`);
-        const url = '/api/v1/mystock/' + stockCode;
+        const url = '/kiwi7/api/v1/mystock/' + stockCode;
         deleteFetch(url)
         .then(data => {
             if (data.success) {
@@ -780,7 +780,7 @@
         this.error_account = null;
 
         try {
-          const response = await fetch('/api/v1/accounts/summary');
+          const response = await fetch('/kiwi7/api/v1/accounts/summary');
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
@@ -796,12 +796,12 @@
             console.warn('세션이 만료되었습니다. 로그아웃 처리합니다.');
             // 로그아웃 API 호출
             try {
-              await fetch('/logout');
+              await fetch('/kiwi7/logout');
             } catch (logoutError) {
               console.error('로그아웃 중 오류:', logoutError);
             }
             // 로그인 페이지로 이동
-            window.location.href = '/login';
+            window.location.href = '/kiwi7/login';
             return;
           }
 

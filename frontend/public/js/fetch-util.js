@@ -41,7 +41,7 @@ async function callKiwiApi(url, method, data = null) {
         if (response.status === 401) {
             console.error('세션이 만료되었습니다.');
             // 사용자에게 로그인 페이지로 리다이렉트하도록 처리
-            window.location.href = '/login';
+            window.location.href = '/kiwi7/login';
             return;
         }
 
@@ -65,7 +65,7 @@ async function callKiwiApi(url, method, data = null) {
         let errorStr = error.toString();
         if (errorStr.includes('SyntaxError: Unexpected end of JSON input')) {
             alert("세션 종료되었습니다. 서버와의 통신이 원활하지 않습니다. 다시 로그인해주세요.");
-            window.location.href = '/login';
+            window.location.href = '/kiwi7/login';
         } else {
             throw new KiwiError(500, errorStr);
         }
@@ -135,7 +135,7 @@ async function callKiwoomApi(api_id, payload, options = {}) {
         title: options.title || null
     };
 
-    const url = `/api/v1/kiwoom/${api_id}`;
+    const url = `/kiwi7/api/v1/kiwoom/${api_id}`;
     return postFetch(url, requestData);
 }
 
@@ -159,7 +159,7 @@ async function callKisApi(api_id, payload, options = {}) {
         title: options.title || null
     };
 
-    const url = `/api/v1/kis/${api_id}`;
+    const url = `/kiwi7/api/v1/kis/${api_id}`;
     return postFetch(url, requestData);
 }
 /**
@@ -175,7 +175,7 @@ async function callGetKisApi(api_id, payload) {
         payload: payload
     };
 
-    const url = `/api/v1/kis/${api_id}`;
+    const url = `/kiwi7/api/v1/kis/${api_id}`;
     return getFetch(url);
 }
 
@@ -199,7 +199,7 @@ async function callLsApi(api_id, payload, options = {}) {
         title: options.title || null
     };
 
-    const url = `/api/v1/ls/${api_id}`;
+    const url = `/kiwi7/api/v1/ls/${api_id}`;
     return postFetch(url, requestData);
 }
 

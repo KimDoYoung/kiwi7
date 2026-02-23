@@ -184,7 +184,7 @@ document.addEventListener('alpine:init', () => {
                     console.log('종목 검색 시작:', { keyword: this.keyword, limit: this.limit });
                     
                     // KiwoomRequest 형식으로 변경
-                    const response = await postFetch('/api/v1/stock/find', {
+                    const response = await postFetch('/kiwi7/api/v1/stock/find', {
                         api_id: "stock_find",
                         payload: {
                             keyword: this.keyword.trim(),
@@ -272,7 +272,7 @@ document.addEventListener('alpine:init', () => {
                     return;
                 }
                 let stk_cd = item.stk_cd;
-                putFetch('/api/v1/mystock/' + stk_cd)
+                putFetch('/kiwi7/api/v1/mystock/' + stk_cd)
                 .then(response => {
                     console.log('My Stock 추가 응답:', response);
                     if (response.success) {

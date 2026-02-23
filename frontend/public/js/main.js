@@ -11,7 +11,7 @@
             logout() {
                 localStorage.removeItem('kiwi7_token');
                 sessionStorage.removeItem('kiwi7_token');
-                window.location.href = "/logout"; // 서버 로그아웃 (쿠키 삭제 및 리디렉션)
+                window.location.href = "/kiwi7/logout"; // 서버 로그아웃 (쿠키 삭제 및 리디렉션)
             }
         };
     }

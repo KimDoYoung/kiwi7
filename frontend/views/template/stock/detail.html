@@ -589,7 +589,7 @@ function createStockDetailComponent() {
                 
                 console.log('종목 정보 조회 시작:', this.stk_cd);
                 
-                const response = await getFetch(`/api/v1/stock/info/${this.stk_cd}`, {});
+                const response = await getFetch(`/kiwi7/api/v1/stock/info/${this.stk_cd}`, {});
 
                 console.log('종목 정보 응답:', response);
 

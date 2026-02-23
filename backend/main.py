@@ -31,13 +31,14 @@ def create_app() -> FastAPI:
     kiwi7_app = FastAPI(title='Kiwi7 - 주식매매(개인용)', version='0.0.1')
     add_middlewares(kiwi7_app)
     add_routes(kiwi7_app)
-    add_event_handlers(kiwi7_app)
     add_static_files(kiwi7_app)
     add_exception_handlers(kiwi7_app)
 
     # 루트 앱에 /kiwi7로 마운트
     root_app = FastAPI()
-    root_app.mount('/kiwi7', kiwi7_app)
+    add_event_handlers(root_app)  # sub-app의 lifespan은 실행 안되므로 root_app에 등록
+    root_app.mount('/kiwi7', kiwi7_app)  # /kiwi7 하위로 마운트
+    add_static_files(root_app)  # 루트 레벨 /public 접근용
     return root_app
 
 

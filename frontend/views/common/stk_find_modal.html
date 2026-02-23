@@ -127,7 +127,7 @@
                 try {
                     // Mock Fetch for demo if fetch-util not present, but it should be.
                     // Assuming postFetch is globally available.
-                    const response = await postFetch('/api/v1/stock/find', {
+                    const response = await postFetch('/kiwi7/api/v1/stock/find', {
                         api_id: "stock_find",
                         payload: {
                             keyword: this.keyword.trim(),
@@ -163,7 +163,7 @@
                 }
 
                 try {
-                    const response = await putFetch('/api/v1/mystock/' + item.code);
+                    const response = await putFetch('/kiwi7/api/v1/mystock/' + item.code);
 
                     if (response.success) {
                         this.showMessage(`'${item.name}' 종목이 My Stock에 추가되었습니다.`, 'success');

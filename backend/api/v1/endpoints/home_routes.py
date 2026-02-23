@@ -36,7 +36,8 @@ router = APIRouter()
 @router.get('/', response_class=HTMLResponse, include_in_schema=False)
 def display_root(request: Request):
     """메인"""
-    return RedirectResponse(url='/main')
+    root = request.scope.get('root_path', '')
+    return RedirectResponse(url=f'{root}/main')
 
 
 @router.get('/main', response_class=HTMLResponse, include_in_schema=False)
@@ -118,15 +119,12 @@ async def login(request: Request):
 
 
 @router.get('/logout', response_class=JSONResponse)
-async def logout(response: Response):
-    """로그아웃 페이지"""
-    response = RedirectResponse(url='/login', status_code=302)
+async def logout(request: Request, response: Response):
+    """로그아웃"""
+    root = request.scope.get('root_path', '')
+    response = RedirectResponse(url=f'{root}/login', status_code=302)
     response.delete_cookie(
-        key=config.ACCESS_TOKEN_NAME,
-        path='/',  # ✅ set_cookie와 동일하게!
-        secure=False,  # ✅ set_cookie와 동일하게!
-        httponly=True,  # optional (FastAPI 기본값은 True)
-        samesite='lax',  # ✅ 동일하게
+        key=config.ACCESS_TOKEN_NAME, path='/', secure=False, httponly=True, samesite='lax'
     )
     return response
 
